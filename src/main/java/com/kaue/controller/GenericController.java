@@ -1,5 +1,7 @@
 package com.kaue.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,14 @@ public class GenericController {
 	public ModelAndView novo() {
 		ModelAndView mv = new ModelAndView("page/titulos/novo");
 		mv.addObject("todosStatusTitulo", StatusTitulo.values());
+		return mv;
+	}
+	
+	@RequestMapping
+	public ModelAndView lista() {
+		List<Titulo> tituloList = tituloService.findAll();
+		ModelAndView mv = new ModelAndView("page/titulos/lista");
+		mv.addObject("titulos", tituloList);
 		return mv;
 	}
 	

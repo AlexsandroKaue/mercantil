@@ -1,3 +1,6 @@
+com\kaue\model\StatusTitulo.class
 com\kaue\controller\GenericController.class
 com\kaue\ServletInitializer.class
+com\kaue\service\TituloService.class
+com\kaue\model\Titulo.class
 com\kaue\MercantilApplication.class
