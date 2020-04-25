@@ -25,7 +25,8 @@
                 <li><button type="button" class="btn btn-block btn-info">Info</button></li>
               </ol> -->
               <div class="float-right">
-                <button type="button" class="btn btn-md btn-info">Novo</button>
+                <!-- <button type="button" class="btn btn-md btn-info">Novo</button> -->
+                <a href="/titulos/novo">Novo</a>
               </div>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -58,7 +59,15 @@
                     <td th:text="${titulo.descricao}"></td>
                     <td class="text-center" th:text="${{titulo.dataVencimento}}"></td>
                     <td class="text-right" th:text="|R$ ${{titulo.valor}}|"></td>
-                    <td class="text-center" th:text="${titulo.status.descricao}"></td>
+                    <td class="text-center">
+                      <span class="badge" th:classappend="${#strings.toString(titulo.status) == 'PENDENTE' ? 'bg-danger' : 'bg-success'}" 
+                        th:text="${titulo.status.descricao}"></span>
+                    </td>
+                    <td class="text-center">
+                      <a href="pages/widgets.html"><!-- class="nav-link" -->
+                        <i class="fas fa-pencil-alt"></i>
+                      </a>
+                    </td>
                   </tr>
                   <tr th:if="${#lists.isEmpty(titulos)}">
                     <td colspan="6">Nenhum título foi encontrado.</td>
