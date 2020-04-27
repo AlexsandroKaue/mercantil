@@ -38,7 +38,8 @@
       <section class="content">
         <div class="container-fluid">
         
-          <div layout:insert="~{mensagem}"></div>
+          <div layout:insert="~{mensagem_geral}"></div>
+          <div layout:insert="~{mensagem_erro}"></div>
           
           <div class="card card-secondary">
             <div class="card-header">
@@ -47,6 +48,7 @@
             <!-- form start -->
             <!-- <form class="form-horizontal" method="POST" action="/titulos"> -->
               <div class="card-body">
+                <input type="hidden" id="inputCodigo" th:field="*{codigo}"></input>
                 <div class="form-group row">
                   <label for="inputDescricao1" class="col-sm-2 col-form-label">Descrição</label>
                   <div class="col-sm-4">
@@ -54,15 +56,15 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="inputDataVencimento1" class="col-sm-2 col-form-label">Data de Vencimento</label>
+                  <label for="inputDataVencimento" class="col-sm-2 col-form-label">Data de Vencimento</label>
                   <div class="col-sm-2">
-                    <input type="text" class="form-control" id="inputDataVencimento1" th:field="*{dataVencimento}" th:classappend="${#fields.hasErrors('dataVencimento')} ? is-invalid">
+                    <input type="text" class="form-control" id="inputDataVencimento" th:field="*{dataVencimento}" th:classappend="${#fields.hasErrors('dataVencimento')} ? is-invalid">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="inputValor1" class="col-sm-2 col-form-label">Valor</label>
                   <div class="col-sm-2">
-                    <input type="text" class="form-control" id="inputValor1" th:field="*{valor}" th:classappend="${#fields.hasErrors('valor')} ? is-invalid">
+                    <input type="text" class="form-control js-currency" id="inputValor1" th:field="*{valor}" th:classappend="${#fields.hasErrors('valor')} ? is-invalid">
                   </div>
                 </div>        
                 <div class="form-group row">
