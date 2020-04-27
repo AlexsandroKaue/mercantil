@@ -16,15 +16,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kaue.dao.TituloDAO;
 import com.kaue.model.StatusTitulo;
 import com.kaue.model.Titulo;
 import com.kaue.service.TituloService;
 
 @Controller
 @RequestMapping("/titulos")
-public class GenericController {
+public class TituloController {
 	
 	public static final String NOVO_TITULO_VIEW = "page/titulos/novo";
+	
+	@Autowired
+	private TituloDAO tituloDAO;
 	
 	@Autowired
 	private TituloService tituloService;
@@ -53,7 +57,7 @@ public class GenericController {
 	
 	@RequestMapping
 	public ModelAndView lista() {
-		List<Titulo> tituloList = tituloService.findAll(Sort.by(Sort.Direction.ASC, "codigo"));
+		List<Titulo> tituloList = tituloDAO.findAll(Sort.by(Sort.Direction.ASC, "codigo"));
 		ModelAndView mv = new ModelAndView("page/titulos/lista");
 		mv.addObject("titulos", tituloList);
 		return mv;
@@ -65,11 +69,11 @@ public class GenericController {
 			return NOVO_TITULO_VIEW;
 		}
 		try {
-			tituloService.save(titulo);
+			tituloService.salvar(titulo);
 			attributes.addFlashAttribute("mensagem", "Título cadastrado com sucesso!");
 			return "redirect:/titulos/novo";
 		} catch(DataIntegrityViolationException e) {
-			errors.rejectValue("dataVencimento", null, "Formato de data inválido");
+			errors.rejectValue("dataVencimento", null, e.getMessage());
 			return NOVO_TITULO_VIEW;
 		}
 	}
@@ -84,7 +88,7 @@ public class GenericController {
 	
 	@RequestMapping(value = "{codigo}", method = RequestMethod.DELETE)
 	public String excluir(@PathVariable Long codigo, RedirectAttributes attributes) {
-		tituloService.deleteById(codigo);
+		tituloService.excluir(codigo);
 		attributes.addFlashAttribute("mensagem", "Título excluído com sucesso!");
 		return "redirect:/titulos";
 	}
