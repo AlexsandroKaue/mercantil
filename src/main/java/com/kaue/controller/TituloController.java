@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.TituloDAO;
-import com.kaue.model.StatusTitulo;
+import com.kaue.dao.filter.TituloFilter;
+import com.kaue.enumeration.StatusTitulo;
 import com.kaue.model.Titulo;
 import com.kaue.service.TituloService;
 
@@ -26,9 +28,6 @@ import com.kaue.service.TituloService;
 public class TituloController {
 	
 	public static final String NOVO_TITULO_VIEW = "page/titulos/novo";
-	
-	@Autowired
-	private TituloDAO tituloDAO;
 	
 	@Autowired
 	private TituloService tituloService;
@@ -49,15 +48,16 @@ public class TituloController {
 	}
 	
 	@RequestMapping("/novo")
-	public ModelAndView novo() {
+	public ModelAndView showFormNovo(@ModelAttribute("titulo") Titulo titulo) {
 		ModelAndView mv = new ModelAndView(NOVO_TITULO_VIEW);
-		mv.addObject("titulo", new Titulo());
+		/* mv.addObject("titulo", new Titulo()); */
 		return mv;
 	}
 	
 	@RequestMapping
-	public ModelAndView lista() {
-		List<Titulo> tituloList = tituloDAO.findAll(Sort.by(Sort.Direction.ASC, "codigo"));
+	public ModelAndView pesquisar(@ModelAttribute("filtro") TituloFilter filtro) {
+		//List<Titulo> tituloList = tituloDAO.findAll(Sort.by(Sort.Direction.ASC, "codigo"));
+		List<Titulo> tituloList = tituloService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView("page/titulos/lista");
 		mv.addObject("titulos", tituloList);
 		return mv;
@@ -91,6 +91,11 @@ public class TituloController {
 		tituloService.excluir(codigo);
 		attributes.addFlashAttribute("mensagem", "Título excluído com sucesso!");
 		return "redirect:/titulos";
+	}
+	
+	@RequestMapping(value = "/{codigo}/receber", method = RequestMethod.PUT)
+	public @ResponseBody String receber(@PathVariable Long codigo) {
+		return tituloService.receber(codigo);
 	}
 	
 	@ModelAttribute

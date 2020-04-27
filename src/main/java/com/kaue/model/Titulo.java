@@ -20,6 +20,8 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
+import com.kaue.enumeration.StatusTitulo;
+
 @Entity
 public class Titulo {
 
@@ -74,6 +76,13 @@ public class Titulo {
 	}
 	public void setStatus(StatusTitulo status) {
 		this.status = status;
+	}
+	
+	public boolean pendente() {
+		if(status.equals(StatusTitulo.PENDENTE)) {
+			return true;
+		}
+		return false;
 	}
 	
 	@Override

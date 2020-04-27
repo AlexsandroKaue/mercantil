@@ -26,7 +26,7 @@
               </ol> -->
               <div class="float-right">
                 <!-- <button type="button" class="btn btn-md btn-danger">Voltar</button> -->
-                <a href="/titulos">Voltar</a>
+                <a class="btn btn-danger" href="/titulos">Voltar</a>
                 <button type="submit" class="btn btn-md btn-info">Salvar</button>
               </div>
             </div><!-- /.col -->
@@ -42,9 +42,9 @@
           <div layout:insert="~{mensagem_erro}"></div>
           
           <div class="card card-secondary">
-            <div class="card-header">
+            <!-- <div class="card-header">
               <h3 class="card-title">Novo Título</h3>
-            </div>
+            </div> -->
             <!-- form start -->
             <!-- <form class="form-horizontal" method="POST" action="/titulos"> -->
               <div class="card-body">
@@ -52,7 +52,7 @@
                 <div class="form-group row">
                   <label for="inputDescricao1" class="col-sm-2 col-form-label">Descrição</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="inputDescricao1" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? is-invalid">
+                    <input type="text" class="form-control" id="inputDescricao1" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
                   </div>
                 </div>
                 <div class="form-group row">

@@ -1,10 +1,9 @@
-package com.kaue.model;
+package com.kaue.enumeration;
 
 public enum StatusTitulo {
 	
 	PENDENTE("Pendente"),
-	RECEBIDO("Recebido"),
-	CANCELADO("Cancelado");
+	RECEBIDO("Recebido");
 	
 	private String descricao;
 	
