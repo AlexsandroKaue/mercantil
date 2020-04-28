@@ -25,7 +25,7 @@
                 <li><button type="button" class="btn btn-block btn-info">Info</button></li>
               </ol> -->
               <div class="float-right">
-                <a class="btn btn-block btn-info" href="/titulos/novo">Novo</a>
+                <a class="btn btn-block btn-info" th:href="@{/titulos/novo}">Novo</a>
               </div>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -44,7 +44,7 @@
               <h3 class="card-title">Novo Título</h3>
             </div> -->
             <div class="card-body">
-              <form method="GET" action="/titulos" th:object="${filtro}">
+              <form method="GET" th:action="@{/titulos}" th:object="${filtro}">
                 <div class="form-group row">
                   <div class="col-sm-5">
                     <div class="input-group">
@@ -65,8 +65,8 @@
               <table class="table table-bordered table-striped js-tabela">
                 <thead>
                   <tr>
-                    <th class="text-center col-md-1 nopadding">#</th>
-                    <th>Descrição</th>
+                    <th class="text-center col-md-1">Codigo</th>
+                    <th class="text-center col-md-4">Descrição</th>
                     <th class="text-center col-md-2">Data de Vencimento</th>
                     <th class="text-right col-md-2">Valor</th>
                     <th class="text-center col-md-2">Status</th>
@@ -75,7 +75,7 @@
                 </thead>
                 <tbody>
                   <tr th:each="titulo : ${titulos}">
-                    <td class="text-center nopadding" th:text="${titulo.codigo}"></td>
+                    <td class="text-center" th:text="${titulo.codigo}"></td>
                     <td th:text="${titulo.descricao}"></td>
                     <td class="text-center" th:text="${{titulo.dataVencimento}}"></td>
                     <td class="text-right" th:text="|R$ ${{titulo.valor}}|"></td>
@@ -89,7 +89,7 @@
                         <i class="fas fa-pencil-alt"></i>
                       </a>
                       <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-xs" 
-                        href="#" th:attr="data-codigo=${titulo.codigo}, data-descricao=${titulo.descricao}"
+                        th:href="@{#}" th:attr="data-codigo=${titulo.codigo}, data-descricao=${titulo.descricao}"
                         title="Excluir" rel="tooltip" data-placement="top"><!--  -->
                         <i class="fas fa-times"></i>
                       </a>

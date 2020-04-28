@@ -90,20 +90,22 @@ $(function(){
 	
 	$('.js-tabela').DataTable({
       "paging": true,
+      "pageLength": 10,
       "lengthChange": true,
       "searching": false,
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "lengthMenu": [ 5, 10, 15, 20 ],
-      "columnDefs": [
+      "lengthChange": false,
+      /*"lengthMenu": [ 5, 10, 15, 20 ],*/
+      /*"columnDefs": [
     	    { "orderable": false, "targets": [0,5] }
-    	  ],
+    	  ],*/
       "ordering": false,
       "language": {
           "lengthMenu": "Mostrar _MENU_ registro por página",
           "zeroRecords": "Nothing found - sorry",
-          "info": "Mostrando página _PAGE_ de _PAGES_",
+          "info": "Total de registros: _MAX_",
           "infoEmpty": "Nenhum registro encontrado",
           "infoFiltered": "",
           "search": "Pesquisa",

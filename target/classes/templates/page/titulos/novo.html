@@ -9,7 +9,7 @@
 
   <section layout:fragment="conteudo">
   
-    <form class="form-horizontal" method="POST" action="/titulos" th:object="${titulo}">
+    <form class="form-horizontal" method="POST" th:action="@{/titulos}" th:object="${titulo}">
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
@@ -26,8 +26,9 @@
               </ol> -->
               <div class="float-right">
                 <!-- <button type="button" class="btn btn-md btn-danger">Voltar</button> -->
-                <a class="btn btn-danger" href="/titulos">Voltar</a>
-                <button type="submit" class="btn btn-md btn-info">Salvar</button>
+                <a class="btn btn-danger" th:href="@{/titulos}">Voltar</a>
+                <button type="submit" class="btn btn-md btn-info" th:if="!*{codigo}">Salvar</button>
+                <button type="submit" class="btn btn-md btn-info" th:if="*{codigo}">Alterar</button>
               </div>
             </div><!-- /.col -->
           </div><!-- /.row -->
