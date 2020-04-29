@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
       
-  <div class="alert alert-primary" role="alert" th:if="${!#strings.isEmpty(mensagem)}">
+  <div class="alert alert-primary js-fade" role="alert" th:if="${!#strings.isEmpty(mensagem)}">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <span th:text="${mensagem}"></span>
   </div>

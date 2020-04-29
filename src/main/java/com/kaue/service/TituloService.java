@@ -38,7 +38,7 @@ public class TituloService {
 	
 	public List<Titulo> pesquisar(TituloFilter filtro) {
 		String descricao = (filtro.getDescricao() == null ? "" : filtro.getDescricao());
-		return tituloDAO.findByDescricaoContainingIgnoreCase(descricao);
+		return tituloDAO.findByDescricaoContainingIgnoreCaseOrderByCodigo(descricao);
 	}
 
 }

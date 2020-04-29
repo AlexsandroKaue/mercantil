@@ -20,8 +20,11 @@ $('#modalConfirmacao').on('show.bs.modal', function(event){
 
 $(function(){
 	$('[rel="tooltip"]').tooltip({
-		container: 'body'
+		container: 'body',
+		boundary: 'scrollParent',
+		trigger : 'hover'
 	});
+	
 	
 	$('.js-currency').maskMoney({decimal:',', thousands:'.', allowZero:'true'});
 	$('.js-atualizar-status').on('click', function(event) {
@@ -90,7 +93,7 @@ $(function(){
 	
 	$('.js-tabela').DataTable({
       "paging": true,
-      "pageLength": 10,
+      "pageLength": 5,
       "lengthChange": true,
       "searching": false,
       "info": true,
@@ -101,7 +104,7 @@ $(function(){
       /*"columnDefs": [
     	    { "orderable": false, "targets": [0,5] }
     	  ],*/
-      "ordering": false,
+      "ordering": true,
       "language": {
           "lengthMenu": "Mostrar _MENU_ registro por página",
           "zeroRecords": "Nothing found - sorry",
@@ -118,6 +121,11 @@ $(function(){
           }
       }
     });
+	
+	
+	$('.js-fade').fadeTo(5000, 1, function() {
+		$(this).slideUp( "slow", function() {});
+	})
 
 	
     /*const Toast = Swal.mixin({

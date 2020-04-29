@@ -62,15 +62,15 @@
                 </div>
               </form>
             
-              <table class="table table-bordered table-striped js-tabela">
+              <table class="table table-bordered table-striped js-tabela"><!-- js-tabela -->
                 <thead>
                   <tr>
-                    <th class="text-center col-md-1">Codigo</th>
-                    <th class="text-center col-md-4">Descrição</th>
-                    <th class="text-center col-md-2">Data de Vencimento</th>
-                    <th class="text-right col-md-2">Valor</th>
-                    <th class="text-center col-md-2">Status</th>
-                    <th class="text-center col-md-1">Ações</th>
+                    <th class="text-center col-1">Código</th>
+                    <th>Descrição</th>
+                    <th class="text-center col-2">Data de Vencimento</th>
+                    <th class="text-right col-2">Valor</th>
+                    <th class="text-center col-2">Status</th>
+                    <th class="text-center col-2">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -80,20 +80,20 @@
                     <td class="text-center" th:text="${{titulo.dataVencimento}}"></td>
                     <td class="text-right" th:text="|R$ ${{titulo.valor}}|"></td>
                     <td class="text-center" th:attr="data-role=${titulo.codigo}">
-                      <span class="badge" th:classappend="${titulo.pendente() ? 'bg-danger' : 'bg-success'}" 
+                      <span class="badge badge-pill" th:classappend="${titulo.pendente() ? 'bg-danger' : 'bg-success'}" 
                         th:text="${titulo.status.descricao}"></span>
                     </td>
                     <td class="text-center nopadding">
-                      <a th:href="@{/titulos/{codigo}(codigo=${titulo.codigo})}" class="btn btn-link btn-xs"
+                      <a th:href="@{/titulos/{codigo}(codigo=${titulo.codigo})}" class="btn btn-link btn-sm"
                         title="Editar" rel="tooltip" data-placement="top">
                         <i class="fas fa-pencil-alt"></i>
                       </a>
-                      <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-xs" 
+                      <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
                         th:href="@{#}" th:attr="data-codigo=${titulo.codigo}, data-descricao=${titulo.descricao}"
                         title="Excluir" rel="tooltip" data-placement="top"><!--  -->
                         <i class="fas fa-times"></i>
                       </a>
-                      <a class="btn btn-link btn-xs js-atualizar-status" th:if="${titulo.pendente()}"
+                      <a class="btn btn-link btn-sm js-atualizar-status" th:if="${titulo.pendente()}"
                         th:href="@{/titulos/{codigo}/receber(codigo=${titulo.codigo})}"
                         th:attr="data-codigo=${titulo.codigo}" 
                         title="Receber" rel="tooltip" data-placement="top">
@@ -114,6 +114,7 @@
         </div><!-- container-fluid -->
       </section>
       <!-- /.content -->
+      <br/>
     </div>
     <!-- /.content-wrapper -->
     
