@@ -6,7 +6,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.envers.Audited;
+
 @Entity
+@Audited
 public class Permissao {
 	
 	@Id

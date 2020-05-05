@@ -2,6 +2,7 @@ package com.kaue.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMin;
@@ -26,7 +29,8 @@ import com.kaue.enumeration.Categoria;
 public class Produto {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "seq_produto", sequenceName = "seq_produto", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(generator = "seq_produto", strategy = GenerationType.SEQUENCE)
 	private Long codigo;
 	
 	@NotEmpty(message = "Descrição é obrigatória")
@@ -54,6 +58,12 @@ public class Produto {
 	
 	@Enumerated(EnumType.STRING)
 	private Categoria categoria;
+	
+	@NotNull(message = "Quantidade não pode ser 0")
+	private Integer quantidade;
+	
+	@OneToMany(mappedBy = "produto")
+	private List<ProdutoFornecedor> produtoFornecedorList;
 
 	public String getDescricao() {
 		return descricao;
@@ -109,6 +119,22 @@ public class Produto {
 
 	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
+	}
+
+	public Integer getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
+
+	public List<ProdutoFornecedor> getProdutoFornecedorList() {
+		return produtoFornecedorList;
+	}
+
+	public void setProdutoFornecedorList(List<ProdutoFornecedor> produtoFornecedorList) {
+		this.produtoFornecedorList = produtoFornecedorList;
 	}
 	
 

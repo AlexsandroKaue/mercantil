@@ -15,7 +15,7 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Títulos</h1>
+              <h1 class="m-0 text-dark">Permissões</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">  
               <!-- <ol class="breadcrumb float-sm-right">
@@ -25,7 +25,7 @@
                 <li><button type="button" class="btn btn-block btn-info">Info</button></li>
               </ol> -->
               <div class="float-right">
-                <a class="btn btn-block btn-info" th:href="@{/titulos/novo}">Novo</a>
+                <a class="btn btn-block btn-info" th:href="@{/permissoes/novo}">Novo</a>
               </div>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -44,7 +44,7 @@
               <h3 class="card-title">Novo Título</h3>
             </div> -->
             <div class="card-body">
-              <form method="GET" th:action="@{/titulos}" th:object="${filtro}">
+              <form method="GET" th:action="@{/permissoes}" th:object="${filtro}">
                 <div class="form-group row">
                   <div class="col-sm-5">
                     <div class="input-group">
@@ -66,42 +66,29 @@
                 <thead>
                   <tr>
                     <th class="text-center col-1">Código</th>
-                    <th th:text="#{descricao}"></th>
-                    <th class="text-center col-2">Data de Vencimento</th>
-                    <th class="text-right col-2">Valor</th>
-                    <th class="text-center col-2">Status</th>
+                    <th>Descrição</th>
+                    <th class="text-center col-2">Sigla</th>
                     <th class="text-center col-2">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr th:each="titulo : ${titulos}">
-                    <td class="text-center" th:text="${titulo.codigo}"></td>
-                    <td th:text="${titulo.descricao}"></td>
-                    <td class="text-center" th:text="${{titulo.dataVencimento}}"></td>
-                    <td class="text-right" th:text="|R$ ${{titulo.valor}}|"></td>
-                    <td class="text-center" th:attr="data-role=${titulo.codigo}">
-                      <span class="badge badge-pill" th:classappend="${titulo.pendente() ? 'bg-danger' : 'bg-success'}" 
-                        th:text="${titulo.status.descricao}"></span>
-                    </td>
+                  <tr th:each="permissao : ${permissoes}">
+                    <td class="text-center" th:text="${permissao.codigo}"></td>
+                    <td th:text="${permissao.descricao}"></td>
+                    <td class="text-center" th:text="${permissao.sigla}"></td>
                     <td class="text-center nopadding">
-                      <a th:href="@{/titulos/{codigo}(codigo=${titulo.codigo})}" class="btn btn-link btn-sm"
+                      <a th:href="@{/permissoes/{codigo}(codigo=${permissao.codigo})}" class="btn btn-link btn-sm"
                         title="Editar" rel="tooltip" data-placement="top">
                         <i class="fas fa-pencil-alt"></i>
                       </a>
                       <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
-                        th:href="@{#}" th:attr="data-codigo=${titulo.codigo}, data-descricao=${titulo.descricao}"
+                        th:href="@{#}" th:attr="data-codigo=${permissao.codigo}, data-descricao=${permissao.descricao}"
                         title="Excluir" rel="tooltip" data-placement="top"><!--  -->
                         <i class="fas fa-times"></i>
                       </a>
-                      <a class="btn btn-link btn-sm js-atualizar-status" th:if="${titulo.pendente()}"
-                        th:href="@{/titulos/{codigo}/receber(codigo=${titulo.codigo})}"
-                        th:attr="data-codigo=${titulo.codigo}" 
-                        title="Receber" rel="tooltip" data-placement="top">
-                        <i class="fas fa-check"></i>
-                      </a>
                     </td>
                   </tr>
-                  <tr th:if="${#lists.isEmpty(titulos)}">
+                  <tr th:if="${#lists.isEmpty(permissoes)}">
                     <td colspan="6">Nenhum título foi encontrado.</td>
                   </tr>
                 </tbody>
@@ -118,7 +105,7 @@
     </div>
     <!-- /.content-wrapper -->
     
-    <div layout:insert="~{confirmacao_exclusao}"></div>
+    <div layout:insert="~{confirmacao_exclusao_permissao}"></div>
     
   </section>
   

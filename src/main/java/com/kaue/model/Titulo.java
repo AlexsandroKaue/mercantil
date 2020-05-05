@@ -17,12 +17,14 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
 import com.kaue.enumeration.StatusTitulo;
 
 @Entity
+@Audited
 public class Titulo {
 
 	@Id
