@@ -15,7 +15,7 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Permissões</h1>
+              <h1 class="m-0 text-dark">Fornecedores</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">  
               <!-- <ol class="breadcrumb float-sm-right">
@@ -25,7 +25,7 @@
                 <li><button type="button" class="btn btn-block btn-info">Info</button></li>
               </ol> -->
               <div class="float-right">
-                <a class="btn btn-block btn-info" th:href="@{/permissoes/novo}">Novo</a>
+                <a class="btn btn-block btn-info" th:href="@{/fornecedores/novo}">Novo</a>
               </div>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -44,20 +44,19 @@
               <h3 class="card-title">Novo Título</h3>
             </div> -->
             <div class="card-body">
-              <form method="GET" th:action="@{/permissoes}" th:object="${filtro}">
+              <form method="GET" th:action="@{/fornecedores}" th:object="${filtro}">
                 <div class="form-group row">
                   <div class="col-sm-5">
                     <div class="input-group">
                       <input class="form-control" 
-                        placeholder="Qual título você está procurando?" autofocus="autofocus"
-                        th:field="*{descricao}"/>
+                        placeholder="Qual fornecedor você está procurando?" autofocus="autofocus"
+                        th:field="*{nome}"/>
                       <div class="input-group-append">
                         <button type="submit" class="btn btn-default">
                           <i class="fas fa-search"></i>
                         </button>
                       </div>
                     </div>
-                    
                   </div>
                 </div>
               </form>
@@ -66,30 +65,32 @@
                 <thead>
                   <tr>
                     <th class="text-center col-1">Código</th>
-                    <th>Descrição</th>
-                    <th class="text-center col-2">Sigla</th>
+                    <th>Nome</th>
+                    <th class="text-center col-2">Telefone</th>
+                    <th class="text-center col-2">Cnpj</th>
                     <th class="text-center col-2">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr th:each="permissao : ${permissoes}">
-                    <td class="text-center" th:text="${permissao.codigo}"></td>
-                    <td th:text="${permissao.descricao}"></td>
-                    <td class="text-center" th:text="${permissao.sigla}"></td>
+                  <tr th:each="fornecedor : ${fornecedores}">
+                    <td class="text-center" th:text="${fornecedor.codigo}"></td>
+                    <td th:text="${fornecedor.nome}"></td>
+                    <td th:text="${fornecedor.telefone}"></td>
+                    <td th:text="${fornecedor.cnpj}"></td>
                     <td class="text-center nopadding">
-                      <a th:href="@{/permissoes/{codigo}(codigo=${permissao.codigo})}" class="btn btn-link btn-sm"
+                      <a th:href="@{/fornecedores/{codigo}(codigo=${fornecedor.codigo})}" class="btn btn-link btn-sm"
                         title="Editar" rel="tooltip" data-placement="top">
                         <i class="fas fa-pencil-alt"></i>
                       </a>
                       <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
-                        th:href="@{#}" th:attr="data-codigo=${permissao.codigo}, data-descricao=${permissao.descricao}"
+                        th:href="@{#}" th:attr="data-codigo=${fornecedor.codigo}, data-descricao=${fornecedor.nome}"
                         title="Excluir" rel="tooltip" data-placement="top"><!--  -->
                         <i class="fas fa-times"></i>
                       </a>
                     </td>
                   </tr>
-                  <tr th:if="${#lists.isEmpty(permissoes)}">
-                    <td colspan="6">Nenhum título foi encontrado.</td>
+                  <tr th:if="${#lists.isEmpty(fornecedores)}">
+                    <td colspan="6">Nenhum fornecedor foi encontrado.</td>
                   </tr>
                 </tbody>
               </table>
@@ -105,7 +106,7 @@
     </div>
     <!-- /.content-wrapper -->
     
-    <div layout:insert="~{confirmacao_exclusao_permissao}"></div>
+    <div layout:insert="~{confirmacao_exclusao_fornecedor}"></div>
     
   </section>
   

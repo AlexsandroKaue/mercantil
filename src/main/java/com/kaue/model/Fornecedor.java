@@ -28,6 +28,9 @@ public class Fornecedor {
 	@Column(length = 100)
 	private String cnpj;
 	
+	@Column(length = 50)
+	private String telefone;
+	
 	@OneToOne
 	private Endereco endereco;
 
@@ -61,6 +64,14 @@ public class Fornecedor {
 
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 	
 

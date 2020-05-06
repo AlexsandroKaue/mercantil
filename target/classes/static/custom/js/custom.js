@@ -12,7 +12,7 @@ $('#modalConfirmacao').on('show.bs.modal', function(event){
 		action += '/';
 	}
 	form.attr('action',action + codigo);
-	modal.find('.modal-body p').html('Deseja realmente excluir o título <strong>'+descricao+'</strong>?');
+	modal.find('.modal-body p').html('Deseja realmente excluir o registro <strong>'+descricao+'</strong>?');
 	/*alert(codigo);*/
 	
 });
@@ -26,7 +26,13 @@ $(function(){
 	});
 	
 	
-	$('.js-currency').maskMoney({decimal:',', thousands:'.', allowZero:'true'});
+	$('.js-currency').maskMoney({decimal:',', 
+		thousands:'.', 
+		allowZero:'true',
+		prefix:'R$'});
+	
+	$('[data-mask]').inputmask();
+	
 	$('.js-atualizar-status').on('click', function(event) {
 		event.preventDefault();
 		
