@@ -4,12 +4,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{principal}">
 <head>
-  <title>Cadastro de Permissão</title>
+  <title>Cadastro de Categorias</title>
 </head>
 
   <section layout:fragment="conteudo">
   
-    <form class="form-horizontal" method="POST" th:action="@{/permissoes}" th:object="${permissao}">
+    <form class="form-horizontal" method="POST" th:action="@{/categorias}" th:object="${categoria}">
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
@@ -17,7 +17,7 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Cadastro de Permissão</h1>
+              <h1 class="m-0 text-dark">Cadastro de Categorias</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <!-- <ol class="breadcrumb float-sm-right">
@@ -25,8 +25,7 @@
                 <li class="breadcrumb-item active">Dashboard v1</li>
               </ol> -->
               <div class="float-right">
-                <!-- <button type="button" class="btn btn-md btn-danger">Voltar</button> -->
-                <a class="btn btn-danger" th:href="@{/permissoes}">Voltar</a>
+                <a class="btn btn-danger" th:href="@{/categorias}">Voltar</a>
                 <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
                 <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
               </div>
@@ -44,25 +43,31 @@
           
           <div class="card card-secondary">
             <!-- <div class="card-header">
-              <h3 class="card-title">Novo Título</h3>
+              <h3 class="card-title">Novo Categoria</h3>
             </div> -->
             <!-- form start -->
-            <!-- <form class="form-horizontal" method="POST" action="/titulos"> -->
+            <!-- <form class="form-horizontal" method="POST" action="/categorias"> -->
+            
               <div class="card-body">
                 <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
                 <div class="form-group row">
-                  <label for="inputDescricao1" class="col-sm-2 col-form-label">Descrição</label>
+                  <label for="inputNome" class="col-sm-2 col-form-label">Nome</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="inputDescricao1" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
+                    <input type="text" autofocus="autofocus" class="form-control" id="inputNome" th:field="*{nome}" th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="inputSigla1" class="col-sm-2 col-form-label">Sigla</label>
+                  <label for="inputDescricao" class="col-sm-2 col-form-label">Descrição</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="inputSigla1" th:field="*{sigla}" th:classappend="${#fields.hasErrors('sigla')} ? 'is-invalid'">
+                    <input type="text" class="form-control" id="inputDescricao" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
                   </div>
-                </div>
+                </div> 
               </div>
+              <!-- <div class="card-footer">
+                <a class="btn btn-md btn-danger" th:href="@{/categorias}" style="margin-right:10px">Voltar</a>
+                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
+                <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
+              </div> -->
             <!-- </form> -->
           </div>
           <!-- /.card -->

@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kaue.dao.filter.CategoriaFilter;
 import com.kaue.dao.filter.ProdutoFilter;
-import com.kaue.enumeration.Categoria;
-import com.kaue.enumeration.StatusTitulo;
+import com.kaue.model.Categoria;
 import com.kaue.model.Produto;
 import com.kaue.model.Titulo;
+import com.kaue.service.CategoriaService;
 import com.kaue.service.ProdutoService;
 
 @Controller
@@ -32,6 +33,9 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoService produtoService;
 	
+	@Autowired
+	private CategoriaService categoriaService;
+	
 	@RequestMapping("/novo")
 	public ModelAndView showFormNovo(Produto produto) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
@@ -39,8 +43,8 @@ public class ProdutoController {
 		return mv;
 	}
 	
-	@RequestMapping("{codigo}")
-	public ModelAndView showFormEditar(@PathVariable("codigo") Produto produto) {
+	@RequestMapping("{id}")
+	public ModelAndView showFormEditar(@PathVariable("id") Produto produto) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		mv.addObject("produto", produto);
 		return mv;
@@ -69,15 +73,16 @@ public class ProdutoController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "{codigo}", method = RequestMethod.DELETE)
-	public String excluir(@PathVariable Long codigo, RedirectAttributes attributes) {
-		produtoService.excluir(codigo);
+	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+	public String excluir(@PathVariable Long id, RedirectAttributes attributes) {
+		produtoService.excluir(id);
 		attributes.addFlashAttribute("mensagem", "Produto excluído com sucesso!");
 		return "redirect:/produtos";
 	}
 	
 	@ModelAttribute
 	public List<Categoria> todasCategorias(){
-		return Arrays.asList(Categoria.values());
+		List<Categoria> categoriaList = categoriaService.pesquisar(new CategoriaFilter());
+		return categoriaList;
 	}
 }

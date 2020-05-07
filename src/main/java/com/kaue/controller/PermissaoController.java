@@ -42,15 +42,15 @@ public class PermissaoController {
 		return "redirect:/permissoes/novo";
 	}
 	
-	@RequestMapping(value = "{codigo}", method = RequestMethod.DELETE)
-	public String excluir(@PathVariable Long codigo, RedirectAttributes attributes) {
-		permissaoService.excluir(codigo);
+	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+	public String excluir(@PathVariable Long id, RedirectAttributes attributes) {
+		permissaoService.excluir(id);
 		attributes.addFlashAttribute("mensagem", "Permissão excluída com Sucesso!");
 		return "redirect:/permissoes";
 	}
 	
-	@RequestMapping("{codigo}")
-	public ModelAndView showFormEditar(@PathVariable("codigo") Permissao permissao) {
+	@RequestMapping("{id}")
+	public ModelAndView showFormEditar(@PathVariable("id") Permissao permissao) {
 		ModelAndView mv = new ModelAndView("/page/permissao/Cadastrar");
 		mv.addObject("permissao", permissao);
 		return mv;

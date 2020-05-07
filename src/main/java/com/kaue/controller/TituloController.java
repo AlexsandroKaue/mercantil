@@ -39,10 +39,10 @@ public class TituloController {
 		return mv;
 	}
 	
-	@RequestMapping("{codigo}")
-	public ModelAndView showFormEditar(@PathVariable("codigo") Titulo titulo) {
+	@RequestMapping("{id}")
+	public ModelAndView showFormEditar(@PathVariable("id") Titulo titulo) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
-		/* Titulo titulo = tituloService.findById(codigo).orElse(null); */
+		/* Titulo titulo = tituloService.findById(id).orElse(null); */
 		mv.addObject("titulo", titulo);
 		return mv;
 	}
@@ -64,23 +64,23 @@ public class TituloController {
 	
 	@RequestMapping
 	public ModelAndView pesquisar(@ModelAttribute("filtro") TituloFilter filtro) {
-		//List<Titulo> tituloList = tituloDAO.findAll(Sort.by(Sort.Direction.ASC, "codigo"));
+		//List<Titulo> tituloList = tituloDAO.findAll(Sort.by(Sort.Direction.ASC, "id"));
 		List<Titulo> tituloList = tituloService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);
 		mv.addObject("titulos", tituloList);
 		return mv;
 	}
 	
-	@RequestMapping(value = "{codigo}", method = RequestMethod.DELETE)
-	public String excluir(@PathVariable Long codigo, RedirectAttributes attributes) {
-		tituloService.excluir(codigo);
+	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+	public String excluir(@PathVariable Long id, RedirectAttributes attributes) {
+		tituloService.excluir(id);
 		attributes.addFlashAttribute("mensagem", "Título excluído com sucesso!");
 		return "redirect:/titulos";
 	}
 	
-	@RequestMapping(value = "/{codigo}/receber", method = RequestMethod.PUT)
-	public @ResponseBody String receber(@PathVariable Long codigo) {
-		return tituloService.receber(codigo);
+	@RequestMapping(value = "/{id}/receber", method = RequestMethod.PUT)
+	public @ResponseBody String receber(@PathVariable Long id) {
+		return tituloService.receber(id);
 	}
 	
 	@ModelAttribute

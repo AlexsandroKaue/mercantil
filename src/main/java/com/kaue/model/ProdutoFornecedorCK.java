@@ -9,32 +9,36 @@ class ProdutoFornecedorCK implements Serializable{
 	
 	private static final long serialVersionUID = 5089725270434001457L;
 
-	private Long codigoProduto;
+	private Long idProduto;
 	
-	private Long codigoFornecedor;
-
-	public Long getCodigoProduto() {
-		return codigoProduto;
+	private Long idFornecedor;
+	
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
-	public void setCodigoProduto(Long codigoProduto) {
-		this.codigoProduto = codigoProduto;
+	public Long getIdProduto() {
+		return idProduto;
 	}
 
-	public Long getCodigoFornecedor() {
-		return codigoFornecedor;
+	public void setIdProduto(Long idProduto) {
+		this.idProduto = idProduto;
 	}
 
-	public void setCodigoFornecedor(Long codigoFornecedor) {
-		this.codigoFornecedor = codigoFornecedor;
+	public Long getIdFornecedor() {
+		return idFornecedor;
+	}
+
+	public void setIdFornecedor(Long idFornecedor) {
+		this.idFornecedor = idFornecedor;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigoFornecedor == null) ? 0 : codigoFornecedor.hashCode());
-		result = prime * result + ((codigoProduto == null) ? 0 : codigoProduto.hashCode());
+		result = prime * result + ((idFornecedor == null) ? 0 : idFornecedor.hashCode());
+		result = prime * result + ((idProduto == null) ? 0 : idProduto.hashCode());
 		return result;
 	}
 
@@ -47,20 +51,17 @@ class ProdutoFornecedorCK implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		ProdutoFornecedorCK other = (ProdutoFornecedorCK) obj;
-		if (codigoFornecedor == null) {
-			if (other.codigoFornecedor != null)
+		if (idFornecedor == null) {
+			if (other.idFornecedor != null)
 				return false;
-		} else if (!codigoFornecedor.equals(other.codigoFornecedor))
+		} else if (!idFornecedor.equals(other.idFornecedor))
 			return false;
-		if (codigoProduto == null) {
-			if (other.codigoProduto != null)
+		if (idProduto == null) {
+			if (other.idProduto != null)
 				return false;
-		} else if (!codigoProduto.equals(other.codigoProduto))
+		} else if (!idProduto.equals(other.idProduto))
 			return false;
 		return true;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 }

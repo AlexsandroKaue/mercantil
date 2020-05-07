@@ -1,5 +1,6 @@
 package com.kaue.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,18 +12,19 @@ import org.hibernate.envers.Audited;
 
 @Entity
 @Audited
-public class Permissao {
+public class Categoria {
 	
 	@Id
-	@SequenceGenerator(name = "seq_permissao", sequenceName = "seq_permissao", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(generator = "seq_permissao", strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "seq_categoria", sequenceName = "seq_categoria", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(generator = "seq_categoria" , strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@NotEmpty(message = "Descrição é obrigatória")
-	private String descricao;
+	@NotEmpty(message = "Nome é um campo obrigatório")
+	@Column(length = 100)
+	private String nome;
 	
-	@NotEmpty(message = "Sigla é obrigatória")
-	private String sigla;
+	@Column(length = 100)
+	private String descricao;
 	
 	public Long getId() {
 		return id;
@@ -32,20 +34,20 @@ public class Permissao {
 		this.id = id;
 	}
 
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 	public String getDescricao() {
 		return descricao;
 	}
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}
-
-	public String getSigla() {
-		return sigla;
-	}
-
-	public void setSigla(String sigla) {
-		this.sigla = sigla;
 	}
 
 	@Override
@@ -64,7 +66,7 @@ public class Permissao {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Permissao other = (Permissao) obj;
+		Categoria other = (Categoria) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -72,4 +74,5 @@ public class Permissao {
 			return false;
 		return true;
 	}
+
 }

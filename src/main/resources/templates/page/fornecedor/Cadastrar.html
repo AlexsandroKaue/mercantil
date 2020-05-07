@@ -27,8 +27,8 @@
               <div class="float-right">
                 <!-- <button type="button" class="btn btn-md btn-danger">Voltar</button> -->
                 <a class="btn btn-danger" th:href="@{/fornecedores}">Voltar</a>
-                <button type="submit" class="btn btn-md btn-info" th:if="!*{codigo}">Salvar</button>
-                <button type="submit" class="btn btn-md btn-info" th:if="*{codigo}">Alterar</button>
+                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
+                <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
               </div>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -47,7 +47,7 @@
               <h3 class="card-title">Novo Título</h3>
             </div> -->
               <div class="card-body">
-                <input type="hidden" id="inputCodigo" th:field="*{codigo}"></input>
+                <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
               	<div class="row">
               	   <div class="col-md-12">
                     <div class="form-group">

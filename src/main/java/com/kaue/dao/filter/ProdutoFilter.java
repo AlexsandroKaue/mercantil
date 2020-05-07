@@ -3,7 +3,7 @@ package com.kaue.dao.filter;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.kaue.enumeration.Categoria;
+import com.kaue.model.Categoria;
 
 public class ProdutoFilter {
 	

@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMax;
@@ -28,8 +29,9 @@ import com.kaue.enumeration.StatusTitulo;
 public class Titulo {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long codigo;
+	@SequenceGenerator(name = "seq_titulo", sequenceName = "seq_titulo", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(generator = "seq_titulo", strategy = GenerationType.SEQUENCE)
+	private Long id;
 	
 	@NotEmpty(message = "Descrição é obrigatória")
 	@Size(max = 60, message = "A descrição não pode conter mais de 60 caracteres")
@@ -49,12 +51,14 @@ public class Titulo {
 	@Enumerated(EnumType.STRING)
 	private StatusTitulo status;
 	
-	public Long getCodigo() {
-		return codigo;
+	public Long getId() {
+		return id;
 	}
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
+	
 	public String getDescricao() {
 		return descricao;
 	}
@@ -86,14 +90,15 @@ public class Titulo {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -103,10 +108,10 @@ public class Titulo {
 		if (getClass() != obj.getClass())
 			return false;
 		Titulo other = (Titulo) obj;
-		if (codigo == null) {
-			if (other.codigo != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!codigo.equals(other.codigo))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}

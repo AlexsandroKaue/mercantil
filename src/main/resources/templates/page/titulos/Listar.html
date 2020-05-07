@@ -72,27 +72,27 @@
                 </thead>
                 <tbody>
                   <tr th:each="titulo : ${titulos}">
-                    <td class="text-center" th:text="${titulo.codigo}"></td>
+                    <td class="text-center" th:text="${titulo.id}"></td>
                     <td th:text="${titulo.descricao}"></td>
                     <td class="text-center" th:text="${{titulo.dataVencimento}}"></td>
                     <td class="text-right" th:text="|R$ ${{titulo.valor}}|"></td>
-                    <td class="text-center" th:attr="data-role=${titulo.codigo}">
+                    <td class="text-center" th:attr="data-role=${titulo.id}">
                       <span class="badge badge-pill" th:classappend="${titulo.pendente() ? 'bg-danger' : 'bg-success'}" 
                         th:text="${titulo.status.descricao}"></span>
                     </td>
                     <td class="text-center nopadding">
-                      <a th:href="@{/titulos/{codigo}(codigo=${titulo.codigo})}" class="btn btn-link btn-sm"
+                      <a th:href="@{/titulos/{id}(id=${titulo.id})}" class="btn btn-link btn-sm"
                         title="Editar" rel="tooltip" data-placement="top">
                         <i class="fas fa-pencil-alt"></i>
                       </a>
                       <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
-                        th:href="@{#}" th:attr="data-codigo=${titulo.codigo}, data-descricao=${titulo.descricao}"
+                        th:href="@{#}" th:attr="data-id=${titulo.id}, data-descricao=${titulo.descricao}"
                         title="Excluir" rel="tooltip" data-placement="top"><!--  -->
                         <i class="fas fa-times"></i>
                       </a>
                       <a class="btn btn-link btn-sm js-atualizar-status" th:if="${titulo.pendente()}"
-                        th:href="@{/titulos/{codigo}/receber(codigo=${titulo.codigo})}"
-                        th:attr="data-codigo=${titulo.codigo}" 
+                        th:href="@{/titulos/{id}/receber(id=${titulo.id})}"
+                        th:attr="data-id=${titulo.id}" 
                         title="Receber" rel="tooltip" data-placement="top">
                         <i class="fas fa-check"></i>
                       </a>

@@ -73,16 +73,16 @@
                 </thead>
                 <tbody>
                   <tr th:each="permissao : ${permissoes}">
-                    <td class="text-center" th:text="${permissao.codigo}"></td>
+                    <td class="text-center" th:text="${permissao.id}"></td>
                     <td th:text="${permissao.descricao}"></td>
                     <td class="text-center" th:text="${permissao.sigla}"></td>
                     <td class="text-center nopadding">
-                      <a th:href="@{/permissoes/{codigo}(codigo=${permissao.codigo})}" class="btn btn-link btn-sm"
+                      <a th:href="@{/permissoes/{id}(id=${permissao.id})}" class="btn btn-link btn-sm"
                         title="Editar" rel="tooltip" data-placement="top">
                         <i class="fas fa-pencil-alt"></i>
                       </a>
                       <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
-                        th:href="@{#}" th:attr="data-codigo=${permissao.codigo}, data-descricao=${permissao.descricao}"
+                        th:href="@{#}" th:attr="data-id=${permissao.id}, data-descricao=${permissao.descricao}"
                         title="Excluir" rel="tooltip" data-placement="top"><!--  -->
                         <i class="fas fa-times"></i>
                       </a>

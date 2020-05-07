@@ -27,8 +27,8 @@
               <div class="float-right">
                 <!-- <button type="button" class="btn btn-md btn-danger">Voltar</button> -->
                 <a class="btn btn-danger" th:href="@{/produtos}" th:text="#{voltar}"></a>
-                <button type="submit" class="btn btn-md btn-info" th:if="!*{codigo}" th:text="#{salvar}"></button>
-                <button type="submit" class="btn btn-md btn-info" th:if="*{codigo}" th:text="#{alterar}"></button>
+                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}" th:text="#{salvar}"></button>
+                <button type="submit" class="btn btn-md btn-info" th:if="*{id}" th:text="#{alterar}"></button>
               </div>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -49,12 +49,12 @@
             <!-- form start -->
             <!-- <form class="form-horizontal" method="POST" action="/titulos"> -->
               <div class="card-body">
-                <input type="hidden" id="inputCodigo" th:field="*{codigo}"></input>
+                <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
                 <div class="row">
                   <div class="col-md-10">
                     <div class="form-group">
                       <label for="inputDescricao" class="col-form-label" th:text="#{cadastro.produto.label.descricao.obrigatorio}"></label>
-                      <input type="text" class="form-control" id="inputDescricao" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
+                      <input type="text" autofocus="autofocus" class="form-control" id="inputDescricao" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
                     </div>
                   </div>
                   <div class="col-md-2">
@@ -76,12 +76,12 @@
                       <label for="inputCategoria" class="col-form-label" th:text="#{cadastro.produto.label.categoria}"></label>
                       <select class="form-control" th:field="*{categoria}">
                         <option value="" selected th:text="#{selecione.categoria}"></option>
-                        <option th:each="categoria : ${categoriaList}" th:value="${categoria}" th:text="${categoria.descricao}"></option>
+                        <option th:each="categoria : ${categoriaList}" th:value="${categoria.id}" th:text="${categoria.descricao}"></option>
                       </select>
                     </div>
                   </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="inputCategoria" class="col-form-label" th:text="#{cadastro.produto.label.categoria}"></label>
@@ -90,7 +90,7 @@
                       </select>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
             <!-- </form> -->
           </div>

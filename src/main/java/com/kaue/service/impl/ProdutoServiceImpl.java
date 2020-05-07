@@ -34,7 +34,7 @@ public class ProdutoServiceImpl implements ProdutoService{
 	@Override
 	public List<Produto> pesquisar(ProdutoFilter filtro) {
 		String descricao = (filtro.getDescricao() == null ? "" : filtro.getDescricao());
-		return produtoDAO.findByDescricaoContainingIgnoreCaseOrderByCodigoDesc(descricao);
+		return produtoDAO.findByDescricaoContainingIgnoreCaseOrderByIdDesc(descricao);
 	}
 	
 	

@@ -37,8 +37,8 @@ public class FornecedorController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "{codigo}")
-	public ModelAndView showFormEditar(@PathVariable("codigo") Fornecedor fornecedor) {
+	@RequestMapping(value = "{id}")
+	public ModelAndView showFormEditar(@PathVariable("id") Fornecedor fornecedor) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		mv.addObject("fornecedor", fornecedor);
 		return mv;
@@ -107,9 +107,9 @@ public class FornecedorController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "{codigo}",method = RequestMethod.DELETE)
-	public String excluir(@PathVariable("codigo") Long codigo, RedirectAttributes attr) {
-		fornecedorService.excluir(codigo);
+	@RequestMapping(value = "{id}",method = RequestMethod.DELETE)
+	public String excluir(@PathVariable("id") Long id, RedirectAttributes attr) {
+		fornecedorService.excluir(id);
 		attr.addFlashAttribute("mensagem","Registro excluído com sucesso!");
 		return "redirect:/fornecedores";
 	}

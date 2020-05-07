@@ -8,6 +8,6 @@ import com.kaue.model.Produto;
 
 public interface ProdutoDAO extends JpaRepository<Produto, Long>{
 
-	public List<Produto> findByDescricaoContainingIgnoreCaseOrderByCodigoDesc(String descricao);
+	public List<Produto> findByDescricaoContainingIgnoreCaseOrderByIdDesc(String descricao);
 
 }

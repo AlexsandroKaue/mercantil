@@ -1,7 +1,7 @@
 $('#modalConfirmacao').on('show.bs.modal', function(event){
 	
 	var button = $(event.relatedTarget); // Button that triggered the modal
-	var codigo = button.data('codigo'); // Extract info from data-* attributes
+	var id = button.data('id'); // Extract info from data-* attributes
 	var descricao = button.data('descricao');
 	
 	var modal = $(this);
@@ -11,9 +11,9 @@ $('#modalConfirmacao').on('show.bs.modal', function(event){
 	if(!action.endsWith('/')){
 		action += '/';
 	}
-	form.attr('action',action + codigo);
+	form.attr('action',action + id);
 	modal.find('.modal-body p').html('Deseja realmente excluir o registro <strong>'+descricao+'</strong>?');
-	/*alert(codigo);*/
+	/*alert(id);*/
 	
 });
 
@@ -46,8 +46,8 @@ $(function(){
 		})
 		
 		response.done(function(e){
-			var codigoTitulo = botaoReceber.data('codigo');
-			$('[data-role="'+ codigoTitulo + '"]').html('<span class="badge bg-success">' + e + '</span>');
+			var idTitulo = botaoReceber.data('id');
+			$('[data-role="'+ idTitulo + '"]').html('<span class="badge bg-success">' + e + '</span>');
 			botaoReceber.hide();
 		});
 		

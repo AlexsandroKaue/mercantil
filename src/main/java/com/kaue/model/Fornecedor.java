@@ -21,7 +21,7 @@ public class Fornecedor {
 	@Id
 	@SequenceGenerator(name = "seq_fornecedor", sequenceName = "seq_fornecedor", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(generator = "seq_fornecedor", strategy = GenerationType.SEQUENCE)
-	private Long codigo;
+	private Long id;
 	
 	@NotEmpty(message = "Nome é obrigatório")
 	@Size(max = 255, message = "Nome não pode exceder 255 caracteres")
@@ -37,13 +37,13 @@ public class Fornecedor {
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Endereco endereco;
-
-	public Long getCodigo() {
-		return codigo;
+	
+	public Long getId() {
+		return id;
 	}
 
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -90,7 +90,7 @@ public class Fornecedor {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -103,13 +103,12 @@ public class Fornecedor {
 		if (getClass() != obj.getClass())
 			return false;
 		Fornecedor other = (Fornecedor) obj;
-		if (codigo == null) {
-			if (other.codigo != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!codigo.equals(other.codigo))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
 	
-
 }
