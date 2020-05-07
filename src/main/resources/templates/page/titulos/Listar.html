@@ -21,8 +21,6 @@
               <!-- <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item active">Dashboard v1</li>
-                <li><button type="button" class="btn btn-block btn-info">Info</button></li>
-                <li><button type="button" class="btn btn-block btn-info">Info</button></li>
               </ol> -->
               <div class="float-right">
                 <a class="btn btn-block btn-info" th:href="@{/titulos/novo}">Novo</a>
@@ -46,7 +44,7 @@
             <div class="card-body">
               <form method="GET" th:action="@{/titulos}" th:object="${filtro}">
                 <div class="form-group row">
-                  <div class="col-sm-5">
+                  <div class="col-sm-12">
                     <div class="input-group">
                       <input class="form-control" 
                         placeholder="Qual título você está procurando?" autofocus="autofocus"
@@ -57,7 +55,6 @@
                         </button>
                       </div>
                     </div>
-                    
                   </div>
                 </div>
               </form>

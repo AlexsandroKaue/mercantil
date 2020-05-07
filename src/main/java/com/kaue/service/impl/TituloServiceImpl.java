@@ -39,7 +39,7 @@ public class TituloServiceImpl implements TituloService{
 	
 	public List<Titulo> pesquisar(TituloFilter filtro) {
 		String descricao = (filtro.getDescricao() == null ? "" : filtro.getDescricao());
-		return tituloDAO.findByDescricaoContainingIgnoreCaseOrderByCodigo(descricao);
+		return tituloDAO.findByDescricaoContainingIgnoreCaseOrderByCodigoDesc(descricao);
 	}
 
 }

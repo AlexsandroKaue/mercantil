@@ -36,22 +36,28 @@ public class Produto {
 	@NotEmpty(message = "Descrição é obrigatória")
 	private String descricao;
 	
-	@NotNull(message = "Data de Fabricação é obrigatória")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	/*
+	 * @NotNull(message = "Data de Fabricação é obrigatória")
+	 * 
+	 * @DateTimeFormat(pattern = "dd/MM/yyyy")
+	 */
 	@Temporal(TemporalType.DATE)
 	private Date dataDeFabricacao;
 	
-	@NotNull(message = "Data de Vencimento é obrigatória")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	/*
+	 * @NotNull(message = "Data de Vencimento é obrigatória")
+	 * 
+	 * @DateTimeFormat(pattern = "dd/MM/yyyy")
+	 */
 	@Temporal(TemporalType.DATE)
 	private Date dataDeVencimento;
 	
-	@NotNull(message = "Valor de Custo é obrigatório")
+	//@NotNull(message = "Valor de Custo é obrigatório")
 	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorDeCusto;
 	
-	@NotNull(message = "Valor de Venda é obrigatório")
+	//@NotNull(message = "Valor de Venda é obrigatório")
 	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorDeVenda;
@@ -59,7 +65,7 @@ public class Produto {
 	@Enumerated(EnumType.STRING)
 	private Categoria categoria;
 	
-	@NotNull(message = "Quantidade não pode ser 0")
+	//@NotNull(message = "Quantidade não pode ser 0")
 	private Integer quantidade;
 	
 	@OneToMany(mappedBy = "produto")

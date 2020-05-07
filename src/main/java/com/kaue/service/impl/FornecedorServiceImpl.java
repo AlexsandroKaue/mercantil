@@ -29,7 +29,7 @@ public class FornecedorServiceImpl implements FornecedorService{
 	@Override
 	public List<Fornecedor> pesquisar(FornecedorFilter filtro) {
 		String nome = (filtro.getNome() == null ? "" : filtro.getNome());
-		return fornecedorDAO.findByNomeIgnoreCaseContainingOrderByCodigoAsc(nome);
+		return fornecedorDAO.findByNomeContainingIgnoreCaseOrderByCodigoDesc(nome);
 	}
 	
 	

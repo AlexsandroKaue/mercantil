@@ -3,6 +3,7 @@ package com.kaue.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.kaue.dao.ProdutoDAO;
@@ -18,7 +19,11 @@ public class ProdutoServiceImpl implements ProdutoService{
 
 	@Override
 	public void salvar(Produto produto) {
-		produtoDAO.save(produto);
+		try {
+			produtoDAO.save(produto);
+		} catch(DataIntegrityViolationException e) {
+			throw new IllegalArgumentException("Formato de data inválido");
+		}
 	}
 
 	@Override
@@ -28,8 +33,8 @@ public class ProdutoServiceImpl implements ProdutoService{
 
 	@Override
 	public List<Produto> pesquisar(ProdutoFilter filtro) {
-		// TODO Auto-generated method stub
-		return null;
+		String descricao = (filtro.getDescricao() == null ? "" : filtro.getDescricao());
+		return produtoDAO.findByDescricaoContainingIgnoreCaseOrderByCodigoDesc(descricao);
 	}
 	
 	

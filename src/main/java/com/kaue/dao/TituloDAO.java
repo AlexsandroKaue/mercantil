@@ -8,5 +8,5 @@ import com.kaue.model.Titulo;
 
 public interface TituloDAO extends JpaRepository<Titulo, Long>{
 
-	public List<Titulo> findByDescricaoContainingIgnoreCaseOrderByCodigo(String descricao);
+	public List<Titulo> findByDescricaoContainingIgnoreCaseOrderByCodigoDesc(String descricao);
 }

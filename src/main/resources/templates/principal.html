@@ -13,6 +13,8 @@
   <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}"/>
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+  <!-- pace-progress -->
+  <link rel="stylesheet" th:href="@{/plugins/pace-progress/themes/black/pace-theme-flat-top.css}">
   <!-- DataTables -->
   <link rel="stylesheet" th:href="@{/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
   <link rel="stylesheet" th:href="@{/plugins/datatables-responsive/css/responsive.bootstrap4.min.css}">
@@ -36,12 +38,14 @@
   <link rel="stylesheet" th:href="@{/plugins/summernote/summernote-bs4.css}"/>
   <!-- daterange picker -->
   <link rel="stylesheet" th:href="@{/plugins/daterangepicker/daterangepicker.css}">
+  <!-- Bootstrap4 Duallistbox -->
+  <link rel="stylesheet" th:href="@{/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"/>
   <!-- Css contendo as customizações -->
   <link rel="stylesheet" th:href="@{/custom/css/style.css}"/>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-navbar-fixed">
 <div class="wrapper">
 
   <header layout:insert="~{menu_superior}"></header>
@@ -116,6 +120,10 @@
 <!-- InputMask -->
 <script th:src="@{/plugins/moment/moment.min.js}"></script>
 <script th:src="@{/plugins/inputmask/min/jquery.inputmask.bundle.min.js}"></script>
+  <!-- pace-progress -->
+<script th:src="@{/plugins/pace-progress/pace.min.js}"></script>
+<!-- Bootstrap4 Duallistbox -->
+<script th:src="@{/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js}"></script>
 <!-- JavaScript contendo as customizações -->
 <script th:src="@{/custom/js/custom.js}"></script>
 </body>

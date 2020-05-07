@@ -25,11 +25,12 @@ $(function(){
 		trigger : 'hover'
 	});
 	
+	//Bootstrap Duallistbox
+    $('.duallistbox').bootstrapDualListbox();
 	
 	$('.js-currency').maskMoney({decimal:',', 
 		thousands:'.', 
-		allowZero:'true',
-		prefix:'R$'});
+		allowZero:'true'});
 	
 	$('[data-mask]').inputmask();
 	
@@ -100,12 +101,13 @@ $(function(){
 	$('.js-tabela').DataTable({
       "paging": true,
       "pageLength": 5,
-      "lengthChange": true,
+      /*"lengthChange": true,*/
       "searching": false,
       "info": true,
       "autoWidth": false,
       "responsive": true,
       "lengthChange": false,
+      "aaSorting": [],
       /*"lengthMenu": [ 5, 10, 15, 20 ],*/
       /*"columnDefs": [
     	    { "orderable": false, "targets": [0,5] }

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.FornecedorFilter;
 import com.kaue.enumeration.Estado;
-import com.kaue.enumeration.StatusTitulo;
+import com.kaue.model.Endereco;
 import com.kaue.model.Fornecedor;
 import com.kaue.service.FornecedorService;
 
@@ -47,12 +46,57 @@ public class FornecedorController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public String salvar(@Validated Fornecedor fornecedor, Errors errors, RedirectAttributes attr) {
-		if(errors.hasErrors()) {
+		
+		if(!isValidated(fornecedor, errors)) {
 			return CADASTRAR_VIEW;
 		}
+		if(isEnderecoEmpty(fornecedor.getEndereco())) {
+			fornecedor.setEndereco(null);
+		}
+		
 		fornecedorService.salvar(fornecedor);
 		attr.addFlashAttribute("mensagem", "Fornecedor cadastrado com sucesso!");
 		return "redirect:/fornecedores/novo";
+	}
+	
+	private boolean isValidated(Fornecedor fornecedor, Errors errors) {
+		
+		//Valida os campos de cnpj e telefone
+		String cnpj = fornecedor.getCnpj();
+		cnpj = cnpj.replaceAll("[_./-]", "");
+		if(cnpj.length() > 0 && cnpj.length() < 14) {
+			errors.rejectValue("cnpj", null, "Cnpj inválido");
+		}
+		String telefone = fornecedor.getTelefone();
+		telefone = telefone.replaceAll("[_()-]", "");
+		if(telefone.length() > 0 && telefone.length() < 10) {
+			errors.rejectValue("telefone", null, "Telefone inválido");
+		}
+		String cep = fornecedor.getEndereco() != null ? fornecedor.getEndereco().getCep() : "";
+		cep = cep.replaceAll("[_-]", "");
+		if(cep.length() > 0 && cep.length() < 8) {
+			errors.rejectValue("endereco.cep", null, "Cep inválido");
+		}
+		
+		if(errors.hasErrors()) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean isEnderecoEmpty(Endereco endereco) {
+		
+		if(endereco.getBairro().isEmpty()
+				&& endereco.getCep().isEmpty()
+				&& endereco.getCidade().isEmpty()
+				&& endereco.getEstado()==null
+				&& endereco.getLogradouro().isEmpty()
+				&& endereco.getNumero().isEmpty()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	@RequestMapping
