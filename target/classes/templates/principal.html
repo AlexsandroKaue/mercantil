@@ -47,14 +47,19 @@
 </head>
 <body class="hold-transition sidebar-mini layout-navbar-fixed">
 <div class="wrapper">
-
+ 
   <header layout:insert="~{menu_superior}"></header>
   
   <header layout:insert="~{menu_lateral}"></header>
   
-  <section layout:fragment="conteudo"></section>  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    
+    <div layout:fragment="container"></div>
+    
+  </div>
+  <!-- /.content-wrapper -->
 
-  
   <footer class="main-footer">
     <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
     All rights reserved.

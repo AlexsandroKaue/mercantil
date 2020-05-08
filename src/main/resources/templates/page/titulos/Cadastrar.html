@@ -6,91 +6,60 @@
 <head>
   <title>Cadastro de Títulos</title>
 </head>
-
-  <section layout:fragment="conteudo">
-  
-    <form class="form-horizontal" method="POST" th:action="@{/titulos}" th:object="${titulo}">
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Cadastro de Títulos</h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">
-              <!-- <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard v1</li>
-              </ol> -->
-              <div class="float-right">
-                <a class="btn btn-danger" th:href="@{/titulos}">Voltar</a>
-                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
-                <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
-              </div>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-      </div>
-      <!-- /.content-header -->
-      <!-- Main content -->
-      <section class="content">
-        <div class="container-fluid">
-        
-          <div layout:insert="~{mensagem_geral}"></div>
-          <div layout:insert="~{mensagem_erro}"></div>
-          
-          <div class="card card-secondary">
-            <!-- <div class="card-header">
-              <h3 class="card-title">Novo Título</h3>
-            </div> -->
-            <!-- form start -->
-            <!-- <form class="form-horizontal" method="POST" action="/titulos"> -->
-            
-              <div class="card-body">
-                <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
-                <div class="form-group row">
-                  <label for="inputDescricao1" class="col-sm-2 col-form-label">Descrição</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="inputDescricao1" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputDataVencimento" class="col-sm-2 col-form-label">Data de Vencimento</label>
-                  <div class="col-sm-2">
-                    <input type="text" class="form-control" id="inputDataVencimento" th:field="*{dataVencimento}" th:classappend="${#fields.hasErrors('dataVencimento')} ? is-invalid">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputValor1" class="col-sm-2 col-form-label">Valor</label>
-                  <div class="col-sm-2">
-                    <input type="text" class="form-control js-currency" id="inputValor1" th:field="*{valor}" th:classappend="${#fields.hasErrors('valor')} ? is-invalid">
-                  </div>
-                </div>        
-                <div class="form-group row">
-                  <label for="inputStatus" class="col-sm-2 col-form-label">Status</label>
-                  <div class="col-sm-2">
-                    <select class="form-control" th:field="*{status}">
-                      <option th:each="status : ${statusTituloList}" th:value="${status}" th:text="${status.descricao}"></option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- <div class="card-footer">
-                <a class="btn btn-md btn-danger" th:href="@{/titulos}" style="margin-right:10px">Voltar</a>
-                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
-                <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
-              </div> -->
-            <!-- </form> -->
-          </div>
-          <!-- /.card -->
-        </div><!-- container-fluid -->
-      </section>
-      <!-- /.content --> 
+    <div layout:fragment="container">
+      <form class="form-horizontal" method="POST" th:action="@{/titulos}" th:object="${titulo}">
+        <header layout:insert="~{cabecalho}"></header>
+        <header layout:insert="~{corpo}"></header>
+      </form>
+    </div> 
+     
+    <div layout:fragment="titulo">
+      <h1 class="m-0 text-dark">Cadastro de Títulos</h1>
     </div>
-    <!-- /.content-wrapper -->
-    </form>
-  </section>
+    
+    <div layout:fragment="botoes">
+      <a class="btn btn-danger" th:href="@{/titulos}">Voltar</a>
+      <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
+      <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
+    </div>
+    
+    <div layout:fragment="conteudo">
+      <div class="card card-secondary">
+        <div class="card-header">
+          <h3 class="card-title">Novo Título</h3>
+        </div> 
+        
+        <div class="card-body">
+          <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
+          <div class="form-group row">
+            <label for="inputDescricao1" class="col-sm-2 col-form-label">Descrição</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="inputDescricao1" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputDataVencimento" class="col-sm-2 col-form-label">Data de Vencimento</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control" id="inputDataVencimento" th:field="*{dataVencimento}" th:classappend="${#fields.hasErrors('dataVencimento')} ? is-invalid">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputValor1" class="col-sm-2 col-form-label">Valor</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control js-currency" id="inputValor1" th:field="*{valor}" th:classappend="${#fields.hasErrors('valor')} ? is-invalid">
+            </div>
+          </div>        
+          <div class="form-group row">
+            <label for="inputStatus" class="col-sm-2 col-form-label">Status</label>
+            <div class="col-sm-2">
+              <select class="form-control" th:field="*{status}">
+                <option th:each="status : ${statusTituloList}" th:value="${status}" th:text="${status.descricao}"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.card -->
+    </div>
     
 </html>

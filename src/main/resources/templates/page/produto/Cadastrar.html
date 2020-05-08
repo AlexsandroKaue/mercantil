@@ -7,100 +7,73 @@
   <title th:text="#{cadastro.produto.titulo.aba.navegador}"></title>
 </head>
 
-  <section layout:fragment="conteudo">
-  
-    <form class="form" method="POST" th:action="@{/produtos}" th:object="${produto}">
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark" th:text="#{cadastro.produto.titulo}"></h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">
-              <!-- <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard v1</li>
-              </ol> -->
-              <div class="float-right">
-                <!-- <button type="button" class="btn btn-md btn-danger">Voltar</button> -->
-                <a class="btn btn-danger" th:href="@{/produtos}" th:text="#{voltar}"></a>
-                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}" th:text="#{salvar}"></button>
-                <button type="submit" class="btn btn-md btn-info" th:if="*{id}" th:text="#{alterar}"></button>
-              </div>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-      </div>
-      <!-- /.content-header -->
-      <!-- Main content -->
-      <section class="content">
-        <div class="container-fluid">
-        
-          <div layout:insert="~{mensagem_geral}"></div>
-          <div layout:insert="~{mensagem_erro}"></div>
-          
-          <div class="card card-secondary">
-            <!-- <div class="card-header">
-              <h3 class="card-title">Novo Título</h3>
-            </div> -->
-            <!-- form start -->
-            <!-- <form class="form-horizontal" method="POST" action="/titulos"> -->
-              <div class="card-body">
-                <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
-                <div class="row">
-                  <div class="col-md-10">
-                    <div class="form-group">
-                      <label for="inputDescricao" class="col-form-label" th:text="#{cadastro.produto.label.descricao.obrigatorio}"></label>
-                      <input type="text" autofocus="autofocus" class="form-control" id="inputDescricao" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
-                    </div>
-                  </div>
-                  <div class="col-md-2">
-                    <div class="form-group">
-                      <label for="inputQuantidade" class="col-form-label" th:text="#{cadastro.produto.label.quantidade}"></label>
-                      <input type="text" disabled="disabled" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid'">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="inputValorVenda" class="col-form-label" th:text="#{cadastro.produto.label.valor.venda}"></label>
-                      <input type="text" class="form-control js-currency" id="inputValorVenda" th:field="*{valorDeVenda}" th:classappend="${#fields.hasErrors('valorDeVenda')} ? is-invalid">
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="inputCategoria" class="col-form-label" th:text="#{cadastro.produto.label.categoria}"></label>
-                      <select class="form-control" th:field="*{categoria}">
-                        <option value="" selected th:text="#{selecione.categoria}"></option>
-                        <option th:each="categoria : ${categoriaList}" th:value="${categoria.id}" th:text="${categoria.descricao}"></option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <!-- <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="inputCategoria" class="col-form-label" th:text="#{cadastro.produto.label.categoria}"></label>
-                      <select class="duallistbox" multiple="multiple">
-                        <option th:each="categoria : ${categoriaList}" th:value="${categoria}" th:text="${categoria.descricao}"></option>
-                      </select>
-                    </div>
-                  </div>
-                </div> -->
-              </div>
-            <!-- </form> -->
-          </div>
-          <!-- /.card -->
-        </div><!-- container-fluid -->
-      </section>
-      <!-- /.content --> 
-    </div>
-    <!-- /.content-wrapper -->
+  <section layout:fragment="container">
+    <form role="form" method="POST" th:action="@{/produtos}" th:object="${produto}">
+      <header layout:insert="~{cabecalho}"></header>
+      <header layout:insert="~{corpo}"></header>
     </form>
+  </section>
+  
+  <section layout:fragment="titulo">
+    <h1 class="m-0 text-dark">Cadastro de Produtos</h1>
+  </section>
+  
+  <section layout:fragment="botoes">
+    <a class="btn btn-danger" th:href="@{/produtos}">Voltar</a>
+    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
+    <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
+  </section>
+  
+  <section layout:fragment="conteudo">
+    <div class="card card-secondary">
+      <!-- <div class="card-header">
+        <h3 class="card-title">Novo Título</h3>
+      </div> -->
+      <div class="card-body">
+        <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
+        <div class="row">
+          <div class="col-md-10">
+            <div class="form-group">
+              <label for="inputDescricao" class="col-form-label" th:text="#{cadastro.produto.label.descricao.obrigatorio}"></label>
+              <input type="text" autofocus="autofocus" class="form-control" id="inputDescricao" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputQuantidade" class="col-form-label" th:text="#{cadastro.produto.label.quantidade}"></label>
+              <input type="text" disabled="disabled" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid'">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="inputValorVenda" class="col-form-label" th:text="#{cadastro.produto.label.valor.venda}"></label>
+              <input type="text" class="form-control js-currency" id="inputValorVenda" th:field="*{valorDeVenda}" th:classappend="${#fields.hasErrors('valorDeVenda')} ? is-invalid">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="inputCategoria" class="col-form-label" th:text="#{cadastro.produto.label.categoria}"></label>
+              <select class="form-control" th:field="*{categoria}">
+                <option value="" selected th:text="#{selecione.categoria}"></option>
+                <option th:each="categoria : ${categoriaList}" th:value="${categoria.id}" th:text="${categoria.descricao}"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="inputCategoria" class="col-form-label" th:text="#{cadastro.produto.label.categoria}"></label>
+              <select class="duallistbox" multiple="multiple">
+                <option th:each="categoria : ${categoriaList}" th:value="${categoria}" th:text="${categoria.descricao}"></option>
+              </select>
+            </div>
+          </div>
+        </div> -->
+      </div>
+  </div>
   </section>
     
 </html>

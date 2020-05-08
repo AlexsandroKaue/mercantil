@@ -12,4 +12,6 @@ import com.kaue.model.Permissao;
 public interface LoteDAO extends JpaRepository<Lote, Long>{	
 	@Query("select l from Lote l")
 	public List<Lote> findAllAndSort(Sort sort);
+	
+	
 }

@@ -4,106 +4,82 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{principal}">
 <head>
-  <title>AdminLTE 3 | Dashboard</title>
+  <title th:text="#{mercadinho}">Seu título aqui</title>
 </head>
 
-  <section layout:fragment="conteudo">
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Fornecedores</h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">  
-              <!-- <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard v1</li>
-              </ol> -->
-              <div class="float-right">
-                <a class="btn btn-block btn-info" th:href="@{/fornecedores/novo}">Novo</a>
-              </div>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-      </div>
-      <!-- /.content-header -->
+  <section layout:fragment="container">
+    <form method="GET" th:action="@{/fornecedores}" th:object="${filtro}">
+      <header layout:insert="~{cabecalho}"></header>
+      <header layout:insert="~{corpo}"></header>
+    </form>
+    <div layout:insert="~{confirmar_exclusao_fornecedor}"></div>
+  </section>
   
-      <!-- Main content -->
-      <section class="content">
-        <div class="container-fluid">
-        
-          <div layout:insert="~{mensagem_geral}"></div>
-          
-          <div class="card card-secondary">
-            <!-- <div class="card-header">
-              <h3 class="card-title">Novo Título</h3>
-            </div> -->
-            <div class="card-body">
-              <form method="GET" th:action="@{/fornecedores}" th:object="${filtro}">
-                <div class="form-group row">
-                  <div class="col-sm-6">
-                    <div class="input-group">
-                      <input class="form-control" 
-                        placeholder="Qual fornecedor você está procurando?" autofocus="autofocus"
-                        th:field="*{nome}"/>
-                      <div class="input-group-append">
-                        <button type="submit" class="btn btn-default">
-                          <i class="fas fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-              <table class="table table-bordered js-tabela"><!-- js-tabela -->
-                <thead>
-                  <tr>
-                    <th class="text-center col-1">Código</th>
-                    <th>Nome</th>
-                    <th class="text-center col-2">Telefone</th>
-                    <th class="text-center col-2">Cnpj</th>
-                    <th class="text-center col-2">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr th:each="fornecedor : ${fornecedores}">
-                    <td class="text-center" th:text="${fornecedor.id}"></td>
-                    <td th:text="${fornecedor.nome}"></td>
-                    <td th:text="${fornecedor.telefone}"></td>
-                    <td th:text="${fornecedor.cnpj}"></td>
-                    <td class="text-center nopadding">
-                      <a th:href="@{/fornecedores/{id}(id=${fornecedor.id})}" class="btn btn-link btn-sm"
-                        title="Editar" rel="tooltip" data-placement="top">
-                        <i class="fas fa-pencil-alt"></i>
-                      </a>
-                      <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
-                        th:href="@{#}" th:attr="data-id=${fornecedor.id}, data-descricao=${fornecedor.nome}"
-                        title="Excluir" rel="tooltip" data-placement="top"><!--  -->
-                        <i class="fas fa-times"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr th:if="${#lists.isEmpty(fornecedores)}">
-                    <td colspan="6">Nenhum fornecedor foi encontrado.</td>
-                  </tr>
-                </tbody>
-              </table>
+  <div layout:fragment="titulo">
+    <h1 class="m-0 text-dark">Fornecedores</h1>
+  </div>
+  
+  <div layout:fragment="botoes">
+    <a class="btn btn-block btn-info" th:href="@{/fornecedores/novo}" th:text="#{novo}"></a>
+  </div>
+  
+  <section layout:fragment="conteudo">
+    <div class="card card-secondary">
+      <!-- <div class="card-header">
+        <h3 class="card-title">Novo Título</h3>
+      </div> -->
+      <div class="card-body">
+        <div class="form-group row">
+          <div class="col-sm-6">
+            <div class="input-group">
+              <input class="form-control" 
+                placeholder="Qual fornecedor você está procurando?" autofocus="autofocus"
+                th:field="*{nome}"/>
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
             </div>
-            
           </div>
-          <!-- /.card -->
-        </div><!-- container-fluid -->
-      </section>
-      <!-- /.content -->
-      <br/>
+        </div>
+        
+        <table class="table table-bordered table-striped js-tabela"><!-- js-tabela -->
+          <thead>
+            <tr>
+              <th class="text-center col-1">Código</th>
+              <th>Nome</th>
+              <th class="text-center col-2">Telefone</th>
+              <th class="text-center col-2">Cnpj</th>
+              <th class="text-center col-2">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="fornecedor : ${fornecedores}">
+              <td class="text-center" th:text="${fornecedor.id}"></td>
+              <td th:text="${fornecedor.nome}"></td>
+              <td th:text="${fornecedor.telefone}"></td>
+              <td th:text="${fornecedor.cnpj}"></td>
+              <td class="text-center nopadding">
+                <a th:href="@{/fornecedores/{id}(id=${fornecedor.id})}" class="btn btn-link btn-sm"
+                  title="Editar" rel="tooltip" data-placement="top">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                  th:href="@{#}" th:attr="data-id=${fornecedor.id}, data-descricao=${fornecedor.nome}"
+                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                  <i class="fas fa-times"></i>
+                </a>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(fornecedores)}">
+              <td colspan="5">Nenhum fornecedor foi encontrado.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <!-- /.content-wrapper -->
-    
-    <div layout:insert="~{confirmacao_exclusao_fornecedor}"></div>
-    
+    <!-- /.card -->
   </section>
   
 </html>
