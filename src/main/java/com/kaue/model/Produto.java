@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -67,6 +68,9 @@ public class Produto {
 	
 	@OneToMany(mappedBy = "produto")
 	private List<ProdutoFornecedor> produtoFornecedorList;
+	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
+	private List<Lote> loteList;
 	
 	public Long getId() {
 		return id;

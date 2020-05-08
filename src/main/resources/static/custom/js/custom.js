@@ -58,7 +58,7 @@ $(function(){
 	});
 	
 	//Date range picker
-	$('#inputDataVencimento').daterangepicker({
+	$('.js-date').daterangepicker({
 	    singleDatePicker: true,
 	    /*showDropdowns: true,*/
 	    minYear: 1901,

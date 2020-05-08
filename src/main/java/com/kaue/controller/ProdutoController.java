@@ -1,6 +1,5 @@
 package com.kaue.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kaue.dao.filter.CategoriaFilter;
 import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.model.Categoria;
+import com.kaue.model.Lote;
 import com.kaue.model.Produto;
-import com.kaue.model.Titulo;
 import com.kaue.service.CategoriaService;
 import com.kaue.service.ProdutoService;
 
@@ -29,6 +28,8 @@ public class ProdutoController {
 
 	private static final String CADASTRAR_VIEW = "page/produto/Cadastrar";
 	private static final String LISTAR_VIEW = "page/produto/Listar";
+	
+	private static final String CADASTRAR_LOTE_VIEW = "page/lote/Cadastrar";
 	
 	@Autowired
 	private ProdutoService produtoService;
@@ -47,6 +48,15 @@ public class ProdutoController {
 	public ModelAndView showFormEditar(@PathVariable("id") Produto produto) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		mv.addObject("produto", produto);
+		return mv;
+	}
+	
+	@RequestMapping("{id}/lote")
+	public ModelAndView showFormNovoLote(@PathVariable("id") Produto produto) {
+		ModelAndView mv = new ModelAndView(CADASTRAR_LOTE_VIEW);
+		Lote lote = new Lote();
+		lote.setProduto(produto);
+		mv.addObject("lote", lote);
 		return mv;
 	}
 	
