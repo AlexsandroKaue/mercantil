@@ -12,6 +12,7 @@
       <header layout:insert="~{cabecalho}"></header>
       <header layout:insert="~{corpo}"></header>
     </form>
+    <div layout:insert="~{confirmar_exclusao_lote}"></div>
   </section>
   
   <section layout:fragment="titulo">
@@ -41,7 +42,8 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="inputQuantidade" class="col-form-label" th:text="#{cadastro.produto.label.quantidade}"></label>
-              <input type="text" disabled="disabled" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid'">
+              <input type="text" readonly="readonly" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid'">
+              
             </div>
           </div>
         </div>
@@ -49,7 +51,12 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="inputValorVenda" class="col-form-label" th:text="#{cadastro.produto.label.valor.venda}"></label>
-              <input type="text" class="form-control js-currency" id="inputValorVenda" th:field="*{valorDeVenda}" th:classappend="${#fields.hasErrors('valorDeVenda')} ? is-invalid">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">R$<!-- <i class="fas fa-phone"> --></i></span>
+                </div>
+                <input type="text" class="form-control js-currency" id="inputValorVenda" th:field="*{valorDeVenda}" th:classappend="${#fields.hasErrors('valorDeVenda')} ? is-invalid">
+              </div>
             </div>
           </div>
           <div class="col-md-6">
@@ -62,17 +69,9 @@
             </div>
           </div>
         </div>
-        <!-- <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label for="inputCategoria" class="col-form-label" th:text="#{cadastro.produto.label.categoria}"></label>
-              <select class="duallistbox" multiple="multiple">
-                <option th:each="categoria : ${categoriaList}" th:value="${categoria}" th:text="${categoria.descricao}"></option>
-              </select>
-            </div>
-          </div>
-        </div> -->
-      </div>
+        <br/>
+    </div>
+    
   </div>
   </section>
     

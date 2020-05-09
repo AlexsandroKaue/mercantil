@@ -56,7 +56,7 @@ public class LoteController {
 		try {
 			loteService.salvar(lote);
 			attributes.addFlashAttribute("mensagem", "Lote cadastrado com sucesso!");
-			return "redirect:/lotes/novo";
+			return "redirect:/produtos/"+lote.getProduto().getId()+"/lote";
 		} catch(DataIntegrityViolationException e) {
 			errors.rejectValue("dataDeVencimento", null, e.getMessage());
 			return CADASTRAR_VIEW;
@@ -73,9 +73,10 @@ public class LoteController {
 	
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	public String excluir(@PathVariable Long id, RedirectAttributes attributes) {
+		Produto produto = loteService.buscarPorId(id).getProduto();
 		loteService.excluir(id);
 		attributes.addFlashAttribute("mensagem", "Lote excluído com sucesso!");
-		return "redirect:/lotes";
+		return "redirect:/produtos/"+produto.getId()+"/lote";
 	}
 	
 	@ModelAttribute

@@ -10,5 +10,6 @@ public interface LoteService {
 	public void salvar(Lote lote);
 	public void excluir(Long id);
 	public List<Lote> pesquisar(LoteFilter filtro);
+	public Lote buscarPorId(Long id);
 
 }

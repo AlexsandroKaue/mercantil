@@ -38,5 +38,10 @@ public class LoteServiceImpl implements LoteService{
 		Sort sorter = Sort.by(orderable);
 		return loteDAO.findAllAndSort(sorter);
 	}
+
+	@Override
+	public Lote buscarPorId(Long id) {
+		return loteDAO.findById(id).orElse(null);
+	}
 	
 }

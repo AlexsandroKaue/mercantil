@@ -169,4 +169,12 @@ public class Produto {
 		return true;
 	}
 
+	public List<Lote> getLoteList() {
+		return loteList;
+	}
+
+	public void setLoteList(List<Lote> loteList) {
+		this.loteList = loteList;
+	}
+
 }

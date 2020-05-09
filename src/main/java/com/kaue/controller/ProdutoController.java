@@ -40,7 +40,9 @@ public class ProdutoController {
 	@RequestMapping("/novo")
 	public ModelAndView showFormNovo(Produto produto) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
-		mv.addObject("produto", new Produto());
+		//Produto prod = new Produto();
+		produto.setQuantidade(new Integer(0));
+		mv.addObject("produto", produto);
 		return mv;
 	}
 	

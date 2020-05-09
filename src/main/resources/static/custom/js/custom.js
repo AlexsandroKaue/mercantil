@@ -30,7 +30,8 @@ $(function(){
 	
 	$('.js-currency').maskMoney({decimal:',', 
 		thousands:'.', 
-		allowZero:'true'});
+		allowZero:'true',
+		formatOnBlur:false});
 	
 	$('[data-mask]').inputmask();
 	
