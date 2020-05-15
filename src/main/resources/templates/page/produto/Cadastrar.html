@@ -32,6 +32,7 @@
       </div> -->
       <div class="card-body">
         <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
+        <input type="hidden" id="inputLoteList" th:field="*{loteList}"></input>
         <div class="row">
           <div class="col-md-10">
             <div class="form-group">
@@ -43,7 +44,6 @@
             <div class="form-group">
               <label for="inputQuantidade" class="col-form-label" th:text="#{cadastro.produto.label.quantidade}"></label>
               <input type="text" readonly="readonly" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid'">
-              
             </div>
           </div>
         </div>

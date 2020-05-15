@@ -17,7 +17,48 @@ $('#modalConfirmacao').on('show.bs.modal', function(event){
 	
 });
 
+  $('[role="form"]').validate({
+	errorElement: 'span',
+	errorPlacement: function (error, element) {
+	  error.addClass('invalid-feedback');
+	  element.closest('.form-group').append(error);
+	},
+	highlight: function (element, errorClass, validClass) {
+	  $(element).addClass('is-invalid');
+	},
+	unhighlight: function (element, errorClass, validClass) {
+	  $(element).removeClass('is-invalid');
+	}
+  });
 
+	$.validator.addMethod('celular', function (value, element) {
+	    value = value.replace(/[_()-\s]/g, "");
+	    if (value == '0000000000') {
+	        return (this.optional(element) || false);
+	    } else if (value == '00000000000') {
+	        return (this.optional(element) || false);
+	    } 
+	    if (["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]
+	    .indexOf(value.substring(0, 2)) != -1) {
+	        return (this.optional(element) || false);
+	    }
+	    if (value.length < 11) {
+	        return (this.optional(element) || false);
+	    }
+	    if (["6", "7", "8", "9"].indexOf(value.substring(2, 3)) == -1) {
+	        return (this.optional(element) || false);
+	    }
+	    return (this.optional(element) || true);
+	}, 'Informe um número de telefone celular válido');
+	
+	
+	$.validator.addMethod("customDate", function(value, element) {
+		return moment(value, 'DD/MM/YYYY', true).isValid();
+	},
+	"Por favor forneça uma data válida"
+	);
+
+	
 $(function(){
 	$('[rel="tooltip"]').tooltip({
 		container: 'body',
@@ -27,6 +68,8 @@ $(function(){
 	
 	//Bootstrap Duallistbox
     $('.duallistbox').bootstrapDualListbox();
+    
+    /*$( "input[value='0']" ).text( "0" );*/
 	
 	$('.js-currency').maskMoney({decimal:',', 
 		thousands:'.', 
@@ -64,7 +107,9 @@ $(function(){
 	    /*showDropdowns: true,*/
 	    minYear: 1901,
 	    /*maxYear: parseInt(moment().format('YYYY'),10),*/
+	    autoUpdateInput: false,
 	    locale: {
+	    	cancelLabel: 'Clear',
 	        format: "DD/MM/YYYY",
 	        separator: " - ",
 	        applyLabel: "Aplicar",
@@ -96,8 +141,25 @@ $(function(){
 	            "Dezembro"
 	        ],
 	        firstDay: 0
-	    }
+	    },
+	    
+	}).inputmask("99/99/9999");
+	
+	$('.js-date').on('apply.daterangepicker', function(ev, picker) {
+		if (!picker.startDate.isValid()) {
+			$(this).val('');
+		} else {
+			$(this).val(picker.startDate.format('DD/MM/YYYY'));
+		}
 	});
+	
+	/*$('.js-date').on('focusout', function() {
+		$(this).apply.daterangepicker
+		console.log($(this));
+		if (!picker.startDate.isValid()) {
+			$(this).val('');
+		} 
+	});*/
 	
 	$('.js-tabela').DataTable({
       "paging": true,
@@ -130,25 +192,12 @@ $(function(){
           }
       }
     });
-	
+
 	
 	$('.js-fade').fadeTo(5000, 1, function() {
 		$(this).slideUp( "slow", function() {});
 	})
-
 	
-    /*const Toast = Swal.mixin({
-    	
-      var saved = [[${!#strings.isEmpty(mensagem)}]];
-      
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000
-    });
-    if(saved){
-  	  toastr.success([[${mensagem}]]);  
-    }*/
     
 });
 

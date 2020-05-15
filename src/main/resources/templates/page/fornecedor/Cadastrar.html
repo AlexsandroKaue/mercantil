@@ -8,7 +8,7 @@
 </head>
 
   <section layout:fragment="container">
-    <form role="form" method="POST" th:action="@{/fornecedores}" th:object="${fornecedor}">
+    <form role="form" id="fornecedorForm" method="POST" th:action="@{/fornecedores}" th:object="${fornecedor}">
       <header layout:insert="~{cabecalho}"></header>
       <header layout:insert="~{corpo}"></header>
     </form>
@@ -55,7 +55,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="inputEmail" class="col-form-label">Email</label>
-                <input type="text" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
+                <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
               </div>
             </div>
         </div>
@@ -108,5 +108,39 @@
     </div>
     <!-- /.card -->
   </section>
+  
+  <script layout:fragment="js-validator">
+      $('#fornecedorForm').validate({
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        }
+      });
+      $('#inputNome').rules('add', {
+        required: true,
+        messages: { 
+            required: "Por favor digite um nome para o fornecedor"
+        }
+      });
+      $('#inputEmail').rules('add', {
+        email: true,
+        messages: { 
+            email: "Por favor digite um email válido"
+        }
+      });
+      $('#inputTelefone').rules('add', {
+        celular: true,
+        messages: { 
+            celular: "Por favor digite um telefone válido"
+        }
+      });
+  </script>
     
 </html>

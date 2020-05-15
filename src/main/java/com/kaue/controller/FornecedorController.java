@@ -29,6 +29,7 @@ public class FornecedorController {
 	
 	private static final String CADASTRAR_VIEW = "page/fornecedor/Cadastrar";
 	private static final String LISTAR_VIEW = "page/fornecedor/Listar";
+	private static final String CADASTRAR_LOTE_VIEW = "page/lote/Cadastrar";
 	
 	@RequestMapping(value = "/novo")
 	public ModelAndView showFormNovo() {
@@ -117,6 +118,12 @@ public class FornecedorController {
 	@ModelAttribute
 	public List<Estado> todosEstados() {
 		return Arrays.asList(Estado.values());
+	}
+	
+	@ModelAttribute
+	public List<Fornecedor> todosFornecedores() {
+		List<Fornecedor> fornecedorList = fornecedorService.pesquisar(new FornecedorFilter());
+		return fornecedorList;
 	}
 	
 }

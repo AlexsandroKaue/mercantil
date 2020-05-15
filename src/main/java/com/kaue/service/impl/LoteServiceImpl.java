@@ -8,19 +8,24 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kaue.dao.LoteDAO;
 import com.kaue.dao.filter.LoteFilter;
 import com.kaue.model.Lote;
 import com.kaue.service.LoteService;
+import com.kaue.service.ProdutoService;
 
 @Service
 public class LoteServiceImpl implements LoteService{
 	
 	@Autowired
 	private LoteDAO loteDAO;
+	
+	@Autowired
+	private ProdutoService produtoService;
 
-	@Override
+	@Transactional
 	public void salvar(Lote lote) {
 		loteDAO.save(lote);
 	}

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{principal}">
+<head>
+  <title th:text="#{mercadinho}"></title>
+</head>
+  
+  <section layout:fragment="container">
+    <form class="form-horizontal" method="POST" th:action="@{/produtos}" th:object="${produto}">
+      <header layout:insert="~{cabecalho}"></header>
+      <header layout:insert="~{corpo}"></header>
+    </form>
+    <div layout:insert="~{confirmar_exclusao_lote}"></div>
+  </section>
+  
+  <section layout:fragment="titulo">
+    <h1 class="m-0 text-dark" th:text="#{cadastro.lote.titulo}"></h1>
+  </section>
+  
+  <section layout:fragment="botoes">
+    <a class="btn btn-danger" th:href="@{/produtos}" th:text="#{voltar}"></a>
+    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}" th:text="#{salvar}"></button>
+    <button type="submit" class="btn btn-md btn-info" th:if="*{id}" th:text="#{alterar}"></button>
+  </section>
+  
+  <section layout:fragment="conteudo">
+    <div class="card card-secondary">
+    <!-- <div class="card-header">
+      <h3 class="card-title">Novo Título</h3>
+    </div> -->
+    <div class="card-body">
+      <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
+      <input type="hidden" id="inputProdutoId" th:field="*{produto.id}"></input>
+      <input type="hidden" id="inputCategoriaId" th:field="*{produto.categoria.id}"></input>
+      <input type="hidden" id="inputLoteList" th:field="*{produto.loteList}"></input>
+      
+      <div class="row">
+        <div class="col-md-10">
+          <div class="form-group">
+            <label for="inputDescricao" class="col-form-label">Produto</label>
+            <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.descricao}" th:classappend="${#fields.hasErrors('produto.descricao')} ? is-invalid">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="inputQuantidadeTotal" class="col-form-label">Qtd. Total</label>
+            <input type="text" readonly="readonly" class="form-control" id="inputQuantidadeTotal" th:field="*{produto.quantidade}" th:classappend="${#fields.hasErrors('produto.quantidade')} ? is-invalid">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="inputValorVenda" class="col-form-label">Valor de Venda</label>
+            <input type="text" readonly="readonly" class="form-control" id="inputValorVenda" th:field="*{{produto.valorDeVenda}}" th:classappend="${#fields.hasErrors('produto.valorDeVenda')} ? is-invalid">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="inputDescricao" class="col-form-label">Categoria</label>
+            <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.categoria.descricao}" th:classappend="${#fields.hasErrors('produto.categoria.descricao')} ? is-invalid">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="inputDataFabricacao" class="col-form-label">Data de Fabricacao</label>
+            <input type="text" autofocus="autofocus" class="form-control js-date" id="inputDataFabricacao" th:field="*{dataFabricacao}" th:classappend="${#fields.hasErrors('dataFabricacao')} ? is-invalid">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="inputDataVencimento" class="col-form-label">Data de Vencimento</label>
+            <input type="text" class="form-control js-date" id="inputDataVencimento" th:field="*{dataVencimento}" th:classappend="${#fields.hasErrors('dataVencimento')} ? is-invalid">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="inputValorCusto" class="col-form-label">Valor de Custo</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">R$<!-- <i class="fas fa-phone"> --></i></span>
+              </div>
+              <input type="text" class="form-control js-currency" id="inputValorCusto" th:field="*{valorCusto}" th:classappend="${#fields.hasErrors('valorCusto')} ? is-invalid">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="inputQuantidade" class="col-form-label">Quantidade</label>
+            <input type="text" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? is-invalid">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="text-center col-1">Lote</th>
+                <!-- <th th:text="#{listagem.lote.coluna.produto}"></th> -->
+                <th class="text-center col-2" th:text="#{listagem.lote.coluna.dataFabricacao}"></th>
+                <th class="text-center col-2" th:text="#{listagem.lote.coluna.dataVencimento}"></th>
+                <th class="text-center col-2" th:text="#{listagem.lote.coluna.valor.custo}"></th>
+                <th class="text-center col-2" th:text="#{quantidade}"></th>
+                <th class="text-center col-2" th:text="#{listagem.lote.coluna.acoes}"></th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr th:each="lote : ${lote.produto.loteList}">
+              <td class="text-center" th:text="${lote.id}"></td>
+              <!-- <td th:text="${lote.produto!=null?lote.produto.descricao:null}">  -->                   
+              <td class="text-center" th:text="${{lote.dataFabricacao}}">                    
+              <td class="text-center" th:text="${{lote.dataVencimento}}">
+              <td class="text-center" th:text="|R$ ${{lote.valorCusto}}|">
+              <td class="text-center" th:text="${lote.quantidade}|">
+              <td class="text-center">
+                <a th:href="@{/lotes/{id}(id=${lote.id})}" class="btn btn-link btn-sm"
+                  title="Editar" rel="tooltip" data-placement="top">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                  th:href="@{#}" th:attr="data-id=${lote.id}, data-descricao=|Lote ${lote.id} do produto ${lote.produto.descricao}|"
+                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                  <i class="fas fa-times"></i>
+                </a>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(lote.produto.loteList)}">
+              <td colspan="6">Nenhum lote foi encontrado.</td>
+            </tr>
+          </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.card -->
+  </section>
+
+  <!-- <section layout:fragment="conteudo">
+  
+    <form class="form" method="POST" th:action="@{/lotes}" th:object="${lote}">
+    Content Wrapper. Contains page content
+    
+    <div class="content-wrapper">
+      Content Header (Page header)
+      <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-10">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark" th:text="#{cadastro.lote.titulo}"></h1>
+            </div>/.col
+            
+            
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard v1</li>
+              </ol>
+              <div class="float-right">
+                <button type="button" class="btn btn-md btn-danger">Voltar</button>
+                <a class="btn btn-danger" th:href="@{/produtos}" th:text="#{voltar}"></a>
+                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}" th:text="#{salvar}"></button>
+                <button type="submit" class="btn btn-md btn-info" th:if="*{id}" th:text="#{alterar}"></button>
+              </div>
+            </div>/.col
+          </div>/.row
+        </div>/.container-fluid
+      </div>
+      /.content-header
+      Main content
+      <section class="content">
+        <div class="container-fluid">
+        
+          <div layout:insert="~{mensagem_geral}"></div>
+          <div layout:insert="~{mensagem_erro}"></div>
+          
+          
+          <div class="card card-secondary">
+            <div class="card-header">
+              <h3 class="card-title">Novo Título</h3>
+            </div>
+            form start
+            <form class="form-horizontal" method="POST" action="/titulos">
+              <div class="card-body">
+                <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
+                <input type="hidden" id="inputProdutoId" th:field="*{produto.id}"></input>
+                
+                <div class="row">
+                  <div class="col-md-10">
+                    <div class="form-group">
+                      <label for="inputDescricao" class="col-form-label">Produto</label>
+                      <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.descricao}" th:classappend="${#fields.hasErrors('produto.descricao')} ? is-invalid">
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="inputQuantidadeTotal" class="col-form-label">Qtd. Total</label>
+                      <input type="text" readonly="readonly" class="form-control" id="inputQuantidadeTotal" th:field="*{produto.quantidade}" th:classappend="${#fields.hasErrors('produto.quantidade')} ? is-invalid">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="inputDescricao" class="col-form-label">Categoria</label>
+                      <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.categoria.descricao}" th:classappend="${#fields.hasErrors('produto.categoria.descricao')} ? is-invalid">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="inputValorVenda" class="col-form-label">Valor de Venda</label>
+                      <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.categoria.descricao}" th:classappend="${#fields.hasErrors('produto.categoria.descricao')} ? is-invalid">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="inputDataFabricacao" class="col-form-label">Data de Fabricacao</label>
+                      <input type="text" class="form-control js-date" id="inputDataFabricacao" th:field="*{dataFabricacao}" th:classappend="${#fields.hasErrors('dataFabricacao')} ? is-invalid">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="inputDataVencimento" class="col-form-label">Data de Vencimento</label>
+                      <input type="text" class="form-control js-date" id="inputDataVencimento" th:field="*{dataVencimento}" th:classappend="${#fields.hasErrors('dataVencimento')} ? is-invalid">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="inputValorCusto" class="col-form-label">Valor de Custo</label>
+                      <input type="text" class="form-control js-currency" id="inputValorCusto" th:field="*{valorCusto}" th:classappend="${#fields.hasErrors('valorCusto')} ? is-invalid">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="inputProduto" class="col-form-label" th:text="#{cadastro.lote.label.produto}"></label>
+                      <select class="form-control" th:field="*{produto}">
+                        <option value="" selected th:text="#{selecione.produto}"></option>
+                        <option th:each="produto : ${produtoList}" th:value="${produto.id}" th:text="${produto.descricao}"></option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="inputQuantidade" class="col-form-label">Quantidade</label>
+                      <input type="text" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? is-invalid">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="inputCategoria" class="col-form-label" th:text="#{cadastro.lote.label.categoria}"></label>
+                      <select class="duallistbox" multiple="multiple">
+                        <option th:each="categoria : ${categoriaList}" th:value="${categoria}" th:text="${categoria.descricao}"></option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          /.card
+        </div>container-fluid
+      </section>
+      /.content 
+      </div>
+      <div class="col-md-1"></div>
+      </div>
+    </div>
+    /.content-wrapper
+    </form>
+  </section> -->
+    
+</html>

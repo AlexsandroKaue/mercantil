@@ -15,11 +15,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.CategoriaFilter;
+import com.kaue.dao.filter.FornecedorFilter;
 import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.model.Categoria;
+import com.kaue.model.Fornecedor;
 import com.kaue.model.Lote;
 import com.kaue.model.Produto;
 import com.kaue.service.CategoriaService;
+import com.kaue.service.FornecedorService;
 import com.kaue.service.ProdutoService;
 
 @Controller
@@ -29,7 +32,7 @@ public class ProdutoController {
 	private static final String CADASTRAR_VIEW = "page/produto/Cadastrar";
 	private static final String LISTAR_VIEW = "page/produto/Listar";
 	
-	private static final String CADASTRAR_LOTE_VIEW = "page/lote/Cadastrar";
+	private static final String LISTAR_LOTE_VIEW = "page/lote/Cadastrar";
 	
 	@Autowired
 	private ProdutoService produtoService;
@@ -37,11 +40,14 @@ public class ProdutoController {
 	@Autowired
 	private CategoriaService categoriaService;
 	
+	@Autowired
+	private FornecedorService fornecedorService;
+	
 	@RequestMapping("/novo")
-	public ModelAndView showFormNovo(Produto produto) {
+	public ModelAndView showFormNovo() {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
-		//Produto prod = new Produto();
-		produto.setQuantidade(new Integer(0));
+		Produto produto = new Produto();
+		produto.setQuantidade(0);
 		mv.addObject("produto", produto);
 		return mv;
 	}
@@ -54,10 +60,12 @@ public class ProdutoController {
 	}
 	
 	@RequestMapping("{id}/lote")
-	public ModelAndView showFormNovoLote(@PathVariable("id") Produto produto) {
-		ModelAndView mv = new ModelAndView(CADASTRAR_LOTE_VIEW);
+	public ModelAndView showListarLote(@PathVariable("id") Produto produto) 
+	{
+		ModelAndView mv = new ModelAndView(LISTAR_LOTE_VIEW);
 		Lote lote = new Lote();
 		lote.setProduto(produto);
+		
 		mv.addObject("lote", lote);
 		return mv;
 	}
@@ -68,9 +76,16 @@ public class ProdutoController {
 			return CADASTRAR_VIEW;
 		}
 		try {
+			String url = "";
+			if(produto.getId()==null) {
+				attributes.addFlashAttribute("mensagem", "Produto cadastrado com sucesso!");
+				url = "redirect:/produtos/novo";
+			} else {
+				attributes.addFlashAttribute("mensagem", "Produto alterado com sucesso!");
+				url = "redirect:/produtos/"+produto.getId();
+			}
 			produtoService.salvar(produto);
-			attributes.addFlashAttribute("mensagem", "Produto cadastrado com sucesso!");
-			return "redirect:/produtos/novo";
+			return url;
 		} catch(DataIntegrityViolationException e) {
 			errors.rejectValue("dataDeVencimento", null, e.getMessage());
 			return CADASTRAR_VIEW;
@@ -96,5 +111,11 @@ public class ProdutoController {
 	public List<Categoria> todasCategorias(){
 		List<Categoria> categoriaList = categoriaService.pesquisar(new CategoriaFilter());
 		return categoriaList;
+	}
+	
+	@ModelAttribute
+	public List<Fornecedor> todosFornecedores() {
+		List<Fornecedor> fornecedorList = fornecedorService.pesquisar(new FornecedorFilter());
+		return fornecedorList;
 	}
 }

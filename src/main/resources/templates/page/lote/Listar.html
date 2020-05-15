@@ -8,9 +8,88 @@
 </head>
 
   <section layout:fragment="container">
-    <form method="GET" th:action="@{/lotes}" th:object="${filtro}">
+    <form role="form" id="loteForm" method="POST" th:action="@{/lotes}" th:object="${lote}">
       <header layout:insert="~{cabecalho}"></header>
       <header layout:insert="~{corpo}"></header>
+      
+      <div class="modal" id="modalLote">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title"></h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="inputDescricao" class="col-form-label">Produto</label>
+                    <input type="text" disabled="disabled" class="form-control" th:field="*{produto.descricao}">
+                  </div>
+                </div>
+              </div>
+              <div id="camposEditaveis">
+              <div class="row">
+                <input id="inputCodigo" type="hidden" th:field="*{id}"></input>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="inputDataFabricacao" class="col-form-label">Data de Fabricacao</label>
+                    <input type="text" autofocus="autofocus" class="form-control js-date" id="inputDataFabricacao" th:field="*{dataFabricacao}">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="inputDataVencimento" class="col-form-label">Data de Vencimento</label>
+                    <input type="text"  autocomplete="off" class="form-control js-date" name="datefilter" id="inputDataVencimento" th:field="*{dataVencimento}">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="inputValorCusto" class="col-form-label">Valor de Custo</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">R$</span>
+                      </div>
+                      <input type="text" class="form-control js-currency" id="inputValorCusto" th:field="*{valorCusto}">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="inputQuantidade" class="col-form-label">Quantidade</label>
+                    <input type="text" class="form-control" id="inputQuantidade" th:field="*{quantidade}">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="inputCategoria" class="col-form-label" th:text="#{fornecedor}"></label>
+                    <select id="selectFornecedor" class="form-control" th:field="*{fornecedor}">
+                      <option value="" selected th:text="#{selecione.fornecedor}"></option>
+                      <option th:each="fornecedor : ${fornecedorList}" th:value="${fornecedor.id}" th:text="|${fornecedor.id} - ${fornecedor.nome}|"></option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-md btn-success" th:text="#{salvar}"></button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal --> 
+      
     </form>
     <div layout:insert="~{confirmar_exclusao_lote}"></div>
   </section>
@@ -19,7 +98,10 @@
     <h1 class="m-0 text-dark">Lotes</h1>
   </div>
   <div layout:fragment="botoes">
-    <a class="btn btn-block btn-info" th:href="@{/lotes/novo}" th:text="#{novo}"></a>
+    <a class="btn btn-danger" th:href="@{/produtos}" th:text="#{voltar}"></a>
+    <a class="btn btn-info js-novo-lote" 
+      th:href="@{#}" data-toggle="modal" data-target="#modalLote"
+      th:text="#{novo}"></a>
   </div>
   <div layout:fragment="conteudo">
     <div class="card card-secondary">
@@ -27,60 +109,152 @@
         <h3 class="card-title">Novo Título</h3>
       </div> -->
       <div class="card-body">
-        <div class="form-group row">
-          <div class="col-sm-6">
-            <div class="input-group">
-              <input class="form-control" 
-                placeholder="Qual lote você está procurando?" autofocus="autofocus"
-                th:field="*{quantidade}"/>
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-default">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
+        <input type="hidden" id="inputProduto" th:field="*{produto}"></input>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="inputDescricao" class="col-form-label">Produto</label>
+              <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.descricao}" th:classappend="${#fields.hasErrors('produto.descricao')} ? is-invalid">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputValorVenda" class="col-form-label">Valor de Venda</label>
+              <input type="text" readonly="readonly" class="form-control" id="inputValorVenda" th:field="*{{produto.valorDeVenda}}" th:classappend="${#fields.hasErrors('produto.valorDeVenda')} ? is-invalid">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputDescricao" class="col-form-label">Categoria</label>
+              <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.categoria.descricao}" th:classappend="${#fields.hasErrors('produto.categoria.descricao')} ? is-invalid">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputQuantidadeTotal" class="col-form-label">Qtd. Total</label>
+              <input type="text" readonly="readonly" class="form-control" id="inputQuantidadeTotal" th:field="*{produto.quantidade}" th:classappend="${#fields.hasErrors('produto.quantidade')} ? is-invalid">
             </div>
           </div>
         </div>
-      
-        <table class="table table-bordered table-striped js-tabela">
-          <thead>
-            <tr>
-              <th class="text-center col-1" th:text="#{listagem.lote.coluna.id}"></th>
-              <th class="text-center col-2" th:text="#{listagem.lote.coluna.produto}"></th>
-              <th class="text-center col-2" th:text="#{listagem.lote.coluna.dataFabricacao}"></th>
-              <th class="text-center col-2" th:text="#{listagem.lote.coluna.dataVencimento}"></th>
-              <th class="text-center col-2" th:text="#{listagem.lote.coluna.valor.custo}"></th>
-              <th class="text-center col-3" th:text="#{listagem.lote.coluna.acoes}"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="lote : ${lotes}">
-              <td class="text-center" th:text="${lote.id}"></td>
-              <td class="text-center" th:text="${lote.produto!=null?lote.produto.descricao:null}">                    
-              <td class="text-center" th:text="${{lote.dataFabricacao}}">                    
-              <td class="text-center" th:text="${{lote.dataVencimento}}">
-              <td class="text-center" th:text="|R$ ${{lote.valorCusto}}|">
-              <td class="text-center">
-                <a th:href="@{/lotes/{id}(id=${lote.id})}" class="btn btn-link btn-sm"
-                  title="Editar" rel="tooltip" data-placement="top">
-                  <i class="fas fa-pencil-alt"></i>
-                </a>
-                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
-                  th:href="@{#}" th:attr="data-id=${lote.id}, data-descricao=${lote.produto.descricao}"
-                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
-                  <i class="fas fa-times"></i>
-                </a>
-              </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(lotes)}">
-              <td colspan="6">Nenhum lote foi encontrado.</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="row">
+          <div class="col-md-12" >
+            <table class="table table-bordered table-striped js-tabela">
+              <thead>
+                <tr>
+                  <th class="text-center col-1">Lote</th>
+                  <!-- <th th:text="#{listagem.lote.coluna.produto}"></th> -->
+                  <th class="text-center col-3" th:text="#{listagem.lote.coluna.dataFabricacao}"></th>
+                  <th class="text-center col-3" th:text="#{listagem.lote.coluna.dataVencimento}"></th>
+                  <th class="text-center col-2" th:text="#{listagem.lote.coluna.valor.custo}"></th>
+                  <th class="text-center col-1" th:text="#{quantidade}"></th>
+                  <th class="text-center col-2" th:text="#{listagem.lote.coluna.acoes}"></th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr th:each="lote : ${lote.produto.loteList}">
+                <td class="text-center" th:text="${lote.id}"></td>                  
+                <td class="text-center" th:text="${{lote.dataFabricacao}}">                    
+                <td class="text-center" th:text="${{lote.dataVencimento}}">
+                <td class="text-center" th:text="|R$ ${{lote.valorCusto}}|">
+                <td class="text-center" th:text="${lote.quantidade}|">
+                <td class="text-center">
+                  <a th:href="@{/lotes/{id}/ajax(id=${lote.id})}" class="btn btn-link btn-sm js-alterar-lote"
+                    data-toggle="modal" data-target="#modalLote"
+                    title="Editar" rel="tooltip" data-placement="top">
+                    <i class="fas fa-pencil-alt"></i>
+                  </a>
+                  <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                    th:href="@{#}" th:attr="data-id=${lote.id}, data-descricao=|Lote ${lote.id} do produto ${lote.produto.descricao}|"
+                    title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                    <i class="fas fa-times"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(lote.produto.loteList)}">
+                <td colspan="6">Nenhum lote foi encontrado.</td>
+              </tr>
+            </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
     <!-- /.card -->
     
   </div>
+  
+  <script layout:fragment="js-validator">
+  	
+  	$('.js-alterar-lote').on('click', function(event) {
+		event.preventDefault();
+		
+		var botaoAlterar = $(event.currentTarget);
+		var urlAlterarLote = botaoAlterar.attr('href');
+		
+		var response = $.ajax({
+			url: urlAlterarLote,
+			type: 'GET'
+		})
+		
+		response.done(function(lote){
+			$('#modalLote').find('.modal-header h4').html('Alterar Lote');
+			$('#modalLote').find('input#inputCodigo').val(lote.id);
+			$('#modalLote').find('input#inputDataFabricacao').val(lote.dataFabricacao);
+			$('#modalLote').find('input#inputDataVencimento').val(lote.dataVencimento);
+			$('#modalLote').find('input#inputValorCusto').val(lote.valorCusto);
+			$('#modalLote').find('input#inputQuantidade').val(lote.quantidade);
+			$('#modalLote').find('select#selectFornecedor').val(lote.fornecedor);
+		});
+		
+		response.fail(function(e){
+			console.log(e);
+			alert('Erro recebendo lote');
+		});
+	});
+  	
+  	$('.js-novo-lote').on('click', function(event) {
+  		$('#modalLote').find('.modal-header h4').html('Cadastrar Lote');
+  		$('#modalLote').find('#camposEditaveis input').each( function (index, element) {
+  			var val = $(element).val(null);
+  		});
+  		$('#modalLote').find('#camposEditaveis select').each( function (index, element) {
+  			var val = $(element).val(null);
+  		});
+  	});
+  	
+  	
+  	$('#inputDataFabricacao').rules('add', {
+      required: true,
+      customDate: true,
+      messages: { 
+          required: "Por favor digite uma data",
+          customDate: "Por favor forneça uma data válida"
+      }
+    });
+  	$('#inputDataVencimento').rules('add', {
+      required: true,
+      customDate: true,
+      messages: { 
+          required: "Por favor digite uma data",
+          customDate: "Por favor forneça uma data válida"
+      }
+    });
+  	$('#inputValorCusto').rules('add', {
+      required: true,
+      //min: 0.01,
+      messages: { 
+          required: "Por favor digite uma quantidade",
+          //min: "Por favor digite um valor maior que 0.01"
+      }
+    });
+  	$('#inputQuantidade').rules('add', {
+      required: true,
+      min: 1,
+      messages: { 
+          required: "Por favor digite uma quantidade",
+          min: "Por favor digite uma quantidade maior que 0"
+      }
+    });
+  </script>
   
 </html>

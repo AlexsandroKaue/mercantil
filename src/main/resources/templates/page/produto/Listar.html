@@ -60,10 +60,10 @@
               <td th:text="${produto.descricao}"></td>
               <td class="text-center" th:text="${produto.categoria!=null?produto.categoria.descricao:null}">                    
               <td class="text-center">
-                <a th:href="@{/produtos/{id}/lote(id=${produto.id})}" class="btn btn-link btn-sm"
-                  title="Lote" rel="tooltip" data-placement="top">
+                <a th:href="@{/lotes?produtoId={id}(id=${produto.id})}" class="btn btn-link btn-sm"
+                  title="Lotes" rel="tooltip" data-placement="top">
                   <i class="fas fa-plus-circle"></i>
-                </a>
+                </a><!-- th:href="@{/produtos/{id}/lote(id=${produto.id})}" --> <!-- th:href="@{/lotes/novo?produtoId={id}(id=${produto.id})}" -->
                 <a th:href="@{/produtos/{id}(id=${produto.id})}" class="btn btn-link btn-sm"
                   title="Editar" rel="tooltip" data-placement="top">
                   <i class="fas fa-pencil-alt"></i>

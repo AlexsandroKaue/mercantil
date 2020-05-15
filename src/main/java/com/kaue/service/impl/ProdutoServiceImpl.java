@@ -36,6 +36,11 @@ public class ProdutoServiceImpl implements ProdutoService{
 		String descricao = (filtro.getDescricao() == null ? "" : filtro.getDescricao());
 		return produtoDAO.findByDescricaoContainingIgnoreCaseOrderByIdDesc(descricao);
 	}
+
+	@Override
+	public Produto buscarPorId(Long id) {
+		return produtoDAO.findById(id).orElse(null);
+	}
 	
 	
 }

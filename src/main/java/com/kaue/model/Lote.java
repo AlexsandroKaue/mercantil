@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,30 +19,45 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Audited
 public class Lote {
-
+	
+	/* @EmbeddedId private ProdutoFornecedorCK key; */
+	 
 	@Id
 	@SequenceGenerator(name = "seq_lote", sequenceName = "seq_lote", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(generator = "seq_lote" , strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@NotNull(message = "O campo Data de Fabricação é obrigatório")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
-	private Date dataFabricacao;
+	/* @MapsId(value = "codigoProduto") */
+	@ManyToOne
+	private Produto produto;
 	
-	@NotNull(message = "O campo Data de Vencimento é obrigatório")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
-	private Date dataVencimento;
+	/* @MapsId(value = "codigoFornecedor") */
+	@ManyToOne
+	private Fornecedor fornecedor;
 	
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataCadastro;
 	
-	@NotNull(message = "O campo Valor é obrigatório")
+	@JsonFormat(pattern="dd/MM/yyyy")
+	@NotNull(message = "O campo Data de Fabricação é obrigatório")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Temporal(TemporalType.DATE)
+	private Date dataFabricacao;
+	
+	@JsonFormat(pattern="dd/MM/yyyy")
+	@NotNull(message = "O campo Data de Vencimento é obrigatório")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Temporal(TemporalType.DATE)
+	private Date dataVencimento;
+	
+	@JsonFormat(pattern = "#,##0.00")
+	@NotNull(message = "O campo Valor de Custo é obrigatório")
 	@DecimalMin(value = "0.01", message = "Valor não pode ser inferior a R$ 0,01")
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser superior R$ 9.999.999,99")
 	@NumberFormat(pattern = "#,##0.00")
@@ -52,10 +66,22 @@ public class Lote {
 	@NotNull(message = "O campo Quantidade é obrigatório")
 	@DecimalMin(value = "1.0", message = "Quantidade não pode ser inferior a 1")
 	private Integer quantidade;
-	
-	@NotNull(message = "O campo Produto é obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Produto produto;
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
 
 	public Long getId() {
 		return id;
@@ -63,6 +89,14 @@ public class Lote {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 
 	public Date getDataFabricacao() {
@@ -81,14 +115,6 @@ public class Lote {
 		this.dataVencimento = dataVencimento;
 	}
 
-	public Date getDataCadastro() {
-		return dataCadastro;
-	}
-
-	public void setDataCadastro(Date dataCadastro) {
-		this.dataCadastro = dataCadastro;
-	}
-
 	public BigDecimal getValorCusto() {
 		return valorCusto;
 	}
@@ -103,14 +129,6 @@ public class Lote {
 
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
-	}
-
-	public Produto getProduto() {
-		return produto;
-	}
-
-	public void setProduto(Produto produto) {
-		this.produto = produto;
 	}
 
 	@Override
