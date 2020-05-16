@@ -12,11 +12,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.NumberFormat;
@@ -30,7 +32,7 @@ public class Produto {
 	@GeneratedValue(generator = "seq_produto", strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@NotEmpty(message = "Descrição é obrigatória")
+	@NotEmpty(message = "A Descrição é obrigatória")
 	private String descricao;
 	
 	//@NotNull(message = "Valor de Venda é obrigatório")
@@ -40,9 +42,11 @@ public class Produto {
 	
 	private Integer quantidade;
 	
+	@NotNull(message = "A Categoria é obrigatória")
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Categoria categoria;
 	
+	@OrderBy("id desc")
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Lote> loteList;
 	

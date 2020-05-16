@@ -30,6 +30,7 @@
         <h3 class="card-title">Novo Título</h3>
       </div> -->
       <div class="card-body">
+        <div id="conteudo"> 
         <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
         <div class="row">
            <div class="col-md-12">
@@ -104,25 +105,14 @@
         <br/>
         <p>* Campos obrigatório</p>
       </div>
+      </div>
     </div>
     </div>
     <!-- /.card -->
   </section>
   
-  <script layout:fragment="js-validator">
-      $('#fornecedorForm').validate({
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-          error.addClass('invalid-feedback');
-          element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-          $(element).addClass('is-invalid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-          $(element).removeClass('is-invalid');
-        }
-      });
+  <div layout:fragment="js-validator">
+    <script id="validador">
       $('#inputNome').rules('add', {
         required: true,
         messages: { 
@@ -141,6 +131,8 @@
             celular: "Por favor digite um telefone válido"
         }
       });
-  </script>
+  	</script>
+  </div>
+  
     
 </html>

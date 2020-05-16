@@ -65,7 +65,6 @@ public class ProdutoController {
 		ModelAndView mv = new ModelAndView(LISTAR_LOTE_VIEW);
 		Lote lote = new Lote();
 		lote.setProduto(produto);
-		
 		mv.addObject("lote", lote);
 		return mv;
 	}

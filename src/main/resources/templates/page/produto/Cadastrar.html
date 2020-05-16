@@ -62,7 +62,7 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="inputCategoria" class="col-form-label" th:text="#{cadastro.produto.label.categoria}"></label>
-              <select class="form-control" th:field="*{categoria}">
+              <select id="selectCategoria" class="form-control" th:field="*{categoria}" th:classappend="${#fields.hasErrors('categoria')} ? 'is-invalid'">
                 <option value="" selected th:text="#{selecione.categoria}"></option>
                 <option th:each="categoria : ${categoriaList}" th:value="${categoria.id}" th:text="${categoria.descricao}"></option>
               </select>
@@ -74,5 +74,22 @@
     
   </div>
   </section>
+  
+  <div layout:fragment="js-validator">
+    <script id="validador">
+      $('#inputDescricao').rules('add', {
+        required: true,
+        messages: { 
+            required: "Por favor digite uma descrição para o produto"
+        }
+      });
+      $('#selectCategoria').rules('add', {
+        required: true,
+        messages: { 
+            required: "Por favor escolha uma categoria"
+        }
+      });
+    </script>
+  </div>
     
 </html>

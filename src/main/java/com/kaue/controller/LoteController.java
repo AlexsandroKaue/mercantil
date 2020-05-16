@@ -3,6 +3,7 @@ package com.kaue.controller;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +118,7 @@ public class LoteController {
 		Lote lote = new Lote();
 		lote.setProduto(produto);
 		mv.addObject("lote", lote);
+		mv.addObject("fornecedor", new Fornecedor());
 		return mv;
 	}
 

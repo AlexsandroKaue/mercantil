@@ -72,8 +72,9 @@
                     <label for="inputCategoria" class="col-form-label" th:text="#{fornecedor}"></label>
                     <select id="selectFornecedor" class="form-control" th:field="*{fornecedor}">
                       <option value="" selected th:text="#{selecione.fornecedor}"></option>
-                      <option th:each="fornecedor : ${fornecedorList}" th:value="${fornecedor.id}" th:text="|${fornecedor.id} - ${fornecedor.nome}|"></option>
+                      <option th:each="fornecedor : ${fornecedorList}" th:value="${fornecedor.id}" th:text="${fornecedor.nome}"></option>
                     </select>
+                    <a th:href="@{#}" data-toggle="modal" data-target="#modalFornecedor">Incluir novo</a>
                   </div>
                 </div>
               </div>
@@ -91,6 +92,7 @@
       <!-- /.modal --> 
       
     </form>
+      
     <div layout:insert="~{confirmar_exclusao_lote}"></div>
   </section>
   
@@ -184,7 +186,6 @@
   </div>
   
   <script layout:fragment="js-validator">
-  	
   	$('.js-alterar-lote').on('click', function(event) {
 		event.preventDefault();
 		
@@ -197,7 +198,7 @@
 		})
 		
 		response.done(function(lote){
-			$('#modalLote').find('.modal-header h4').html('Alterar Lote');
+			$('#modalLote').find('.modal-header h4').html('Alterar Lote '+lote.id);
 			$('#modalLote').find('input#inputCodigo').val(lote.id);
 			$('#modalLote').find('input#inputDataFabricacao').val(lote.dataFabricacao);
 			$('#modalLote').find('input#inputDataVencimento').val(lote.dataVencimento);
@@ -222,12 +223,17 @@
   		});
   	});
   	
+  	$('#modalLote').on('hidden.bs.modal', function() {
+  		console.log('fechou model.');
+  		$('#loteForm').validate().resetForm();
+  		$('#loteForm').find('.is-invalid').removeClass('is-invalid');
+  	});
   	
   	$('#inputDataFabricacao').rules('add', {
       required: true,
       customDate: true,
       messages: { 
-          required: "Por favor digite uma data",
+          required: "Por favor digite a data de fabricação",
           customDate: "Por favor forneça uma data válida"
       }
     });
@@ -235,7 +241,7 @@
       required: true,
       customDate: true,
       messages: { 
-          required: "Por favor digite uma data",
+          required: "Por favor digite a data de vencimento",
           customDate: "Por favor forneça uma data válida"
       }
     });
@@ -243,7 +249,7 @@
       required: true,
       //min: 0.01,
       messages: { 
-          required: "Por favor digite uma quantidade",
+          required: "Por favor digite o valor de custo",
           //min: "Por favor digite um valor maior que 0.01"
       }
     });
@@ -251,7 +257,7 @@
       required: true,
       min: 1,
       messages: { 
-          required: "Por favor digite uma quantidade",
+          required: "Por favor digite a quantidade",
           min: "Por favor digite uma quantidade maior que 0"
       }
     });
