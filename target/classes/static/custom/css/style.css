@@ -30,14 +30,14 @@
     padding-right: 0px;
     overflow: scroll;
     overflow-x: hidden;
-    font-family: "Nimbus Sans Narrow", Times, monospace;
+    /* font-family: "Nimbus Sans Narrow", Times, monospace; */
 }
 
 .items-list li.item {
   padding-left: 10px;
   padding-right: 10px;
-  padding-top: 6px;
-  padding-bottom: 6px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   margin-top: 1px;
   margin-bottom: 1px;
 }
@@ -46,7 +46,7 @@
   margin-bottom: 0px;
 }
 
-.items-list li h6{
+.items-list li h5{
   margin-bottom: 0px;
 }
 
@@ -59,6 +59,11 @@
 
 .items-list li.item:hover{
   background-color:  #d4e6f1;
+}
+
+.labels-font {
+	font-size: x-large;
+	/* font-family: "Nimbus Sans Narrow", Times, monospace; */
 }
 
 
