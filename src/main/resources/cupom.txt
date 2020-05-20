@@ -1,0 +1,13 @@
+﻿ITEM CÓDIGO        DESCRIÇÃO
+QTD.  UN.        VL.UNIT( R$) ST                VL.ITEM( R$)
+------------------------------------------------------------
+001 00000000000017 AGUA MINERAL 600ML
+      1,000 UN X 1,20 N00                               1,20
+001 00000000000017 AGUA MINERAL 600ML
+      1,000 UN X 1,20 N00                               1,20
+001 00000000000017 AGUA MINERAL 600ML
+      1,000 UN X 1,20 N00                               1,20
+001 00000000000017 AGUA MINERAL 600ML
+      1,000 UN X 1,20 N00                               1,20
+001 00000000000017 AGUA MINERAL 600ML
+      1,000 UN X 1,20 N00                               1,20

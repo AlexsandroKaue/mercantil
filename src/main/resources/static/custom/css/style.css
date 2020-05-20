@@ -14,3 +14,54 @@
 .toUpperCase {
 	text-transform: uppercase;
 }
+
+.todo-list li{
+  border-left: 0px;
+  border-bottom: 1px;
+  border-color: #000000; 
+  background-color: #ffffff;
+}
+
+.items-list {
+	height: 400px; 
+	list-style-type:none;
+	line-height:80%;
+	padding-left: 0px;
+    padding-right: 0px;
+    overflow: scroll;
+    overflow-x: hidden;
+    font-family: "Nimbus Sans Narrow", Times, monospace;
+}
+
+.items-list li.item {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.items-list li h4{
+  margin-bottom: 0px;
+}
+
+.items-list li h6{
+  margin-bottom: 0px;
+}
+
+.items-list li.linha{
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.items-list li.item:hover{
+  background-color:  #d4e6f1;
+}
+
+
+
+
+

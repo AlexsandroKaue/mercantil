@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{principal}">
+<head>
+  <title th:text="#{mercadinho}"></title>
+</head>
+
+  <section layout:fragment="container">
+    <form role="form"  method="POST" th:action="@{/caixa}" th:object="${registradora}">
+      <!-- <header layout:insert="~{cabecalho}"></header> -->
+      <br/>
+      <header layout:insert="~{corpo}"></header>
+    </form>
+  </section>
+  
+  <section layout:fragment="titulo">
+    <h1 class="m-0 text-dark">Registradora</h1>
+  </section>
+  
+  <section layout:fragment="botoes">
+    <a class="btn btn-danger" th:href="@{/categorias}">Voltar</a>
+    <button type="submit" class="btn btn-md btn-info">Salvar</button>
+    <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
+  </section>
+  
+  <section layout:fragment="conteudo">
+    <div class="card card-default">
+      <!-- <div class="card-header"></div> -->
+      <div class="card-body">
+        <div class="row" >
+          <div class="col-md-12">
+            <div class="bg-gray">
+              <h1 class="text-center" style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
+                1 X AGUA MINERAL 600ML
+              </h1>
+            </div>
+          </div>
+                
+          <div class="col-md-12">      
+          <div class="chart" style="height: 500px;">
+          <div class="row">      
+          <div class="col-md-9">
+            <strong>Itens</strong>
+            <div style="border-style: solid; border-width: 2px; border-color: #cbd3da">
+            
+              <!-- <div class="box-profile">
+                <div id="cupom"><pre th:text="${cupom}" style="height: 400px"></pre></div>
+              </div> -->
+              <ul data-widget="todo-list" class="items-list">
+                <li class="item">
+                  <!-- drag handle -->
+                  <div class="row align-items-end">
+                    <div class="col-md-4">
+                      <h5><strong>Água mineral 600ml</strong></h5>
+                      <h6>00000000000017</h6>
+                    </div>
+                    <div class="col-md-4 text-center">
+                      <h6>3un X R$ 1,20</h6>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <h4>R$ 3,60</h4>
+                    </div>
+                  </div>
+                </li>
+                <li class="linha border-bottom"></li>
+                <li class="item">
+                  <!-- drag handle -->
+                  <div class="row align-items-end">
+                    <div class="col-md-4">
+                      <h5><strong>Arroz Itaguary 2kg</strong></h5>
+                      <h6>00000000045872</h6>
+                    </div>
+                    <div class="col-md-4 text-center">
+                      <h6>5un X R$ 3,00</h6>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <h4>R$ 15,00</h4>
+                    </div>
+                  </div>
+                </li>
+                <li class="linha border-bottom"></li>
+                <li class="item">
+                  <!-- drag handle -->
+                  <div class="row align-items-end">
+                    <div class="col-md-4">
+                      <h5><strong>Macarrão Fortaleza 800gr</strong></h5>
+                      <h6>00000000000017</h6>
+                    </div>
+                    <div class="col-md-4 text-center">
+                      <h6>2un X R$ 2,20</h6>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <h4>R$ 6,40</h4>
+                    </div>
+                  </div>
+                </li>
+                <li class="linha border-bottom"></li>
+                <li class="item">
+                  <!-- drag handle -->
+                  <div class="row align-items-end">
+                    <!-- <div class="col-md-12">
+                      
+                    </div> -->
+                    <div class="col-md-4">
+                      <h5><strong>Água mineral 600ml</strong></h5>
+                      <h6>00000000000017</h6>
+                    </div>
+                    <div class="col-md-4 text-center">
+                      <h6>3un X R$ 1,20</h6>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <h4>R$ 3,60</h4>
+                    </div>
+                  </div>
+                </li>
+                <li class="linha border-bottom"></li>
+                <li class="item">
+                  <!-- drag handle -->
+                  <div class="row align-items-end">
+                    <!-- <div class="col-md-12">
+                      
+                    </div> -->
+                    <div class="col-md-4">
+                      <h5><strong>Água mineral 600ml</strong></h5>
+                      <h6>00000000000017</h6>
+                    </div>
+                    <div class="col-md-4 text-center">
+                      <h6>3un X R$ 1,20</h6>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <h4>R$ 3,60</h4>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            
+            </div>
+          </div>
+          
+          <div class="col-md-3">
+          <div class="chart" style="height: 500px;">
+          <div class="row">
+          <div class="col align-self-start">
+            <div class="progress-group">
+              <strong>Código</strong>
+              <input type="text" class="form-control"></input>
+            </div>
+            <!-- /.progress-group -->
+            
+            <div class="progress-group">
+              <strong>Quantidade</strong>
+              <input type="text"  class="form-control"></input>
+            </div>
+            <!-- /.progress-group -->
+            
+            <div class="progress-group">
+              <strong>Preço Unitário</strong>
+              <input type="text"  class="form-control"></input>
+            </div>
+            <!-- /.progress-group -->
+            
+            <div class="progress-group">
+              <strong>Preço Total</strong>
+              <input type="text" class="form-control"></input>
+            </div>
+            <!-- /.progress-group -->
+            
+            </div>
+            <div class="col align-self-end">
+            
+            <div class="progress-group">
+              <h1 class="mb-0"><span class="text" style="font-family: 'Nimbus Sans Narrow', Times, monospace;">Subtotal</span></h1>
+              <div class="bg-gray py-2 px-3 ">
+                <h1 class="mb-0" style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
+                  R$ 80,00
+                </h1>
+                <!-- <h4 class="mt-0">
+                  <small>Ex Tax: $80.00 </small>
+                </h4> -->
+              </div>
+           </div>
+           <!-- /.progress-group -->
+           </div>
+           </div>
+           </div>
+           </div>
+
+          <!-- <div class="col-md-3">
+            <div class="row">
+            
+            </div>
+          </div> -->
+
+          </div>
+          <!-- /.col -->
+          </div>
+          </div>
+          </div>
+        </div>
+        <!-- /.row -->
+      </div>
+      <div class="card-footer">
+        <div class="row">
+          <div class="col-sm-3 col-6">
+            <div class="description-block border-right">
+              <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span>
+              <h5 class="description-header">$35,210.43</h5>
+              <span class="description-text">TOTAL REVENUE</span>
+            </div>
+            <!-- /.description-block -->
+          </div>
+          <!-- /.col -->
+          <div class="col-sm-3 col-6">
+            <div class="description-block border-right">
+              <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
+              <h5 class="description-header">$10,390.90</h5>
+              <span class="description-text">TOTAL COST</span>
+            </div>
+            <!-- /.description-block -->
+          </div>
+          <!-- /.col -->
+          <div class="col-sm-3 col-6">
+            <div class="description-block border-right">
+              <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
+              <h5 class="description-header">$24,813.53</h5>
+              <span class="description-text">TOTAL PROFIT</span>
+            </div>
+            <!-- /.description-block -->
+          </div>
+          <!-- /.col -->
+          <div class="col-sm-3 col-6">
+            <div class="description-block">
+              <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> 18%</span>
+              <h5 class="description-header">1200</h5>
+              <span class="description-text">GOAL COMPLETIONS</span>
+            </div>
+            <!-- /.description-block -->
+          </div>
+        </div>
+        <!-- /.row -->
+      </div>
+    </div>
+    <!-- /.card -->
+  </section>
+  
+  <div layout:fragment="js-validator">
+    <script id="validador">
+      
+      $('.cupom').on('click', function(event) {
+  		event.preventDefault();
+  		var cupom = $('#cupom').find('pre').html();
+        alert(cupom);
+        console.log(cupom);
+  	});
+    </script>
+  </div>
+    
+</html>
