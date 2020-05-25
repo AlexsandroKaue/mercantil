@@ -36,17 +36,17 @@
 .items-list li.item {
   padding-left: 10px;
   padding-right: 10px;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 0.34em;
+  padding-bottom: 0.34em;
   margin-top: 1px;
   margin-bottom: 1px;
 }
 
-.items-list li h4{
+.items-list li h5{
   margin-bottom: 0px;
 }
 
-.items-list li h5{
+.items-list li h6{
   margin-bottom: 0px;
 }
 

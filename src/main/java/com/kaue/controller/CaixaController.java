@@ -41,4 +41,10 @@ public class CaixaController {
 		mv.addObject("cupom", cupom);
 		return mv;
 	}
+	
+	public void incluirItem() {
+		
+	}
+	
+	
 }
