@@ -8,24 +8,78 @@
 </head>
 
   <section layout:fragment="container">
-    <form role="form"  method="POST" th:action="@{/caixa}" th:object="${registradora}">
-      <!-- <header layout:insert="~{cabecalho}"></header> -->
-      <div class="pt-2"></div>
+    <form role="form"  method="POST" th:action="@{/caixa}" th:object="${caixa}">
+      <header layout:insert="~{cabecalho}"></header>
       <header layout:insert="~{corpo}"></header>
     </form>
+    
+    <div class="modal" id="modalIncluirProduto">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="inputCodigoProduto" class="col-form-label">Produto</label>
+                  <input id="inputCodigoProduto" type="text" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            <a th:href="@{/caixa/incluir/}" class="js-incluir btn btn-md btn-success" th:text="#{incluir}"></a>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal --> 
+    
+    <div class="modal" id="modalExcluirProduto">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="inputCodigoProduto" class="col-form-label">Produto</label>
+                  <input id="inputCodigoProduto" type="text" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            <a th:href="@{/caixa/excluir/}" class="js-excluir btn btn-md btn-success" th:text="#{excluir}"></a>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal --> 
   </section>
-  
-  <!-- <section layout:fragment="titulo">
-    <h1 class="m-0 text-dark">Registradora</h1>
-  </section> -->
   
   <section layout:fragment="cabecalho">
     <div class="col-md-12">
-      <!-- <div class="bg-gray py-2 px-3">
-        <h1 class="text-center" style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
-          1 X AGUA MINERAL 600ML
-        </h1>
-      </div> -->
       <div class="bg-white py-2 px-3 my-0 rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
         <h1 class="text-center" style="color: #708599;">
           Pronto para registrar
@@ -46,9 +100,10 @@
               <div class="input-group">
               <input type="text" class="form-control" disabled="disabled"></input>
               <div class="input-group-append">
-                <button type="submit" class="btn btn-block bg-gradient-success">
+                <a data-toggle="modal" data-target="#modalIncluirProduto"
+                 class="btn btn-block bg-gradient-success">
                   <i class="fas fa-plus"></i>
-                </button>
+                </a>
               </div>
             </div>  
             </div>
@@ -91,119 +146,8 @@
                 <div id="cupom"><pre th:text="${cupom}" style="height: 400px"></pre></div>
               </div> -->
               <div class="chart">
-                <ul data-widget="todo-list" class="items-list" style="height: 401px">
-                  <li class="item">
-                    <!-- drag handle -->
-                    <div class="row align-items-end">
-                      <div class="col-md-4">
-                        <h5><b>Água mineral 600ml</b></h5>
-                        <h6>00000000000017</h6>
-                      </div>
-                      <div class="col-md-4 text-center">
-                        <h5>3un x 1,20</h5>
-                      </div>
-                      <div class="col-md-4 text-right">
-                        <h5>R$ 3,60</h5>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="linha border-bottom"></li>
-                  <li class="item">
-                    <!-- drag handle -->
-                    <div class="row align-items-end">
-                      <div class="col-md-4">
-                        <h5><b>Água mineral 600ml</b></h5>
-                        <h6>00000000000017</h6>
-                      </div>
-                      <div class="col-md-4 text-center">
-                        <h5>3un x 1,20</h5>
-                      </div>
-                      <div class="col-md-4 text-right">
-                        <h5>R$ 3,60</h5>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="linha border-bottom"></li>
-                  <li class="item">
-                    <!-- drag handle -->
-                    <div class="row align-items-end">
-                      <div class="col-md-4">
-                        <h5><b>Água mineral 600ml</b></h5>
-                        <h6>00000000000017</h6>
-                      </div>
-                      <div class="col-md-4 text-center">
-                        <h5>3un x 1,20</h5>
-                      </div>
-                      <div class="col-md-4 text-right">
-                        <h5>R$ 3,60</h5>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="linha border-bottom"></li>
-                  <li class="item">
-                    <!-- drag handle -->
-                    <div class="row align-items-end">
-                      <div class="col-md-4">
-                        <h5><b>Água mineral 600ml</b></h5>
-                        <h6>00000000000017</h6>
-                      </div>
-                      <div class="col-md-4 text-center">
-                        <h5>3un x 1,20</h5>
-                      </div>
-                      <div class="col-md-4 text-right">
-                        <h5>R$ 3,60</h5>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="linha border-bottom"></li>
-                  <li class="item">
-                    <!-- drag handle -->
-                    <div class="row align-items-end">
-                      <div class="col-md-4">
-                        <h5><b>Água mineral 600ml</b></h5>
-                        <h6>00000000000017</h6>
-                      </div>
-                      <div class="col-md-4 text-center">
-                        <h5>3un x 1,20</h5>
-                      </div>
-                      <div class="col-md-4 text-right">
-                        <h5>R$ 3,60</h5>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="linha border-bottom"></li>
-                  <li class="item">
-                    <!-- drag handle -->
-                    <div class="row align-items-end">
-                      <div class="col-md-4">
-                        <h5><b>Água mineral 600ml</b></h5>
-                        <h6>00000000000017</h6>
-                      </div>
-                      <div class="col-md-4 text-center">
-                        <h5>3un x 1,20</h5>
-                      </div>
-                      <div class="col-md-4 text-right">
-                        <h5>R$ 3,60</h5>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="linha border-bottom"></li>
-                 <li class="item">
-                    <!-- drag handle -->
-                    <div class="row align-items-end">
-                      <div class="col-md-4">
-                        <h5><b>Água mineral 600ml</b></h5>
-                        <h6>00000000000017</h6>
-                      </div>
-                      <div class="col-md-4 text-center">
-                        <h5>3un x 1,20</h5>
-                      </div>
-                      <div class="col-md-4 text-right">
-                        <h5>R$ 3,60</h5>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="linha border-bottom"></li>
+                <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 401px">
+                 
                 </ul>
               </div>
             </div>
@@ -228,9 +172,11 @@
             
             <div class=" text-right">
               <div class="btn btn-warning btn-lg btn-flat btn-block py-3 mt-2">
-                <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
-                <i class="fas fa-cart-plus fa-lg mr-2"></i> 
-                Remover Itens
+                <a data-toggle="modal" data-target="#modalExcluirProduto">
+                  <i class="fas fa-cart-minus fa-lg mr-2"></i> 
+                  <i class="fas fa-minus-circle fa-lg mr-2"></i>
+                  Remover
+                </a>
               </div>
             </div>
             
@@ -240,61 +186,121 @@
           </div>
         </div>
         <!-- /.row -->
-        <!-- <div class="card-footer">
-        <div class="row">
-          <div class="col-sm-3 col-6">
-            <div class="description-block border-right">
-              <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span>
-              <h5 class="description-header">$35,210.43</h5>
-              <span class="description-text">TOTAL REVENUE</span>
-            </div>
-            /.description-block
-          </div>
-          /.col
-          <div class="col-sm-3 col-6">
-            <div class="description-block border-right">
-              <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
-              <h5 class="description-header">$10,390.90</h5>
-              <span class="description-text">TOTAL COST</span>
-            </div>
-            /.description-block
-          </div>
-          /.col
-          <div class="col-sm-3 col-6">
-            <div class="description-block border-right">
-              <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
-              <h5 class="description-header">$24,813.53</h5>
-              <span class="description-text">TOTAL PROFIT</span>
-            </div>
-            /.description-block
-          </div>
-          /.col
-          <div class="col-sm-3 col-6">
-            <div class="description-block">
-              <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> 18%</span>
-              <h5 class="description-header">1200</h5>
-              <span class="description-text">GOAL COMPLETIONS</span>
-            </div>
-            /.description-block
-          </div>
-        </div>
-        /.row
-      </div> -->
+        <!-- <div class="card-footer"></div> -->
       
     </div>
     <!-- /.card -->
   </section>
   
-  <div layout:fragment="js-validator">
-    <script id="validador">
-      
-      $('.cupom').on('click', function(event) {
-  		event.preventDefault();
-  		var cupom = $('#cupom').find('pre').html();
-        alert(cupom);
-        console.log(cupom);
+  <script layout:fragment="js-validator">
+  	$('.js-incluir').on('click', function(event) {
+		event.preventDefault();
+		
+		var botaoIncluir = $(event.currentTarget);
+		var urlIncluirItem = botaoIncluir.attr('href');
+		var codigoProduto = $('#modalIncluirProduto').find('input#inputCodigoProduto').val();
+		urlIncluirItem += codigoProduto;
+		console.log(urlIncluirItem);
+		
+		var response = $.ajax({
+			url: urlIncluirItem,
+			type: 'GET'
+		})
+		
+		response.done(function(e){
+			var check = ''+
+  			'<div  class="icheck-primary d-inline ml-2">'+
+      			'<input type="checkbox" value="" name="todo4" id="todoCheck4"></input>'+
+      			'<label for="todoCheck4"></label>'+
+  			'</div>';
+			
+			var li = '';
+			for(var i=0; i<e.length; i++) {
+				li += '<li class="item" id="item'+(i+1)+'""> '+
+    				'<div class="row align-items-end">'+
+        				'<div class="col-md-4">'+
+            				'<h5><b id="descricao">'+ e[i].produto.descricao +'</b></h5>'+
+            				'<h6 id="codigo">'+ e[i].produto.codigo +'</h6>'+
+        				'</div>'+
+        				'<div class="col-md-3 text-center">'+
+          					'<h5 id="quantidade">3un x 1,20</h5>'+
+          				'</div>'+
+          				'<div class="col-md-4 text-right">'+
+          					'<h5>R$ 3,60</h5>'+
+        				'</div>'+
+    				'</div>'+
+				'</li>'+
+				'<li class="linha border-bottom"></li>';
+			}
+			$('#listaDeItens').html(li);
+			
+			
+		});
+		
+		response.fail(function(e){
+			console.log(e);
+			alert('Erro incluindo item');
+		});
+		
+		$('#modalIncluirProduto').modal("hide");
+		
+	});
+  	
+  	$('#item1').on('click', function(event) {
+  		console.log(event);
   	});
-    </script>
-  </div>
+  	
+  	$('.js-excluir').on('click', function(event) {
+		event.preventDefault();
+		
+		var botaoExcluir = $(event.currentTarget);
+		var urlExcluirItem = botaoExcluir.attr('href');
+		var codigoProduto = $('#modalExcluirProduto').find('input#inputCodigoProduto').val();
+		urlExcluirItem += codigoProduto;
+		
+		var response = $.ajax({
+			url: urlExcluirItem,
+			type: 'GET'
+		});
+		
+		response.done(function(e){
+			var check = ''+
+  			'<div  class="icheck-primary d-inline ml-2">'+
+      			'<input type="checkbox" value="" name="todo4" id="todoCheck4"></input>'+
+      			'<label for="todoCheck4"></label>'+
+  			'</div>';
+			
+			var li = '';
+			for(var i=0; i<e.length; i++) {
+				li += '<li class="item"> '+
+    				'<div class="row align-items-end">'+
+        				'<div class="col-md-4">'+
+            				'<h5><b id="descricao">'+ e[i].produto.descricao +'</b></h5>'+
+            				'<h6 id="codigo">'+ e[i].produto.codigo +'</h6>'+
+        				'</div>'+
+        				'<div class="col-md-3 text-center">'+
+          					'<h5 id="quantidade">3un x 1,20</h5>'+
+          				'</div>'+
+          				'<div class="col-md-4 text-right">'+
+          					'<h5>R$ 3,60</h5>'+
+        				'</div>'+
+    				'</div>'+
+				'</li>'+
+				'<li class="linha border-bottom"></li>';
+			}
+			$('#listaDeItens').html(li);
+			
+			
+		});
+		
+		response.fail(function(e){
+			console.log(e);
+			alert('Erro excluindo item');
+		});
+		
+		$('#modalExcluirProduto').modal("hide");
+		
+	});
+  </script>
     
 </html>

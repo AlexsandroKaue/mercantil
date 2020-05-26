@@ -22,6 +22,7 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kaue.enumeration.StatusVenda;
 
 @Entity
@@ -33,7 +34,7 @@ public class Venda {
 	@GeneratedValue(generator = "seq_venda", strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@NotNull(message = "Data é obrigatória")
+	@NotNull(message = "Data de Venda é obrigatório")
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	@Temporal(TemporalType.TIME)
 	private Date dataVenda;

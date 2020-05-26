@@ -9,6 +9,8 @@ import javax.persistence.SequenceGenerator;
 
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Audited
 public class Item {
@@ -18,9 +20,11 @@ public class Item {
 	@GeneratedValue(generator = "seq_item", strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
+	@JsonIgnoreProperties({"categoria", "loteList" }) 
 	@ManyToOne
 	private Produto produto;
 	
+	@JsonIgnoreProperties({"itemList" }) 
 	@ManyToOne
 	private Venda venda;
 

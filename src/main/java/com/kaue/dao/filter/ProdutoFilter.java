@@ -7,7 +7,7 @@ import com.kaue.model.Categoria;
 
 public class ProdutoFilter {
 	
-	private Long codigo;
+	private String codigo;
 	
 	private String descricao;
 	
@@ -20,14 +20,6 @@ public class ProdutoFilter {
 	private BigDecimal valorDeVenda;
 	
 	private Categoria categoria;
-
-	public Long getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
-	}
 
 	public String getDescricao() {
 		return descricao;
@@ -75,6 +67,14 @@ public class ProdutoFilter {
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 }

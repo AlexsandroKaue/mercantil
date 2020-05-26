@@ -41,6 +41,12 @@ public class ProdutoServiceImpl implements ProdutoService{
 	public Produto buscarPorId(Long id) {
 		return produtoDAO.findById(id).orElse(null);
 	}
+
+	@Override
+	public Produto buscarPorCodigo(String codigo) {
+		String cod = (codigo == null ? "" : codigo);
+		return produtoDAO.findByCodigo(cod);
+	}
 	
 	
 }

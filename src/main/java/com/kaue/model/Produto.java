@@ -32,6 +32,8 @@ public class Produto {
 	@GeneratedValue(generator = "seq_produto", strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
+	private String codigo;
+	
 	@NotEmpty(message = "A Descrição é obrigatória")
 	private String descricao;
 	
@@ -121,6 +123,14 @@ public class Produto {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 }

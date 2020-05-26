@@ -9,6 +9,9 @@ import com.kaue.model.Venda;
 
 public interface VendaDAO extends JpaRepository<Venda, Long>{
 
-	public List<Venda> findByDescricaoContainingIgnoreCaseOrderByIdDesc(String descricao);
+	/*
+	 * public List<Venda> findByDescricaoContainingIgnoreCaseOrderByIdDesc(String
+	 * descricao);
+	 */
 
 }
