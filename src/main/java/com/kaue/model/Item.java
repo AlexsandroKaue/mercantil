@@ -1,5 +1,7 @@
 package com.kaue.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +29,10 @@ public class Item {
 	@JsonIgnoreProperties({"itemList" }) 
 	@ManyToOne
 	private Venda venda;
+	
+	private Integer quantidade;
+	
+	private BigDecimal valor;
 
 	public Long getId() {
 		return id;
@@ -75,5 +81,21 @@ public class Item {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public Integer getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
+
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
 	}
 }

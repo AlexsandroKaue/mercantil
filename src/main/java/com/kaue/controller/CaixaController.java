@@ -61,14 +61,27 @@ public class CaixaController {
 	@RequestMapping(value = "/incluir/{codigo}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public List<Item> incluirItem(@PathVariable("codigo") String codigo) {
-		Item item = new Item();
+		
+		if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
 		Produto produto = produtoService.buscarPorCodigo(codigo);
+		
 		if(produto != null) {
-			item.setProduto(produto);
-			item.setVenda(venda);
-			
-			if(venda.getItemList()==null) venda.setItemList(new ArrayList<Item>());
-			venda.getItemList().add(item);
+			boolean isNew = true;
+			for(Item it : venda.getItemList()) {
+				if(it.getProduto().getCodigo().equals(codigo)) {
+					it.setQuantidade(it.getQuantidade()+1);
+					isNew = false;
+				}
+			}
+			if(isNew) {
+				Item item = new Item();
+				item.setProduto(produto);
+				item.setValor(produto.getValorDeVenda());
+				item.setVenda(venda);
+				item.setQuantidade(1);
+				
+				venda.getItemList().add(item);
+			}
 		}
 		
 		List<Item> itemList = venda.getItemList();
@@ -85,7 +98,11 @@ public class CaixaController {
 		while(itemIterator.hasNext()) {
 			item = itemIterator.next();
 			if(item.getProduto().getCodigo().equals(codigo)) {
-				itemIterator.remove();
+				if(item.getQuantidade()>1) {
+					item.setQuantidade(item.getQuantidade()-1);
+				} else {
+					itemIterator.remove();
+				}
 			}
 		}
 		
