@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -60,21 +62,23 @@ public class CaixaController {
 	
 	@RequestMapping(value = "/incluir/{codigo}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public List<Item> incluirItem(@PathVariable("codigo") String codigo) {
+	public Map<String, Object> incluirItem(@PathVariable("codigo") String codigo) {
 		
 		if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
 		Produto produto = produtoService.buscarPorCodigo(codigo);
 		
+		Item item = null;
 		if(produto != null) {
 			boolean isNew = true;
 			for(Item it : venda.getItemList()) {
 				if(it.getProduto().getCodigo().equals(codigo)) {
 					it.setQuantidade(it.getQuantidade()+1);
 					isNew = false;
+					item = it; break;
 				}
 			}
 			if(isNew) {
-				Item item = new Item();
+				item = new Item();
 				item.setProduto(produto);
 				item.setValor(produto.getValorDeVenda());
 				item.setVenda(venda);
@@ -83,18 +87,21 @@ public class CaixaController {
 				venda.getItemList().add(item);
 			}
 		}
-		
 		List<Item> itemList = venda.getItemList();
-		return itemList;
+		Map<String, Object> map = new HashMap<>();
+		map.put("listaDeItem", itemList);
+		map.put("item", item);
+		
+		return map;
 		
 	}
 	
 	@RequestMapping(value = "/excluir/{codigo}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public List<Item> excluirItem(@PathVariable("codigo") String codigo) {
+	public Map<String, Object> excluirItem(@PathVariable("codigo") String codigo) {
 		
 		Iterator<Item> itemIterator = venda.getItemList().iterator();
-		Item item;
+		Item item = null;
 		while(itemIterator.hasNext()) {
 			item = itemIterator.next();
 			if(item.getProduto().getCodigo().equals(codigo)) {
@@ -107,7 +114,11 @@ public class CaixaController {
 		}
 		
 		List<Item> itemList = venda.getItemList();
-		return itemList;
+		Map<String, Object> map = new HashMap<>();
+		map.put("listaDeItem", itemList);
+		map.put("item", item);
+		
+		return map;
 		
 	}
 	

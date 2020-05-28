@@ -9,7 +9,8 @@
 
   <section layout:fragment="container">
     <form role="form"  method="POST" th:action="@{/caixa}" th:object="${caixa}">
-      <header layout:insert="~{cabecalho}"></header>
+      <!-- <header layout:insert="~{cabecalho}"></header> -->
+      <div class="pt-2"></div>
       <header layout:insert="~{corpo}"></header>
     </form>
     
@@ -78,20 +79,68 @@
     <!-- /.modal --> 
   </section>
   
-  <section layout:fragment="cabecalho">
-    <div class="col-md-12">
+  <!-- <section layout:fragment="cabecalho">
+    <div class="col-md-9">
       <div class="bg-gray py-2 px-3 my-0 rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
         <h1 class="text-center">
           Pronto para registrar
         </h1>
       </div>
     </div>
-  </section>
+    <div class="col-md-3">
+      <div class="bg-white py-2 px-3 my-0 rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
+        <h1 class="text-center">
+          Pronto para registrar
+        </h1>
+      </div>
+    </div>
+  </section> -->
   
   <section layout:fragment="conteudo">
     <div class="card card-default">
       <!-- <div class="card-header"></div> -->
       <div class="card-body">
+        <div class="row mb-2 align-items-center">
+          <div class="col-md-9">
+            <div class="bg-gray rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
+              <h1 id="descricaoProduto" class="text-center">
+                Produto
+              </h1>
+            </div>
+          </div>
+          <!-- <div class="col-md-3 text-center">
+            <div class="bg-white rounded py-1" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
+              <div class="btn-lg btn-flat">
+                <i class="fas fa-circle text-green"></i>
+                Pronto para registrar
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="col-md-3 text-center">
+            <div class="bg-white rounded py-1" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
+              <div class="btn-lg btn-flat">
+                <i class="fas fa-circle text-red"></i>
+                Caixa fechado
+              </div>
+            </div>
+          </div> -->
+          <div class="col-md-3">
+            <!-- <div class="bg-white rounded py-1" style="border-style: solid; border-width: 2px; border-color: #cbd3da;"> -->
+              <div class="btn-lg btn-flat">
+                <div class="row">
+                  <div class="col-md-4 text-left">
+                    Status:
+                  </div>
+                  <div class="col-md-8 text-right">
+                    <i class="fas fa-circle text-yellow"></i>
+                    Registrando
+                  </div>
+                </div>
+              </div>
+            <!-- </div> -->
+          </div>
+        </div>
+      
         <div class="row" >
           
           <!-- <div class="col-md-3">
@@ -140,21 +189,21 @@
           /.col -->
                  
           <div class="col-md-9">
-            <div class="bg-white py-2 px-3" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
+            <div class="bg-white py-2 px-2" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
               <ul class="items-list" style="height: 25px; margin-bottom: 0px">
                 <li>
                   <div class="row">
-                    <div class="col-md-4 text-left">
+                    <div class="col-md-5 text-left">
                       <h5 class="mb-0">
                         Descrição
                       </h5>
                     </div>
-                    <div class="col-md-4 text-right">
+                    <div class="col-md-4 text-center">
                       <h5 class="mb-0">
-                        Quantidade. X Preço Unitário
+                        Quantidade x Preço Unitário
                       </h5>
                     </div>
-                    <div class="col-md-4 text-right">
+                    <div class="col-md-3 text-right">
                       <h5 class="mb-0">
                         Preço Total
                       </h5>
@@ -214,7 +263,7 @@
             </div>
             
             <div class="progress-group text-right">
-              <h1 style="margin-top: 80px;"><span class="text">Subtotal</span></h1>
+              <h1 style="margin-top: 107px;"><span class="text">Subtotal</span></h1>
               <div class="bg-gray py-2 px-3 ">
                 <h1 id="subtotal" class="mb-0" style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
                   R$ 0,00
@@ -227,7 +276,7 @@
           </div>
         </div>
         <!-- /.row -->
-        <!-- <div class="card-footer"></div> -->
+        <div class="card-footer"></div>
       
     </div>
     <!-- /.card -->
@@ -255,7 +304,7 @@
       			'<label for="todoCheck4"></label>'+
   			'</div>';
 			
-			atualizarLista(e);
+			atualizarLista(e.listaDeItem, e.item);
 		});
 		
 		response.fail(function(e){
@@ -287,7 +336,7 @@
       			'<label for="todoCheck4"></label>'+
   			'</div>';
 			
-  			atualizarLista(e);
+  			atualizarLista(e.listaDeItem, e.item);
 		});
 		
 		response.fail(function(e){
@@ -299,7 +348,7 @@
 		
 	});
   	
-  	function atualizarLista(listaDeItem) {
+  	function atualizarLista(listaDeItem, item) {
 		// Create our number formatters.
 		var currencyformatter = new Intl.NumberFormat('pt-BR', {
 		  style: "currency",
@@ -317,14 +366,14 @@
 		for(var i=0; i<listaDeItem.length; i++) {
 			li += '<li class="item"> '+
 				'<div class="row align-items-end">'+
-    				'<div class="col-md-5">'+
+    				'<div class="col-md-5 text-left">'+
         				'<h5><b id="descricao">'+ listaDeItem[i].produto.descricao +'</b></h5>'+
         				'<h6 id="codigo">'+ listaDeItem[i].produto.codigo +'</h6>'+
     				'</div>'+
-    				'<div class="col-md-2 text-center">'+
+    				'<div class="col-md-4 text-center">'+
       					'<h5 id="quantidade">'+listaDeItem[i].quantidade+'un x '+ decimalformatter.format(listaDeItem[i].valor)+'</h5>'+
       				'</div>'+
-      				'<div class="col-md-4 text-right">'+
+      				'<div class="col-md-3 text-right">'+
       					'<h5>'+currencyformatter.format(listaDeItem[i].quantidade*listaDeItem[i].valor)+'</h5>'+
     				'</div>'+
 				'</div>'+
@@ -332,6 +381,7 @@
 			'<li class="linha border-bottom"></li>';
 			subtotal += listaDeItem[i].valor*listaDeItem[i].quantidade;
 		}
+		$('#descricaoProduto').html(item.produto.descricao);
 		$('#listaDeItens').html(li);
 		$('#subtotal').html(currencyformatter.format(subtotal));
 	}
