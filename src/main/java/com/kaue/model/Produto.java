@@ -23,8 +23,11 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.NumberFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Audited
+@JsonIgnoreProperties({"loteList"}) 
 public class Produto {
 	
 	@Id

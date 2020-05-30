@@ -162,6 +162,7 @@ $(function(){
 	});*/
 	
 	$('.js-tabela').DataTable({
+	  "destroy": true,
       "paging": true,
       "pageLength": 5,
       /*"lengthChange": true,*/

@@ -33,8 +33,13 @@ public class ProdutoServiceImpl implements ProdutoService{
 
 	@Override
 	public List<Produto> pesquisar(ProdutoFilter filtro) {
-		String descricao = (filtro.getDescricao() == null ? "" : filtro.getDescricao());
-		return produtoDAO.findByDescricaoContainingIgnoreCaseOrderByIdDesc(descricao);
+		/*
+		 * String descricao = (filtro.getDescricao() == null ? "" :
+		 * filtro.getDescricao()); return
+		 * produtoDAO.findByDescricaoContainingIgnoreCaseOrderByIdDesc(descricao);
+		 */
+		
+		return produtoDAO.findProdutoByFiltro(filtro);
 	}
 
 	@Override

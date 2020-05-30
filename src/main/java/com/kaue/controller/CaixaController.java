@@ -14,10 +14,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kaue.dao.filter.ProdutoFilter;
+import com.kaue.model.Categoria;
 import com.kaue.model.Item;
 import com.kaue.model.Produto;
 import com.kaue.model.Venda;
@@ -57,6 +61,8 @@ public class CaixaController {
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW);
 		venda.setItemList(new ArrayList<Item>());
 		mv.addObject("caixa", venda);
+		mv.addObject("listaDeItens", new ArrayList<Item>());
+		mv.addObject("listaDeProdutos", new ArrayList<Produto>());
 		return mv;
 	}
 	
@@ -65,9 +71,9 @@ public class CaixaController {
 	public Map<String, Object> incluirItem(@PathVariable("codigo") String codigo) {
 		
 		if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
+		Item item = null;
 		Produto produto = produtoService.buscarPorCodigo(codigo);
 		
-		Item item = null;
 		if(produto != null) {
 			boolean isNew = true;
 			for(Item it : venda.getItemList()) {
@@ -87,6 +93,7 @@ public class CaixaController {
 				venda.getItemList().add(item);
 			}
 		}
+		
 		List<Item> itemList = venda.getItemList();
 		Map<String, Object> map = new HashMap<>();
 		map.put("listaDeItem", itemList);
@@ -119,6 +126,28 @@ public class CaixaController {
 		map.put("item", item);
 		
 		return map;
+		
+	}
+	
+	@RequestMapping(value = "/obterItens", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public List<Item> obterItens() {
+		return venda.getItemList();
+	}
+	
+	@RequestMapping(value = "/buscarProduto/{termo}", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public List<Produto> buscarProduto(@PathVariable("termo") String termo) {
+		
+		ProdutoFilter filtro = new ProdutoFilter();
+		filtro.setCodigo(termo);
+		filtro.setDescricao(termo);
+		filtro.setCategoria(new Categoria());
+		filtro.getCategoria().setDescricao(termo);
+		
+		List<Produto> produtoList = produtoService.pesquisar(filtro);
+		
+		return produtoList;
 		
 	}
 	
