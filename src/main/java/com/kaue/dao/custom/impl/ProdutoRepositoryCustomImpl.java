@@ -8,13 +8,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.kaue.dao.custom.ProdutoRepositoryCustom;
 import com.kaue.dao.filter.ProdutoFilter;
-import com.kaue.model.Categoria;
 import com.kaue.model.Produto;
 
 public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
@@ -35,7 +35,7 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         Path<String> categoriaPath = null;
         if(produtoFiltro.getCodigo()!=null) {
         	codigoPath = produto.get("codigo");
-        	predicates.add(cb.equal(codigoPath, produtoFiltro.getCodigo()));
+        	predicates.add(cb.like(codigoPath, "%"+produtoFiltro.getCodigo()+"%"));
         }
         if(produtoFiltro.getDescricao()!=null) {
         	descricaoPath = produto.get("descricao");
@@ -47,7 +47,12 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         			"%"+produtoFiltro.getCategoria().getDescricao().toUpperCase()+"%"));
         }
         
-        query.select(produto).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        if(predicates.size()>0) {
+        	query.select(produto).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        } else {
+        	query.select(produto);
+        }
+        query.orderBy(cb.desc(produto.get("id")));
         
         TypedQuery<Produto> typedQuery = entityManager.createQuery(query);
  

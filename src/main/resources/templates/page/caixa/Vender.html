@@ -353,6 +353,146 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+    
+    <div class="modal" id="modalPagamento">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Pagamento</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body">
+            <div class="row">
+              <!-- accepted payments column -->
+              <div class="col-6">
+                <p class="lead">Método de Pagamento:</p>
+                <img th:src="@{/dist/img/credit/visa.png}" alt="Visa"></img>
+                <img th:src="@{/dist/img/credit/mastercard.png}" alt="Mastercard"></img>
+                <img th:src="@{/dist/img/credit/american-express.png}" alt="American Express"></img>
+                <img th:src="@{/dist/img/credit/paypal2.png}" alt="Paypal"></img>
+
+                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
+                  Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
+                  plugg
+                  dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                </p>
+              </div>
+              <!-- /.col -->
+              <div class="col-6">
+                <p class="lead">Amount Due 2/22/2014</p>
+
+                <div class="table-responsive">
+                  <table class="table">
+                    <tr>
+                      <th style="width:50%">Subtotal:</th>
+                      <td>$250.30</td>
+                    </tr>
+                    <tr>
+                      <th>Desconto (9.3%)</th>
+                      <td><p class="text-danger mb-0">$10.34</p></td>
+                    </tr>
+                    <!-- <tr>
+                      <th>Shipping:</th>
+                      <td>$5.80</td>
+                    </tr> -->
+                    <tr>
+                      <th>Total:</th>
+                      <td>$265.24</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+          </div>
+          
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+            <a th:href="@{#}" class="btn btn-md btn-success">
+              <i class="far fa-credit-card"></i> 
+              Confirmar Pagamento
+            </a>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal --> 
+  
+    <div class="modal" id="modalPagamento">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Pagamento</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body">
+            <div class="row">
+              <!-- accepted payments column -->
+              <div class="col-6">
+                <p class="lead">Método de Pagamento:</p>
+                <img th:src="@{/dist/img/credit/visa.png}" alt="Visa"></img>
+                <img th:src="@{/dist/img/credit/mastercard.png}" alt="Mastercard"></img>
+                <img th:src="@{/dist/img/credit/american-express.png}" alt="American Express"></img>
+                <img th:src="@{/dist/img/credit/paypal2.png}" alt="Paypal"></img>
+
+                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
+                  Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
+                  plugg
+                  dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                </p>
+              </div>
+              <!-- /.col -->
+              <div class="col-6">
+                <p class="lead">Amount Due 2/22/2014</p>
+
+                <div class="table-responsive">
+                  <table class="table">
+                    <tr>
+                      <th style="width:50%">Subtotal:</th>
+                      <td>$250.30</td>
+                    </tr>
+                    <tr>
+                      <th>Desconto (9.3%)</th>
+                      <td><p class="text-danger mb-0">$10.34</p></td>
+                    </tr>
+                    <!-- <tr>
+                      <th>Shipping:</th>
+                      <td>$5.80</td>
+                    </tr> -->
+                    <tr>
+                      <th>Total:</th>
+                      <td>$265.24</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+          </div>
+          
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+            <a th:href="@{#}" class="btn btn-md btn-success">
+              <i class="far fa-credit-card"></i> 
+              Confirmar Pagamento
+            </a>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal --> 
   </section>
   
   <section layout:fragment="conteudo">
@@ -362,10 +502,10 @@
       <!-- <div class="card-header"></div> -->
       <div class="card-body">
         <div class="row mb-2 align-items-center">
-          <div class="col-md-8">
-            <div class="bg-gray rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
-              <h2 id="descricaoProduto" class="text-center">
-                Produto
+          <div class="col-md-9">
+            <div class="bg-white rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
+              <h2 id="descricaoProduto" class="text-center text-success">
+                <strong>Produto</strong>
               </h2>
             </div>
           </div>
@@ -382,25 +522,25 @@
       
         <div class="row" >
                  
-          <div class="col-md-8">
+          <div class="col-md-9">
             <div class="bg-white py-2 px-2" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
               <ul class="items-list" style="height: 25px; margin-bottom: 0px">
                 <li>
                   <div class="row">
-                    <div class="col-md-5 text-left">
-                      <h6 class="mb-0">
+                    <div class="col-md-4 text-left">
+                      <h5 class="lead mb-0">
                         Descrição
-                      </h6>
+                      </h5>
                     </div>
                     <div class="col-md-4 text-center">
-                      <h6 class="mb-0">
+                      <h5 class="lead mb-0">
                         Quantidade x Preço Unitário
-                      </h6>
+                      </h5>
                     </div>
-                    <div class="col-md-3 text-right">
-                      <h6 class="mb-0">
+                    <div class="col-md-4 text-right">
+                      <h5 class="lead mb-0">
                         Preço Total
-                      </h6>
+                      </h5>
                     </div>
                   </div>
                 </li>
@@ -428,34 +568,38 @@
             <div class="row mt-2">
               <div class="col-md-6">
                 <div class=" text-center">
-                  <div class="btn btn-success btn-flat btn-block py-2">
-                    <a data-toggle="modal" data-target="#modalIncluirProduto">
+                  <!-- <div class="btn btn-success btn-flat btn-block py-2"> -->
+                    <a class="btn btn-success btn-flat btn-block py-2"
+                       th:href="@{#}" data-toggle="modal" data-target="#modalIncluirProduto">
                       <i class="fas fa-plus mr-2"></i>
                       Incluir
                     </a>
-                  </div>
+                  <!-- </div> -->
                 </div>
               </div>
               <div class="col-md-6">
                 <div class=" text-right">
-                  <div class="btn btn-primary btn-flat py-2 btn-block">
-                    <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
-                    <i class="fas fa-cart-plus mr-2"></i> 
-                    Pagamento
-                  </div>
+                  <!-- <div class="btn btn-primary btn-flat py-2 btn-block"> -->
+                    <a th:href="@{#}" class="btn btn-primary btn-flat py-2 btn-block" 
+                      data-toggle="modal" data-target="#modalPagamento">
+                      <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
+                      <i class="fas fa-cart-plus mr-2"></i> 
+                      Pagamento
+                    </a>
+                  <!-- </div> -->
                 </div>
               </div>
               </div>
               <div class="row mt-2">
               <div class="col-md-6">
                 <div class=" text-right">
-                  <div class="btn btn-warning btn-flat btn-block py-2">
-                    <a class="js-buscar-itens" 
+                  <!-- <div class="btn btn-warning btn-flat btn-block py-2"> -->
+                    <a class="js-buscar-itens btn btn-warning btn-flat btn-block py-2" 
                       th:href="@{/caixa/obterItens}">
                       <i class="fas fa-minus-circle mr-2"></i>
                       Remover
                     </a>
-                  </div>
+                  <!-- </div> -->
                 </div>
               </div>
               <div class="col-md-6">
@@ -745,14 +889,14 @@
 		for(var i=0; i<listaDeItem.length; i++) {
 			li += '<li class="item"> '+
 				'<div class="row align-items-end">'+
-    				'<div class="col-md-5 text-left">'+
+    				'<div class="col-md-4 text-left">'+
         				'<h6><b id="descricao">'+ listaDeItem[i].produto.descricao +'</b></h6>'+
         				'<h6 id="codigo">'+ listaDeItem[i].produto.codigo +'</h6>'+
     				'</div>'+
     				'<div class="col-md-4 text-center">'+
       					'<h6 id="quantidade">'+listaDeItem[i].quantidade+'un x '+ decimalformatter.format(listaDeItem[i].valor)+'</h6>'+
       				'</div>'+
-      				'<div class="col-md-3 text-right">'+
+      				'<div class="col-md-4 text-right">'+
       					'<h5>'+currencyformatter.format(listaDeItem[i].quantidade*listaDeItem[i].valor)+'</h5>'+
     				'</div>'+
 				'</div>'+
@@ -760,7 +904,7 @@
 			'<li class="linha border-bottom"></li>';
 			subtotal += listaDeItem[i].valor*listaDeItem[i].quantidade;
 		}
-		$('#descricaoProduto').html(item.quantidade +' X '+item.produto.descricao);
+		$('#descricaoProduto').html('<strong>'+item.produto.descricao+'</strong>');//item.quantidade +' X '
 		$('#listaDeItens').html(li);
 		$('#subtotal').html(currencyformatter.format(subtotal));
 	}

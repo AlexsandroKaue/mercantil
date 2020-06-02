@@ -83,6 +83,8 @@ public class ProdutoController {
 				attributes.addFlashAttribute("mensagem", "Produto alterado com sucesso!");
 				url = "redirect:/produtos/"+produto.getId();
 			}
+			
+			produto.setCodigo(String.format("%010d" , produto.getId()));
 			produtoService.salvar(produto);
 			return url;
 		} catch(DataIntegrityViolationException e) {
@@ -93,6 +95,17 @@ public class ProdutoController {
 	
 	@RequestMapping
 	public ModelAndView pesquisar(@ModelAttribute("filtro") ProdutoFilter filtro) {
+		
+		if(filtro.getDescricao() != null) {
+			String termo = filtro.getDescricao();
+			try {
+				Integer codigo = Integer.parseInt(termo);
+				filtro.setCodigo(String.format("%010d" , codigo));
+			} catch(NumberFormatException nfe) {}
+
+			filtro.setCategoria(new Categoria());
+			filtro.getCategoria().setDescricao(termo);
+		}
 		List<Produto> produtoList = produtoService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);
 		mv.addObject("produtos", produtoList);

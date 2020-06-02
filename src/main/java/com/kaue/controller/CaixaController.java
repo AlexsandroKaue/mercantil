@@ -140,7 +140,12 @@ public class CaixaController {
 	public List<Produto> buscarProduto(@PathVariable("termo") String termo) {
 		
 		ProdutoFilter filtro = new ProdutoFilter();
-		filtro.setCodigo(termo);
+
+		try {
+			Integer codigo = Integer.parseInt(termo);
+			filtro.setCodigo(String.format("%010d" , codigo));
+		} catch(NumberFormatException nfe) {}
+
 		filtro.setDescricao(termo);
 		filtro.setCategoria(new Categoria());
 		filtro.getCategoria().setDescricao(termo);

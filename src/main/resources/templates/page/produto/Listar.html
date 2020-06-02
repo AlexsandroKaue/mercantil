@@ -56,7 +56,7 @@
           </thead>
           <tbody>
             <tr th:each="produto : ${produtos}">
-              <td class="text-center" th:text="${produto.id}"></td>
+              <td class="text-center" th:text="${produto.codigo}"></td>
               <td th:text="${produto.descricao}"></td>
               <td class="text-center" th:text="${produto.categoria!=null?produto.categoria.descricao:null}">                    
               <td class="text-center">

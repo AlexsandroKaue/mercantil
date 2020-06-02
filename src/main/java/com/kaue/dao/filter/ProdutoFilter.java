@@ -20,6 +20,11 @@ public class ProdutoFilter {
 	private BigDecimal valorDeVenda;
 	
 	private Categoria categoria;
+	
+	public ProdutoFilter() {
+		this.codigo = null;
+		this.descricao = null;
+	}
 
 	public String getDescricao() {
 		return descricao;
