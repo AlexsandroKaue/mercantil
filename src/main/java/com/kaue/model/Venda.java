@@ -35,13 +35,22 @@ public class Venda {
 	private Long id;
 	
 	@NotNull(message = "Data de Venda é obrigatório")
-	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-	@Temporal(TemporalType.TIME)
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Temporal(TemporalType.DATE)
 	private Date dataVenda;
 	
 	@NotNull(message = "Valor é obrigatório")
 	@NumberFormat(pattern = "#,##0.00")
-	private BigDecimal valor;
+	private BigDecimal subtotal;
+	
+	@NumberFormat(pattern = "#,##0.00")
+	private BigDecimal desconto;
+	
+	@NumberFormat(pattern = "#,##0.00")
+	private BigDecimal saldo;
+	
+	@NumberFormat(pattern = "#,##0.00")
+	private BigDecimal troco;
 	
 	@Enumerated(EnumType.STRING)
 	private StatusVenda status;
@@ -63,14 +72,6 @@ public class Venda {
 
 	public void setDataVenda(Date dataVenda) {
 		this.dataVenda = dataVenda;
-	}
-
-	public BigDecimal getValor() {
-		return valor;
-	}
-
-	public void setValor(BigDecimal valor) {
-		this.valor = valor;
 	}
 
 	public StatusVenda getStatus() {
@@ -112,6 +113,38 @@ public class Venda {
 
 	public void setItemList(List<Item> itemList) {
 		this.itemList = itemList;
+	}
+
+	public BigDecimal getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(BigDecimal subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public BigDecimal getDesconto() {
+		return desconto;
+	}
+
+	public void setDesconto(BigDecimal desconto) {
+		this.desconto = desconto;
+	}
+
+	public BigDecimal getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(BigDecimal saldo) {
+		this.saldo = saldo;
+	}
+
+	public BigDecimal getTroco() {
+		return troco;
+	}
+
+	public void setTroco(BigDecimal troco) {
+		this.troco = troco;
 	}
 
 }

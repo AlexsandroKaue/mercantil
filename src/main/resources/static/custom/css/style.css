@@ -66,6 +66,10 @@
 	/* font-family: "Nimbus Sans Narrow", Times, monospace; */
 }
 
+.inherit {
+  font-size: inherit;
+}
+
 
 
 

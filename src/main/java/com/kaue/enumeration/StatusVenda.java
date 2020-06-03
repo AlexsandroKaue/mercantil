@@ -3,7 +3,7 @@ package com.kaue.enumeration;
 public enum StatusVenda {
 	
 	ABERTA("Aberta"),
-	FECHADA("Fechada"),
+	FINALIZADA("Finalizada"),
 	CANCELADA("Cancelada");
 	
 	private String descricao;

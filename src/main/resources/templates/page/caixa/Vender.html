@@ -8,10 +8,112 @@
 </head>
 
   <section layout:fragment="container">
-    <form role="form"  method="POST" th:action="@{/caixa}" th:object="${caixa}">
+    <form role="form"  method="POST" th:action="@{/caixa/finalizarVenda}" th:object="${venda}">
       <!-- <header layout:insert="~{cabecalho}"></header> -->
       <div class="pt-2"></div>
       <header layout:insert="~{corpo}"></header>
+      
+      <div class="modal" id="modalPagamento">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Pagamento</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-12">
+                  
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tr>
+                        <th class="lead mt-2" style="width:50%">Subtotal:</th>
+                        <td id="subtotal"><h3 class="mb-0">R$ 0,00</h3></td>
+                      </tr>
+                      <tr>
+                        <th class="lead">Desconto (0%):</th>
+                        <td><p class="mb-0">R$ 0,00</p></td>
+                      </tr>
+                      <tr>
+                        <th class="lead">Total:</th>
+                        <td><h3 class="mb-0">R$ 0,00</h3></td>
+                      </tr>
+                      <tr>
+                        <th class="lead">Saldo:</th>
+                        <td>
+                          <div class="input-group input-group-lg">
+                            <input type="text" class="form-control" id="inputSaldo"></input>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                    </table>
+                  </div>
+                  
+                </div>
+              </div>
+              <!-- /.row -->
+            </div>
+            
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Voltar</button>
+              <button type="submit" class="btn btn-md btn-success">
+                <i class="far fa-credit-card"></i> 
+                Finalizar
+              </button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal --> 
+      
+      <div class="modal" id="modalExcluirProduto">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title"></h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <table id="tabelaDeItens" class="table table-bordered table-striped js-tabela">
+                    <thead>
+                      <tr>
+                        <th class="text-center col-3" th:text="#{codigo}"></th>
+                        <th th:text="#{descricao}" ></th>
+                        <th class="text-center col-2" th:text="#{quantidade}"></th>
+                        <th class="text-center col-1"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="item : ${venda.itemList}">
+                        <td colspan="4">Nenhum produto foi encontrado.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+              <a th:href="@{/caixa/excluir/}" class="js-excluir btn btn-md btn-success" th:text="#{excluir}"></a>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal --> 
     </form>
     
     <div class="modal" id="modalIncluirProduto">
@@ -41,57 +143,14 @@
                 <table id="tabelaDeProdutos" class="table table-bordered table-striped js-tabela">
                   <thead>
                     <tr>
-                      <th class="text-center col-1" th:text="#{listagem.produto.coluna.id}"></th>
-                      <th th:text="#{listagem.produto.coluna.descricao}" ></th>
-                      <th class="text-center col-2" th:text="#{listagem.produto.coluna.categoria}"></th>
+                      <th class="text-center col-1" th:text="#{codigo}"></th>
+                      <th th:text="#{descricao}" ></th>
+                      <th class="text-center col-2" th:text="#{categoria}"></th>
                       <th class="text-center col-2"></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr th:each="produto : ${listaDeProdutos}">
-    				  <td colspan="4">Nenhum produto foi encontrado.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          
-          <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-            <a th:href="@{/caixa/incluir/}" class="js-incluir btn btn-md btn-success" th:text="#{incluir}"></a>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal --> 
-    
-    <div class="modal" id="modalExcluirProduto">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title"></h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-12">
-                <table id="tabelaDeItens" class="table table-bordered table-striped js-tabela">
-                  <thead>
-                    <tr>
-                      <th class="text-center col-3" th:text="#{listagem.produto.coluna.id}"></th>
-                      <th th:text="#{listagem.produto.coluna.descricao}" ></th>
-                      <th class="text-center col-2">Quantidade</th>
-                      <th class="text-center col-1"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr th:each="item : ${listaDeItens}">
                       <td colspan="4">Nenhum produto foi encontrado.</td>
                     </tr>
                   </tbody>
@@ -102,7 +161,7 @@
           
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-            <a th:href="@{/caixa/excluir/}" class="js-excluir btn btn-md btn-success" th:text="#{excluir}"></a>
+            <a th:href="@{/caixa/incluir/}" class="js-incluir btn btn-md btn-success" th:text="#{incluir}"></a>
           </div>
         </div>
         <!-- /.modal-content -->
@@ -353,146 +412,7 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
-    
-    <div class="modal" id="modalPagamento">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Pagamento</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          
-          <div class="modal-body">
-            <div class="row">
-              <!-- accepted payments column -->
-              <div class="col-6">
-                <p class="lead">Método de Pagamento:</p>
-                <img th:src="@{/dist/img/credit/visa.png}" alt="Visa"></img>
-                <img th:src="@{/dist/img/credit/mastercard.png}" alt="Mastercard"></img>
-                <img th:src="@{/dist/img/credit/american-express.png}" alt="American Express"></img>
-                <img th:src="@{/dist/img/credit/paypal2.png}" alt="Paypal"></img>
-
-                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                  Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
-                  plugg
-                  dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                </p>
-              </div>
-              <!-- /.col -->
-              <div class="col-6">
-                <p class="lead">Amount Due 2/22/2014</p>
-
-                <div class="table-responsive">
-                  <table class="table">
-                    <tr>
-                      <th style="width:50%">Subtotal:</th>
-                      <td>$250.30</td>
-                    </tr>
-                    <tr>
-                      <th>Desconto (9.3%)</th>
-                      <td><p class="text-danger mb-0">$10.34</p></td>
-                    </tr>
-                    <!-- <tr>
-                      <th>Shipping:</th>
-                      <td>$5.80</td>
-                    </tr> -->
-                    <tr>
-                      <th>Total:</th>
-                      <td>$265.24</td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
-          </div>
-          
-          <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-            <a th:href="@{#}" class="btn btn-md btn-success">
-              <i class="far fa-credit-card"></i> 
-              Confirmar Pagamento
-            </a>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal --> 
   
-    <div class="modal" id="modalPagamento">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Pagamento</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          
-          <div class="modal-body">
-            <div class="row">
-              <!-- accepted payments column -->
-              <div class="col-6">
-                <p class="lead">Método de Pagamento:</p>
-                <img th:src="@{/dist/img/credit/visa.png}" alt="Visa"></img>
-                <img th:src="@{/dist/img/credit/mastercard.png}" alt="Mastercard"></img>
-                <img th:src="@{/dist/img/credit/american-express.png}" alt="American Express"></img>
-                <img th:src="@{/dist/img/credit/paypal2.png}" alt="Paypal"></img>
-
-                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                  Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
-                  plugg
-                  dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                </p>
-              </div>
-              <!-- /.col -->
-              <div class="col-6">
-                <p class="lead">Amount Due 2/22/2014</p>
-
-                <div class="table-responsive">
-                  <table class="table">
-                    <tr>
-                      <th style="width:50%">Subtotal:</th>
-                      <td>$250.30</td>
-                    </tr>
-                    <tr>
-                      <th>Desconto (9.3%)</th>
-                      <td><p class="text-danger mb-0">$10.34</p></td>
-                    </tr>
-                    <!-- <tr>
-                      <th>Shipping:</th>
-                      <td>$5.80</td>
-                    </tr> -->
-                    <tr>
-                      <th>Total:</th>
-                      <td>$265.24</td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
-          </div>
-          
-          <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-            <a th:href="@{#}" class="btn btn-md btn-success">
-              <i class="far fa-credit-card"></i> 
-              Confirmar Pagamento
-            </a>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal --> 
   </section>
   
   <section layout:fragment="conteudo">
@@ -502,14 +422,14 @@
       <!-- <div class="card-header"></div> -->
       <div class="card-body">
         <div class="row mb-2 align-items-center">
-          <div class="col-md-9">
+          <div class="col-md-8">
             <div class="bg-white rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
               <h2 id="descricaoProduto" class="text-center text-success">
                 <strong>Produto</strong>
               </h2>
             </div>
           </div>
-          <div class="col-md-3 text-center">
+          <div class="col-md-4 text-center">
             <!-- <div class="bg-white rounded py-1" style="border-style: solid; border-width: 2px; border-color: #cbd3da;"> -->
               <div class="btn btn-flat">
                 Status:
@@ -522,7 +442,7 @@
       
         <div class="row" >
                  
-          <div class="col-md-9">
+          <div class="col-md-8">
             <div class="bg-white py-2 px-2" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
               <ul class="items-list" style="height: 25px; margin-bottom: 0px">
                 <li>
@@ -550,13 +470,13 @@
             <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
               <div class="chart">
                 <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
-                  <li th:each="item : ${listaDeItens}"></li>
+                  <li th:each="item : ${venda.itemList}"></li>
                 </ul>
               </div>
             </div>
           </div>
           
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class=" text-center">
               <div class="btn btn-info btn-flat btn-block py-2">
                 <a data-toggle="modal" data-target="#modalEscolherCliente">
@@ -694,7 +614,7 @@
 				});
 				
 				response.done(function(e){
-					atualizarLista(e.listaDeItem, e.item);
+					atualizarLista(e.venda, e.item);
 				});
 				
 				response.fail(function(e){
@@ -726,7 +646,7 @@
 				});
 				
 				response.done(function(e){
-					atualizarLista(e.listaDeItem, e.item);
+					atualizarLista(e.venda, e.item);
 				});
 				
 				response.fail(function(e){
@@ -871,7 +791,12 @@
   		$('#modalIncluirProduto').find('input#inputCodigoProduto').focus();
   	});
   	
-  	function atualizarLista(listaDeItem, item) {
+  	$('#modalPagamento').on('shown.bs.modal', function(event) {
+  		$(this).find('input#inputSaldo').focus();
+  	});
+  	
+  	function atualizarLista(venda, item) {
+  		var listaDeItem = venda.itemList;
 		// Create our number formatters.
 		var currencyformatter = new Intl.NumberFormat('pt-BR', {
 		  style: "currency",
@@ -884,7 +809,7 @@
 		  minimumFractionDigits: 2
 		});
 		
-		var subtotal = 0.0;
+		//var subtotal = 0.0;
 		var li = '';
 		for(var i=0; i<listaDeItem.length; i++) {
 			li += '<li class="item"> '+
@@ -902,11 +827,11 @@
 				'</div>'+
 			'</li>'+
 			'<li class="linha border-bottom"></li>';
-			subtotal += listaDeItem[i].valor*listaDeItem[i].quantidade;
+			//subtotal += listaDeItem[i].valor*listaDeItem[i].quantidade;
 		}
 		$('#descricaoProduto').html('<strong>'+item.produto.descricao+'</strong>');//item.quantidade +' X '
 		$('#listaDeItens').html(li);
-		$('#subtotal').html(currencyformatter.format(subtotal));
+		$('#subtotal').html('<h3>'+currencyformatter.format(venda.subtotal)+'</h3>');
 	}
   </script>
     

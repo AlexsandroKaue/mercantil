@@ -18,9 +18,9 @@ public class VendaServiceImpl implements VendaService{
 	private VendaDAO vendaDAO;
 
 	@Override
-	public void salvar(Venda venda) {
+	public Venda salvar(Venda venda) {
 		try {
-			vendaDAO.save(venda);
+			return vendaDAO.save(venda);
 		} catch(DataIntegrityViolationException e) {
 			throw new IllegalArgumentException("Formato de data inválido");
 		}
