@@ -48,7 +48,7 @@ public class Venda {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal total;
 	
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private OpcoesDesconto desconto;
 	
 	@NumberFormat(pattern = "#,##0.00")

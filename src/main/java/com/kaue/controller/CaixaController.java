@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -174,12 +175,11 @@ public class CaixaController {
 		
 	}
 	
-	@RequestMapping(value = "/finalizarVenda/{saldo}")
-	public String finalizarVenda(@PathVariable("saldo") BigDecimal saldo) {
+	@RequestMapping(value = "/finalizarVenda")
+	public String finalizarVenda() {
 		
 		venda.setDataVenda(new Date());
 		venda.setStatus(StatusVenda.FINALIZADA);
-		venda.setSaldo(saldo);
 		if(venda.getSaldo().compareTo(venda.getTotal()) > 0) {
 			BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
 			venda.setTroco(troco);
@@ -220,6 +220,11 @@ public class CaixaController {
 		Map<String, Venda> map = new HashMap<String, Venda>();
 		map.put("venda", venda);
 		return map;
+	}
+	
+	@RequestMapping(value = "/aplicar/saldo/{saldo}")
+	public @ResponseBody void aplicarSaldo(@PathVariable("saldo") BigDecimal saldo) {	
+		venda.setSaldo(saldo);
 	}
 	
 	@ModelAttribute

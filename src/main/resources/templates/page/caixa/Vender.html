@@ -8,7 +8,7 @@
 </head>
 
   <section layout:fragment="container">
-    <form role="form"  method="POST" th:action="@{/caixa/finalizarVenda}" th:object="${venda}">
+    <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa/finalizarVenda}" th:object="${venda}">
       <!-- <header layout:insert="~{cabecalho}"></header> -->
       <div class="pt-2"></div>
       <header layout:insert="~{corpo}"></header>
@@ -50,7 +50,7 @@
                         <th class="lead">Saldo:</th>
                         <td>
                           <div class="input-group input-group-lg">
-                            <input type="text" class="form-control" id="inputSaldo"></input>
+                            <input type="text" class="js-currency form-control" id="inputSaldo"></input>
                           </div>
                         </td>
                       </tr>
@@ -65,7 +65,7 @@
             
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Voltar</button>
-              <button type="submit" class="js-finalizar btn btn-md btn-success">
+              <button type="button" class="js-finalizar btn btn-md btn-success">
                 <i class="far fa-credit-card"></i> 
                 Finalizar
               </button>
@@ -603,6 +603,12 @@
 	  minimumFractionDigits: 2,
 	  currencyDisplay: "symbol",
 	});
+  	
+  	var decimalformatter = new Intl.NumberFormat('pt-BR', {
+	  minimumFractionDigits: 2
+	});
+  	
+  	//final decimalformatterrev = NumberFormat("#,##0.00", "pt-BR");
 
   	$('.js-incluir').on('click', function(event) {
 		event.preventDefault();
@@ -669,17 +675,6 @@
 		
 	});
   	
- 	// Execute a function when the user releases a key on the keyboard
-  	$('#inputCodigoProduto').on('keyup', function(event) {
-  	  // Number 13 is the "Enter" key on the keyboard
-  	  if (event.keyCode === 13) {
-  	    // Cancel the default action, if needed
-  	    event.preventDefault();
-  	    // Trigger the button element with a click
-  	    $('.js-buscar-produto').click();
-  	  }
-  	}); 
-  	
   	$('.js-buscar-produto').on('click', function(event) {
 		event.preventDefault();
 		
@@ -744,6 +739,17 @@
 		response.fail(function(e){
 			alert('Erro buscando produto');
 		});
+  	});
+  	
+ 	// Execute a function when the user releases a key on the keyboard
+  	$('#inputCodigoProduto').on('keyup', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  if (event.keyCode === 13) {
+  	    // Cancel the default action, if needed
+  	    event.preventDefault();
+  	    // Trigger the button element with a click
+  	    $('.js-buscar-produto').click();
+  	  }
   	});
   	
   	$('.js-buscar-itens').on('click', function(event) {
@@ -852,40 +858,29 @@
 		});
   	});
   	
-  	$('js-finalizar').on('click', function(event) {
-		event.preventDefault();
-		
-		var botaoFinalizar = $(event.currentTarget);
-		var urlFinalizar = botaoFinalizar.attr('href');
-		
-		var response = $.ajax({
-			url: urlFinalizar+,
-			type: 'GET'
-		})
-		
-		response.done(function(e){
-			
+  	$('.js-finalizar').on('click', function(event) {
+
+  		var saldo = $('#modalPagamento').find('input#inputSaldo').val();
+  		saldo = parseFloat(saldo.replace(/\./g, '').replace(/,/, '.'));
+  		console.log(saldo);
+  		
+  		var response = $.ajax({
+			url: '/caixa/aplicar/saldo/'+saldo,
+			type: 'PUT'
 		});
+  		
+  		response.done(function(e){
+  			$('#caixaForm').submit();
+  		});
 		
 		response.fail(function(e){
-			
+			alert('Erro aplicando saldo');
 		});
   	});
   	
   	function atualizarLista(venda, item) {
   		var listaDeItem = venda.itemList;
-		// Create our number formatters.
-		var currencyformatter = new Intl.NumberFormat('pt-BR', {
-		  style: "currency",
-		  currency: "BRL",
-		  minimumFractionDigits: 2,
-		  currencyDisplay: "symbol",
-		});
-		
-		var decimalformatter = new Intl.NumberFormat('pt-BR', {
-		  minimumFractionDigits: 2
-		});
-		
+
 		//var subtotal = 0.0;
 		var li = '';
 		for(var i=0; i<listaDeItem.length; i++) {
