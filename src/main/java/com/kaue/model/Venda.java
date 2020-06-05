@@ -23,6 +23,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.kaue.enumeration.OpcoesDesconto;
 import com.kaue.enumeration.StatusVenda;
 
 @Entity
@@ -43,8 +44,15 @@ public class Venda {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal subtotal;
 	
+	/* @NotNull(message = "Valor é obrigatório") */
 	@NumberFormat(pattern = "#,##0.00")
-	private BigDecimal desconto;
+	private BigDecimal total;
+	
+	@Enumerated(EnumType.STRING)
+	private OpcoesDesconto desconto;
+	
+	@NumberFormat(pattern = "#,##0.00")
+	private BigDecimal valorDesconto;
 	
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal saldo;
@@ -123,14 +131,6 @@ public class Venda {
 		this.subtotal = subtotal;
 	}
 
-	public BigDecimal getDesconto() {
-		return desconto;
-	}
-
-	public void setDesconto(BigDecimal desconto) {
-		this.desconto = desconto;
-	}
-
 	public BigDecimal getSaldo() {
 		return saldo;
 	}
@@ -145,6 +145,30 @@ public class Venda {
 
 	public void setTroco(BigDecimal troco) {
 		this.troco = troco;
+	}
+
+	public OpcoesDesconto getDesconto() {
+		return desconto;
+	}
+
+	public void setDesconto(OpcoesDesconto desconto) {
+		this.desconto = desconto;
+	}
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
+	public BigDecimal getValorDesconto() {
+		return valorDesconto;
+	}
+
+	public void setValorDesconto(BigDecimal valorDesconto) {
+		this.valorDesconto = valorDesconto;
 	}
 
 }

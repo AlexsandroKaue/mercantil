@@ -31,15 +31,20 @@
                     <table class="table">
                       <tr>
                         <th class="lead mt-2" style="width:50%">Subtotal:</th>
-                        <td id="subtotal"><h3 class="mb-0">R$ 0,00</h3></td>
+                        <td id="subtotal" class="js-subtotal"><h3 class="mb-0">R$ 0,00</h3></td>
                       </tr>
                       <tr>
-                        <th class="lead">Desconto (0%):</th>
-                        <td><p class="mb-0">R$ 0,00</p></td>
+                        <th class="lead form-inline">
+                          Desconto
+                          <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2">
+                            <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
+                          </select>
+                        </th>
+                        <td id="desconto-valor"><p class="mb-0">R$ 0,00</p></td>
                       </tr>
                       <tr>
                         <th class="lead">Total:</th>
-                        <td><h3 class="mb-0">R$ 0,00</h3></td>
+                        <td id="total"><h3 class="mb-0">R$ 0,00</h3></td>
                       </tr>
                       <tr>
                         <th class="lead">Saldo:</th>
@@ -60,7 +65,7 @@
             
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Voltar</button>
-              <button type="submit" class="btn btn-md btn-success">
+              <button type="submit" class="js-finalizar btn btn-md btn-success">
                 <i class="far fa-credit-card"></i> 
                 Finalizar
               </button>
@@ -500,8 +505,7 @@
               <div class="col-md-6">
                 <div class=" text-right">
                   <!-- <div class="btn btn-primary btn-flat py-2 btn-block"> -->
-                    <a th:href="@{#}" class="btn btn-primary btn-flat py-2 btn-block" 
-                      data-toggle="modal" data-target="#modalPagamento">
+                    <a th:href="@{#}" class="js-pagamento btn btn-primary btn-flat py-2 btn-block">
                       <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
                       <i class="fas fa-cart-plus mr-2"></i> 
                       Pagamento
@@ -537,7 +541,7 @@
             <div class="progress-group text-right">
               <h2><span class="text">Subtotal</span></h2>
               <div class="bg-gray py-2 px-3 ">
-                <h2 id="subtotal" class="mb-0" style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
+                <h2 id="subtotal" class="js-subtotal mb-0" style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
                   R$ 0,00
                 </h2>
               </div>
@@ -561,7 +565,7 @@
             <!-- /.col -->
             <div class="col-sm-3 col-6">
               <div class="description-block border-right">
-                <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
+                <span class="description-p0ercentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
                 <h5 class="description-header">$10,390.90</h5>
               </div>
               <!-- /.description-block -->
@@ -593,6 +597,12 @@
   </section>
   
   <script layout:fragment="js-validator">
+  	var currencyformatter = new Intl.NumberFormat('pt-BR', {
+	  style: "currency",
+	  currency: "BRL",
+	  minimumFractionDigits: 2,
+	  currencyDisplay: "symbol",
+	});
 
   	$('.js-incluir').on('click', function(event) {
 		event.preventDefault();
@@ -795,6 +805,73 @@
   		$(this).find('input#inputSaldo').focus();
   	});
   	
+  	$('.js-pagamento').on('click',function(e) {
+		event.preventDefault();
+		
+		var botao = $(event.currentTarget);
+		var url = botao.attr('href');
+  		
+  		var response = $.ajax({
+			url: '/caixa/pagar',
+			type: 'GET'
+		});
+  		
+  		response.done(function(e){
+  			var venda = e;
+  			$('#modalPagamento').find('#desconto option:selected').html(venda.desconto.descricao);
+  			$('#modalPagamento').find('#total').html('<h3 class="mb-0">'+currencyformatter.format(venda.total)+'</h3>');
+  			console.log(venda.total);
+  			$('#modalPagamento').modal('show');
+		});
+		
+		response.fail(function(e){
+			alert('Erro ao ir para tela de Pagamento');
+		});
+  	});
+  	
+  	$('.js-desconto').on('change', function() {
+  		
+  		var option = $('#modalPagamento').find('#desconto option:selected')[0];
+  		var desconto = option.value;
+
+  		console.log(desconto);
+  		var response = $.ajax({
+			url: '/caixa/aplicar/desconto/'+desconto,
+			type: 'GET'
+		});
+  		
+  		response.done(function(e){
+  			var venda = e.venda;
+  			console.log(venda);
+  			$('#modalPagamento').find('#desconto-valor p').html(currencyformatter.format(venda.valorDesconto));
+  			$('#modalPagamento').find('#total').html('<h3 class="mb-0">'+currencyformatter.format(venda.total)+'</h3>');
+		});
+		
+		response.fail(function(e){
+			alert('Erro aplicando desconto');
+		});
+  	});
+  	
+  	$('js-finalizar').on('click', function(event) {
+		event.preventDefault();
+		
+		var botaoFinalizar = $(event.currentTarget);
+		var urlFinalizar = botaoFinalizar.attr('href');
+		
+		var response = $.ajax({
+			url: urlFinalizar+,
+			type: 'GET'
+		})
+		
+		response.done(function(e){
+			
+		});
+		
+		response.fail(function(e){
+			
+		});
+  	});
+  	
   	function atualizarLista(venda, item) {
   		var listaDeItem = venda.itemList;
 		// Create our number formatters.
@@ -831,7 +908,7 @@
 		}
 		$('#descricaoProduto').html('<strong>'+item.produto.descricao+'</strong>');//item.quantidade +' X '
 		$('#listaDeItens').html(li);
-		$('#subtotal').html('<h3>'+currencyformatter.format(venda.subtotal)+'</h3>');
+		$('.js-subtotal').html('<h3 class="mb-0">'+currencyformatter.format(venda.subtotal)+'</h3>');
 	}
   </script>
     

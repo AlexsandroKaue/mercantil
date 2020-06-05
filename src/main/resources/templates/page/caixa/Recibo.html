@@ -28,27 +28,27 @@
             <div class="table-responsive">
               <table class="table">
                 <tr>
-                  <th class="lead mt-2" style="width:50%">Subtotal:</th>
-                  <td id="subtotal"><h3 class="mb-0" th:text="|R$ ${venda.subtotal}|"></h3></td>
-                </tr>
-                <tr>
-                  <th class="lead">Desconto (0%):</th>
-                  <td><p class="mb-0">R$ 0,00</p></td>
-                </tr>
-                <tr>
                   <th class="lead">Total:</th>
                   <td><h3 class="mb-0" th:text="|R$ ${venda.subtotal}|"></h3></td>
                 </tr>
                 <tr>
-                  <th class="lead">Saldo:</th>
-                  <td>
-                    <div class="input-group input-group-lg">
-                      <input type="text" class="form-control" id="inputSaldo"></input>
-                    </div>
-                  </td>
+                  <th class="lead">Pagamento:</th>
+                  <td id="subtotal"><h3 class="mb-0" th:text="|R$ ${venda.saldo}|"></h3></td>
+                </tr>
+                <tr>
+                  <th class="lead mt-2" style="width:50%">Troco:</th>
+                  <td id="subtotal"><h3 class="mb-0" th:text="|R$ ${venda.troco}|"></h3></td>
                 </tr>
                 
               </table>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div style="border-style: solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
+              <div class="chart" style="height: 330px">
+                
+              </div>
             </div>
           </div>
 

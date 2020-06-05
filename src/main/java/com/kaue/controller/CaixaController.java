@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,12 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kaue.dao.filter.ProdutoFilter;
+import com.kaue.enumeration.OpcoesDesconto;
+import com.kaue.enumeration.StatusTitulo;
 import com.kaue.enumeration.StatusVenda;
 import com.kaue.model.Categoria;
 import com.kaue.model.Item;
@@ -46,10 +49,11 @@ public class CaixaController {
 	@Autowired
 	private ProdutoService produtoService;
 	
-	private Venda venda = new Venda();
+	private Venda venda;
 	
 	@RequestMapping
 	public ModelAndView showRegistradora() {
+		venda = new Venda();
 		Resource resource = resourceLoader.getResource("classpath:cupom.txt");
 		File file = null;
 		String cupom = null;
@@ -63,6 +67,7 @@ public class CaixaController {
 		
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW);
 		venda.setItemList(new ArrayList<Item>());
+		venda.setDesconto(OpcoesDesconto.ZERO);
 		mv.addObject("venda", venda);
 		/* mv.addObject("listaDeItens", new ArrayList<Item>()); */
 		mv.addObject("listaDeProdutos", new ArrayList<Produto>());
@@ -169,11 +174,16 @@ public class CaixaController {
 		
 	}
 	
-	@RequestMapping(value = "/finalizarVenda")
-	public String finalizarVenda() {
+	@RequestMapping(value = "/finalizarVenda/{saldo}")
+	public String finalizarVenda(@PathVariable("saldo") BigDecimal saldo) {
 		
 		venda.setDataVenda(new Date());
 		venda.setStatus(StatusVenda.FINALIZADA);
+		venda.setSaldo(saldo);
+		if(venda.getSaldo().compareTo(venda.getTotal()) > 0) {
+			BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
+			venda.setTroco(troco);
+		}
 		
 		venda = vendaService.salvar(venda);
 
@@ -185,6 +195,36 @@ public class CaixaController {
 		ModelAndView mv = new ModelAndView(VENDA_CONLUIDA_VIEW);
 		mv.addObject("venda", venda);
 		return mv;
+	}
+	
+	@RequestMapping(value = "/pagar", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Venda pagar() {		
+		
+		venda.setDesconto(OpcoesDesconto.ZERO);
+		venda.setTotal(venda.getSubtotal());
+
+		return venda;
+	}
+	
+	@RequestMapping(value = "/aplicar/desconto/{desconto}", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Map<String, Venda> aplicarDesconto(@PathVariable("desconto") OpcoesDesconto opcao) {		
+		
+		venda.setDesconto(opcao);
+		BigDecimal valorDesconto = venda.getSubtotal().multiply(new BigDecimal(venda.getDesconto().getNumero())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		BigDecimal total = venda.getSubtotal().subtract(valorDesconto);
+		venda.setValorDesconto(valorDesconto);
+		venda.setTotal(total);
+
+		Map<String, Venda> map = new HashMap<String, Venda>();
+		map.put("venda", venda);
+		return map;
+	}
+	
+	@ModelAttribute
+	public List<OpcoesDesconto> todasOpcoesDesconto(){
+		return Arrays.asList(OpcoesDesconto.values());
 	}
 	
 }
