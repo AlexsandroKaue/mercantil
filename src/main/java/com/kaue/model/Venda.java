@@ -36,8 +36,8 @@ public class Venda {
 	private Long id;
 	
 	@NotNull(message = "Data de Venda é obrigatório")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
+	//@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataVenda;
 	
 	@NotNull(message = "Valor é obrigatório")

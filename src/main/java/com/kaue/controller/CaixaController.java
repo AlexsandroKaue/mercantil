@@ -39,7 +39,7 @@ import com.kaue.service.VendaService;
 public class CaixaController {
 
 	static final String REGISTRADORA_VIEW = "page/caixa/Vender";
-	static final String VENDA_CONLUIDA_VIEW = "page/caixa/Recibo";
+	static final String VENDA_CONLUIDA_VIEW = "page/caixa/Pagamento";
 	
 	@Autowired
 	ResourceLoader resourceLoader;
@@ -69,6 +69,7 @@ public class CaixaController {
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW);
 		venda.setItemList(new ArrayList<Item>());
 		venda.setDesconto(OpcoesDesconto.ZERO);
+		
 		mv.addObject("venda", venda);
 		/* mv.addObject("listaDeItens", new ArrayList<Item>()); */
 		mv.addObject("listaDeProdutos", new ArrayList<Produto>());
@@ -197,14 +198,16 @@ public class CaixaController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/pagar", produces = "application/json; charset=UTF-8")
-	@ResponseBody
-	public Venda pagar() {		
+	@RequestMapping(value = "/pagar", method = RequestMethod.POST)
+	public ModelAndView pagar() {		
 		
+		ModelAndView mv = new ModelAndView(VENDA_CONLUIDA_VIEW);
+		venda.setStatus(StatusVenda.ABERTA);
 		venda.setDesconto(OpcoesDesconto.ZERO);
+		venda.setValorDesconto(new BigDecimal(0.0));
 		venda.setTotal(venda.getSubtotal());
-
-		return venda;
+		mv.addObject("venda", venda);
+		return mv;
 	}
 	
 	@RequestMapping(value = "/aplicar/desconto/{desconto}", produces = "application/json; charset=UTF-8")

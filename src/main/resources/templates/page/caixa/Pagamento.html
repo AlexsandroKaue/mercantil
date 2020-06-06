@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{principal}">
+<head>
+  <title th:text="#{mercadinho}"></title>
+</head>
+
+  <section layout:fragment="container">
+    <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa/finalizarVenda}" th:object="${venda}">
+      <!-- <header layout:insert="~{cabecalho}"></header> -->
+      <div class="pt-2"></div>
+      <header layout:insert="~{corpo}"></header>
+      
+    </form>
+  </section>
+  
+  <section layout:fragment="conteudo">
+    <div class="row">
+    <div class="col-md-12">
+    <div class="card card-default">
+      <!-- <div class="card-header"></div> -->
+      <div class="card-body">
+        <div class="row" >
+        
+          <div class="col-6">
+            <div class="table-responsive">
+              <table class="table">
+                <tr>
+                  <th class="lead mt-2" style="width:50%">Subtotal:</th>
+                  <td id="subtotal" class="js-subtotal"><h3 class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</h3></td>
+                </tr>
+                <tr>
+                  <th class="lead form-inline">
+                    Desconto
+                    <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}">
+                      <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
+                    </select>
+                  </th>
+                  <td id="desconto-valor"><p class="mb-0" th:text="|R$ *{{valorDesconto}}|">R$ 0,00</p></td>
+                </tr>
+                <tr>
+                  <th class="lead">Total:</th>
+                  <td id="total"><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
+                </tr>
+                <tr>
+                  <th class="lead">Saldo:</th>
+                  <td>
+                    <div class="input-group input-group-lg">
+                      <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}"></input>
+                    </div>
+                  </td>
+                </tr>
+                
+              </table>
+              <button type="submit" class="btn btn-md btn-success">
+                <i class="far fa-credit-card"></i> 
+                Finalizar
+              </button>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div style="border-style: solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
+              <div class="chart" style="height: 330px">
+                
+              </div>
+            </div>
+          </div>
+
+        </div>
+        
+      </div>
+      <div class="card-footer py-0">
+      </div>
+      
+    </div>
+    <!-- /.card -->
+    </div>
+    </div>
+  </section>
+  
+  <script layout:fragment="js-validator">
+  	var currencyformatter = new Intl.NumberFormat('pt-BR', {
+	  style: "currency",
+	  currency: "BRL",
+	  minimumFractionDigits: 2,
+	  currencyDisplay: "symbol",
+	});
+  	
+  	var decimalformatter = new Intl.NumberFormat('pt-BR', {
+	  minimumFractionDigits: 2
+	});
+  	
+  	//final decimalformatterrev = NumberFormat("#,##0.00", "pt-BR");
+
+  	$('.js-incluir').on('click', function(event) {
+		event.preventDefault();
+		
+		var botaoIncluir = $(event.currentTarget);
+		//var codigoProduto = $('#modalIncluirProduto').find('input#inputCodigoProduto').val();
+
+		var rows = $('#modalIncluirProduto').find('#tabelaDeProdutos tbody tr');
+		rows.each(function(index, element) {
+			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
+			if(isChecked) {
+				var urlIncluirItem = botaoIncluir.attr('href');
+				var codigo = $(element).find('td input[name="todo1"]').attr('id');
+				urlIncluirItem += codigo;
+				console.log(urlIncluirItem);
+				var response = $.ajax({
+					url: urlIncluirItem,
+					type: 'GET'
+				});
+				
+				response.done(function(e){
+					atualizarLista(e.venda, e.item);
+				});
+				
+				response.fail(function(e){
+					alert('Erro incluindo item');
+				});
+			}
+		});
+		
+		$('#modalIncluirProduto').modal("hide");
+		
+	});
+  	
+  	$('.js-excluir').on('click', function(event) {
+		event.preventDefault();
+		
+		var botaoExcluir = $(event.currentTarget);
+					
+		var rows = $('#modalExcluirProduto').find('#tabelaDeItens tbody tr');
+		rows.each(function(index, element) {
+			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
+			if(isChecked) {
+				var urlExcluirItem = botaoExcluir.attr('href');
+				var codigo = $(element).find('td input[name="todo1"]').attr('id');
+				urlExcluirItem += codigo;
+				console.log(urlExcluirItem);
+				var response = $.ajax({
+					url: urlExcluirItem,
+					type: 'GET'
+				});
+				
+				response.done(function(e){
+					atualizarLista(e.venda, e.item);
+				});
+				
+				response.fail(function(e){
+					alert('Erro excluindo item');
+				});
+			}
+		});
+		
+		$('#modalExcluirProduto').modal("hide");
+		
+	});
+  	
+  	$('.js-buscar-produto').on('click', function(event) {
+		event.preventDefault();
+		
+		var botaoPesquisarProduto = $(event.currentTarget);
+		var urlPesquisarProduto = botaoPesquisarProduto.attr('href');
+		var termoDaPesquisa = $('#modalIncluirProduto').find('input#inputCodigoProduto').val();
+		urlPesquisarProduto += termoDaPesquisa;
+		
+		console.log(urlPesquisarProduto);
+					
+		var response = $.ajax({
+			url: urlPesquisarProduto,
+			type: 'GET'
+		});
+		
+		response.done(function(listaDeProdutos){
+			console.log(listaDeProdutos);
+  			var tr = '';
+  			var produto;
+  			
+  			$('#tabelaDeProdutos').DataTable().clear();
+
+
+  			if(listaDeProdutos.length < 1) {
+  				tr += '<tr>'+
+    					'<td colspan="4">Nenhum produto foi encontrado.</td>'+
+    				'</tr>';
+  			} else {
+  				for(var i=0; i<listaDeProdutos.length; i++) {
+  	  				produto = listaDeProdutos[i];
+  	  				
+  	  				tr += 
+  	  				'<tr>'+
+  	    				'<td class="text-center">'+ produto.codigo +'</td>'+
+  	    				'<td>' + produto.descricao + '</td>'+
+  	                    '<td class="text-center">'+ produto.categoria.descricao +'</td>'+
+  	                    '<td class="text-center">'+
+  	                        '<a class="btn btn-link btn-sm">'+
+  	                          '<i class="fas fa-times"></i>'+
+  	                        '</a>'+
+  	                    '</td>'+
+  	                '</tr>'; 
+  	                
+  	              $('#tabelaDeProdutos').DataTable().row.add([
+  	            	  produto.codigo, 
+  	            	  produto.descricao,
+  	            	  produto.categoria.descricao,
+  	            	  '<div class="d-flex flex-row bd-highlight">'+
+    	            	  '<div class="icheck-primary d-inline ml-2">'+
+    	            	  	'<input type="checkbox" value="" name="todo1" id="'+produto.codigo+'">'+
+    	            	  	'<label for="'+produto.codigo+'"></label>'+
+    	            	  '</div>'+
+    	            	  '<input disabled="disabled" type="number" id="quantity" name="quantity" min="1" max="5">'+
+  	            	  '</div>']);
+  	  			}
+  			}
+  			
+  			$('#tabelaDeProdutos').DataTable().draw();
+  			
+		});
+		
+		response.fail(function(e){
+			alert('Erro buscando produto');
+		});
+  	});
+  	
+ 	// Execute a function when the user releases a key on the keyboard
+  	$('#inputCodigoProduto').on('keyup', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  if (event.keyCode === 13) {
+  	    // Cancel the default action, if needed
+  	    event.preventDefault();
+  	    // Trigger the button element with a click
+  	    $('.js-buscar-produto').click();
+  	  }
+  	});
+  	
+  	$('.js-buscar-itens').on('click', function(event) {
+		event.preventDefault();
+		
+		var botaoBuscatItens = $(event.currentTarget);
+		var urlBuscarItens = botaoBuscatItens.attr('href');
+					
+		var response = $.ajax({
+			url: urlBuscarItens,
+			type: 'GET'
+		});
+		
+		response.done(function(listaDeItens){
+  			var item;
+  			
+  			$('#tabelaDeItens').DataTable().clear();
+
+  			if(listaDeItens.length > 0) {
+  				for(var i=0; i<listaDeItens.length; i++) {
+  	  				item = listaDeItens[i];
+  	  				console.log(item);
+  	                
+  	              $('#tabelaDeItens').DataTable().row.add([
+  	            	  item.produto.codigo, 
+  	            	  item.produto.descricao,
+  	            	  item.quantidade,
+  	            	  '<div class="d-flex flex-row bd-highlight">'+
+    	            	  '<div class="icheck-danger d-inline ml-2">'+
+    	            	  	'<input type="checkbox" value="" name="todo1" id="'+item.produto.codigo+'">'+
+    	            	  	'<label for="'+item.produto.codigo+'"></label>'+
+    	            	  '</div>'+
+  	            	  '</div>']);
+  	  			}
+  			} 
+  			
+  			$('#tabelaDeItens').DataTable().draw();
+  			$('#modalExcluirProduto').modal('show');
+  			
+		});
+		
+		response.fail(function(e){
+			alert('Erro buscando itens');
+		});
+  	});
+  	
+  	$('#modalIncluirProduto').on('hidden.bs.modal', function (event){
+  		$('#modalIncluirProduto').find('input#inputCodigoProduto').val(null);
+  		var tabelaProdutos = $('#tabelaDeProdutos').DataTable();
+  		tabelaProdutos.clear();
+  		tabelaProdutos.draw();
+  	});
+  	
+  	$('#modalIncluirProduto').on('shown.bs.modal', function (event){
+  		$('#modalIncluirProduto').find('input#inputCodigoProduto').focus();
+  	});
+  	
+  	$('#modalPagamento').on('shown.bs.modal', function(event) {
+  		$(this).find('input#inputSaldo').focus();
+  	});
+  	
+  	$('.js-pagamento').on('click',function(e) {
+		event.preventDefault();
+		
+		var botao = $(event.currentTarget);
+		var url = botao.attr('href');
+  		
+  		var response = $.ajax({
+			url: '/caixa/pagar',
+			type: 'GET'
+		});
+  		
+  		response.done(function(e){
+  			var venda = e;
+  			$('#modalPagamento').find('#desconto option:selected').html(venda.desconto.descricao);
+  			$('#modalPagamento').find('#total').html('<h3 class="mb-0">'+currencyformatter.format(venda.total)+'</h3>');
+  			console.log(venda.total);
+  			$('#modalPagamento').modal('show');
+		});
+		
+		response.fail(function(e){
+			alert('Erro ao ir para tela de Pagamento');
+		});
+  	});
+  	
+  	$('.js-desconto').on('change', function() {
+  		
+  		var option = $('#desconto option:selected')[0];
+  		var desconto = option.value;
+
+  		console.log(desconto);
+  		var response = $.ajax({
+			url: '/caixa/aplicar/desconto/'+desconto,
+			type: 'GET'
+		});
+  		
+  		response.done(function(e){
+  			var venda = e.venda;
+  			console.log(venda);
+  			$('#desconto-valor p').html(currencyformatter.format(venda.valorDesconto));
+  			$('#total').html('<h3 class="mb-0">'+currencyformatter.format(venda.total)+'</h3>');
+		});
+		
+		response.fail(function(e){
+			alert('Erro aplicando desconto');
+		});
+  	});
+  	
+  	$('.js-finalizar').on('click', function(event) {
+
+  		var saldo = $('#modalPagamento').find('input#inputSaldo').val();
+  		saldo = parseFloat(saldo.replace(/\./g, '').replace(/,/, '.'));
+  		console.log(saldo);
+  		
+  		var response = $.ajax({
+			url: '/caixa/aplicar/saldo/'+saldo,
+			type: 'PUT'
+		});
+  		
+  		response.done(function(e){
+  			$('#caixaForm').submit();
+  		});
+		
+		response.fail(function(e){
+			alert('Erro aplicando saldo');
+		});
+  	});
+  	
+  	function atualizarLista(venda, item) {
+  		var listaDeItem = venda.itemList;
+
+		//var subtotal = 0.0;
+		var li = '';
+		for(var i=0; i<listaDeItem.length; i++) {
+			li += '<li class="item"> '+
+				'<div class="row align-items-end">'+
+    				'<div class="col-md-4 text-left">'+
+        				'<h6><b id="descricao">'+ listaDeItem[i].produto.descricao +'</b></h6>'+
+        				'<h6 id="codigo">'+ listaDeItem[i].produto.codigo +'</h6>'+
+    				'</div>'+
+    				'<div class="col-md-4 text-center">'+
+      					'<h6 id="quantidade">'+listaDeItem[i].quantidade+'un x '+ decimalformatter.format(listaDeItem[i].valor)+'</h6>'+
+      				'</div>'+
+      				'<div class="col-md-4 text-right">'+
+      					'<h5>'+currencyformatter.format(listaDeItem[i].quantidade*listaDeItem[i].valor)+'</h5>'+
+    				'</div>'+
+				'</div>'+
+			'</li>'+
+			'<li class="linha border-bottom"></li>';
+			//subtotal += listaDeItem[i].valor*listaDeItem[i].quantidade;
+		}
+		$('#descricaoProduto').html('<strong>'+item.produto.descricao+'</strong>');//item.quantidade +' X '
+		$('#listaDeItens').html(li);
+		$('.js-subtotal').html('<h3 class="mb-0">'+currencyformatter.format(venda.subtotal)+'</h3>');
+	}
+  </script>
+    
+</html>
