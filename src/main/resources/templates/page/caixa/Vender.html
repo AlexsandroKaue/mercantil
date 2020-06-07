@@ -47,8 +47,19 @@
                       <th class="text-center col-2"></th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr th:each="produto : ${listaDeProdutos}">
+                  <tbody th:fragment="tabelaDeProdutos">
+                    <tr th:each="produto : ${produtoList}">
+      				  <td class="text-center" th:text="${produto.codigo}"></td>
+      				  <td th:text="${produto.descricao}"></td>
+                      <td class="text-center" th:text="${produto.categoria.descricao}"></td>
+                      <td class="text-center">
+                        <div class="icheck-primary d-inline ml-2">
+                          <input type="checkbox" value="" name="todo1" th:id="|${produto.codigo}-inc|">
+                          <label th:for="|${produto.codigo}-inc|"></label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(produtoList)}">
                       <td colspan="4">Nenhum produto foi encontrado.</td>
                     </tr>
                   </tbody>
@@ -341,8 +352,8 @@
                       <td class="text-center col-1">
                         <div class="d-flex flex-row bd-highlight">
                           <div class="icheck-danger d-inline ml-2">
-                            <input type="checkbox" value="" name="todo1" th:id="${item.produto.codigo}">
-                            <label th:for="${item.produto.codigo}"></label>
+                            <input type="checkbox" value="" name="todo1" th:id="|${item.produto.codigo}-exc|">
+                            <label th:for="|${item.produto.codigo}-exc|"></label>
                           </div>
                         </div>
                       </td>
@@ -585,7 +596,7 @@
 			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
 			if(isChecked) {
 				var urlIncluirItem = botaoIncluir.attr('href');
-				var codigo = $(element).find('td input[name="todo1"]').attr('id');
+				var codigo = $(element).find('td input[name="todo1"]').attr('id').split('-')[0];
 				urlIncluirItem += codigo;
 				console.log(urlIncluirItem);
 				var response = $.ajax({
@@ -608,25 +619,6 @@
 		
 	});
   	
-  	$('#modalExcluirProduto').on('shown.bs.modal', function(event){
-  		event.preventDefault();
-  		   
-      		var response = $.ajax({
-    			url: '/caixa/obterItens',
-    			type: 'GET'
-    		}); 
-      		
-      		response.done(function(e){
-    			console.log(e);    			
-    			$('#modalExcluirProduto .modal-body table tbody').replaceWith(e);
-    			$('#modalExcluirProduto').modal('show');
-    		});
-      		
-      		response.fail(function(e){
-    			alert('Erro buscando itens');
-    		});
-  	});
-  	
   	$('.js-excluir').on('click', function(event) {
   		event.preventDefault();
 		
@@ -637,7 +629,7 @@
 			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
 			if(isChecked) {
 				var urlExcluirItem = botaoExcluir.attr('href');
-				var codigo = $(element).find('td input[name="todo1"]').attr('id');
+				var codigo = $(element).find('td input[name="todo1"]').attr('id').split('-')[0];
 				urlExcluirItem += codigo;
 
 				var response = $.ajax({
@@ -660,6 +652,25 @@
 		
 	});
   	
+  	$('#modalExcluirProduto').on('shown.bs.modal', function(event){
+  		event.preventDefault();
+  		   
+      		var response = $.ajax({
+    			url: '/caixa/obterItens',
+    			type: 'GET'
+    		}); 
+      		
+      		response.done(function(e){
+    			console.log(e);    			
+    			$('#modalExcluirProduto .modal-body table tbody').replaceWith(e);
+    			$('#modalExcluirProduto').modal('show');
+    		});
+      		
+      		response.fail(function(e){
+    			alert('Erro buscando itens');
+    		});
+  	});
+  	
   	$('.js-buscar-produto').on('click', function(event) {
 		event.preventDefault();
 		
@@ -675,50 +686,10 @@
 			type: 'GET'
 		});
 		
-		response.done(function(listaDeProdutos){
-			console.log(listaDeProdutos);
-  			var tr = '';
-  			var produto;
-  			
-  			$('#tabelaDeProdutos').DataTable().clear();
-
-
-  			if(listaDeProdutos.length < 1) {
-  				tr += '<tr>'+
-    					'<td colspan="4">Nenhum produto foi encontrado.</td>'+
-    				'</tr>';
-  			} else {
-  				for(var i=0; i<listaDeProdutos.length; i++) {
-  	  				produto = listaDeProdutos[i];
-  	  				
-  	  				tr += 
-  	  				'<tr>'+
-  	    				'<td class="text-center">'+ produto.codigo +'</td>'+
-  	    				'<td>' + produto.descricao + '</td>'+
-  	                    '<td class="text-center">'+ produto.categoria.descricao +'</td>'+
-  	                    '<td class="text-center">'+
-  	                        '<a class="btn btn-link btn-sm">'+
-  	                          '<i class="fas fa-times"></i>'+
-  	                        '</a>'+
-  	                    '</td>'+
-  	                '</tr>'; 
-  	                
-  	              $('#tabelaDeProdutos').DataTable().row.add([
-  	            	  produto.codigo, 
-  	            	  produto.descricao,
-  	            	  produto.categoria.descricao,
-  	            	  '<div class="d-flex flex-row bd-highlight">'+
-    	            	  '<div class="icheck-primary d-inline ml-2">'+
-    	            	  	'<input type="checkbox" value="" name="todo1" id="'+produto.codigo+'">'+
-    	            	  	'<label for="'+produto.codigo+'"></label>'+
-    	            	  '</div>'+
-    	            	  '<input disabled="disabled" type="number" id="quantity" name="quantity" min="1" max="5">'+
-  	            	  '</div>']);
-  	  			}
-  			}
-  			
-  			$('#tabelaDeProdutos').DataTable().draw();
-  			
+		response.done(function(e){
+			console.log(e);
+			$('#modalIncluirProduto .modal-body table tbody').replaceWith(e);
+			$('#modalIncluirProduto').modal('show');
 		});
 		
 		response.fail(function(e){

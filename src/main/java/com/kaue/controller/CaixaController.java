@@ -159,10 +159,9 @@ public class CaixaController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/buscarProduto/{termo}", produces = "application/json; charset=UTF-8")
-	@ResponseBody
-	public List<Produto> buscarProduto(@PathVariable("termo") String termo) {
-		
+	@RequestMapping(value = "/buscarProduto/{termo}")
+	public ModelAndView buscarProduto(@PathVariable("termo") String termo) {
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: tabelaDeProdutos");
 		ProdutoFilter filtro = new ProdutoFilter();
 
 		try {
@@ -176,7 +175,9 @@ public class CaixaController {
 		
 		List<Produto> produtoList = produtoService.pesquisar(filtro);
 		
-		return produtoList;
+		mv.addObject("produtoList", produtoList);
+		
+		return mv;
 		
 	}
 	
