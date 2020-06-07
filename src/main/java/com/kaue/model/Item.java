@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.NumberFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -32,6 +33,7 @@ public class Item {
 	
 	private Integer quantidade;
 	
+	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valor;
 
 	public Long getId() {

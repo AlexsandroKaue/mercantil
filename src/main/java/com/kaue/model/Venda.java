@@ -36,7 +36,7 @@ public class Venda {
 	private Long id;
 	
 	@NotNull(message = "Data de Venda é obrigatório")
-	//@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataVenda;
 	
@@ -63,7 +63,7 @@ public class Venda {
 	@Enumerated(EnumType.STRING)
 	private StatusVenda status;
 	
-	@OneToMany(mappedBy = "venda", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Item> itemList;
 
 	public Long getId() {

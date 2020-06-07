@@ -12,113 +12,6 @@
       <!-- <header layout:insert="~{cabecalho}"></header> -->
       <div class="pt-2"></div>
       <header layout:insert="~{corpo}"></header>
-      
-      <div class="modal" id="modalPagamento">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Pagamento</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-12">
-                  
-                  <div class="table-responsive">
-                    <table class="table">
-                      <tr>
-                        <th class="lead mt-2" style="width:50%">Subtotal:</th>
-                        <td id="subtotal" class="js-subtotal"><h3 class="mb-0">R$ 0,00</h3></td>
-                      </tr>
-                      <tr>
-                        <th class="lead form-inline">
-                          Desconto
-                          <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2">
-                            <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
-                          </select>
-                        </th>
-                        <td id="desconto-valor"><p class="mb-0">R$ 0,00</p></td>
-                      </tr>
-                      <tr>
-                        <th class="lead">Total:</th>
-                        <td id="total"><h3 class="mb-0">R$ 0,00</h3></td>
-                      </tr>
-                      <tr>
-                        <th class="lead">Saldo:</th>
-                        <td>
-                          <div class="input-group input-group-lg">
-                            <input type="text" class="js-currency form-control" id="inputSaldo"></input>
-                          </div>
-                        </td>
-                      </tr>
-                      
-                    </table>
-                  </div>
-                  
-                </div>
-              </div>
-              <!-- /.row -->
-            </div>
-            
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Voltar</button>
-              <button type="button" class="js-finalizar btn btn-md btn-success">
-                <i class="far fa-credit-card"></i> 
-                Finalizar
-              </button>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-      <!-- /.modal --> 
-      
-      <div class="modal" id="modalExcluirProduto">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title"></h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-12">
-                  <table id="tabelaDeItens" class="table table-bordered table-striped js-tabela">
-                    <thead>
-                      <tr>
-                        <th class="text-center col-3" th:text="#{codigo}"></th>
-                        <th th:text="#{descricao}" ></th>
-                        <th class="text-center col-2" th:text="#{quantidade}"></th>
-                        <th class="text-center col-1"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr th:each="item : ${venda.itemList}">
-                        <td colspan="4">Nenhum produto foi encontrado.</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-              <a th:href="@{/caixa/excluir/}" class="js-excluir btn btn-md btn-success" th:text="#{excluir}"></a>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-      <!-- /.modal --> 
     </form>
     
     <div class="modal" id="modalIncluirProduto">
@@ -417,11 +310,68 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+    
+    <div class="modal" id="modalExcluirProduto">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <table id="tabelaDeItens" class="table table-bordered table-striped js-tabela">
+                  <thead>
+                    <tr>
+                      <th class="text-center col-3" th:text="#{codigo}"></th>
+                      <th th:text="#{descricao}" ></th>
+                      <th class="text-center col-2" th:text="#{quantidade}"></th>
+                      <th class="text-center col-1"></th>
+                    </tr>
+                  </thead>
+                  <tbody th:fragment="tabelaDeItens">
+                    <tr th:each="item : ${venda.itemList}">
+                      <td class="text-center col-3" th:text="${item.produto.codigo}"></td>
+                      <td th:text="${item.produto.descricao}"></td>
+                      <td class="text-center col-2" th:text="${item.quantidade}"></td>
+                      <td class="text-center col-1">
+                        <div class="d-flex flex-row bd-highlight">
+                          <div class="icheck-danger d-inline ml-2">
+                            <input type="checkbox" value="" name="todo1" th:id="${item.produto.codigo}">
+                            <label th:for="${item.produto.codigo}"></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(venda.itemList)}">
+                      <td colspan="4">Nenhum título foi encontrado.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            <a th:href="@{/caixa/excluir/}" class="js-excluir btn btn-md btn-success" th:text="#{excluir}"></a>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal --> 
   
   </section>
   
-  <section layout:fragment="conteudo">
-    <div class="row">
+  <section id="conteudoSection" layout:fragment="conteudo">
+      
+    <div class="row" th:fragment="conteudo">
     <div class="col-md-12">
     <div class="card card-default">
       <!-- <div class="card-header"></div> -->
@@ -474,8 +424,27 @@
             
             <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
               <div class="chart">
+                <!-- <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
+                  <li th:each="item : *{itemList}"></li>
+                </ul> -->
                 <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
-                  <li th:each="item : ${venda.itemList}"></li>
+                  <th:block th:each="item : ${venda.itemList}">
+                      <li class="item">
+                      <div class="row align-items-end">
+                       <div class="col-md-4 text-left">
+                          <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>
+                          <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
+                       </div>
+                      <div class="col-md-4 text-center">
+                         <h6 id="quantidade" th:text="|${item.quantidade}un x ${{item.valor}}|"></h6>
+                      </div>
+                      <div class="col-md-4 text-right">
+                         <h5 th:text="|R$ ${item.quantidade*item.valor}|"></h5>
+                      </div>
+                      </div>
+                    </li>
+                    <li class="linha border-bottom"></li>
+                  </th:block>
                 </ul>
               </div>
             </div>
@@ -504,17 +473,10 @@
               </div>
               <div class="col-md-6">
                 <div class=" text-right">
-                  <!-- <div class="btn btn-primary btn-flat py-2 btn-block"> -->
-                    <!-- <a th:href="@{#}" class="js-pagamento btn btn-primary btn-flat py-2 btn-block">
-                      <i class="fas fa-cart-plus fa-lg mr-2"></i>
-                      <i class="fas fa-cart-plus mr-2"></i> 
-                      Pagamento
-                    </a> -->
-                    <button type="submit" class="btn btn-primary btn-flat py-2 btn-block">
-                      <i class="fas fa-cart-plus mr-2"></i> <!-- js-pagamento -->
-                      Pagamento
-                    </button>
-                  <!-- </div> -->
+                  <button type="submit" class="btn btn-primary btn-flat py-2 btn-block">
+                    <i class="fas fa-cart-plus mr-2"></i> <!-- js-pagamento -->
+                    Pagamento
+                  </button>
                 </div>
               </div>
               </div>
@@ -522,8 +484,8 @@
               <div class="col-md-6">
                 <div class=" text-right">
                   <!-- <div class="btn btn-warning btn-flat btn-block py-2"> -->
-                    <a class="js-buscar-itens btn btn-warning btn-flat btn-block py-2" 
-                      th:href="@{/caixa/obterItens}">
+                    <a class="btn btn-warning btn-flat btn-block py-2" 
+                      th:href="@{#}" data-toggle="modal" data-target="#modalExcluirProduto">
                       <i class="fas fa-minus-circle mr-2"></i>
                       Remover
                     </a>
@@ -545,8 +507,9 @@
             <div class="progress-group text-right">
               <h2><span class="text">Subtotal</span></h2>
               <div class="bg-gray py-2 px-3 ">
-                <h2 id="subtotal" class="js-subtotal mb-0" style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
-                  R$ 0,00
+                <h2 id="subtotal" th:text="|R$ ${{venda.subtotal}}|" 
+                  class="js-subtotal mb-0" 
+                  style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
                 </h2>
               </div>
            </div>
@@ -611,14 +574,11 @@
   	var decimalformatter = new Intl.NumberFormat('pt-BR', {
 	  minimumFractionDigits: 2
 	});
-  	
-  	//final decimalformatterrev = NumberFormat("#,##0.00", "pt-BR");
 
   	$('.js-incluir').on('click', function(event) {
 		event.preventDefault();
 		
 		var botaoIncluir = $(event.currentTarget);
-		//var codigoProduto = $('#modalIncluirProduto').find('input#inputCodigoProduto').val();
 
 		var rows = $('#modalIncluirProduto').find('#tabelaDeProdutos tbody tr');
 		rows.each(function(index, element) {
@@ -634,7 +594,8 @@
 				});
 				
 				response.done(function(e){
-					atualizarLista(e.venda, e.item);
+					//atualizarLista(e.venda, e.item);
+					$('#conteudoSection').html(e);
 				});
 				
 				response.fail(function(e){
@@ -647,11 +608,30 @@
 		
 	});
   	
+  	$('#modalExcluirProduto').on('shown.bs.modal', function(event){
+  		event.preventDefault();
+  		   
+      		var response = $.ajax({
+    			url: '/caixa/obterItens',
+    			type: 'GET'
+    		}); 
+      		
+      		response.done(function(e){
+    			console.log(e);    			
+    			$('#modalExcluirProduto .modal-body table tbody').replaceWith(e);
+    			$('#modalExcluirProduto').modal('show');
+    		});
+      		
+      		response.fail(function(e){
+    			alert('Erro buscando itens');
+    		});
+  	});
+  	
   	$('.js-excluir').on('click', function(event) {
-		event.preventDefault();
+  		event.preventDefault();
 		
 		var botaoExcluir = $(event.currentTarget);
-					
+
 		var rows = $('#modalExcluirProduto').find('#tabelaDeItens tbody tr');
 		rows.each(function(index, element) {
 			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
@@ -659,14 +639,15 @@
 				var urlExcluirItem = botaoExcluir.attr('href');
 				var codigo = $(element).find('td input[name="todo1"]').attr('id');
 				urlExcluirItem += codigo;
-				console.log(urlExcluirItem);
+
 				var response = $.ajax({
 					url: urlExcluirItem,
 					type: 'GET'
 				});
 				
 				response.done(function(e){
-					atualizarLista(e.venda, e.item);
+					//atualizarLista(e.venda, e.item);
+					$('#conteudoSection').html(e);
 				});
 				
 				response.fail(function(e){
@@ -756,50 +737,6 @@
   	  }
   	});
   	
-  	$('.js-buscar-itens').on('click', function(event) {
-		event.preventDefault();
-		
-		var botaoBuscatItens = $(event.currentTarget);
-		var urlBuscarItens = botaoBuscatItens.attr('href');
-					
-		var response = $.ajax({
-			url: urlBuscarItens,
-			type: 'GET'
-		});
-		
-		response.done(function(listaDeItens){
-  			var item;
-  			
-  			$('#tabelaDeItens').DataTable().clear();
-
-  			if(listaDeItens.length > 0) {
-  				for(var i=0; i<listaDeItens.length; i++) {
-  	  				item = listaDeItens[i];
-  	  				console.log(item);
-  	                
-  	              $('#tabelaDeItens').DataTable().row.add([
-  	            	  item.produto.codigo, 
-  	            	  item.produto.descricao,
-  	            	  item.quantidade,
-  	            	  '<div class="d-flex flex-row bd-highlight">'+
-    	            	  '<div class="icheck-danger d-inline ml-2">'+
-    	            	  	'<input type="checkbox" value="" name="todo1" id="'+item.produto.codigo+'">'+
-    	            	  	'<label for="'+item.produto.codigo+'"></label>'+
-    	            	  '</div>'+
-  	            	  '</div>']);
-  	  			}
-  			} 
-  			
-  			$('#tabelaDeItens').DataTable().draw();
-  			$('#modalExcluirProduto').modal('show');
-  			
-		});
-		
-		response.fail(function(e){
-			alert('Erro buscando itens');
-		});
-  	});
-  	
   	$('#modalIncluirProduto').on('hidden.bs.modal', function (event){
   		$('#modalIncluirProduto').find('input#inputCodigoProduto').val(null);
   		var tabelaProdutos = $('#tabelaDeProdutos').DataTable();
@@ -813,73 +750,6 @@
   	
   	$('#modalPagamento').on('shown.bs.modal', function(event) {
   		$(this).find('input#inputSaldo').focus();
-  	});
-  	
-  	$('.js-pagamento').on('click',function(e) {
-		event.preventDefault();
-		
-		var botao = $(event.currentTarget);
-		var url = botao.attr('href');
-  		
-  		var response = $.ajax({
-			url: '/caixa/pagar',
-			type: 'GET'
-		});
-  		
-  		response.done(function(e){
-  			var venda = e;
-  			$('#modalPagamento').find('#desconto option:selected').html(venda.desconto.descricao);
-  			$('#modalPagamento').find('#total').html('<h3 class="mb-0">'+currencyformatter.format(venda.total)+'</h3>');
-  			console.log(venda.total);
-  			$('#modalPagamento').modal('show');
-		});
-		
-		response.fail(function(e){
-			alert('Erro ao ir para tela de Pagamento');
-		});
-  	});
-  	
-  	$('.js-desconto').on('change', function() {
-  		
-  		var option = $('#modalPagamento').find('#desconto option:selected')[0];
-  		var desconto = option.value;
-
-  		console.log(desconto);
-  		var response = $.ajax({
-			url: '/caixa/aplicar/desconto/'+desconto,
-			type: 'GET'
-		});
-  		
-  		response.done(function(e){
-  			var venda = e.venda;
-  			console.log(venda);
-  			$('#modalPagamento').find('#desconto-valor p').html(currencyformatter.format(venda.valorDesconto));
-  			$('#modalPagamento').find('#total').html('<h3 class="mb-0">'+currencyformatter.format(venda.total)+'</h3>');
-		});
-		
-		response.fail(function(e){
-			alert('Erro aplicando desconto');
-		});
-  	});
-  	
-  	$('.js-finalizar').on('click', function(event) {
-
-  		var saldo = $('#modalPagamento').find('input#inputSaldo').val();
-  		saldo = parseFloat(saldo.replace(/\./g, '').replace(/,/, '.'));
-  		console.log(saldo);
-  		
-  		var response = $.ajax({
-			url: '/caixa/aplicar/saldo/'+saldo,
-			type: 'PUT'
-		});
-  		
-  		response.done(function(e){
-  			$('#caixaForm').submit();
-  		});
-		
-		response.fail(function(e){
-			alert('Erro aplicando saldo');
-		});
   	});
   	
   	function atualizarLista(venda, item) {
@@ -908,7 +778,7 @@
 		$('#descricaoProduto').html('<strong>'+item.produto.descricao+'</strong>');//item.quantidade +' X '
 		$('#listaDeItens').html(li);
 		$('.js-subtotal').html('<h3 class="mb-0">'+currencyformatter.format(venda.subtotal)+'</h3>');
-	}
+	} 
   </script>
     
 </html>

@@ -8,7 +8,7 @@
 </head>
 
   <section layout:fragment="container">
-    <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa/finalizarVenda}" th:object="${venda}">
+    <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa}" th:object="${venda}">
       <!-- <header layout:insert="~{cabecalho}"></header> -->
       <div class="pt-2"></div>
       <header layout:insert="~{corpo}"></header>
@@ -22,8 +22,16 @@
     <div class="card card-default">
       <!-- <div class="card-header"></div> -->
       <div class="card-body">
-        <div class="row" >
+        <input type="hidden" th:field="*{id}"></input>
+        <input type="hidden" th:field="*{dataVenda}"></input>
+        <input type="hidden" id="inputItemList" th:field="*{itemList}"></input>
+        <input type="hidden" th:field="*{status}"></input>
+        <input type="hidden" th:field="*{subtotal}"></input>
+        <input type="hidden" th:field="*{total}"></input>
+        <input type="hidden" th:field="*{troco}"></input>
+        <input type="hidden" th:field="*{valorDesconto}"></input>
         
+        <div class="row" >
           <div class="col-6">
             <div class="table-responsive">
               <table class="table">
@@ -52,19 +60,34 @@
                     </div>
                   </td>
                 </tr>
-                
               </table>
-              <button type="submit" class="btn btn-md btn-success">
+              <button type="submit" id="finalizar" class="btn btn-md btn-success">
                 <i class="far fa-credit-card"></i> 
                 Finalizar
               </button>
             </div>
           </div>
           
-          <div class="col-md-6">
-            <div style="border-style: solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
-              <div class="chart" style="height: 330px">
-                
+          <div class="col-6">
+            <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
+              <div class="chart">
+                <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
+                  <li class="item" th:each="item, stat : *{itemList}">
+                      <div class="row align-items-end">
+                          <div class="col-md-4 text-left">
+                            <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>
+                            <h6 id="codigo" th:text="item.produto.codigo"></h6>
+                          </div>
+                          <div class="col-md-4 text-center">
+                              <h6 id="quantidade" th:text="|${item.quantidade} X ${{item.valor}}|"></h6>
+                            </div>
+                            <div class="col-md-4 text-right">
+                              <h5 th:text="${{item.valor}}"></h5>
+                          </div>
+                      </div>
+                    </li>
+                    <li class="linha border-bottom"></li>
+                </ul>
               </div>
             </div>
           </div>
@@ -94,6 +117,7 @@
 	});
   	
   	//final decimalformatterrev = NumberFormat("#,##0.00", "pt-BR");
+  	console.log($('#itemList'));
 
   	$('.js-incluir').on('click', function(event) {
 		event.preventDefault();

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8"></meta>
+<title>Insert title here</title>
+</head>
+<body>
+  <th:block th:fragment="list">
+    <th:block th:each="item : ${venda.itemList}">
+        <li class="item">
+        <div class="row align-items-end">
+         <div class="col-md-4 text-left">
+            <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>
+            <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
+         </div>
+        <div class="col-md-4 text-center">
+           <h6 id="quantidade" th:text="|${item.quantidade}un x ${{item.valor}}|"></h6>
+        </div>
+        <div class="col-md-4 text-right">
+           <h5 th:text="${item.quantidade}"></h5>
+        </div>
+        </div>
+      </li>
+      <li class="linha border-bottom"></li>
+    </th:block>
+  </th:block>
+</body>
+</html>

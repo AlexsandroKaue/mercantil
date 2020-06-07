@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +41,8 @@ import com.kaue.service.VendaService;
 public class CaixaController {
 
 	static final String REGISTRADORA_VIEW = "page/caixa/Vender";
-	static final String VENDA_CONLUIDA_VIEW = "page/caixa/Pagamento";
+	static final String PAGAMENTO_VIEW = "page/caixa/Pagamento";
+	static final String RECIBO_VIEW = "page/caixa/Recibo";
 	
 	@Autowired
 	ResourceLoader resourceLoader;
@@ -69,6 +72,7 @@ public class CaixaController {
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW);
 		venda.setItemList(new ArrayList<Item>());
 		venda.setDesconto(OpcoesDesconto.ZERO);
+		venda.setSubtotal(new BigDecimal(0.0));
 		
 		mv.addObject("venda", venda);
 		/* mv.addObject("listaDeItens", new ArrayList<Item>()); */
@@ -76,9 +80,10 @@ public class CaixaController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/incluir/{codigo}", produces = "application/json; charset=UTF-8")
-	@ResponseBody
-	public Map<String, Object> incluirItem(@PathVariable("codigo") String codigo) {
+	@RequestMapping(value = "/incluir/{codigo}")
+	public ModelAndView incluirItem(@PathVariable("codigo") String codigo) {
+		
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: conteudo");
 		
 		if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
 		Item item = null;
@@ -110,17 +115,16 @@ public class CaixaController {
 		}
 		venda.setSubtotal(subtotal);
 
-		Map<String, Object> map = new HashMap<>();
-		map.put("venda", venda);
-		map.put("item", item);
+		mv.addObject("venda", venda);
+		mv.addObject("item", item);
 		
-		return map;
+	    return mv;
 		
 	}
 	
-	@RequestMapping(value = "/excluir/{codigo}", produces = "application/json; charset=UTF-8")
-	@ResponseBody
-	public Map<String, Object> excluirItem(@PathVariable("codigo") String codigo) {
+	@RequestMapping(value = "/excluir/{codigo}")
+	public ModelAndView excluirItem(@PathVariable("codigo") String codigo) {
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: conteudo");
 		
 		Iterator<Item> itemIterator = venda.getItemList().iterator();
 		Item item = null;
@@ -141,18 +145,18 @@ public class CaixaController {
 		}
 		venda.setSubtotal(subtotal);
 		
-		Map<String, Object> map = new HashMap<>();
-		map.put("venda", venda);
-		map.put("item", item);
+		mv.addObject("venda", venda);
+		mv.addObject("item", item);
 		
-		return map;
+	    return mv;
 		
 	}
-	
-	@RequestMapping(value = "/obterItens", produces = "application/json; charset=UTF-8")
-	@ResponseBody
-	public List<Item> obterItens() {
-		return venda.getItemList();
+
+	@RequestMapping(value = "/obterItens")
+	public ModelAndView obterItens() {
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: tabelaDeItens");
+		mv.addObject("venda", venda);
+		return mv;
 	}
 	
 	@RequestMapping(value = "/buscarProduto/{termo}", produces = "application/json; charset=UTF-8")
@@ -176,10 +180,11 @@ public class CaixaController {
 		
 	}
 	
-	@RequestMapping(value = "/finalizarVenda")
-	public String finalizarVenda() {
+	@RequestMapping(method = RequestMethod.POST)
+	public String finalizarVenda(@Validated Venda venda) {
 		
-		venda.setDataVenda(new Date());
+		venda.setSaldo(venda.getSaldo());
+		
 		venda.setStatus(StatusVenda.FINALIZADA);
 		if(venda.getSaldo().compareTo(venda.getTotal()) > 0) {
 			BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
@@ -193,7 +198,7 @@ public class CaixaController {
 	
 	@RequestMapping(value = "/venda/{id}")
 	public ModelAndView detalhesVenda(@PathVariable("id") Venda venda) {
-		ModelAndView mv = new ModelAndView(VENDA_CONLUIDA_VIEW);
+		ModelAndView mv = new ModelAndView(RECIBO_VIEW);
 		mv.addObject("venda", venda);
 		return mv;
 	}
@@ -201,12 +206,17 @@ public class CaixaController {
 	@RequestMapping(value = "/pagar", method = RequestMethod.POST)
 	public ModelAndView pagar() {		
 		
-		ModelAndView mv = new ModelAndView(VENDA_CONLUIDA_VIEW);
+		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
 		venda.setStatus(StatusVenda.ABERTA);
 		venda.setDesconto(OpcoesDesconto.ZERO);
 		venda.setValorDesconto(new BigDecimal(0.0));
 		venda.setTotal(venda.getSubtotal());
-		mv.addObject("venda", venda);
+		venda.setDataVenda(new Date());
+		venda = vendaService.salvar(venda);
+		
+		Venda v = vendaService.buscarPorId(venda.getId());
+		
+		mv.addObject("venda", v);
 		return mv;
 	}
 	
@@ -234,5 +244,6 @@ public class CaixaController {
 	public List<OpcoesDesconto> todasOpcoesDesconto(){
 		return Arrays.asList(OpcoesDesconto.values());
 	}
+	
 	
 }
