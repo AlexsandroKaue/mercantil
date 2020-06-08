@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -76,7 +77,7 @@ public class CaixaController {
 		
 		mv.addObject("venda", venda);
 		/* mv.addObject("listaDeItens", new ArrayList<Item>()); */
-		mv.addObject("listaDeProdutos", new ArrayList<Produto>());
+		mv.addObject("produtoList", new ArrayList<Produto>());
 		return mv;
 	}
 	
@@ -154,14 +155,14 @@ public class CaixaController {
 
 	@RequestMapping(value = "/obterItens")
 	public ModelAndView obterItens() {
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: tabelaDeItens");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: modalExcluirProduto");
 		mv.addObject("venda", venda);
 		return mv;
 	}
 	
-	@RequestMapping(value = "/buscarProduto/{termo}")
+	@RequestMapping(value = "/buscarProduto/{termo}", method = RequestMethod.PUT)
 	public ModelAndView buscarProduto(@PathVariable("termo") String termo) {
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: tabelaDeProdutos");
+
 		ProdutoFilter filtro = new ProdutoFilter();
 
 		try {
@@ -174,7 +175,11 @@ public class CaixaController {
 		filtro.getCategoria().setDescricao(termo);
 		
 		List<Produto> produtoList = produtoService.pesquisar(filtro);
-		
+		if(produtoList == null) {
+			produtoList = new ArrayList<Produto>();
+		}
+		String selector = "modalIncluirProduto";
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: "+selector);
 		mv.addObject("produtoList", produtoList);
 		
 		return mv;

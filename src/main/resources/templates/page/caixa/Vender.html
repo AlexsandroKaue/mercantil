@@ -7,14 +7,14 @@
   <title th:text="#{mercadinho}"></title>
 </head>
 
-  <section layout:fragment="container">
+  <section layout:fragment="container" id="container">
     <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa/pagar}" th:object="${venda}">
       <!-- <header layout:insert="~{cabecalho}"></header> -->
       <div class="pt-2"></div>
       <header layout:insert="~{corpo}"></header>
     </form>
     
-    <div class="modal" id="modalIncluirProduto">
+    <div class="modal" id="modalIncluirProduto" th:fragment="modalIncluirProduto">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -25,7 +25,7 @@
           </div>
           
           <div class="modal-body">
-            <div class="row">
+            <div class="row">       
               <div class="col-md-6">
                 <div class="input-group">
                   <input class="form-control" id="inputCodigoProduto" type="text"
@@ -47,7 +47,7 @@
                       <th class="text-center col-2"></th>
                     </tr>
                   </thead>
-                  <tbody th:fragment="tabelaDeProdutos">
+                  <tbody th:attr="data-length=${#lists.size(produtoList)}">
                     <tr th:each="produto : ${produtoList}">
       				  <td class="text-center" th:text="${produto.codigo}"></td>
       				  <td th:text="${produto.descricao}"></td>
@@ -70,7 +70,7 @@
           
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-            <a th:href="@{/caixa/incluir/}" class="js-incluir btn btn-md btn-success" th:text="#{incluir}"></a>
+            <a th:href="@{/caixa/incluir/}" class="js-incluir btn btn-md btn-success toastrDefaultError" th:text="#{incluir}"></a>
           </div>
         </div>
         <!-- /.modal-content -->
@@ -322,7 +322,7 @@
     </div>
     <!-- /.modal -->
     
-    <div class="modal" id="modalExcluirProduto">
+    <div class="modal" id="modalExcluirProduto" th:fragment="modalExcluirProduto">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -344,7 +344,7 @@
                       <th class="text-center col-1"></th>
                     </tr>
                   </thead>
-                  <tbody th:fragment="tabelaDeItens">
+                  <tbody>
                     <tr th:each="item : ${venda.itemList}">
                       <td class="text-center col-3" th:text="${item.produto.codigo}"></td>
                       <td th:text="${item.produto.descricao}"></td>
@@ -495,8 +495,8 @@
               <div class="col-md-6">
                 <div class=" text-right">
                   <!-- <div class="btn btn-warning btn-flat btn-block py-2"> -->
-                    <a class="btn btn-warning btn-flat btn-block py-2" 
-                      th:href="@{#}" data-toggle="modal" data-target="#modalExcluirProduto">
+                    <a class="js-obter-item btn btn-warning btn-flat btn-block py-2" 
+                      th:href="@{/caixa/obterItens}">
                       <i class="fas fa-minus-circle mr-2"></i>
                       Remover
                     </a>
@@ -585,41 +585,46 @@
   	var decimalformatter = new Intl.NumberFormat('pt-BR', {
 	  minimumFractionDigits: 2
 	});
-
-  	$('.js-incluir').on('click', function(event) {
+  	
+  	$('#container').on('click', '.js-incluir', function(event){
 		event.preventDefault();
 		
 		var botaoIncluir = $(event.currentTarget);
 
+		var listSize = $('#modalIncluirProduto').find('#tabelaDeProdutos tbody').data('length');
+		
 		var rows = $('#modalIncluirProduto').find('#tabelaDeProdutos tbody tr');
-		rows.each(function(index, element) {
-			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
-			if(isChecked) {
-				var urlIncluirItem = botaoIncluir.attr('href');
-				var codigo = $(element).find('td input[name="todo1"]').attr('id').split('-')[0];
-				urlIncluirItem += codigo;
-				console.log(urlIncluirItem);
-				var response = $.ajax({
-					url: urlIncluirItem,
-					type: 'GET'
-				});
-				
-				response.done(function(e){
-					//atualizarLista(e.venda, e.item);
-					$('#conteudoSection').html(e);
-				});
-				
-				response.fail(function(e){
-					alert('Erro incluindo item');
-				});
-			}
-		});
-		
-		$('#modalIncluirProduto').modal("hide");
-		
-	});
+		if(listSize>0) {
+
+    		rows.each(function(index, element) {
+    			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
+    			if(isChecked) {
+    				var urlIncluirItem = botaoIncluir.attr('href');
+    				var codigo = $(element).find('td input[name="todo1"]').attr('id').split('-')[0];
+    				urlIncluirItem += codigo;
+    				console.log(urlIncluirItem);
+    				var response = $.ajax({
+    					url: urlIncluirItem,
+    					type: 'GET'
+    				});
+    				
+    				response.done(function(e){
+    					//atualizarLista(e.venda, e.item);
+    					$('#conteudoSection').html(e);
+    				});
+    				
+    				response.fail(function(e){
+    					alert('Erro incluindo item');
+    				});
+    			}
+    		});
+    		$('#modalIncluirProduto').modal("hide");
+  		} else {
+  			toastr.error('Nenhum produto selecionado.')
+  		}
+  	});
   	
-  	$('.js-excluir').on('click', function(event) {
+	$('#container').on('click', '.js-excluir', function(event) {
   		event.preventDefault();
 		
 		var botaoExcluir = $(event.currentTarget);
@@ -652,53 +657,62 @@
 		
 	});
   	
-  	$('#modalExcluirProduto').on('shown.bs.modal', function(event){
+	$('#container').on('click', '.js-obter-item', function(event){
   		event.preventDefault();
+  		
+  		var botao = $(event.currentTarget);
+		var url = botao.attr('href');
   		   
-      		var response = $.ajax({
-    			url: '/caixa/obterItens',
-    			type: 'GET'
-    		}); 
-      		
-      		response.done(function(e){
-    			console.log(e);    			
-    			$('#modalExcluirProduto .modal-body table tbody').replaceWith(e);
-    			$('#modalExcluirProduto').modal('show');
-    		});
-      		
-      		response.fail(function(e){
-    			alert('Erro buscando itens');
-    		});
+  		var response = $.ajax({
+			url: url,
+			type: 'GET'
+		}); 
+  		
+  		response.done(function(e){
+			console.log(e);    			
+			$('#modalExcluirProduto').replaceWith(e);
+			$('#modalExcluirProduto').modal('show');
+		});
+  		
+  		response.fail(function(e){
+			alert('Erro buscando itens');
+		});
   	});
   	
-  	$('.js-buscar-produto').on('click', function(event) {
+  	$('#container').on('click', '.js-buscar-produto', function(event) {
 		event.preventDefault();
 		
 		var botaoPesquisarProduto = $(event.currentTarget);
 		var urlPesquisarProduto = botaoPesquisarProduto.attr('href');
 		var termoDaPesquisa = $('#modalIncluirProduto').find('input#inputCodigoProduto').val();
-		urlPesquisarProduto += termoDaPesquisa;
 		
-		console.log(urlPesquisarProduto);
-					
-		var response = $.ajax({
-			url: urlPesquisarProduto,
-			type: 'GET'
-		});
+		if(termoDaPesquisa) {
+			urlPesquisarProduto += termoDaPesquisa;
+						
+			var response = $.ajax({
+				url: urlPesquisarProduto,
+				type: 'PUT'
+			});
+			
+			response.done(function(e){
+				console.log(e);
+				$('#modalIncluirProduto').modal('hide');
+				$('#modalIncluirProduto').replaceWith(e);// .modal-body table tbody
+				$('#modalIncluirProduto').modal('show');
+			});
+			
+			response.fail(function(e){
+				console.log(e);
+				alert('Erro buscando produto');
+			});
+		} else {
+			
+		}
 		
-		response.done(function(e){
-			console.log(e);
-			$('#modalIncluirProduto .modal-body table tbody').replaceWith(e);
-			$('#modalIncluirProduto').modal('show');
-		});
-		
-		response.fail(function(e){
-			alert('Erro buscando produto');
-		});
   	});
   	
  	// Execute a function when the user releases a key on the keyboard
-  	$('#inputCodigoProduto').on('keyup', function(event) {
+  	$('#container').on('keyup', '#inputCodigoProduto', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
   	  if (event.keyCode === 13) {
   	    // Cancel the default action, if needed
@@ -708,19 +722,15 @@
   	  }
   	});
   	
-  	$('#modalIncluirProduto').on('hidden.bs.modal', function (event){
+  	/* $('#modalIncluirProduto').on('hidden.bs.modal', function (event){
   		$('#modalIncluirProduto').find('input#inputCodigoProduto').val(null);
   		var tabelaProdutos = $('#tabelaDeProdutos').DataTable();
   		tabelaProdutos.clear();
   		tabelaProdutos.draw();
-  	});
+  	}); */
   	
-  	$('#modalIncluirProduto').on('shown.bs.modal', function (event){
+  	$('#container').on('shown.bs.modal', '#modalIncluirProduto', function (event){
   		$('#modalIncluirProduto').find('input#inputCodigoProduto').focus();
-  	});
-  	
-  	$('#modalPagamento').on('shown.bs.modal', function(event) {
-  		$(this).find('input#inputSaldo').focus();
   	});
   	
   	function atualizarLista(venda, item) {

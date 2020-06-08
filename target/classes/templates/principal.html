@@ -48,9 +48,11 @@
 <body class="hold-transition sidebar-mini sidebar-collapse">
 <div class="wrapper">
  
-  <header layout:insert="~{menu_superior}"></header>
+  <!-- <header layout:insert="~{menu_superior}"></header> -->
+  <div th:replace="menu_superior :: header"></div>
   
-  <header layout:insert="~{menu_lateral}"></header>
+  <!-- <header layout:insert="~{menu_lateral}"></header> -->
+  <div th:replace="menu_lateral :: aside"></div>
   
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
