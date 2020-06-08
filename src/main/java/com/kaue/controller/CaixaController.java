@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -84,40 +85,45 @@ public class CaixaController {
 	@RequestMapping(value = "/incluir/{codigo}")
 	public ModelAndView incluirItem(@PathVariable("codigo") String codigo) {
 		
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: conteudo");
+		String selector = null;
 		
-		if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
 		Item item = null;
-		Produto produto = produtoService.buscarPorCodigo(codigo);
+		if(codigo!=null) {
+			selector = "conteudo";
+			if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
+			Produto produto = produtoService.buscarPorCodigo(codigo);
 
-		if(produto != null) {
-			boolean isNew = true;
-			for(Item it : venda.getItemList()) {
-				if(it.getProduto().getCodigo().equals(codigo)) {
-					it.setQuantidade(it.getQuantidade()+1);
-					isNew = false;
-					item = it; break;
+			if(produto != null) {
+				boolean isNew = true;
+				for(Item it : venda.getItemList()) {
+					if(it.getProduto().getCodigo().equals(codigo)) {
+						it.setQuantidade(it.getQuantidade()+1);
+						isNew = false;
+						item = it; break;
+					}
+				}
+				if(isNew) {
+					item = new Item();
+					item.setProduto(produto);
+					item.setValor(produto.getValorDeVenda());
+					item.setVenda(venda);
+					item.setQuantidade(1);
+					
+					venda.getItemList().add(item);
 				}
 			}
-			if(isNew) {
-				item = new Item();
-				item.setProduto(produto);
-				item.setValor(produto.getValorDeVenda());
-				item.setVenda(venda);
-				item.setQuantidade(1);
-				
-				venda.getItemList().add(item);
+			
+			BigDecimal subtotal = new BigDecimal(0.0);
+			for(Item it : venda.getItemList()) {
+				subtotal = subtotal.add(it.getValor().multiply(new BigDecimal(it.getQuantidade())));
 			}
+			venda.setSubtotal(subtotal);
+		} else {
+			selector = "modalIncluirProduto(_,hasItemSelected=false)";
 		}
-		
-		BigDecimal subtotal = new BigDecimal(0.0);
-		for(Item it : venda.getItemList()) {
-			subtotal = subtotal.add(it.getValor().multiply(new BigDecimal(it.getQuantidade())));
-		}
-		venda.setSubtotal(subtotal);
 
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: "+selector);
 		mv.addObject("venda", venda);
-		mv.addObject("item", item);
 		
 	    return mv;
 		
@@ -160,25 +166,33 @@ public class CaixaController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/buscarProduto/{termo}", method = RequestMethod.PUT)
-	public ModelAndView buscarProduto(@PathVariable("termo") String termo) {
-
-		ProdutoFilter filtro = new ProdutoFilter();
-
-		try {
-			Integer codigo = Integer.parseInt(termo);
-			filtro.setCodigo(String.format("%010d" , codigo));
-		} catch(NumberFormatException nfe) {}
-
-		filtro.setDescricao(termo);
-		filtro.setCategoria(new Categoria());
-		filtro.getCategoria().setDescricao(termo);
+	@RequestMapping(value = "/buscarProduto")
+	public ModelAndView buscarProduto(@RequestParam("termo") String termo) {
 		
-		List<Produto> produtoList = produtoService.pesquisar(filtro);
+		List<Produto> produtoList = null;
+		String selector = "modalIncluirProduto";
+		if(termo != null && !termo.trim().isEmpty()) {
+			selector = selector + "(isSearchEmpty='false',_)";
+			ProdutoFilter filtro = new ProdutoFilter();
+
+			try {
+				Integer codigo = Integer.parseInt(termo);
+				filtro.setCodigo(String.format("%010d" , codigo));
+			} catch(NumberFormatException nfe) {}
+
+			filtro.setDescricao(termo);
+			filtro.setCategoria(new Categoria());
+			filtro.getCategoria().setDescricao(termo);
+			
+			produtoList = produtoService.pesquisar(filtro);
+		} else {
+			selector = selector + "(isSearchEmpty='true',_)";
+		}
+
 		if(produtoList == null) {
 			produtoList = new ArrayList<Produto>();
 		}
-		String selector = "modalIncluirProduto";
+		
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: "+selector);
 		mv.addObject("produtoList", produtoList);
 		

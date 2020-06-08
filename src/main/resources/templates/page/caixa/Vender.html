@@ -14,7 +14,7 @@
       <header layout:insert="~{corpo}"></header>
     </form>
     
-    <div class="modal" id="modalIncluirProduto" th:fragment="modalIncluirProduto">
+    <div class="modal" id="modalIncluirProduto" th:fragment="modalIncluirProduto(isSearchEmpty,hasItemSelected)">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -25,7 +25,23 @@
           </div>
           
           <div class="modal-body">
-            <div class="row">       
+            <div class="row">
+              <div class="col-md-12" th:if="${isSearchEmpty!=null}">
+                <div class="alert alert-danger alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  <!-- <h5><i class="icon fas fa-ban"></i> Alert!</h5> -->
+                  <i class="icon fas fa-ban"></i>
+                  Campo de pesquisa vazio, digite algo para pesquisar.
+                </div>
+              </div>
+              <div class="col-md-12" th:if="${hasItemSelected}">
+                <div class="alert alert-danger alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  <!-- <h5><i class="icon fas fa-ban"></i> Alert!</h5> -->
+                  <i class="icon fas fa-ban"></i>
+                  Nenhum item selecionado.
+                </div>
+              </div>       
               <div class="col-md-6">
                 <div class="input-group">
                   <input class="form-control" id="inputCodigoProduto" type="text"
@@ -586,6 +602,20 @@
 	  minimumFractionDigits: 2
 	});
   	
+  	toastr.options = {
+	  "closeButton": true,
+	  "positionClass": "toast-top-center",
+	  "preventDuplicates": true,
+	  "showDuration": "300",
+	  "hideDuration": "1000",
+	  "timeOut": "5000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+	}
+  	
   	$('#container').on('click', '.js-incluir', function(event){
 		event.preventDefault();
 		
@@ -686,12 +716,12 @@
 		var urlPesquisarProduto = botaoPesquisarProduto.attr('href');
 		var termoDaPesquisa = $('#modalIncluirProduto').find('input#inputCodigoProduto').val();
 		
-		if(termoDaPesquisa) {
-			urlPesquisarProduto += termoDaPesquisa;
+		/* if(termoDaPesquisa) { */
+			urlPesquisarProduto += '?termo='+termoDaPesquisa;
 						
 			var response = $.ajax({
 				url: urlPesquisarProduto,
-				type: 'PUT'
+				type: 'GET'
 			});
 			
 			response.done(function(e){
@@ -705,9 +735,9 @@
 				console.log(e);
 				alert('Erro buscando produto');
 			});
-		} else {
-			
-		}
+		/* } else {
+    		toastr.error('Campo de pesquisa vazio.')
+		} */
 		
   	});
   	
@@ -722,11 +752,9 @@
   	  }
   	});
   	
-  	/* $('#modalIncluirProduto').on('hidden.bs.modal', function (event){
+  	/* $('#container').on('hidden.bs.modal','#modalIncluirProduto', function (event){
   		$('#modalIncluirProduto').find('input#inputCodigoProduto').val(null);
   		var tabelaProdutos = $('#tabelaDeProdutos').DataTable();
-  		tabelaProdutos.clear();
-  		tabelaProdutos.draw();
   	}); */
   	
   	$('#container').on('shown.bs.modal', '#modalIncluirProduto', function (event){
