@@ -1,5 +1,6 @@
 package com.kaue.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,20 @@ public class ProdutoServiceImpl implements ProdutoService{
 
 	@Override
 	public List<Produto> pesquisar(ProdutoFilter filtro) {
-		/*
-		 * String descricao = (filtro.getDescricao() == null ? "" :
-		 * filtro.getDescricao()); return
-		 * produtoDAO.findByDescricaoContainingIgnoreCaseOrderByIdDesc(descricao);
-		 */
-		
-		return produtoDAO.findProdutoByFiltro(filtro);
+		List<Produto> produtoList = produtoDAO.findProdutoByFiltro(filtro);
+		if(produtoList==null) {
+			produtoList = new ArrayList<Produto>();
+		}
+		return produtoList;
+	}
+	
+	@Override
+	public Long contar(ProdutoFilter filtro) {
+		Long count = produtoDAO.countProdutoByFiltro(filtro);
+		if(count!=null) {
+			return count;
+		}
+		return 0L;
 	}
 
 	@Override
@@ -52,6 +60,5 @@ public class ProdutoServiceImpl implements ProdutoService{
 		String cod = (codigo == null ? "" : codigo);
 		return produtoDAO.findByCodigo(cod);
 	}
-	
 	
 }

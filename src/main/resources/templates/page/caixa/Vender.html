@@ -7,15 +7,17 @@
   <title th:text="#{mercadinho}"></title>
 </head>
 
-  <section layout:fragment="container" id="container">
+  <section layout:fragment="container">
+
     <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa/pagar}" th:object="${venda}">
       <!-- <header layout:insert="~{cabecalho}"></header> -->
       <div class="pt-2"></div>
       <header layout:insert="~{corpo}"></header>
     </form>
     
-    <div class="modal" id="modalIncluirProduto" th:fragment="modalIncluirProduto(isSearchEmpty,hasItemSelected)">
-      <div class="modal-dialog modal-lg">
+    
+    <div class="modal" id="modalIncluirProduto">
+      <div class="modal-dialog modal-lg" th:fragment="modalIncluirProduto">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title"></h4>
@@ -26,35 +28,25 @@
           
           <div class="modal-body">
             <div class="row">
-              <div class="col-md-12" th:if="${isSearchEmpty!=null}">
-                <div class="alert alert-danger alert-dismissible">
-                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                  <!-- <h5><i class="icon fas fa-ban"></i> Alert!</h5> -->
-                  <i class="icon fas fa-ban"></i>
-                  Campo de pesquisa vazio, digite algo para pesquisar.
-                </div>
+              <div class="col-md-12" >
+                <div id="pesquisaVaziaErro"></div>
               </div>
-              <div class="col-md-12" th:if="${hasItemSelected}">
-                <div class="alert alert-danger alert-dismissible">
-                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                  <!-- <h5><i class="icon fas fa-ban"></i> Alert!</h5> -->
-                  <i class="icon fas fa-ban"></i>
-                  Nenhum item selecionado.
-                </div>
-              </div>       
+              <div class="col-md-12">
+                <div id="inclusaoVaziaErro"></div>
+              </div>
               <div class="col-md-6">
                 <div class="input-group">
                   <input class="form-control" id="inputCodigoProduto" type="text"
                     placeholder="Qual produto você está procurando?" autofocus="autofocus"></input>
                   <div class="input-group-append">
-                    <a th:href="@{/caixa/buscarProduto/}" class="js-buscar-produto btn btn-md btn-default">
+                    <a th:href="@{/caixa/buscarProduto}" class="js-buscar-produto btn btn-md btn-default">
                       <i class="fas fa-search"></i>
                     </a>
                   </div>
                 </div>
               </div>
               <div class="col-md-12">
-                <table id="tabelaDeProdutos" class="table table-bordered table-striped js-tabela">
+                <table id="tabelaDeProdutos" class="table table-bordered table-striped">
                   <thead>
                     <tr>
                       <th class="text-center col-1" th:text="#{codigo}"></th>
@@ -405,11 +397,12 @@
       <div class="card-body">
         <div class="row mb-2 align-items-center">
           <div class="col-md-8">
-            <div class="bg-white rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
+            <!-- <div class="bg-white rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
               <h2 id="descricaoProduto" class="text-center text-success">
-                <strong>Produto</strong>
+                <strong><label></label></strong>
               </h2>
-            </div>
+            </div> -->
+            <select class="js-example-data-ajax" style="width: 100%;"></select>
           </div>
           <div class="col-md-4 text-center">
             <!-- <div class="bg-white rounded py-1" style="border-style: solid; border-width: 2px; border-color: #cbd3da;"> -->
@@ -624,34 +617,40 @@
 		var listSize = $('#modalIncluirProduto').find('#tabelaDeProdutos tbody').data('length');
 		
 		var rows = $('#modalIncluirProduto').find('#tabelaDeProdutos tbody tr');
-		if(listSize>0) {
-
-    		rows.each(function(index, element) {
-    			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
-    			if(isChecked) {
-    				var urlIncluirItem = botaoIncluir.attr('href');
-    				var codigo = $(element).find('td input[name="todo1"]').attr('id').split('-')[0];
-    				urlIncluirItem += codigo;
-    				console.log(urlIncluirItem);
-    				var response = $.ajax({
-    					url: urlIncluirItem,
-    					type: 'GET'
-    				});
-    				
-    				response.done(function(e){
-    					//atualizarLista(e.venda, e.item);
-    					$('#conteudoSection').html(e);
-    				});
-    				
-    				response.fail(function(e){
-    					alert('Erro incluindo item');
-    				});
-    			}
-    		});
-    		$('#modalIncluirProduto').modal("hide");
-  		} else {
-  			toastr.error('Nenhum produto selecionado.')
-  		}
+		
+		var itens='';
+		rows.each(function(index, element) {
+  			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
+  			
+  			if(isChecked) {
+    			var codigo = $(element).find('td input[name="todo1"]').attr('id').split('-')[0];
+    			itens = itens + codigo + ',';
+  			}
+  		});	
+		
+		if(itens == '') {
+			bootstrap_alert = function() {};
+			bootstrap_alert.warning = function(message) {
+	            $('#inclusaoVaziaErro').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-ban"></i>'+message+'</span></div>')
+	        };
+	        bootstrap_alert.warning('Nenhum <strong>produto</strong> foi selecionado.');
+		} else {
+			$('#inclusaoVaziaErro').html();
+			var response = $.ajax({
+				url: '/caixa/incluir?codigo='+itens,
+				type: 'GET'
+			});
+			
+			response.done(function(e){
+				$('#conteudoSection').html(e);
+			});
+			
+			response.fail(function(e){
+				alert('Erro incluindo item');
+			});
+			$('#modalIncluirProduto').modal("hide");
+		}
+  		
   	});
   	
 	$('#container').on('click', '.js-excluir', function(event) {
@@ -716,9 +715,16 @@
 		var urlPesquisarProduto = botaoPesquisarProduto.attr('href');
 		var termoDaPesquisa = $('#modalIncluirProduto').find('input#inputCodigoProduto').val();
 		
-		/* if(termoDaPesquisa) { */
+		if(termoDaPesquisa.trim() === '') {
+			bootstrap_alert = function() {};
+			bootstrap_alert.warning = function(message) {
+	            $('#pesquisaVaziaErro').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-ban"></i>'+message+'</span></div>')
+	        };
+	        bootstrap_alert.warning('Campo da <strong>pesquisa</strong> vazio, digite algo para pesquisar.');
+		} else {
+			$('#pesquisaVaziaErro').html();
 			urlPesquisarProduto += '?termo='+termoDaPesquisa;
-						
+			
 			var response = $.ajax({
 				url: urlPesquisarProduto,
 				type: 'GET'
@@ -726,19 +732,19 @@
 			
 			response.done(function(e){
 				console.log(e);
-				$('#modalIncluirProduto').modal('hide');
-				$('#modalIncluirProduto').replaceWith(e);// .modal-body table tbody
-				$('#modalIncluirProduto').modal('show');
+				$('#modalIncluirProduto').html(e);
 			});
 			
 			response.fail(function(e){
 				console.log(e);
 				alert('Erro buscando produto');
 			});
-		/* } else {
-    		toastr.error('Campo de pesquisa vazio.')
-		} */
-		
+		}
+			
+  	});
+  	
+  	$('#container').on('hide.bs.modal', '#modalIncluirProduto', function(event){
+  		console.log('Fechou modal modalIncluirProduto')
   	});
   	
  	// Execute a function when the user releases a key on the keyboard
@@ -788,6 +794,81 @@
 		$('#listaDeItens').html(li);
 		$('.js-subtotal').html('<h3 class="mb-0">'+currencyformatter.format(venda.subtotal)+'</h3>');
 	} 
+  	
+  	//Initialize Select2 Elements
+    $('.select2').select2();
+  	
+    $(".js-example-data-ajax").select2({
+    	language: "pt-BR",
+    	  ajax: {
+    	    url: "/caixa/buscarProdutoAjax",
+    	    dataType: 'json',
+    	    delay: 250,
+    	    data: function (params) {
+    	      return {
+    	        q: params.term, // search term
+    	        page: params.page || 1 
+    	      };
+    	    },
+    	    processResults: function (data, params) {
+    	      // parse the results into the format expected by Select2
+    	      // since we are using custom formatting functions we do not need to
+    	      // alter the remote JSON data, except to indicate that infinite
+    	      // scrolling can be used
+    	      params.page = params.page || 1;
+
+    	      return {
+    	        results: data.items,
+    	        pagination: {
+    	          more: (params.page * data.page_size) < data.total_count
+    	        }
+    	      };
+    	    },
+    	    cache: true
+    	  },
+    	  placeholder: 'Procure por um produto',
+    	  minimumInputLength: 1,
+    	  templateResult: formatRepo,
+    	  templateSelection: formatRepoSelection
+    	});
+
+    	function formatRepo (repo) {
+    	  if (repo.loading) {
+    	    return repo.text;
+    	  }
+
+    	  var $container = $(
+    	    "<div class='select2-result-repository clearfix'>" +
+    	      "<div class='select2-result-repository__avatar'><img/></div>" +
+    	      "<div class='select2-result-repository__meta'>" +
+    	      	"<div class='select2-result-repository__description'></div>" +
+    	        "<div class='select2-result-repository__title'></div>" +
+    	        "<div class='select2-result-repository__statistics'>" +
+    	          "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> </div>" +
+    	          "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
+    	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +
+    	        "</div>" +
+    	      "</div>" +
+    	    "</div>"
+    	  );
+
+    	  $container.find(".select2-result-repository__description").text(repo.codigo);
+    	  $container.find(".select2-result-repository__title").text(repo.descricao);
+    	  $container.find(".select2-result-repository__forks").append(123 + " Forks");
+    	  $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
+    	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers");
+
+    	  return $container;
+    	}
+
+    	function formatRepoSelection (repo) {
+    	  return repo.full_name || repo.text;
+    	}
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    });
   </script>
     
 </html>

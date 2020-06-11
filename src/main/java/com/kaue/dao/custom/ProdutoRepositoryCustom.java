@@ -8,4 +8,5 @@ import com.kaue.model.Produto;
 public interface ProdutoRepositoryCustom {
 
 	public List<Produto> findProdutoByFiltro(ProdutoFilter produtoFiltro);
+	public Long countProdutoByFiltro(ProdutoFilter produtoFiltro);
 }

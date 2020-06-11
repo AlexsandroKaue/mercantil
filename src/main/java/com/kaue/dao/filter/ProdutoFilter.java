@@ -7,6 +7,16 @@ import com.kaue.model.Categoria;
 
 public class ProdutoFilter {
 	
+	private String _type;
+	
+	private String term;
+	
+	private String q;
+	
+	private Long page;
+	
+	private Long pageSize;
+	
 	private String codigo;
 	
 	private String descricao;
@@ -80,6 +90,46 @@ public class ProdutoFilter {
 
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
+	}
+
+	public Long getPage() {
+		return page;
+	}
+
+	public void setPage(Long page) {
+		this.page = page;
+	}
+
+	public String getQ() {
+		return q;
+	}
+
+	public void setQ(String q) {
+		this.q = q;
+	}
+
+	public String get_type() {
+		return _type;
+	}
+
+	public void set_type(String _type) {
+		this._type = _type;
+	}
+
+	public String getTerm() {
+		return term;
+	}
+
+	public void setTerm(String term) {
+		this.term = term;
+	}
+
+	public Long getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Long pageSize) {
+		this.pageSize = pageSize;
 	}
 
 }

@@ -197,8 +197,6 @@ $(function(){
 	$('.js-fade').fadeTo(5000, 1, function() {
 		$(this).slideUp( "slow", function() {});
 	})
-	
-    
 });
 
 

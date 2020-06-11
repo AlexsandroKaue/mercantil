@@ -20,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,7 +28,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.enumeration.OpcoesDesconto;
-import com.kaue.enumeration.StatusTitulo;
 import com.kaue.enumeration.StatusVenda;
 import com.kaue.model.Categoria;
 import com.kaue.model.Item;
@@ -78,52 +76,53 @@ public class CaixaController {
 		
 		mv.addObject("venda", venda);
 		/* mv.addObject("listaDeItens", new ArrayList<Item>()); */
-		mv.addObject("produtoList", new ArrayList<Produto>());
+		//mv.addObject("produtoList", new ArrayList<Produto>());
 		return mv;
 	}
 	
-	@RequestMapping(value = "/incluir/{codigo}")
-	public ModelAndView incluirItem(@PathVariable("codigo") String codigo) {
+	@RequestMapping(value = "/incluir")
+	public ModelAndView incluirItem(@RequestParam("codigo") List<String> codigoList) {
 		
-		String selector = null;
+		ModelAndView mv = null;
+		mv = new ModelAndView(REGISTRADORA_VIEW+" :: conteudo");
+		
+		if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
 		
 		Item item = null;
-		if(codigo!=null) {
-			selector = "conteudo";
-			if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
-			Produto produto = produtoService.buscarPorCodigo(codigo);
+		if(!codigoList.isEmpty()) {
+			for(String codigo : codigoList) {
+				Produto produto = produtoService.buscarPorCodigo(codigo);
 
-			if(produto != null) {
-				boolean isNew = true;
-				for(Item it : venda.getItemList()) {
-					if(it.getProduto().getCodigo().equals(codigo)) {
-						it.setQuantidade(it.getQuantidade()+1);
-						isNew = false;
-						item = it; break;
+				if(produto != null) {
+					boolean isNew = true;
+					for(Item it : venda.getItemList()) {
+						if(it.getProduto().getCodigo().equals(codigo)) {
+							it.setQuantidade(it.getQuantidade()+1);
+							isNew = false;
+							item = it; break;
+						}
+					}
+					if(isNew) {
+						item = new Item();
+						item.setProduto(produto);
+						item.setValor(produto.getValorDeVenda());
+						item.setVenda(venda);
+						item.setQuantidade(1);
+						
+						venda.getItemList().add(item);
 					}
 				}
-				if(isNew) {
-					item = new Item();
-					item.setProduto(produto);
-					item.setValor(produto.getValorDeVenda());
-					item.setVenda(venda);
-					item.setQuantidade(1);
-					
-					venda.getItemList().add(item);
+				
+				BigDecimal subtotal = new BigDecimal(0.0);
+				for(Item it : venda.getItemList()) {
+					subtotal = subtotal.add(it.getValor().multiply(new BigDecimal(it.getQuantidade())));
 				}
+				venda.setSubtotal(subtotal);
 			}
-			
-			BigDecimal subtotal = new BigDecimal(0.0);
-			for(Item it : venda.getItemList()) {
-				subtotal = subtotal.add(it.getValor().multiply(new BigDecimal(it.getQuantidade())));
-			}
-			venda.setSubtotal(subtotal);
-		} else {
-			selector = "modalIncluirProduto(_,hasItemSelected=false)";
-		}
+		} 
 
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: "+selector);
 		mv.addObject("venda", venda);
+		mv.addObject("item", item);
 		
 	    return mv;
 		
@@ -167,12 +166,12 @@ public class CaixaController {
 	}
 	
 	@RequestMapping(value = "/buscarProduto")
-	public ModelAndView buscarProduto(@RequestParam("termo") String termo) {
+	public ModelAndView buscarProduto(@RequestParam("termo") String termo, Model model) {
 		
-		List<Produto> produtoList = null;
-		String selector = "modalIncluirProduto";
+		List<Produto> produtoList = new ArrayList<Produto>();
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: modalIncluirProduto");
+		
 		if(termo != null && !termo.trim().isEmpty()) {
-			selector = selector + "(isSearchEmpty='false',_)";
 			ProdutoFilter filtro = new ProdutoFilter();
 
 			try {
@@ -185,16 +184,9 @@ public class CaixaController {
 			filtro.getCategoria().setDescricao(termo);
 			
 			produtoList = produtoService.pesquisar(filtro);
-		} else {
-			selector = selector + "(isSearchEmpty='true',_)";
-		}
-
-		if(produtoList == null) {
-			produtoList = new ArrayList<Produto>();
-		}
+		} 
 		
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: "+selector);
-		mv.addObject("produtoList", produtoList);
+		model.addAttribute("produtoList", produtoList);
 		
 		return mv;
 		
@@ -234,9 +226,7 @@ public class CaixaController {
 		venda.setDataVenda(new Date());
 		venda = vendaService.salvar(venda);
 		
-		Venda v = vendaService.buscarPorId(venda.getId());
-		
-		mv.addObject("venda", v);
+		mv.addObject("venda", venda);
 		return mv;
 	}
 	
@@ -260,9 +250,49 @@ public class CaixaController {
 		venda.setSaldo(saldo);
 	}
 	
+	@RequestMapping(value = "/buscarProdutoAjax", produces = "application/json")
+	public @ResponseBody Map<String, Object> obterProdutosAjax(@RequestParam("q") String q, @RequestParam("page") Integer page) {
+		
+		String termo = q;
+		List<Produto> produtoList = new ArrayList<Produto>();
+		Long quantidadeDeProdutos = 0L;
+		Long pageSize = 3L;
+		if(termo != null && !termo.trim().isEmpty()) {
+			ProdutoFilter filtro = new ProdutoFilter();
+
+			try {
+				Integer codigo = Integer.parseInt(termo);
+				filtro.setCodigo(String.format("%010d" , codigo));
+			} catch(NumberFormatException nfe) {}
+
+			filtro.setDescricao(termo);
+			filtro.setCategoria(new Categoria());
+			filtro.getCategoria().setDescricao(termo);
+			filtro.setPage(new Long(page.intValue()-1));
+			filtro.setPageSize(pageSize);
+			
+			produtoList = produtoService.pesquisar(filtro);
+			quantidadeDeProdutos = produtoService.contar(filtro);
+		} 
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("items", produtoList);
+		data.put("total_count", quantidadeDeProdutos);
+		data.put("page_size", pageSize);
+		
+		return data;
+	}
+	
 	@ModelAttribute
 	public List<OpcoesDesconto> todasOpcoesDesconto(){
 		return Arrays.asList(OpcoesDesconto.values());
+	}
+	
+	@ModelAttribute
+	public void addAttributes(Model model){
+		model.addAttribute("produtoList", new ArrayList<Produto>());
+		model.addAttribute("emptySearchError", false);
+		model.addAttribute("inclusaoVaziaErro", false);
 	}
 	
 	

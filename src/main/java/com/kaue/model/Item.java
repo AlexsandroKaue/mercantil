@@ -23,11 +23,11 @@ public class Item {
 	@GeneratedValue(generator = "seq_item", strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@JsonIgnoreProperties({"categoria", "loteList" }) 
+	//@JsonIgnoreProperties({"categoria", "loteList" }) 
 	@ManyToOne
 	private Produto produto;
 	
-	@JsonIgnoreProperties({"itemList" }) 
+	//@JsonIgnoreProperties({"itemList" }) 
 	@ManyToOne
 	private Venda venda;
 	

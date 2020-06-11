@@ -28,7 +28,52 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         CriteriaQuery<Produto> query = cb.createQuery(Produto.class);
         Root<Produto> produto = query.from(Produto.class);
         
-        List<Predicate> predicates = new ArrayList<>();
+        List<Predicate> predicates = prepararPredicadosDaConsulta(produtoFiltro, cb, produto);
+        
+        if(predicates.size()>0) {
+        	query.select(produto).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        } else {
+        	query.select(produto);
+        }
+        query.orderBy(cb.desc(produto.get("id")));
+        
+        TypedQuery<Produto> typedQuery = null;
+        Long page = produtoFiltro.getPage();
+        Long pageSize = produtoFiltro.getPageSize();
+        if(page!=null) {
+        	int start = page.intValue()*pageSize.intValue();
+        	typedQuery = entityManager.createQuery(query).setFirstResult(start).setMaxResults(pageSize.intValue());
+        } else {
+        	typedQuery = entityManager.createQuery(query);
+        }
+ 
+        return typedQuery.getResultList();
+	}
+
+	@Override
+	public Long countProdutoByFiltro(ProdutoFilter produtoFiltro) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<Produto> produto = query.from(Produto.class);
+        
+        List<Predicate> predicates = prepararPredicadosDaConsulta(produtoFiltro, cb, produto);
+        
+        if(predicates.size()>0) {
+        	query.select(cb.count(produto)).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        } else {
+        	query.select(cb.count(query.from(Produto.class)));
+        }
+        
+        TypedQuery<Long> typedQuery = entityManager.createQuery(query);
+ 
+        return typedQuery.getSingleResult();
+	}
+	
+	private List<Predicate> prepararPredicadosDaConsulta(ProdutoFilter produtoFiltro, 
+			CriteriaBuilder cb, 
+			Root<Produto> produto) {
+		
+		List<Predicate> predicates = new ArrayList<>();
         
         Path<String> codigoPath = null;
         Path<String> descricaoPath = null;
@@ -47,16 +92,7 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         			"%"+produtoFiltro.getCategoria().getDescricao().toUpperCase()+"%"));
         }
         
-        if(predicates.size()>0) {
-        	query.select(produto).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
-        } else {
-        	query.select(produto);
-        }
-        query.orderBy(cb.desc(produto.get("id")));
-        
-        TypedQuery<Produto> typedQuery = entityManager.createQuery(query);
- 
-        return typedQuery.getResultList();
+        return predicates;
 	}
 
 }
