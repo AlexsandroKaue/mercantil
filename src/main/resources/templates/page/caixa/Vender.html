@@ -795,11 +795,13 @@
 		$('.js-subtotal').html('<h3 class="mb-0">'+currencyformatter.format(venda.subtotal)+'</h3>');
 	} 
   	
-  	//Initialize Select2 Elements
-    $('.select2').select2();
+    $("#container").ready(function() {
+    	$('.js-example-data-ajax').click();
+    });
   	
-    $(".js-example-data-ajax").select2({
-    	language: "pt-BR",
+  	$("#container").on("click", ".js-example-data-ajax", function(){
+  		$(this).select2({
+  	      language: "pt-BR",
     	  ajax: {
     	    url: "/caixa/buscarProdutoAjax",
     	    dataType: 'json',
@@ -816,7 +818,7 @@
     	      // alter the remote JSON data, except to indicate that infinite
     	      // scrolling can be used
     	      params.page = params.page || 1;
-
+  
     	      return {
     	        results: data.items,
     	        pagination: {
@@ -831,6 +833,10 @@
     	  templateResult: formatRepo,
     	  templateSelection: formatRepoSelection
     	});
+  		
+  	});
+  	
+    
 
     	function formatRepo (repo) {
     	  if (repo.loading) {
@@ -839,24 +845,24 @@
 
     	  var $container = $(
     	    "<div class='select2-result-repository clearfix'>" +
-    	      "<div class='select2-result-repository__avatar'><img/></div>" +
+    	      "<div class='select2-result-repository__avatar'><img src='/custom/img/sem-imagem_3.png'/></div>" +
     	      "<div class='select2-result-repository__meta'>" +
     	      	"<div class='select2-result-repository__description'></div>" +
     	        "<div class='select2-result-repository__title'></div>" +
-    	        "<div class='select2-result-repository__statistics'>" +
+    	        /* "<div class='select2-result-repository__statistics'>" +
     	          "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> </div>" +
     	          "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
     	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +
-    	        "</div>" +
+    	        "</div>" + */
     	      "</div>" +
     	    "</div>"
     	  );
 
     	  $container.find(".select2-result-repository__description").text(repo.codigo);
     	  $container.find(".select2-result-repository__title").text(repo.descricao);
-    	  $container.find(".select2-result-repository__forks").append(123 + " Forks");
+    	  /* $container.find(".select2-result-repository__forks").append(123 + " Forks");
     	  $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
-    	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers");
+    	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers"); */
 
     	  return $container;
     	}
@@ -864,10 +870,24 @@
     	function formatRepoSelection (repo) {
     	  return repo.full_name || repo.text;
     	}
-
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
+    
+    $('#container').on('select2:select','.js-example-data-ajax', function (e) {
+        var data = e.params.data;
+        console.log(data);
+        var response = $.ajax({
+			url: '/caixa/incluir?codigo='+data.codigo,
+			type: 'GET'
+		});
+		
+		response.done(function(e){
+			var html = $.parseHTML(e);
+			$('#conteudoSection').html(html);
+			$('.js-example-data-ajax').click();
+		});
+		
+		response.fail(function(e){
+			alert('Erro incluindo item');
+		});
     });
   </script>
     
