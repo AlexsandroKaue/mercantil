@@ -4,122 +4,105 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{principal}">
 <head>
-  <title>AdminLTE 3 | Dashboard</title>
+  <title th:text="#{mercadinho}">Seu título aqui</title>
 </head>
 
-  <section layout:fragment="conteudo">
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Títulos</h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">  
-              <!-- <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard v1</li>
-                <li><button type="button" class="btn btn-block btn-info">Info</button></li>
-                <li><button type="button" class="btn btn-block btn-info">Info</button></li>
-              </ol> -->
-              <div class="float-right">
-                <a class="btn btn-block btn-info" th:href="@{/titulos/novo}">Novo</a>
-              </div>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-      </div>
-      <!-- /.content-header -->
-  
-      <!-- Main content -->
-      <section class="content">
-        <div class="container-fluid">
-        
-          <div layout:insert="~{mensagem_geral}"></div>
-        
-          <div class="card card-secondary">
-            <!-- <div class="card-header">
-              <h3 class="card-title">Novo Título</h3>
-            </div> -->
-            <div class="card-body">
-              <form method="GET" th:action="@{/titulos}" th:object="${filtro}">
-                <div class="form-group row">
-                  <div class="col-sm-5">
-                    <div class="input-group">
-                      <input class="form-control" 
-                        placeholder="Qual título você está procurando?" autofocus="autofocus"
-                        th:field="*{descricao}"/>
-                      <div class="input-group-append">
-                        <button type="submit" class="btn btn-default">
-                          <i class="fas fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-                    
-                  </div>
-                </div>
-              </form>
-            
-              <table class="table table-bordered table-striped js-tabela"><!-- js-tabela -->
-                <thead>
-                  <tr>
-                    <th class="text-center col-1">Código</th>
-                    <th>Descrição</th>
-                    <th class="text-center col-2">Data de Vencimento</th>
-                    <th class="text-right col-2">Valor</th>
-                    <th class="text-center col-2">Status</th>
-                    <th class="text-center col-2">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr th:each="titulo : ${titulos}">
-                    <td class="text-center" th:text="${titulo.id}"></td>
-                    <td th:text="${titulo.descricao}"></td>
-                    <td class="text-center" th:text="${{titulo.dataVencimento}}"></td>
-                    <td class="text-right" th:text="|R$ ${{titulo.valor}}|"></td>
-                    <td class="text-center" th:attr="data-role=${titulo.id}">
-                      <span class="badge badge-pill" th:classappend="${titulo.pendente() ? 'bg-danger' : 'bg-success'}" 
-                        th:text="${titulo.status.descricao}"></span>
-                    </td>
-                    <td class="text-center nopadding">
-                      <a th:href="@{/titulos/{id}(id=${titulo.id})}" class="btn btn-link btn-sm"
-                        title="Editar" rel="tooltip" data-placement="top">
-                        <i class="fas fa-pencil-alt"></i>
-                      </a>
-                      <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
-                        th:href="@{#}" th:attr="data-id=${titulo.id}, data-descricao=${titulo.descricao}"
-                        title="Excluir" rel="tooltip" data-placement="top"><!--  -->
-                        <i class="fas fa-times"></i>
-                      </a>
-                      <a class="btn btn-link btn-sm js-atualizar-status" th:if="${titulo.pendente()}"
-                        th:href="@{/titulos/{id}/receber(id=${titulo.id})}"
-                        th:attr="data-id=${titulo.id}" 
-                        title="Receber" rel="tooltip" data-placement="top">
-                        <i class="fas fa-check"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr th:if="${#lists.isEmpty(titulos)}">
-                    <td colspan="6">Nenhum título foi encontrado.</td>
-                  </tr>
-                </tbody>
-              </table>
+  <section layout:fragment="container">
+    <form method="GET" th:action="@{/usuarios}" th:object="${filtro}">
+      <header layout:insert="~{cabecalho}"></header>
+      <header layout:insert="~{corpo}"></header>
+    </form>
+
+    <div class="modal fade" id="modalConfirmacao" tabindex="-1" data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog">
+        <form th:attr="data-url-base=@{/usuarios}" method="POST">
+          <input type="hidden" name="_method" value="DELETE"></input>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirmar exclusão</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-            <!-- form start -->
-            <!-- <form class="form-horizontal" method="POST" action="/titulos"></form> -->
+            <div class="modal-body">
+              <p>Deseja realmente excluir o usuário?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Excluir</button>
+            </div>
           </div>
-          <!-- /.card -->
-        </div><!-- container-fluid -->
-      </section>
-      <!-- /.content -->
-      <br/>
+          <!-- /.modal-content -->
+        </form>
+      </div>
+      <!-- /.modal-dialog -->
     </div>
-    <!-- /.content-wrapper -->
-    
-    <div layout:insert="~{confirmacao_exclusao}"></div>
-    
+    <!-- /.modal -->
+  </section>
+  
+  <div layout:fragment="titulo">
+    <h1 class="m-0 text-dark">Usuários</h1>
+  </div>
+  
+  <div layout:fragment="botoes">
+    <a class="btn btn-block btn-info" th:href="@{/usuarios/novo}" th:text="#{novo}"></a>
+  </div>
+  
+  <section layout:fragment="conteudo">
+    <div class="card card-secondary">
+      <!-- <div class="card-header">
+        <h3 class="card-title">Novo Título</h3>
+      </div> -->
+      <div class="card-body">
+        <div class="form-group row">
+          <div class="col-sm-6">
+            <div class="input-group">
+              <input class="form-control" 
+                placeholder="Qual usuário você está procurando?" autofocus="autofocus"
+                th:field="*{termo}"/>
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <table class="table table-bordered table-striped js-tabela"><!-- js-tabela -->
+          <thead>
+            <tr>
+              <th class="text-center col-1">Id</th>
+              <th>Nome</th>
+              <th class="text-center col-3">Email</th>
+              <th class="text-center col-2">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="usuario : ${usuarios}">
+              <td class="text-center" th:text="${usuario.id}"></td>
+              <td th:text="${usuario.nome}"></td>
+              <td th:text="${usuario.email}"></td>
+              <td class="text-center">
+                <a th:href="@{/usuarios/{id}(id=${usuario.id})}" class="btn btn-link btn-sm"
+                  title="Editar" rel="tooltip" data-placement="top">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                  th:href="@{#}" th:attr="data-id=${usuario.id}, data-descricao=${usuario.nome}"
+                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                  <i class="fas fa-times"></i>
+                </a>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(usuarios)}">
+              <td colspan="5">Nenhum usuário foi encontrado.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- /.card -->
   </section>
   
 </html>

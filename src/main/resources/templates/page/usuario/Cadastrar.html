@@ -4,94 +4,157 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{principal}">
 <head>
-  <title>Cadastro de Produtos</title>
+  <title th:text="#{mercadinho}"></title>
 </head>
 
-  <section layout:fragment="conteudo">
-  
-    <form class="form-horizontal" method="POST" th:action="@{/titulos}" th:object="${titulo}">
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Cadastro de Produtos</h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">
-              <!-- <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard v1</li>
-              </ol> -->
-              <div class="float-right">
-                <!-- <button type="button" class="btn btn-md btn-danger">Voltar</button> -->
-                <a class="btn btn-danger" th:href="@{/produtos}">Voltar</a>
-                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
-                <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
-              </div>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-      </div>
-      <!-- /.content-header -->
-      <!-- Main content -->
-      <section class="content">
-        <div class="container-fluid">
-        
-          <div layout:insert="~{mensagem_geral}"></div>
-          <div layout:insert="~{mensagem_erro}"></div>
-          
-          <div class="card card-secondary">
-            <!-- <div class="card-header">
-              <h3 class="card-title">Novo Título</h3>
-            </div> -->
-            <!-- form start -->
-            <!-- <form class="form-horizontal" method="POST" action="/titulos"> -->
-              <div class="card-body">
-                <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
-                <div class="form-group row">
-                  <label for="inputDescricao1" class="col-sm-2 col-form-label">Descrição</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="inputDescricao1" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputDataVencimento" class="col-sm-2 col-form-label">Data de Vencimento</label>
-                  <div class="col-sm-2">
-                    <input type="text" class="form-control" id="inputDataVencimento" th:field="*{dataVencimento}" th:classappend="${#fields.hasErrors('dataVencimento')} ? is-invalid">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputValor1" class="col-sm-2 col-form-label">Valor</label>
-                  <div class="col-sm-2">
-                    <input type="text" class="form-control js-currency" id="inputValor1" th:field="*{valor}" th:classappend="${#fields.hasErrors('valor')} ? is-invalid">
-                  </div>
-                </div>        
-                <div class="form-group row">
-                  <label for="inputStatus" class="col-sm-2 col-form-label">Status</label>
-                  <div class="col-sm-2">
-                    <select class="form-control" th:field="*{status}">
-                      <option th:each="status : ${statusTituloList}" th:value="${status}" th:text="${status.descricao}"></option>
-                    </select>
-                  </div>
-                </div>
-                <!-- <div class="form-group row" >
-                  <label class="col-sm-2 col-form-label"></label>
-                  <div class="col-sm-10">
-                    <button type="submit" class="btn btn-info">Salvar</button>
-                  </div>
-                </div> -->
-              </div>
-            <!-- </form> -->
-          </div>
-          <!-- /.card -->
-        </div><!-- container-fluid -->
-      </section>
-      <!-- /.content --> 
-    </div>
-    <!-- /.content-wrapper -->
+  <section layout:fragment="container">
+    <form role="form" id="usuarioForm" enctype="multipart/form-data" method="POST" 
+      th:action="@{/usuarios}" th:object="${usuario}">
+      <header layout:insert="~{cabecalho}"></header>
+      <header layout:insert="~{corpo}"></header>
     </form>
   </section>
+  
+  <section layout:fragment="titulo">
+    <h1 class="m-0 text-dark">Cadastro de Usuarios</h1>
+  </section>
+  
+  <section layout:fragment="botoes">
+    <a class="btn btn-danger" th:href="@{/usuarios}">Voltar</a>
+    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
+    <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
+  </section>
+  
+  <section layout:fragment="conteudo">
+    <div class="card card-secondary">
+      <!-- <div class="card-header">
+        <h3 class="card-title">Novo Título</h3>
+      </div> -->
+      <div class="card-body">
+        <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="inputNome" class="col-form-label">Nome*</label>
+              <input type="text" autofocus="autofocus" class="form-control" id="inputNome" th:field="*{nome}" th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'">
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-form-label">Email</label>
+              <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
+            </div>
+            <div class="form-group">
+              <label for="inputStatus" class="col-form-label">Ativo?</label>
+              <select id="inputStatus" class="form-control" th:field="*{ativo}">
+                <!-- <option value="" selected th:text="#{selecione.estado}"></option> -->
+                <option th:each="status : ${statusUsuarioList}" th:value="${status}" th:text="${status.descricao}"></option>
+              </select>
+            </div>
+            <div class="form-group">
+              <p class="text-muted">Campo marcados com * são obrigatórios.</p>
+            </div> 
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="inputLogin" class="col-form-label ">Login*</label>
+              <input type="text" class="form-control" id="inputLogin" th:field="*{login}" th:classappend="${#fields.hasErrors('login')} ? 'is-invalid'">     
+            </div>
+            <div class="form-group">
+              <label for="inputSenha" class="col-form-label">Senha*</label>
+              <input type="password" class="form-control" id="inputSenha" th:field="*{senha}" th:classappend="${#fields.hasErrors('senha')} ? 'is-invalid'">   
+            </div>  
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+            <label class="col-form-label">Foto</label>
+            <div class="box-profile">
+              <div class="text-center mb-4">
+                <img id="foto" class="img-fluid" style="height:200px"
+                     th:src="@{${imagem}}"
+                     alt="User profile picture"></img><!-- class="profile-user-img img-fluid img-circle" -->
+              
+              </div>
+  
+              <div class="form-group">
+                <!-- <div class="btn btn-default btn-file">
+                  <i class="fas fa-image"></i> Clique para escolher uma imagem...
+                  <input id="foto" type="file" name="attachment">
+                </div>
+                <p class="help-block">Max. 32MB</p> -->
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                    <label class="custom-file-label" for="exampleInputFile">Clique para escolher uma imagem...</label>
+                  </div>
+                  <!-- <div class="input-group-append">
+                    <span class="input-group-text" id="">Upload</span>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        <!-- <div class="row">
+          <div class="col-md-12">
+            <p class="text-muted">Campo marcados com * são obrigatórios.</p>
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <!-- /.card -->
+  </section>
+  
+  <div layout:fragment="js-validator">
+    <script id="validador">
+      $('#inputNome').rules('add', {
+        required: true,
+        maxlength: 100,
+        messages: { 
+        	maxlength: "O  campo nome não pode conter mais de 100 caracteres",
+            required: "Por favor, digite um nome para o usuário"
+        }
+      });
+      $('#inputLogin').rules('add', {
+        required: true,
+        maxlength: 100,
+        messages: {
+        	maxlength: "O  campo login não pode conter mais de 100 caracteres",
+            required: "Por favor, digite um login para o usuário"
+        }
+      });
+      $('#inputSenha').rules('add', {
+          required: true,
+          messages: { 
+              required: "Por favor, digite uma senha para o usuário"
+          }
+        });
+      $('#inputEmail').rules('add', {
+        email: true,
+        maxlength: 100,
+        messages: { 
+        	maxlength: "O campo email não pode conter mais de 100 caracteres",
+            email: "Por favor, digite um email válido"
+        }
+      });
+      
+      function readURL(input) {
+    	  if (input.files && input.files[0]) {
+    	    var reader = new FileReader();
+    	    
+    	    reader.onload = function(e) {
+    	      $('#foto').attr('src', e.target.result);
+    	    }
+    	    
+    	    reader.readAsDataURL(input.files[0]); // convert to base64 string
+    	  }
+    	}
+
+  	$("#exampleInputFile").change(function() {
+  	  readURL(this);
+  	});
+      
+  	</script>
+  </div>
+  
     
 </html>
