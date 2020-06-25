@@ -1,11 +1,13 @@
 package com.kaue.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotEmpty;
@@ -42,6 +44,9 @@ public class Usuario {
 	
 	@Enumerated(EnumType.STRING)
 	private StatusUsuario ativo;
+	
+	@Lob
+	private byte[] imagem;
 	
 	@ManyToOne
 	private Grupo grupo;
@@ -133,6 +138,14 @@ public class Usuario {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public byte[] getImagem() {
+		return imagem;
+	}
+
+	public void setImagem(byte[] imagem) {
+		this.imagem = imagem;
 	}
 	
 	

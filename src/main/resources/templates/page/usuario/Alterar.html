@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{principal}">
+<head>
+  <title th:text="#{mercadinho}"></title>
+</head>
+
+  <section layout:fragment="container">
+    <form role="form" id="usuarioForm" enctype="multipart/form-data" method="POST" 
+      th:action="@{/usuarios}" th:object="${usuario}">
+      <header layout:insert="~{cabecalho}"></header>
+      <header layout:insert="~{corpo}"></header>
+    </form>
+    
+    <div class="modal fade" id="modalAlterarSenha">
+      <div class="modal-dialog">
+        <form id="senhaForm" method="POST" th:action="@{/usuarios/alterarSenha}"> 
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Alterar a senha</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- <p>One fine body&hellip;</p> -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div id="mensagemAlteracaoSenha"></div>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="password" name="senhaAtual" class="form-control" placeholder="Senha Atual" id="inputSenhaAtual">
+                      <div class="input-group-append">
+                        <div class="input-group-text">
+                          <span class="fas fa-lock"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="password" name="novaSenha" class="form-control" placeholder="Nova Senha" id="inputNovaSenha">
+                      <div class="input-group-append">
+                        <div class="input-group-text">
+                          <span class="fas fa-lock"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="password" name="novaSenhaConfirmacao" class="form-control" placeholder="Confirme a Senha" id="inputConfirmarSenha">
+                      <div class="input-group-append">
+                        <div class="input-group-text">
+                          <span class="fas fa-lock"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary js-alterar-senha">Salvar</button>
+            </div>
+          </div>
+        <!-- /.modal-content -->
+        </form>
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+  </section>
+  
+  <section layout:fragment="titulo">
+    <h1 class="m-0 text-dark">Cadastro de Usuarios</h1>
+  </section>
+  
+  <section layout:fragment="botoes">
+    <a class="btn btn-danger" th:href="@{/usuarios}">Voltar</a>
+    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
+    <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
+  </section>
+  
+  <section layout:fragment="conteudo">
+    <div class="card card-secondary">
+      <!-- <div class="card-header">
+        <h3 class="card-title">Novo Título</h3>
+      </div> -->
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <input type="hidden" id="inputId" th:field="*{id}"></input>
+            <input type="hidden" id="inputSenha" th:field="*{senha}"></input>
+            <input type="hidden" id="inputLogin" th:field="*{login}"></input>
+            <div class="form-group">
+              <label for="inputNome" class="col-form-label">Nome*</label>
+              <input type="text" autofocus="autofocus" class="form-control" id="inputNome" th:field="*{nome}" th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'">
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-form-label">Email</label>
+              <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
+            </div>
+            <div class="form-group">
+              <label for="inputStatus" class="col-form-label">Ativo?</label>
+              <select id="inputStatus" class="form-control" th:field="*{ativo}">
+                <!-- <option value="" selected th:text="#{selecione.estado}"></option> -->
+                <option th:each="status : ${statusUsuarioList}" th:value="${status}" th:text="${status.descricao}"></option>
+              </select>
+            </div>
+            <div class="form-group">
+              <p class="text-muted">Campo marcados com * são obrigatórios.</p>
+            </div> 
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+            <label class="col-form-label">Foto</label>
+            <div class="box-profile">
+              <div class="text-center mb-4">
+                <img id="foto" class="img-fluid" style="height:160px"
+                     th:src="@{${imagem}}"
+                     alt="User profile picture"></img><!-- class="profile-user-img img-fluid img-circle" -->
+              
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                    <label class="custom-file-label" for="exampleInputFile">Clique para alterar a imagem...</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="col-md-4">
+            <a class="btn btn-link" href="" data-toggle="modal" data-target="#modalAlterarSenha">
+              Alterar Senha
+            </a>
+          </div>
+        </div>
+        <!-- <div class="row">
+          <div class="col-md-12">
+            <p class="text-muted">Campo marcados com * são obrigatórios.</p>
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <!-- /.card -->
+  </section>
+  
+  <div layout:fragment="js-validator">
+    <script id="validador">
+      $('#inputNome').rules('add', {
+        required: true,
+        maxlength: 100,
+        messages: { 
+        	maxlength: "O  campo nome não pode conter mais de 100 caracteres",
+            required: "Por favor, digite um nome para o usuário"
+        }
+      });
+      $('#inputLogin').rules('add', {
+        required: true,
+        maxlength: 100,
+        messages: {
+        	maxlength: "O  campo login não pode conter mais de 100 caracteres",
+            required: "Por favor, digite um login para o usuário"
+        }
+      });
+      $('#inputSenha').rules('add', {
+          required: true,
+          messages: { 
+              required: "Por favor, digite uma senha para o usuário"
+          }
+        });
+      $('#inputEmail').rules('add', {
+        email: true,
+        maxlength: 100,
+        messages: { 
+        	maxlength: "O campo email não pode conter mais de 100 caracteres",
+            email: "Por favor, digite um email válido"
+        }
+      });
+      
+      function readURL(input) {
+    	  if (input.files && input.files[0]) {
+    	    var reader = new FileReader();
+    	    
+    	    reader.onload = function(e) {
+    	      $('#foto').attr('src', e.target.result);
+    	    }
+    	    
+    	    reader.readAsDataURL(input.files[0]); // convert to base64 string
+    	  }
+    	}
+
+  	$("#exampleInputFile").change(function() {
+  	  readURL(this);
+  	});
+  	
+  	$('#container').on('click', '.js-alterar-senha', function(event) {
+  		event.preventDefault();
+  		$('#senhaForm').validate({
+  			rules: {
+		    	senhaAtual: {
+		    		required: true
+		      	},
+		      	novaSenha: {
+		        	required: true
+		      	},
+		      	novaSenhaConfirmacao: {
+		        	equalTo: "#inputNovaSenha"
+		      	},
+		    },
+		    messages: {
+		    	senhaAtual: {
+		        	required: "Por favor, digite a senha atual."
+		      	},
+		      	novaSenha: {
+		      	  	required: "Por favor, digite a nova senha."
+		      	},
+		      	novaSenhaConfirmacao: {
+			  		equalTo: "Por favor, digite a mesma senha."
+			  	}
+		    },
+		    errorElement: 'span',
+		    errorPlacement: function (error, element) {
+		    	error.addClass('invalid-feedback');
+		      	element.closest('.form-group').append(error);
+		    },
+		    highlight: function (element, errorClass, validClass) {
+		    	$(element).addClass('is-invalid');
+		    },
+		    unhighlight: function (element, errorClass, validClass) {
+		      	$(element).removeClass('is-invalid');
+		    }
+		});
+  		  
+  		var isValidated = $('#senhaForm').valid();
+  		console.log(isValidated);
+  		if(isValidated) {
+  			var id = $('#usuarioForm').find('input#inputId').val();
+  			var senhaAtual = $('#modalAlterarSenha').find('input#inputSenhaAtual').val();
+  	  		var novaSenha = $('#modalAlterarSenha').find('input#inputNovaSenha').val();
+  	  		var novaSenhaConfirmacao = $('#modalAlterarSenha').find('input#inputConfirmarSenha').val();  
+  	  		var dados = {
+  	  			id: id,
+	  			senhaAtual: senhaAtual,
+	  			novaSenha: novaSenha,
+	  			novaSenhaConfirmacao: novaSenhaConfirmacao 
+	  		};
+  	  		var response = $.ajax({
+      			type: 'POST',
+      			url: '/usuarios/alterarSenha',
+    			data: JSON.stringify(dados),
+    			contentType:'application/json' 
+    		}); 
+      		
+      		response.done(function(e){
+      			var ok = e.ok;
+      			var mensagem = e.mensagem;
+      			bootstrap_alert = function() {};
+      			if(ok) {
+      				bootstrap_alert.warning = function(message) {
+          	  	    	$('#mensagemAlteracaoSenha').html('<div class="alert alert-success js-fade"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-check"></i>'+message+'</span></div>')
+          	  	    };
+      			} else {
+      				bootstrap_alert.warning = function(message) {
+      					$('#mensagemAlteracaoSenha').html('<div class="alert alert-danger js-fade"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-ban"></i>'+message+'</span></div>')
+          	  	    };
+      			}
+      			bootstrap_alert.warning(mensagem);
+      			$('#modalAlterarSenha').find('input#inputSenhaAtual').val(null);
+      			$('#modalAlterarSenha').find('input#inputNovaSenha').val(null);
+      			$('#modalAlterarSenha').find('input#inputConfirmarSenha').val(null);
+    		});
+      		
+      		response.fail(function(e){
+      			alert('Erro atualizando senha');
+    		}); 
+  		}
+    
+  	});
+  	
+  	$('#container').on('hide.bs.modal', '#modalAlterarSenha', function(event){
+  		$('#mensagemAlteracaoSenha').html('');
+  		$('#senhaForm').validate().resetForm();
+  		$('#senhaForm').find('.is-invalid').removeClass('is-invalid');
+  		$('#modalAlterarSenha').find('input#inputSenhaAtual').val(null);
+		$('#modalAlterarSenha').find('input#inputNovaSenha').val(null);
+		$('#modalAlterarSenha').find('input#inputConfirmarSenha').val(null);
+  	});
+  	
+  	$('#container').on('shown.bs.modal', '#modalAlterarSenha', function(event){
+  		$(this).find('input#inputSenhaAtual').focus();
+  	});
+    
+  </script>
+  </div>
+  
+    
+</html>

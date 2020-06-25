@@ -139,6 +139,14 @@
           <i class="fas fa-th-large"></i>
         </a>
       </li>
+      <li class="nav-item">
+        <form method="post"
+          th:action="@{/logout}">
+          <button type="submit" class="btn btn-link nav-link" title="Sair" rel="tooltip" data-placement="bottom">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </form>
+      </li>
     </ul>
   </nav>
   <!-- /.navbar -->

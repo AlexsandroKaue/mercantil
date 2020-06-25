@@ -12,4 +12,5 @@ public interface UsuarioService {
 	public List<Usuario> pesquisar(UsuarioFilter filtro);
 	public Long contar(UsuarioFilter filtro);
 	public Usuario buscarPorId(Long id);
+	public Usuario buscarPorLogin(String login);
 }

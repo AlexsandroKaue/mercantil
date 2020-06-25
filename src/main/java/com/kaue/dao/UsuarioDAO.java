@@ -10,4 +10,6 @@ import com.kaue.model.Usuario;
 public interface UsuarioDAO extends JpaRepository<Usuario, Long>, UsuarioRepositoryCustom{
 
 	public List<Usuario> findByNomeContainingIgnoreCaseOrderByIdDesc(String nome);
+	
+	public Usuario findByLogin(String login);
 }

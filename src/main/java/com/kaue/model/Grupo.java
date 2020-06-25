@@ -1,10 +1,16 @@
 package com.kaue.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.envers.Audited;
 
@@ -16,6 +22,15 @@ public class Grupo {
 	@SequenceGenerator(name = "seq_grupo", sequenceName = "seq_grupo", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(generator = "seq_grupo", strategy = GenerationType.SEQUENCE)
 	private Long id;
+	
+	@NotEmpty(message = "O campo <strong>nome</strong> é obrigatório")
+	private String nome;
+	
+	@NotEmpty(message = "O campo <strong>descrição</strong> é obrigatório")
+	private String descricao;
+	
+	@OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<GrupoPermissao> grupoPermissaoList;
 
 	public Long getId() {
 		return id;
@@ -23,6 +38,30 @@ public class Grupo {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public List<GrupoPermissao> getGrupoPermissaoList() {
+		return grupoPermissaoList;
+	}
+
+	public void setGrupoPermissaoList(List<GrupoPermissao> grupoPermissaoList) {
+		this.grupoPermissaoList = grupoPermissaoList;
 	}
 
 	@Override
@@ -50,5 +89,9 @@ public class Grupo {
 		return true;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "Grupo [id=" + id + ", nome=" + nome + "]";
+	}
+
 }

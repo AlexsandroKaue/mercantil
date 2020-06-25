@@ -38,6 +38,63 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+    
+    <div class="modal fade" id="modalDetalhesUsuario">
+      <div class="modal-dialog modal-lg">
+        <form method="POST">
+          <input type="hidden" name="_method" value="DELETE"></input>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Detalhes do Usuário</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="inputNome" class="col-form-label">Nome</label>
+                    <input type="text" disabled="disabled" autofocus="autofocus" class="form-control" id="inputNome" th:value="${usuario.nome}"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail" class="col-form-label">Email</label>
+                    <input type="email" disabled="disabled" class="form-control" id="inputEmail" th:value="${usuario.email}"/>   
+                  </div>
+                  <div class="form-group">
+                    <label for="inputLogin" class="col-form-label ">Login</label>
+                    <input type="text" disabled="disabled" class="form-control" id="inputLogin" th:value="${usuario.login}"/>     
+                  </div>  
+                  <div class="form-group">
+                    <label for="inputStatus" class="col-form-label">Ativo?</label>
+                    <input type="text" disabled="disabled" class="form-control" id="inputStatus" th:value="${usuario.ativo}"/>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="col-form-label">Foto</label>
+                    <div class="box-profile">
+                      <div class="text-center mb-4">
+                        <img id="foto" class="img-fluid" style="height:160px"
+                             th:src="@{${imagem}}"
+                             alt="User profile picture"></img><!-- class="profile-user-img img-fluid img-circle" -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer float-right">
+              <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button> -->
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </form>
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
   </section>
   
   <div layout:fragment="titulo">
@@ -72,9 +129,10 @@
         <table class="table table-bordered table-striped js-tabela"><!-- js-tabela -->
           <thead>
             <tr>
-              <th class="text-center col-1">Id</th>
+              <th class="text-center col-1">Código</th>
               <th>Nome</th>
               <th class="text-center col-3">Email</th>
+              <th class="text-center col-1">Ativo?</th>
               <th class="text-center col-2">Ações</th>
             </tr>
           </thead>
@@ -83,7 +141,13 @@
               <td class="text-center" th:text="${usuario.id}"></td>
               <td th:text="${usuario.nome}"></td>
               <td th:text="${usuario.email}"></td>
+              <td class="text-center" th:text="${usuario.ativo.descricao}"></td>
               <td class="text-center">
+                <a th:attr="data-url-detalhes=@{/usuarios/detalhes/{id}(id=${usuario.id})}" th:href="@{#}" 
+                  data-toggle="modal" data-target="#modalDetalhesUsuario" class="btn btn-link btn-sm"
+                  title="Visualizar" rel="tooltip" data-placement="top">
+                  <i class="fas fa-eye"></i>
+                </a>
                 <a th:href="@{/usuarios/{id}(id=${usuario.id})}" class="btn btn-link btn-sm"
                   title="Editar" rel="tooltip" data-placement="top">
                   <i class="fas fa-pencil-alt"></i>
@@ -91,7 +155,7 @@
                 <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
                   th:href="@{#}" th:attr="data-id=${usuario.id}, data-descricao=${usuario.nome}"
                   title="Excluir" rel="tooltip" data-placement="top"><!--  -->
-                  <i class="fas fa-times"></i>
+                  <i class="fas fa-trash"></i>
                 </a>
               </td>
             </tr>
@@ -104,5 +168,47 @@
     </div>
     <!-- /.card -->
   </section>
+  
+  <div layout:fragment="js-validator">
+    <script id="validador">
+      /* $('#container').on('click', '.js-detalhes-usuario', function(event){
+    	  event.preventDefault();
+    	  var botao = $(event.currentTarget);
+  		  var url = botao.attr('href');
+  		  var response = $.ajax({
+  			  type: 'GET',
+  			  url: url
+  		  });
+  		  
+  		  response.done(function(e){
+  			$('#modalDetalhesUsuario').html(e);
+  		  });
+  		  
+  		  response.done(function(e){
+			  
+		  });
+      }); */
+      
+      $('#container').on('show.bs.modal', '#modalDetalhesUsuario', function(event){
+  		var botao = $(event.relatedTarget); // Button that triggered the modal
+  		var url = botao.data('url-detalhes');
+  		console.log(url);
+  		var response = $.ajax({
+			  type: 'GET',
+			  url: url
+		  });
+		  
+    	response.done(function(e){
+    		var modalDialog = $(e).find('.modal-dialog');
+    		$('#modalDetalhesUsuario').html(modalDialog);
+    	});
+    	  
+    	response.fail(function(e){
+    		alert('Erro ao mostrar detalhes do usuário.');  
+    	});
+  		
+  	});
+    </script>
+  </div>
   
 </html>

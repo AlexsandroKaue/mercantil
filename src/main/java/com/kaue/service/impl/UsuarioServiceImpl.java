@@ -3,6 +3,8 @@ package com.kaue.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -18,21 +20,17 @@ public class UsuarioServiceImpl implements UsuarioService{
 	@Autowired
 	private UsuarioDAO usuarioDAO;
 
-	@Override
+	@Transactional
 	public Usuario salvar(Usuario usuario) {
-		try {
-			return usuarioDAO.save(usuario);
-		} catch(DataIntegrityViolationException e) {
-			throw new IllegalArgumentException("Formato de data inválido");
-		}
+		return usuarioDAO.save(usuario);
 	}
 
-	@Override
+	@Transactional
 	public void excluir(Long id) {
 		usuarioDAO.deleteById(id);
 	}
 
-	@Override
+	@Transactional
 	public List<Usuario> pesquisar(UsuarioFilter filtro) {
 		List<Usuario> usuarioList = usuarioDAO.findUsuarioByFiltro(filtro);
 		if(usuarioList==null) {
@@ -41,7 +39,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 		return usuarioList;
 	}
 	
-	@Override
+	@Transactional
 	public Long contar(UsuarioFilter filtro) {
 		Long count = usuarioDAO.countUsuarioByFiltro(filtro);
 		if(count!=null) {
@@ -50,9 +48,14 @@ public class UsuarioServiceImpl implements UsuarioService{
 		return 0L;
 	}
 
-	@Override
+	@Transactional
 	public Usuario buscarPorId(Long id) {
 		return usuarioDAO.findById(id).orElse(null);
+	}
+
+	@Override
+	public Usuario buscarPorLogin(String login) {
+		return usuarioDAO.findByLogin(login);
 	}
 	
 }

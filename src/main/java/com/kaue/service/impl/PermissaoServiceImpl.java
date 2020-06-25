@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kaue.dao.PermissaoDAO;
 import com.kaue.dao.filter.PermissaoFilter;
+import com.kaue.model.Grupo;
 import com.kaue.model.Permissao;
 import com.kaue.service.PermissaoService;
 
@@ -27,5 +28,10 @@ public class PermissaoServiceImpl implements PermissaoService{
 	public List<Permissao> pesquisar(PermissaoFilter filtro) {
 		String descricao = (filtro.getDescricao() == null ? "" : filtro.getDescricao());
 		return permissaoDAO.findByDescricaoContainingIgnoreCase(descricao);
+	}
+
+	@Override
+	public List<Permissao> buscarPorGrupo(Grupo grupo) {
+		return null;
 	}
 }
