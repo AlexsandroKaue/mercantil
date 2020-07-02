@@ -19,9 +19,9 @@ public class ProdutoServiceImpl implements ProdutoService{
 	private ProdutoDAO produtoDAO;
 
 	@Override
-	public void salvar(Produto produto) {
+	public Produto salvar(Produto produto) {
 		try {
-			produtoDAO.save(produto);
+			return produtoDAO.save(produto);
 		} catch(DataIntegrityViolationException e) {
 			throw new IllegalArgumentException("Formato de data inválido");
 		}

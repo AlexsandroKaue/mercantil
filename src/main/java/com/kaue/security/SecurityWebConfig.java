@@ -1,6 +1,8 @@
 package com.kaue.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +20,12 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
     http
         .authorizeRequests()
         	.antMatchers("/dist/**", "/plugins/**").permitAll()
+        	.antMatchers("/caixa/**").hasAnyRole("OPERADOR","ADMIN")
+        	.antMatchers("/fornecedores/**").hasAnyRole("ADMIN")
+        	.antMatchers("/permissoes/**").hasAnyRole("ADMIN")
+        	.antMatchers("/produtos/**").hasAnyRole("ADMIN")
+        	//.antMatchers(HttpMethod.DELETE, "/usuarios/**").hasAnyRole("ADMIN")
+        	.antMatchers("/usuarios/**").hasAnyRole("ADMIN")
             // Para qualquer requisição (anyRequest) é preciso estar 
             // autenticado (authenticated).
             .anyRequest().authenticated()
@@ -44,7 +52,6 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
     builder
         .userDetailsService(comercialUserDetailsService)
         .passwordEncoder(new BCryptPasswordEncoder());
-	/* System.out.println(new BCryptPasswordEncoder().encode("123")); */
   }
   
  

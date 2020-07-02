@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -30,10 +29,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kaue.dao.filter.GrupoFilter;
 import com.kaue.dao.filter.UsuarioFilter;
 import com.kaue.enumeration.StatusUsuario;
-import com.kaue.model.Produto;
+import com.kaue.model.Grupo;
 import com.kaue.model.Usuario;
+import com.kaue.service.GrupoService;
 import com.kaue.service.UsuarioService;
 
 @Controller
@@ -46,6 +47,9 @@ public class UsuarioController {
 	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private GrupoService grupoService;
 	
 	@ModelAttribute
 	public void addAttributes(Model model){
@@ -79,6 +83,11 @@ public class UsuarioController {
 	public String salvar(@Validated Usuario usuario, @RequestParam("file") MultipartFile multipartFile,
 			Errors errors, RedirectAttributes attributes) {
 		String mensagem = "";
+		
+		if(usuario.getId()==null && usuarioService.buscarPorLogin(usuario.getLogin())!=null) {
+			errors.rejectValue("login", null, "Já existe um usuário com este login.");
+		}
+		
 		if(errors.hasErrors()) {
 			return CADASTRAR_VIEW;
 		}
@@ -177,6 +186,11 @@ public class UsuarioController {
 	@ModelAttribute
 	public List<StatusUsuario> todosStatusUsuario(){
 		return Arrays.asList(StatusUsuario.values());
+	}
+	
+	@ModelAttribute
+	public List<Grupo> todosGrupos(){
+		return grupoService.pesquisar(new GrupoFilter());
 	}
 	
 	private File buscarFotoDoUsuario(String name) {

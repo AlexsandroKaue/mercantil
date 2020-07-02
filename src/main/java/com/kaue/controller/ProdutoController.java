@@ -78,13 +78,14 @@ public class ProdutoController {
 			String url = "";
 			if(produto.getId()==null) {
 				attributes.addFlashAttribute("mensagem", "Produto cadastrado com sucesso!");
+				produto = produtoService.salvar(produto);
+				produto.setCodigo(String.format("%010d" , produto.getId()));
 				url = "redirect:/produtos/novo";
 			} else {
 				attributes.addFlashAttribute("mensagem", "Produto alterado com sucesso!");
 				url = "redirect:/produtos/"+produto.getId();
 			}
 			
-			produto.setCodigo(String.format("%010d" , produto.getId()));
 			produtoService.salvar(produto);
 			return url;
 		} catch(DataIntegrityViolationException e) {

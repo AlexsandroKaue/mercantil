@@ -2,16 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-      
-  <div class="alert alert-success js-fade" role="alert" th:if="${!#strings.isEmpty(mensagem)}">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <i class="icon fas fa-check"></i>
-    <span th:text="${mensagem}"></span>
-  </div>
-  <div class="alert alert-warning js-fade" role="alert" th:if="${!#strings.isEmpty(aviso)}">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <i class="icon fas fa-exclamation-triangle"></i>
-    <span th:text="${aviso}"></span>
+  
+  <div th:fragment="alert">    
+    <div class="alert alert-success js-fade" role="alert" th:if="${!#strings.isEmpty(mensagem)}">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <i class="icon fas fa-check"></i>
+      <span th:text="${mensagem}"></span>
+    </div>
+    <div class="alert alert-warning js-fade" role="alert" th:if="${!#strings.isEmpty(aviso)}">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <i class="icon fas fa-exclamation-triangle"></i>
+      <span th:text="${aviso}"></span>
+    </div>
   </div>
       
 </html>

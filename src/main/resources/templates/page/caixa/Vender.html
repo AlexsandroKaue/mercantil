@@ -7,85 +7,190 @@
   <title th:text="#{mercadinho}"></title>
 </head>
 
-  <section layout:fragment="container">
+  <section layout:fragment="container" th:fragment="container" id="containerSection">
+    
+    <section id="conteudoSection" layout:fragment="conteudo">
+      <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa/pagar}" th:object="${venda}">
+        <div class="pt-2"></div>
+        <!-- <div th:replace="corpo :: content"></div> -->
+          <!-- <header layout:insert="~{corpo}"></header> -->
 
-    <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa/pagar}" th:object="${venda}">
-      <!-- <header layout:insert="~{cabecalho}"></header> -->
-      <div class="pt-2"></div>
-      <header layout:insert="~{corpo}"></header>
-    </form>
-    
-    
-    <div class="modal" id="modalIncluirProduto">
-      <div class="modal-dialog modal-lg" th:fragment="modalIncluirProduto">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title"></h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-12" >
-                <div id="pesquisaVaziaErro"></div>
-              </div>
-              <div class="col-md-12">
-                <div id="inclusaoVaziaErro"></div>
-              </div>
-              <div class="col-md-6">
-                <div class="input-group">
-                  <input class="form-control" id="inputCodigoProduto" type="text"
-                    placeholder="Qual produto você está procurando?" autofocus="autofocus"></input>
-                  <div class="input-group-append">
-                    <a th:href="@{/caixa/buscarProduto}" class="js-buscar-produto btn btn-md btn-default">
-                      <i class="fas fa-search"></i>
-                    </a>
+    <section class="content">
+      <div class="container-fluid">
+          <div layout:insert="~{mensagem_geral}"></div>
+          <div layout:insert="~{mensagem_erro}"></div>
+          <div class="row">
+            <div class="col-md-12">
+            <div class="card card-default">
+              <!-- <div class="card-header"></div> -->
+              <div class="card-body">
+                <div class="row mb-2 align-items-center">
+                  <div class="col-md-9">
+                    <select class="js-example-data-ajax" style="width: 100%;"></select>
+                  </div>
+                  <div class="col-md-3 text-center">
+                    
                   </div>
                 </div>
-              </div>
-              <div class="col-md-12">
-                <table id="tabelaDeProdutos" class="table table-bordered table-striped">
-                  <thead>
-                    <tr>
-                      <th class="text-center col-1" th:text="#{codigo}"></th>
-                      <th th:text="#{descricao}" ></th>
-                      <th class="text-center col-2" th:text="#{categoria}"></th>
-                      <th class="text-center col-2"></th>
-                    </tr>
-                  </thead>
-                  <tbody th:attr="data-length=${#lists.size(produtoList)}">
-                    <tr th:each="produto : ${produtoList}">
-      				  <td class="text-center" th:text="${produto.codigo}"></td>
-      				  <td th:text="${produto.descricao}"></td>
-                      <td class="text-center" th:text="${produto.categoria.descricao}"></td>
-                      <td class="text-center">
-                        <div class="icheck-primary d-inline ml-2">
-                          <input type="checkbox" value="" name="todo1" th:id="|${produto.codigo}-inc|">
-                          <label th:for="|${produto.codigo}-inc|"></label>
+              
+                <div class="row" >
+                         
+                  <div class="col-md-9">
+                    <div class="bg-white py-2 px-2" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
+                      <ul class="items-list" style="height: 25px; margin-bottom: 0px">
+                        <li>
+                          <div class="row">
+                            <div class="col-md-4 text-left">
+                              <h5 class="lead mb-0">
+                                Descrição
+                              </h5>
+                            </div>
+                            <div class="col-md-4 text-center">
+                              <h5 class="lead mb-0">
+                                Quantidade x Preço Unitário
+                              </h5>
+                            </div>
+                            <div class="col-md-3 text-right">
+                              <h5 class="lead mb-0">
+                                Preço Total
+                              </h5>
+                            </div>
+                            <div class="col-md-1"></div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    
+                    <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
+                      <div class="chart">
+                        <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
+                          <th:block th:each="item : *{itemList}">
+                              <li class="item">
+                              <div class="row align-items-end">
+                               <div class="col-md-4 text-left">
+                                  <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>
+                                  <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
+                               </div>
+                              <div class="col-md-4 text-center">
+                                 <h6 id="quantidade" th:text="|${item.quantidade}un x ${{item.valor}}|"></h6>
+                              </div>
+                              <div class="col-md-3 text-right">
+                                 <h5 th:text="|R$ ${item.quantidade*item.valor}|"></h5>
+                              </div>
+                              <div class="col-md-1 text-center">
+                                <h6>
+                                 <a data-toggle="modal" data-target="#modalConfirmarRemocaoItem" class="text-muted btn-sm"
+                                  th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao}"
+                                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                                  <i class="fas fa-trash"></i>
+                                </a>
+                                </h6>
+                              </div>
+                              </div>
+                            </li>
+                            <li class="linha border-bottom">
+                            </li>
+                          </th:block>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 align-self-end">
+                    <div class=" text-center">
+                      <div class="btn btn-info btn-flat btn-block py-2">
+                        <a data-toggle="modal" data-target="#modalEscolherCliente">
+                          <i class="fas fa-user fa-lg mr-2"></i>
+                          Selecionar usuário
+                        </a>
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-md-12">
+                        <div class=" text-right">
+                          <button type="submit" class="btn btn-primary btn-flat py-2 btn-block">
+                            <i class="fas fa-cart-plus mr-2"></i>
+                            Pagamento
+                          </button>
                         </div>
-                      </td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(produtoList)}">
-                      <td colspan="4">Nenhum produto foi encontrado.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-md-12">
+                        <div class=" text-right">
+                          <div class="btn btn-danger btn-flat btn-block py-2">
+                            <i class="fas fa-cart-arrow-down mr-2"></i> 
+                            Cancelar
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="progress-group text-right">
+                      <h2><span class="text">Subtotal</span></h2>
+                      <div class="bg-gray py-2 px-3 ">
+                        <input type="hidden" th:field="*{subtotal}"></input>
+                        <h2 id="subtotal" th:text="|R$ *{{subtotal}}|" 
+                          class="js-subtotal mb-0" 
+                          style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
+                        </h2>
+                      </div>
+                   </div>
+                   <!-- /.progress-group -->
+                  </div>
+                  
+                  </div>
+                </div>
+                <!-- /.row -->
+                <div class="card-footer py-0">
+                  <div class="row">
+                    <div class="col-sm-3 col-6">
+                      <div class="description-block border-right">
+                        <!-- <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span> -->
+                        <h5 class="description-header">Cliente</h5>
+                        <span class="description-text">Fernanda Araújo</span>
+                      </div>
+                      <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-6">
+                      <div class="description-block border-right">
+                        <!-- <span class="description-p0ercentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
+                        <h5 class="description-header">$10,390.90</h5> -->
+                      </div>
+                      <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-6">
+                      <div class="description-block border-right">
+                        <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
+                        <h5 class="description-header">$24,813.53</h5>
+                      </div>
+                      <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-6">
+                      <div class="description-block">
+                        <h5 class="description-header">Status</h5>
+                        <span class="description-text">
+                          <i class="fas fa-circle text-yellow"></i>
+                          Registrando
+                        </span>
+                      </div>
+                      <!-- /.description-block -->
+                    </div>
+                  </div>
+                  <!-- /.row -->
+                </div>
+              
+            </div>
+            <!-- /.card -->
             </div>
           </div>
-          
-          <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-            <a th:href="@{/caixa/incluir/}" class="js-incluir btn btn-md btn-success toastrDefaultError" th:text="#{incluir}"></a>
-          </div>
         </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal --> 
+       </section>
+      </form>
+     </section> 
     
     <div class="modal" id="modalEscolherCliente">
       <div class="modal-dialog modal-lg">
@@ -329,62 +434,6 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
-    
-    <div class="modal" id="modalExcluirProduto" th:fragment="modalExcluirProduto">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title"></h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-12">
-                <table id="tabelaDeItens" class="table table-bordered table-striped js-tabela">
-                  <thead>
-                    <tr>
-                      <th class="text-center col-3" th:text="#{codigo}"></th>
-                      <th th:text="#{descricao}" ></th>
-                      <th class="text-center col-2" th:text="#{quantidade}"></th>
-                      <th class="text-center col-1"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr th:each="item : ${venda.itemList}">
-                      <td class="text-center col-3" th:text="${item.produto.codigo}"></td>
-                      <td th:text="${item.produto.descricao}"></td>
-                      <td class="text-center col-2" th:text="${item.quantidade}"></td>
-                      <td class="text-center col-1">
-                        <div class="d-flex flex-row bd-highlight">
-                          <div class="icheck-danger d-inline ml-2">
-                            <input type="checkbox" value="" name="todo1" th:id="|${item.produto.codigo}-exc|">
-                            <label th:for="|${item.produto.codigo}-exc|"></label>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(venda.itemList)}">
-                      <td colspan="4">Nenhum título foi encontrado.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          
-          <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-            <a th:href="@{/caixa/excluir/}" class="js-excluir btn btn-md btn-success" th:text="#{excluir}"></a>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal --> 
   
     <div class="modal fade" id="modalConfirmarRemocaoItem" tabindex="-1" data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog">
@@ -411,212 +460,7 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
-  </section>
-  
-  <section id="conteudoSection" layout:fragment="conteudo">
-      
-    <div class="row" th:fragment="conteudo">
-    <div class="col-md-12">
-    <div class="card card-default">
-      <!-- <div class="card-header"></div> -->
-      <div class="card-body">
-        <div class="row mb-2 align-items-center">
-          <div class="col-md-9">
-            <!-- <div class="bg-white rounded" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
-              <h2 id="descricaoProduto" class="text-center text-success">
-                <strong><label></label></strong>
-              </h2>
-            </div> -->
-            <select class="js-example-data-ajax" style="width: 100%;"></select>
-          </div>
-          <div class="col-md-3 text-center">
-            <!-- <div class="bg-white rounded py-1" style="border-style: solid; border-width: 2px; border-color: #cbd3da;"> -->
-              <div class="btn btn-flat">
-                Status:
-                <i class="fas fa-circle text-yellow"></i>
-                Registrando
-              </div>
-            <!-- </div> -->
-          </div>
-        </div>
-      
-        <div class="row" >
-                 
-          <div class="col-md-9">
-            <div class="bg-white py-2 px-2" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
-              <ul class="items-list" style="height: 25px; margin-bottom: 0px">
-                <li>
-                  <div class="row">
-                    <div class="col-md-4 text-left">
-                      <h5 class="lead mb-0">
-                        Descrição
-                      </h5>
-                    </div>
-                    <div class="col-md-4 text-center">
-                      <h5 class="lead mb-0">
-                        Quantidade x Preço Unitário
-                      </h5>
-                    </div>
-                    <div class="col-md-3 text-right">
-                      <h5 class="lead mb-0">
-                        Preço Total
-                      </h5>
-                    </div>
-                    <div class="col-md-1"></div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            
-            <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
-              <div class="chart">
-                <!-- <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
-                  <li th:each="item : *{itemList}"></li>
-                </ul> -->
-                <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
-                  <th:block th:each="item : ${venda.itemList}">
-                      <li class="item">
-                      <div class="row align-items-end">
-                       <div class="col-md-4 text-left">
-                          <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>
-                          <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
-                       </div>
-                      <div class="col-md-4 text-center">
-                         <h6 id="quantidade" th:text="|${item.quantidade}un x ${{item.valor}}|"></h6>
-                      </div>
-                      <div class="col-md-3 text-right">
-                         <h5 th:text="|R$ ${item.quantidade*item.valor}|"></h5>
-                      </div>
-                      <div class="col-md-1 text-center">
-                        <h6>
-                         <a data-toggle="modal" data-target="#modalConfirmarRemocaoItem" class="text-muted btn-sm"
-                          th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao}"
-                          title="Excluir" rel="tooltip" data-placement="top"><!--  -->
-                          <i class="fas fa-trash"></i><!-- th:href="@{#}" th:attr="data-id=${item.produto.codigo}, data-descricao=${item.produto.descricao}" -->
-                        </a>
-                        </h6>
-                      </div>
-                      </div>
-                    </li>
-                    <li class="linha border-bottom">
-                    </li>
-                  </th:block>
-                </ul>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-3 align-self-end">
-            <div class=" text-center">
-              <div class="btn btn-info btn-flat btn-block py-2">
-                <a data-toggle="modal" data-target="#modalEscolherCliente">
-                  <i class="fas fa-user fa-lg mr-2"></i>
-                  Selecionar usuário
-                </a>
-              </div>
-            </div>
-            <div class="row mt-2">
-              <!-- <div class="col-md-6">
-                <div class=" text-center">
-                  <div class="btn btn-success btn-flat btn-block py-2">
-                    <a class="btn btn-success btn-flat btn-block py-2"
-                       th:href="@{#}" data-toggle="modal" data-target="#modalIncluirProduto">
-                      <i class="fas fa-plus mr-2"></i>
-                      Incluir
-                    </a>
-                  </div>
-                </div>
-              </div> -->
-              <div class="col-md-12">
-                <div class=" text-right">
-                  <button type="submit" class="btn btn-primary btn-flat py-2 btn-block">
-                    <i class="fas fa-cart-plus mr-2"></i> <!-- js-pagamento -->
-                    Pagamento
-                  </button>
-                </div>
-              </div>
-              </div>
-              <div class="row mt-2">
-              <!-- <div class="col-md-6">
-                <div class=" text-right">
-                  <div class="btn btn-warning btn-flat btn-block py-2">
-                    <a class="js-obter-item btn btn-warning btn-flat btn-block py-2" 
-                      th:href="@{/caixa/obterItens}">
-                      <i class="fas fa-minus-circle mr-2"></i>
-                      Remover
-                    </a>
-                  </div>
-                </div>
-              </div> -->
-              <div class="col-md-12">
-                <div class=" text-right">
-                  <div class="btn btn-danger btn-flat btn-block py-2">
-                    <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
-                    <i class="fas fa-cart-arrow-down mr-2"></i> 
-                    Cancelar
-                  </div>
-                </div>
-              </div>
-              </div>
-            
-            
-            <div class="progress-group text-right">
-              <h2><span class="text">Subtotal</span></h2>
-              <div class="bg-gray py-2 px-3 ">
-                <h2 id="subtotal" th:text="|R$ ${{venda.subtotal}}|" 
-                  class="js-subtotal mb-0" 
-                  style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
-                </h2>
-              </div>
-           </div>
-           <!-- /.progress-group -->
-          </div>
-          
-          </div>
-        </div>
-        <!-- /.row -->
-        <div class="card-footer py-0">
-          <div class="row">
-            <div class="col-sm-3 col-6">
-              <div class="description-block border-right">
-                <!-- <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span> -->
-                <h5 class="description-header">Cliente</h5>
-                <span class="description-text">Fernanda Araújo</span>
-              </div>
-              <!-- /.description-block -->
-            </div>
-            <!-- /.col -->
-            <div class="col-sm-3 col-6">
-              <div class="description-block border-right">
-                <span class="description-p0ercentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
-                <h5 class="description-header">$10,390.90</h5>
-              </div>
-              <!-- /.description-block -->
-            </div>
-            <!-- /.col -->
-            <div class="col-sm-3 col-6">
-              <div class="description-block border-right">
-                <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
-                <h5 class="description-header">$24,813.53</h5>
-              </div>
-              <!-- /.description-block -->
-            </div>
-            <!-- /.col -->
-            <div class="col-sm-3 col-6">
-              <div class="description-block">
-                <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> 18%</span>
-                <h5 class="description-header">1200</h5>
-              </div>
-              <!-- /.description-block -->
-            </div>
-          </div>
-          <!-- /.row -->
-        </div>
-      
-    </div>
-    <!-- /.card -->
-    </div>
-    </div>
+    
   </section>
   
   <script layout:fragment="js-validator">
@@ -631,158 +475,6 @@
 	  minimumFractionDigits: 2
 	});
   	
-  	toastr.options = {
-	  "closeButton": true,
-	  "positionClass": "toast-top-center",
-	  "preventDuplicates": true,
-	  "showDuration": "300",
-	  "hideDuration": "1000",
-	  "timeOut": "5000",
-	  "extendedTimeOut": "1000",
-	  "showEasing": "swing",
-	  "hideEasing": "linear",
-	  "showMethod": "fadeIn",
-	  "hideMethod": "fadeOut"
-	}
-  	
-  	$('#container').on('click', '.js-incluir', function(event){
-		event.preventDefault();
-		
-		var botaoIncluir = $(event.currentTarget);
-
-		var listSize = $('#modalIncluirProduto').find('#tabelaDeProdutos tbody').data('length');
-		
-		var rows = $('#modalIncluirProduto').find('#tabelaDeProdutos tbody tr');
-		
-		var itens='';
-		rows.each(function(index, element) {
-  			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
-  			
-  			if(isChecked) {
-    			var codigo = $(element).find('td input[name="todo1"]').attr('id').split('-')[0];
-    			itens = itens + codigo + ',';
-  			}
-  		});	
-		
-		if(itens == '') {
-			bootstrap_alert = function() {};
-			bootstrap_alert.warning = function(message) {
-	            $('#inclusaoVaziaErro').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-ban"></i>'+message+'</span></div>')
-	        };
-	        bootstrap_alert.warning('Nenhum <strong>produto</strong> foi selecionado.');
-		} else {
-			$('#inclusaoVaziaErro').html();
-			var response = $.ajax({
-				url: '/caixa/incluir?codigo='+itens,
-				type: 'GET'
-			});
-			
-			response.done(function(e){
-				$('#conteudoSection').html(e);
-			});
-			
-			response.fail(function(e){
-				alert('Erro incluindo item');
-			});
-			$('#modalIncluirProduto').modal("hide");
-		}
-  		
-  	});
-  	
-	$('#container').on('click', '.js-excluir', function(event) {
-  		event.preventDefault();
-		
-		var botaoExcluir = $(event.currentTarget);
-
-		var rows = $('#modalExcluirProduto').find('#tabelaDeItens tbody tr');
-		rows.each(function(index, element) {
-			var isChecked = $(element).find('td input[name="todo1"]').is(':checked');
-			if(isChecked) {
-				var urlExcluirItem = botaoExcluir.attr('href');
-				var codigo = $(element).find('td input[name="todo1"]').attr('id').split('-')[0];
-				urlExcluirItem += codigo;
-
-				var response = $.ajax({
-					url: urlExcluirItem,
-					type: 'GET'
-				});
-				
-				response.done(function(e){
-					//atualizarLista(e.venda, e.item);
-					$('#conteudoSection').html(e);
-				});
-				
-				response.fail(function(e){
-					alert('Erro excluindo item');
-				});
-			}
-		});
-		
-		$('#modalExcluirProduto').modal("hide");
-		
-	});
-  	
-	$('#container').on('click', '.js-obter-item', function(event){
-  		event.preventDefault();
-  		
-  		var botao = $(event.currentTarget);
-		var url = botao.attr('href');
-  		   
-  		var response = $.ajax({
-			url: url,
-			type: 'GET'
-		}); 
-  		
-  		response.done(function(e){
-			console.log(e);    			
-			$('#modalExcluirProduto').replaceWith(e);
-			$('#modalExcluirProduto').modal('show');
-		});
-  		
-  		response.fail(function(e){
-			alert('Erro buscando itens');
-		});
-  	});
-  	
-  	$('#container').on('click', '.js-buscar-produto', function(event) {
-		event.preventDefault();
-		
-		var botaoPesquisarProduto = $(event.currentTarget);
-		var urlPesquisarProduto = botaoPesquisarProduto.attr('href');
-		var termoDaPesquisa = $('#modalIncluirProduto').find('input#inputCodigoProduto').val();
-		
-		if(termoDaPesquisa.trim() === '') {
-			bootstrap_alert = function() {};
-			bootstrap_alert.warning = function(message) {
-	            $('#pesquisaVaziaErro').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-ban"></i>'+message+'</span></div>')
-	        };
-	        bootstrap_alert.warning('Campo da <strong>pesquisa</strong> vazio, digite algo para pesquisar.');
-		} else {
-			$('#pesquisaVaziaErro').html();
-			urlPesquisarProduto += '?termo='+termoDaPesquisa;
-			
-			var response = $.ajax({
-				url: urlPesquisarProduto,
-				type: 'GET'
-			});
-			
-			response.done(function(e){
-				console.log(e);
-				$('#modalIncluirProduto').html(e);
-			});
-			
-			response.fail(function(e){
-				console.log(e);
-				alert('Erro buscando produto');
-			});
-		}
-			
-  	});
-  	
-  	$('#container').on('hide.bs.modal', '#modalIncluirProduto', function(event){
-  		console.log('Fechou modal modalIncluirProduto')
-  	});
-  	
  	// Execute a function when the user releases a key on the keyboard
   	$('#container').on('keyup', '#inputCodigoProduto', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
@@ -792,44 +484,7 @@
   	    // Trigger the button element with a click
   	    $('.js-buscar-produto').click();
   	  }
-  	});
-  	
-  	/* $('#container').on('hidden.bs.modal','#modalIncluirProduto', function (event){
-  		$('#modalIncluirProduto').find('input#inputCodigoProduto').val(null);
-  		var tabelaProdutos = $('#tabelaDeProdutos').DataTable();
-  	}); */
-  	
-  	$('#container').on('shown.bs.modal', '#modalIncluirProduto', function (event){
-  		$('#modalIncluirProduto').find('input#inputCodigoProduto').focus();
-  	});
-  	
-  	function atualizarLista(venda, item) {
-  		var listaDeItem = venda.itemList;
-
-		//var subtotal = 0.0;
-		var li = '';
-		for(var i=0; i<listaDeItem.length; i++) {
-			li += '<li class="item"> '+
-				'<div class="row align-items-end">'+
-    				'<div class="col-md-4 text-left">'+
-        				'<h6><b id="descricao">'+ listaDeItem[i].produto.descricao +'</b></h6>'+
-        				'<h6 id="codigo">'+ listaDeItem[i].produto.codigo +'</h6>'+
-    				'</div>'+
-    				'<div class="col-md-4 text-center">'+
-      					'<h6 id="quantidade">'+listaDeItem[i].quantidade+'un x '+ decimalformatter.format(listaDeItem[i].valor)+'</h6>'+
-      				'</div>'+
-      				'<div class="col-md-4 text-right">'+
-      					'<h5>'+currencyformatter.format(listaDeItem[i].quantidade*listaDeItem[i].valor)+'</h5>'+
-    				'</div>'+
-				'</div>'+
-			'</li>'+
-			'<li class="linha border-bottom"></li>';
-			//subtotal += listaDeItem[i].valor*listaDeItem[i].quantidade;
-		}
-		$('#descricaoProduto').html('<strong>'+item.produto.descricao+'</strong>');//item.quantidade +' X '
-		$('#listaDeItens').html(li);
-		$('.js-subtotal').html('<h3 class="mb-0">'+currencyformatter.format(venda.subtotal)+'</h3>');
-	} 
+  	});  	
   	
     $("#container").ready(function() {
     	$('.js-example-data-ajax').click();
@@ -874,50 +529,50 @@
   	
     
 
-    	function formatRepo (repo) {
-    	  if (repo.loading) {
-    	    return repo.text;
-    	  }
+  	function formatRepo (repo) {
+  	  if (repo.loading) {
+  	    return repo.text;
+  	  }
 
-    	  var $container = $(
-    	    "<div class='select2-result-repository clearfix'>" +
-    	      "<div class='select2-result-repository__avatar'><img src='/custom/img/sem-imagem_3.png'/></div>" +
-    	      "<div class='select2-result-repository__meta'>" +
-    	      	"<div class='select2-result-repository__description'></div>" +
-    	        "<div class='select2-result-repository__title'></div>" +
-    	        /* "<div class='select2-result-repository__statistics'>" +
-    	          "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> </div>" +
-    	          "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
-    	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +
-    	        "</div>" + */
-    	      "</div>" +
-    	    "</div>"
-    	  );
+  	  var $container = $(
+  	    "<div class='select2-result-repository clearfix'>" +
+  	      "<div class='select2-result-repository__avatar'><img src='/custom/img/sem-imagem_3.png'/></div>" +
+  	      "<div class='select2-result-repository__meta'>" +
+  	      	"<div class='select2-result-repository__description'></div>" +
+  	        "<div class='select2-result-repository__title'></div>" +
+  	        /* "<div class='select2-result-repository__statistics'>" +
+  	          "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> </div>" +
+  	          "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
+  	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +
+  	        "</div>" + */
+  	      "</div>" +
+  	    "</div>"
+  	  );
 
-    	  $container.find(".select2-result-repository__description").text(repo.codigo);
-    	  $container.find(".select2-result-repository__title").text(repo.descricao);
-    	  /* $container.find(".select2-result-repository__forks").append(123 + " Forks");
-    	  $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
-    	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers"); */
+  	  $container.find(".select2-result-repository__description").text(repo.codigo);
+  	  $container.find(".select2-result-repository__title").text(repo.descricao);
+  	  /* $container.find(".select2-result-repository__forks").append(123 + " Forks");
+  	  $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
+  	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers"); */
 
-    	  return $container;
-    	}
+  	  return $container;
+  	}
 
-    	function formatRepoSelection (repo) {
-    	  return repo.full_name || repo.text;
-    	}
+  	function formatRepoSelection (repo) {
+  	  return repo.full_name || repo.text;
+  	}
     
     $('#container').on('select2:select','.js-example-data-ajax', function (e) {
         var data = e.params.data;
-        console.log(data);
         var response = $.ajax({
-			url: '/caixa/incluir?codigo='+data.codigo,
+			url: '/caixa/incluir/'+data.codigo,
 			type: 'GET'
 		});
 		
 		response.done(function(e){
+			console.log(e);
 			var html = $.parseHTML(e);
-			$('#conteudoSection').html(html);
+			$('#conteudoSection').replaceWith(html);
 			$('.js-example-data-ajax').click();
 		});
 		
@@ -958,7 +613,8 @@
 		
 		response.done(function(e){
 			$('#conteudoSection').html(e);
-			$('#modalConfirmarRemocaoItem').modal('hide');
+			console.log(e);
+			//$('#modalConfirmarRemocaoItem').modal('hide');
 		});
 		
 		response.fail(function(e){

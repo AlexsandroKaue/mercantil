@@ -11,6 +11,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.envers.Audited;
@@ -49,6 +50,7 @@ public class Usuario {
 	private byte[] imagem;
 	
 	@ManyToOne
+	@NotNull(message = "O campo grupo é obrigatório")
 	private Grupo grupo;
 
 	public Long getId() {

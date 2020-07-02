@@ -19,11 +19,6 @@ public class HomeController {
 		return "login"; // <<< Retorna a página de login
 	}
 	
-	@PostMapping("/logout")
-	public String logout() {
-		return "login"; // <<< Retorna a página de login
-	}
-	
 	@GetMapping("/login-error")
 	public String login(HttpServletRequest request, Model model) {
 		
