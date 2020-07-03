@@ -8,11 +8,10 @@
 </head>
 
   <section layout:fragment="container">
+  
     <div id="conteudo">
       <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa}" th:object="${venda}">
-        <!-- <header layout:insert="~{cabecalho}"></header> -->
         <div class="pt-2"></div>
-        <!-- <header layout:insert="~{corpo}"></header> -->
         <section class="content">
           <div class="container-fluid">
             <div layout:insert="~{mensagem_geral}"></div>
@@ -25,8 +24,6 @@
                   <div class="card-body">
                     <input type="hidden" th:field="*{id}"></input>
                     <input type="hidden" th:field="*{dataVenda}"></input>
-                    <!-- <input type="hidden" th:field="*{itemList}"></input> -->
-                    <input type="hidden" th:field="*{status}"></input>
                     <input type="hidden" th:field="*{subtotal}"></input>
                     <input type="hidden" th:field="*{total}"></input>
                     <input type="hidden" th:field="*{valorDesconto}"></input>
@@ -37,7 +34,7 @@
                           <table class="table">
                             <tr>
                               <th class="lead mt-2" style="width:50%">Subtotal:</th>
-                              <td id="subtotal" class="js-subtotal"><h3 class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</h3></td>
+                              <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
                             </tr>
                             <tr>
                               <th class="lead form-inline">
@@ -70,25 +67,30 @@
                       </div>
                       
                       <div class="col-6">
-                        <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
+                        <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
                           <div class="chart">
                             <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
-                              <li class="item" th:each="item, rowStat : *{itemList}">
-                                  <input type="hidden" th:field="*{itemList[__${rowStat.index}__].id}"></input>
-                                  <div class="row align-items-end">
-                                      <div class="col-md-4 text-left">
-                                        <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>
-                                        <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
-                                      </div>
-                                      <div class="col-md-4 text-center">
-                                          <h6 id="quantidade" th:text="|${item.quantidade} X ${{item.valor}}|"></h6>
+                              <th:block th:each="item, rowStat : *{itemList}">
+                                <li class="item">
+                                    <input type="hidden" th:field="*{itemList[__${rowStat.index}__].id}"></input>
+                                    <input type="hidden" th:field="*{itemList[__${rowStat.index}__].produto}"></input>
+                                    <input type="hidden" th:field="*{itemList[__${rowStat.index}__].quantidade}"></input>
+                                    <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valor}"></input>
+                                    <div class="row align-items-end">
+                                        <div class="col-md-4 text-left">
+                                          <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>
+                                          <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
                                         </div>
-                                        <div class="col-md-4 text-right">
-                                          <h5 th:text="${{item.valor}}"></h5>
-                                      </div>
-                                  </div>
-                                </li>
-                                <li class="linha border-bottom"></li>
+                                        <div class="col-md-4 text-center">
+                                            <h6 id="quantidade" th:text="|${item.quantidade} X ${{item.valor}}|"></h6>
+                                          </div>
+                                          <div class="col-md-4 text-right">
+                                            <h5 th:text="|R$ ${{item.valor}}|"></h5>
+                                        </div>
+                                    </div>
+                                  </li>
+                                  <li class="linha border-bottom"></li>
+                               </th:block>
                             </ul>
                           </div>
                         </div>
@@ -122,18 +124,7 @@
 	  minimumFractionDigits: 2
 	});
   	
- 	// Execute a function when the user releases a key on the keyboard
-  	$('#inputCodigoProduto').on('keyup', function(event) {
-  	  // Number 13 is the "Enter" key on the keyboard
-  	  if (event.keyCode === 13) {
-  	    // Cancel the default action, if needed
-  	    event.preventDefault();
-  	    // Trigger the button element with a click
-  	    $('.js-buscar-produto').click();
-  	  }
-  	});
-  	
-  	$('.js-desconto').on('change', function(event) {
+  	$('#container').on('change', '.js-desconto', function(event) {
   		event.preventDefault();
   		
   		var seletor = $(event.currentTarget);
@@ -146,9 +137,6 @@
 		}
 		
 		url += desconto;
-		
-		console.log('URL: '+url);
-		console.log('Desconto: '+desconto);
 		
 		var response = $.ajax({
 			url: url,
@@ -164,25 +152,12 @@
 		});
   	});
   	
-  	$('.js-finalizar').on('click', function(event) {
-
-  		var saldo = $('#modalPagamento').find('input#inputSaldo').val();
-  		saldo = parseFloat(saldo.replace(/\./g, '').replace(/,/, '.'));
-  		console.log(saldo);
-  		
-  		var response = $.ajax({
-			url: '/caixa/aplicar/saldo/'+saldo,
-			type: 'PUT'
-		});
-  		
-  		response.done(function(e){
-  			$('#caixaForm').submit();
-  		});
-		
-		response.fail(function(e){
-			alert('Erro aplicando saldo');
-		});
-  	});
+  	$(document).ajaxComplete(function() {
+		$('.js-currency').maskMoney({decimal:',', 
+			thousands:'.', 
+			allowZero:'true',
+			formatOnBlur:false});
+	});
   </script>
     
 </html>

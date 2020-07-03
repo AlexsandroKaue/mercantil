@@ -23,11 +23,9 @@ public class Item {
 	@GeneratedValue(generator = "seq_item", strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	//@JsonIgnoreProperties({"categoria", "loteList" }) 
 	@ManyToOne
 	private Produto produto;
 	
-	//@JsonIgnoreProperties({"itemList" }) 
 	@ManyToOne
 	private Venda venda;
 	

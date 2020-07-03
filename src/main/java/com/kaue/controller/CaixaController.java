@@ -68,7 +68,6 @@ public class CaixaController {
 			file = resource.getFile();
 			cupom = new String(Files.readAllBytes(file.toPath()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -79,8 +78,6 @@ public class CaixaController {
 		venda.setSubtotal(new BigDecimal(0.0));
 		
 		mv.addObject("venda", venda);
-		//mv.addObject("listaDeItens", new ArrayList<Item>());
-		//mv.addObject("produtoList", new ArrayList<Produto>());
 		
 		return mv;
 	}
@@ -89,47 +86,42 @@ public class CaixaController {
 	public ModelAndView incluirItem(@PathVariable("codigo") String codigo, Model model) {
 		
 		ModelAndView mv = null;
-		mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudoSection");
+		mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
 		
 		if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
 		
 		Item item = null;
-		//if(!codigoList.isEmpty()) {
-			//for(String codigo : codigoList) {
 		if(!codigo.isEmpty()) {
-				Produto produto = produtoService.buscarPorCodigo(codigo);
-
-				if(produto != null) {
-					boolean isNew = true;
-					for(Item it : venda.getItemList()) {
-						if(it.getProduto().getCodigo().equals(codigo)) {
-							it.setQuantidade(it.getQuantidade()+1);
-							isNew = false;
-							item = it; break;
-						}
-					}
-					if(isNew) {
-						item = new Item();
-						item.setProduto(produto);
-						item.setValor(produto.getValorDeVenda());
-						item.setVenda(venda);
-						item.setQuantidade(1);
-						
-						venda.getItemList().add(item);
-					}
-				}
-				
-				BigDecimal subtotal = new BigDecimal(0.0);
+			Produto produto = produtoService.buscarPorCodigo(codigo);
+	
+			if(produto != null) {
+				boolean isNew = true;
 				for(Item it : venda.getItemList()) {
-					subtotal = subtotal.add(it.getValor().multiply(new BigDecimal(it.getQuantidade())));
+					if(it.getProduto().getCodigo().equals(codigo)) {
+						it.setQuantidade(it.getQuantidade()+1);
+						isNew = false;
+						item = it; break;
+					}
 				}
-				venda.setSubtotal(subtotal);
+				if(isNew) {
+					item = new Item();
+					item.setProduto(produto);
+					item.setValor(produto.getValorDeVenda());
+					item.setVenda(venda);
+					item.setQuantidade(1);
+					
+					venda.getItemList().add(item);
+				}
+			}
+			
+			BigDecimal subtotal = new BigDecimal(0.0);
+			for(Item it : venda.getItemList()) {
+				subtotal = subtotal.add(it.getValor().multiply(new BigDecimal(it.getQuantidade())));
+			}
+			venda.setSubtotal(subtotal);
 		}
-			//}
-		//} 
 
 		mv.addObject("venda", venda);
-		//model.addAttribute("venda", venda);
 		mv.addObject("item", item);
 		
 	    return mv;
@@ -138,7 +130,7 @@ public class CaixaController {
 	
 	@RequestMapping(value = "/excluir/{codigo}")
 	public ModelAndView excluirItem(@PathVariable("codigo") String codigo) {
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudoSection");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
 		
 		Iterator<Item> itemIterator = venda.getItemList().iterator();
 		Item item = null;
@@ -165,62 +157,7 @@ public class CaixaController {
 	    return mv;
 		
 	}
-
-	@RequestMapping(value = "/obterItens")
-	public ModelAndView obterItens() {
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: modalExcluirProduto");
-		mv.addObject("venda", venda);
-		return mv;
-	}
-	
-	@RequestMapping(value = "/buscarProduto")
-	public ModelAndView buscarProduto(@RequestParam("termo") String termo, Model model) {
 		
-		List<Produto> produtoList = new ArrayList<Produto>();
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: modalIncluirProduto");
-		
-		if(termo != null && !termo.trim().isEmpty()) {
-			ProdutoFilter filtro = new ProdutoFilter();
-
-			try {
-				Integer codigo = Integer.parseInt(termo);
-				filtro.setCodigo(String.format("%010d" , codigo));
-			} catch(NumberFormatException nfe) {}
-
-			filtro.setDescricao(termo);
-			filtro.setCategoria(new Categoria());
-			filtro.getCategoria().setDescricao(termo);
-			
-			produtoList = produtoService.pesquisar(filtro);
-		} 
-		
-		model.addAttribute("produtoList", produtoList);
-		
-		return mv;
-		
-	}
-	
-	@RequestMapping(method = RequestMethod.POST)
-	public String finalizarVenda(Venda venda, Errors errors) {
-		
-		if(venda.getSaldo().compareTo(venda.getTotal())==-1) {
-			errors.rejectValue("saldo", null, "Saldo não suficiente");
-		}
-		if(errors.hasErrors()) {
-			return PAGAMENTO_VIEW;
-		}
-		
-		venda.setStatus(StatusVenda.FINALIZADA);
-		if(venda.getSaldo().compareTo(venda.getTotal()) > 0) {
-			BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
-			venda.setTroco(troco);
-		}
-		
-		venda = vendaService.salvar(venda);
-
-		return "redirect:/caixa/venda/"+venda.getId();
-	}
-	
 	@RequestMapping(value = "/venda/{id}")
 	public ModelAndView detalhesVenda(@PathVariable("id") Venda venda) {
 		ModelAndView mv = new ModelAndView(RECIBO_VIEW);
@@ -228,12 +165,13 @@ public class CaixaController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/pagar", method = RequestMethod.POST)
-	public ModelAndView pagar(Venda venda, Errors  errors) {		
+	@RequestMapping(value = "/pagamento", method = RequestMethod.POST)
+	public ModelAndView iniciarPagamento(Venda venda, Errors  errors) {		
 				
 		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
 			errors.rejectValue("subtotal", null, "Subtotal não pode ser 0");
 		}
+	
 		if(errors.hasErrors()) {
 			return new ModelAndView(REGISTRADORA_VIEW);
 		}
@@ -253,12 +191,35 @@ public class CaixaController {
 		venda.setValorDesconto(new BigDecimal(0.0));
 		venda.setTotal(venda.getSubtotal());
 		venda.setDataVenda(new Date());
+		venda.setSaldo(BigDecimal.ZERO);
 		venda = vendaService.salvar(venda);
 
 		venda = vendaService.buscarPorId(venda.getId());
 		
 		mv.addObject("venda", venda);
 		return mv;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
+		
+		if(venda.getSaldo()!=null) {
+			if(venda.getSaldo().compareTo(venda.getTotal())==-1) {
+				errors.rejectValue("saldo", null, "Saldo não suficiente");
+			}
+		}
+		
+		if(errors.hasErrors()) {
+			return PAGAMENTO_VIEW;
+		} else {
+			venda.setStatus(StatusVenda.FINALIZADA);
+			BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
+			venda.setTroco(troco);
+			
+			venda = vendaService.salvar(venda);
+			attributes.addFlashAttribute("mensagem", "Venda concluída com sucesso!");
+			return "redirect:/caixa/venda/"+venda.getId();
+		}
 	}
 	
 	@RequestMapping(value = "{venda}/desconto/{desconto}")
@@ -275,7 +236,7 @@ public class CaixaController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/buscarProdutoAjax", produces = "application/json")
+	@RequestMapping(value = "/buscarItem", produces = "application/json")
 	public @ResponseBody Map<String, Object> obterProdutosAjax(@RequestParam("q") String q, @RequestParam("page") Integer page) {
 		
 		String termo = q;

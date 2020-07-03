@@ -29,15 +29,15 @@
               <table class="table">
                 <tr>
                   <th class="lead">Total:</th>
-                  <td><h3 class="mb-0" th:text="|R$ ${venda.total}|"></h3></td>
+                  <td><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
                 </tr>
                 <tr>
                   <th class="lead">Pagamento:</th>
-                  <td id="subtotal"><h3 class="mb-0" th:text="|R$ ${venda.saldo}|"></h3></td>
+                  <td id="subtotal"><h3 class="mb-0" th:text="|R$ *{{saldo}}|"></h3></td>
                 </tr>
                 <tr>
                   <th class="lead mt-2" style="width:50%">Troco:</th>
-                  <td id="subtotal"><h3 class="mb-0" th:text="|R$ ${venda.troco}|"></h3></td>
+                  <td id="subtotal"><h3 class="mb-0" th:text="|R$ *{{troco}}|"></h3></td>
                 </tr>
                 
               </table>

@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
@@ -40,7 +41,7 @@ public class Venda {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataVenda;
 	
-	@NotNull(message = "Valor é obrigatório")
+	/* @NotNull(message = "Valor é obrigatório") */
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal subtotal;
 	
@@ -54,6 +55,7 @@ public class Venda {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorDesconto;
 	
+	@NotNull(message = "O campo saldo é obrigatório")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal saldo;
 	
