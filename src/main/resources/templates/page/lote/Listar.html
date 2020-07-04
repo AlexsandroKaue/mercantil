@@ -9,6 +9,7 @@
 
   <section layout:fragment="container">
     <form role="form" id="loteForm" method="POST" th:action="@{/lotes}" th:object="${lote}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
       <header layout:insert="~{cabecalho}"></header>
       <header layout:insert="~{corpo}"></header>
       

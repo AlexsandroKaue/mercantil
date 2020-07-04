@@ -21,11 +21,13 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         	.antMatchers("/dist/**", "/plugins/**").permitAll()
         	.antMatchers("/caixa/**").hasAnyRole("OPERADOR","ADMIN")
+        	.antMatchers("/categorias/**").hasAnyRole("ADMIN")
         	.antMatchers("/fornecedores/**").hasAnyRole("ADMIN")
+        	.antMatchers("/grupos/**").hasAnyRole("ADMIN")
+        	.antMatchers("/lotes/**").hasAnyRole("ADMIN")
         	.antMatchers("/permissoes/**").hasAnyRole("ADMIN")
         	.antMatchers("/produtos/**").hasAnyRole("ADMIN")
-        	//.antMatchers(HttpMethod.DELETE, "/usuarios/**").hasAnyRole("ADMIN")
-        	.antMatchers("/usuarios/**").hasAnyRole("ADMIN")
+        	.antMatchers("/usuarios/**").hasAnyRole("ADMIN","OPERADOR")
             // Para qualquer requisição (anyRequest) é preciso estar 
             // autenticado (authenticated).
             .anyRequest().authenticated()
@@ -42,7 +44,9 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
         .logout()
         .logoutUrl("/logout")
         .deleteCookies("JSESSIONID")
-    	.and()
+        .and()
+        .exceptionHandling().accessDeniedPage("/acessoNaoPermitido")
+        .and()
         .rememberMe(); // <<< Habilita a função de "lembrar-me".; 
     
   }

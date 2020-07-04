@@ -9,6 +9,7 @@
   
   <section layout:fragment="container">
     <form class="form-horizontal" method="POST" th:action="@{/produtos}" th:object="${produto}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
       <header layout:insert="~{cabecalho}"></header>
       <header layout:insert="~{corpo}"></header>
     </form>

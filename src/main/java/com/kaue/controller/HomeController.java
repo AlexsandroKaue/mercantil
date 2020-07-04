@@ -38,6 +38,11 @@ public class HomeController {
         return "login";
     }
 	
+	@GetMapping("/acessoNaoPermitido") 
+	public String acessoNaoPermitido() { 
+		return "acessoNaoPermitido";
+	}
+	
 	@ModelAttribute
 	public void addAttributes(Model model){
 		model.addAttribute("errorMessage","");

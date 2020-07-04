@@ -10,6 +10,7 @@
   <section layout:fragment="conteudo">
   
     <form class="form-horizontal" method="POST" th:action="@{/permissoes}" th:object="${permissao}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->

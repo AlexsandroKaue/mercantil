@@ -10,6 +10,7 @@
   <section layout:fragment="container">
     <form role="form" id="usuarioForm" enctype="multipart/form-data" method="POST" 
       th:action="@{/usuarios}" th:object="${usuario}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
       <header layout:insert="~{cabecalho}"></header>
       <header layout:insert="~{corpo}"></header>
     </form>
@@ -17,6 +18,7 @@
     <div class="modal fade" id="modalAlterarSenha">
       <div class="modal-dialog">
         <form id="senhaForm" method="POST" th:action="@{/usuarios/alterarSenha}"> 
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title">Alterar a senha</h4>

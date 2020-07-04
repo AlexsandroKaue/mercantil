@@ -43,6 +43,7 @@
             </div> -->
             <div class="card-body">
               <form method="GET" th:action="@{/titulos}" th:object="${filtro}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
                 <div class="form-group row">
                   <div class="col-sm-12">
                     <div class="input-group">

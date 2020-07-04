@@ -9,6 +9,7 @@
 
   <section layout:fragment="container">
     <form role="form"  method="POST" th:action="@{/categorias}" th:object="${categoria}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
       <header layout:insert="~{cabecalho}"></header>
       <header layout:insert="~{corpo}"></header>
     </form>
@@ -52,8 +53,14 @@
       $('#inputNome').rules('add', {
         required: true,
         messages: { 
-            required: "Por favor digite um nome para a categoria"
+            required: "Por favor, digite um nome para a categoria"
         }
+      });
+      $('#inputDescricao').rules('add', {
+          required: true,
+          messages: { 
+              required: "Por favor, digite uma descrição para a categoria"
+          }
       });
     </script>
   </div>
