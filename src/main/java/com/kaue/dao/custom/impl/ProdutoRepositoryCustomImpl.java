@@ -61,7 +61,7 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         if(predicates.size()>0) {
         	query.select(cb.count(produto)).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
         } else {
-        	query.select(cb.count(query.from(Produto.class)));
+        	query.select(cb.count(produto));
         }
         
         TypedQuery<Long> typedQuery = entityManager.createQuery(query);

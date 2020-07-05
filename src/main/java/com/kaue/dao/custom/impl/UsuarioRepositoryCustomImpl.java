@@ -81,6 +81,7 @@ public class UsuarioRepositoryCustomImpl implements UsuarioRepositoryCustom{
         Path<Long> idPath = null;
         Path<String> nomePath = null;
         Path<String> emailPath = null;
+        Path<String> loginPath = null;
         
         if(usuarioConsulta.getId()!=null) {
         	idPath = usuario.get("id");
@@ -94,6 +95,10 @@ public class UsuarioRepositoryCustomImpl implements UsuarioRepositoryCustom{
         	emailPath = usuario.get("email");
         	predicates.add(cb.like(cb.upper(emailPath), 
         			"%"+usuarioConsulta.getEmail().toUpperCase()+"%"));
+        }
+        if(usuarioConsulta.getLogin()!=null) {
+        	loginPath = usuario.get("login");
+        	predicates.add(cb.like(cb.upper(loginPath), "%"+usuarioConsulta.getLogin().toUpperCase()+"%"));
         }
         
         return predicates;
