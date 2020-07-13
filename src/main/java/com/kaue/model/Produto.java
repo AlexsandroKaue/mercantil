@@ -40,6 +40,8 @@ public class Produto {
 	@NotEmpty(message = "A Descrição é obrigatória")
 	private String descricao;
 	
+	private String marca;
+	
 	//@NotNull(message = "Valor de Venda é obrigatório")
 	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
 	@NumberFormat(pattern = "#,##0.00")
@@ -102,6 +104,22 @@ public class Produto {
 	public void setLoteList(List<Lote> loteList) {
 		this.loteList = loteList;
 	}
+	
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
 
 	@Override
 	public int hashCode() {
@@ -126,14 +144,6 @@ public class Produto {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-
-	public String getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
 	}
 
 }

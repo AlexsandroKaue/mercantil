@@ -7,21 +7,40 @@
   <title th:text="#{mercadinho}"></title>
 </head>
 
-  <section layout:fragment="container" th:fragment="container" id="containerSection">
+  <section layout:fragment="container" th:fragment="container" id="containerSection" class="disabled">
     
     <div id="conteudo">
-      <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa/pagamento}" th:object="${venda}">
-        <div class="pt-2"></div>
+      <section>
+      
+      </section>
+    
+      <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa}" th:object="${venda}">
+        
+        <div class="content-header" style="padding-left:0px; padding-right:0px; padding-bottom:5px">
+    
+          <div class="container-fluid">
+            <div class="row mb-2" layout:fragment="cabecalho">
+              <div class="col-sm-12 m-0">
+                <select class="js-example-data-ajax" 
+                        th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir}"
+                        style="width: 100%;"></select>
+              </div>
+            </div>
+            <!-- /.row -->
+          </div>
+          <!-- /.container-fluid -->
+        </div>
+        <!-- <div class="pt-2"></div> -->
         <section class="content">
           <div class="container-fluid">
-            <div layout:insert="~{mensagem_geral}"></div>
-            <div layout:insert="~{mensagem_erro}"></div>
+            <!-- <div layout:insert="~{mensagem_geral}"></div>
+            <div layout:insert="~{mensagem_erro}"></div> -->
             <div class="row">
               <div class="col-md-12">
                 <div class="card card-default">
                   <!-- <div class="card-header"></div> -->
                   <div class="card-body">
-                    <div class="row mb-2 align-items-center">
+                    <!-- <div class="row mb-2 align-items-center">
                       <div class="col-md-9">
                         <select class="js-example-data-ajax" 
                         th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir}"
@@ -30,10 +49,11 @@
                       <div class="col-md-3 text-center">
                         
                       </div>
-                    </div>
-                  
+                    </div> -->
+                    
                     <div class="row" >
-                      <div class="col-md-9">
+                      <!-- <div class="col-md-5"></div> -->
+                      <div class="col-md-8">
                         <div class="bg-white py-2 px-2" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
                           <ul class="items-list" style="height: 25px; margin-bottom: 0px">
                             <li>
@@ -61,8 +81,16 @@
                         
                         <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
                           <div class="chart">
+                            <input type="hidden" th:field="*{id}"></input>
+                            <input type="hidden" th:field="*{dataVenda}"></input>
+                            <input type="hidden" th:field="*{subtotal}"></input>
+                            <input type="hidden" th:field="*{total}"></input>
+                            <input type="hidden" th:field="*{valorDesconto}"></input>
                             <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
-                              <th:block th:each="item : *{itemList}">
+                              <th:block th:each="item, rowStat : *{itemList}">
+                                  <input type="hidden" th:field="*{itemList[__${rowStat.index}__].produto}"></input>
+                                  <input type="hidden" th:field="*{itemList[__${rowStat.index}__].quantidade}"></input>
+                                  <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valor}"></input>
                                   <li class="item">
                                   <div class="row align-items-end">
                                    <div class="col-md-4 text-left">
@@ -94,37 +122,24 @@
                         </div>
                       </div>
                       
-                      <div class="col-md-3 align-self-end">
-                        <div class=" text-center">
-                          <div class="btn btn-info btn-flat btn-block py-2">
-                            <a data-toggle="modal" data-target="#modalEscolherCliente">
-                              <i class="fas fa-user fa-lg mr-2"></i>
-                              Selecionar usuário
-                            </a>
-                          </div>
-                        </div>
-                        <div class="row mt-2">
+                      <div class="col-md-4 align-items-start flex-column">
+                        <div class="row mb-auto">
                           <div class="col-md-12">
                             <div class=" text-right">
-                              <button type="submit" class="btn btn-primary btn-flat py-2 btn-block">
+                              <!-- <button type="submit" class="btn btn-primary btn-flat py-2 btn-block">
+                                <i class="fas fa-cart-plus mr-2"></i>
+                                Pagamento
+                              </button> -->
+                              <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+                               class="js-pagamento btn btn-primary btn-flat py-2 btn-block">
                                 <i class="fas fa-cart-plus mr-2"></i>
                                 Pagamento
                               </button>
                             </div>
                           </div>
                         </div>
-                        <div class="row mt-2">
-                          <div class="col-md-12">
-                            <div class=" text-right">
-                              <div class="btn btn-danger btn-flat btn-block py-2">
-                                <i class="fas fa-cart-arrow-down mr-2"></i> 
-                                Cancelar
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                         
-                        <div class="progress-group text-right">
+                        <div class="progress-group text-right mt-auto">
                           <h2><span class="text">Subtotal</span></h2>
                           <div class="bg-gray py-2 px-3 ">
                             <input type="hidden" th:field="*{subtotal}"></input>
@@ -185,7 +200,78 @@
             </div>
           </div>
         </section>
+        <div class="modal" id="modal-default">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Pagamento</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div layout:insert="~{mensagem_geral}"></div>
+                <div layout:insert="~{mensagem_erro}"></div>
+                <div class="row" >
+                  <div class="col-12">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <tr>
+                          <th class="lead mt-2" style="width:50%">Subtotal:</th>
+                          <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
+                        </tr>
+                        <tr>
+                          <th class="lead form-inline">
+                            Desconto
+                            <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
+                              th:attr="data-url-base-desconto=@{/caixa/desconto}">
+                              <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
+                            </select>
+                          </th>
+                          <td id="desconto-valor"><p class="mb-0" th:text="|R$ *{{valorDesconto}}|">R$ 0,00</p></td>
+                        </tr>
+                        <tr>
+                          <th class="lead">Total:</th>
+                          <td id="total"><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
+                        </tr>
+                        <tr>
+                          <th class="lead">Saldo:</th>
+                          <td>
+                            <div class="input-group input-group-lg">
+                              <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}" th:classappend="${#fields.hasErrors('saldo')} ? 'is-invalid'"></input>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                      <!-- <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalCancelamento">
+                          Cancelar
+                        </button>
+                        <button type="submit" id="finalizar" class="btn btn-md btn-success">
+                          <i class="far fa-credit-card"></i> 
+                          Finalizar
+                        </button>
+                      </div> -->
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Voltar</button>
+                <button type="submit" id="finalizar" class="btn btn-md btn-success">
+                  <i class="far fa-credit-card"></i> 
+                  Finalizar
+                </button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
       </form>
+    
     </div>
     
     <div class="modal" id="modalEscolherCliente">
@@ -629,6 +715,70 @@
 		});
 		
 	});
+	
+	$('#container').on('click', '.js-pagamento', function(event){
+		
+		var botao = $(event.currentTarget);
+		var url = botao.data('url-base');
+
+		var response = $.ajax({
+			url: url,
+			type: 'PUT'
+		});
+		
+		response.done(function(e){
+			$('#conteudo').replaceWith(e);
+  			$('#modal-default').modal('toggle');
+  		});
+		
+		response.fail(function(e){
+			alert('Erro ao executar pagamento');
+		});
+	});
+	
+	$('#container').on('change', '.js-desconto', function(event) {
+  		event.preventDefault();
+  		
+  		var seletor = $(event.currentTarget);
+		var url = seletor.data('url-base-desconto');
+		var opcao = seletor.find('option:selected');
+		var desconto = opcao[0].value;
+		
+		if(!url.endsWith('/')){
+			url += '/';
+		}
+		
+		url += desconto;
+		
+		var response = $.ajax({
+			url: url,
+			type: 'GET'
+		});
+  		
+  		response.done(function(e){
+  			$('#modal-default').modal('hide');
+  			$('#conteudo').replaceWith(e);
+  			$('#modal-default').modal('show');
+		});
+		
+		response.fail(function(e){
+			alert('Erro aplicando desconto');
+		});
+  	});
+  	
+  	$(document).ajaxComplete(function() {
+		$('.js-currency').maskMoney({decimal:',', 
+			thousands:'.', 
+			allowZero:'true',
+			formatOnBlur:false});
+	});
+	
+	/* $(document).ajaxComplete(function(event, xhr, settings) {
+		if() {
+			
+		}
+		$('.js-example-data-ajax').click();
+	}); */
   </script>
     
 </html>

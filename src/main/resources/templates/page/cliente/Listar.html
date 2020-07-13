@@ -41,6 +41,62 @@
     </div>
     <!-- /.modal -->
     
+    
+    <div class="modal fade" id="modalDetalhes">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Detalhes do Cliente</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-7">
+                <h2 class="lead"><b th:text="${cliente.nome}"></b></h2>
+                <!-- <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                  
+                <ul class="ml-4 mb-0 fa-ul text-muted">
+                  <li class="small">
+                    <span class="fa-li">
+                    <i class="fas fa-lg fa-at"></i></span> 
+                    <h6 class="mb-0">Email:</h6> 
+                    <h6 th:text="#{nao.informado}" th:if="${#strings.isEmpty(cliente.email)}"></h6>
+                    <h6 th:text="${cliente.email}" th:if="${!#strings.isEmpty(cliente.email)}"></h6>
+                  </li>
+                  <li class="small">
+                    <span class="fa-li"><i class="fas fa-lg fa-building"></i></span>
+                    <h6 class="mb-0">Endereço:</h6> 
+                    <h6 th:text="#{nao.informado}" th:if="${#strings.isEmpty(enderecoFormatado)}"></h6>
+                    <h6 th:text="${enderecoFormatado}" th:if="${!#strings.isEmpty(enderecoFormatado)}"></h6>
+                  </li>
+                  <li class="small">
+                    <span class="fa-li">
+                    <i class="fas fa-lg fa-phone"></i></span> 
+                    <h6 class="mb-0">Telefone:</h6> 
+                    <h6 th:text="#{nao.informado}" th:if="${#strings.isEmpty(cliente.telefone)}"></h6>
+                    <h6 th:text="${cliente.telefone}" th:if="${!#strings.isEmpty(cliente.telefone)}"></h6>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-5 text-center">
+                <img th:src="@{${imagem}}" alt="" class="img-fluid" style="height:160px"></img>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer float-right">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    
   </section>
   
   <div layout:fragment="titulo">
@@ -77,6 +133,7 @@
             <tr>
               <th class="text-center col-1">Código</th>
               <th>Nome</th>
+              <th class="text-center col-2">Telefone</th>
               <th class="text-center col-3">Email</th>
               <th class="text-center col-2">Ações</th>
             </tr>
@@ -85,13 +142,19 @@
             <tr th:each="cliente : ${clientes}">
               <td class="text-center" th:text="${cliente.id}"></td>
               <td th:text="${cliente.nome}"></td>
-              <td th:text="${cliente.email}"></td>
+              <td class="text-center" th:text="${cliente.telefone}"></td>
+              <td class="text-center" th:text="${cliente.email}"></td>
               <td class="text-center">
-                <a th:href="@{/clientes/{id}(id=${cliente.id})}" class="btn btn-link btn-sm"
+                <a th:attr="data-url-detalhes=@{/clientes/detalhes/{id}(id=${cliente.id})}" th:href="@{#}" 
+                  data-toggle="modal" data-target="#modalDetalhes" class="btn btn-sm btn-warning"
+                  title="Visualizar" rel="tooltip" data-placement="top">
+                  <i class="fas fa-eye"></i>
+                </a>
+                <a th:href="@{/clientes/{id}(id=${cliente.id})}" class="btn btn-sm btn-primary"
                   title="Editar" rel="tooltip" data-placement="top">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
-                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-sm btn-danger" 
                   th:href="@{#}" th:attr="data-id=${cliente.id}, data-descricao=${cliente.nome}"
                   title="Excluir" rel="tooltip" data-placement="top"><!--  -->
                   <i class="fas fa-trash"></i>
@@ -111,7 +174,7 @@
   <div layout:fragment="js-validator">
     <script id="validador">
       
-      $('#container').on('show.bs.modal', '#modalDetalhesCliente', function(event){
+      $('#container').on('show.bs.modal', '#modalDetalhes', function(event){
   		var botao = $(event.relatedTarget); // Button that triggered the modal
   		var url = botao.data('url-detalhes');
   		console.log(url);
@@ -122,11 +185,11 @@
 		  
     	response.done(function(e){
     		var modalDialog = $(e).find('.modal-dialog');
-    		$('#modalDetalhesCliente').html(modalDialog);
+    		$('#modalDetalhes').html(modalDialog);
     	});
     	  
     	response.fail(function(e){
-    		alert('Erro ao mostrar detalhes do cliente.');  
+    		alert('Erro ao carregar detalhes do cliente.');  
     	});
   		
   	});

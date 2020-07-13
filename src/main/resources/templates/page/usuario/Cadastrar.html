@@ -96,10 +96,12 @@
       </div> -->
       <div class="card-body">
         <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
+        <p class="text-muted">Os campos marcados com <b class="text-danger">*</b> são obrigatórios.</p>
         <div class="row">
+          
           <div class="col-md-4">
             <div class="form-group">
-              <label for="inputNome" class="col-form-label">Nome*</label>
+              <label for="inputNome" class="col-form-label">Nome</label><b class="text-danger">*</b>
               <input type="text" autofocus="autofocus" class="form-control" id="inputNome" th:field="*{nome}" th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'">
             </div>
             <div class="form-group">
@@ -113,21 +115,21 @@
                 <option th:each="status : ${statusUsuarioList}" th:value="${status}" th:text="${status.descricao}"></option>
               </select>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
               <p class="text-muted">Campo marcados com * são obrigatórios.</p>
-            </div> 
+            </div> --> 
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="inputLogin" class="col-form-label ">Login*</label>
+              <label for="inputLogin" class="col-form-label ">Login</label><b class="text-danger">*</b>
               <input type="text" class="form-control" id="inputLogin" th:field="*{login}" th:classappend="${#fields.hasErrors('login')} ? 'is-invalid'">     
             </div>
             <div class="form-group">
-              <label for="inputSenha" class="col-form-label">Senha*</label>
+              <label for="inputSenha" class="col-form-label">Senha</label><b class="text-danger">*</b>
               <input type="password" class="form-control" id="inputSenha" th:field="*{senha}" th:classappend="${#fields.hasErrors('senha')} ? 'is-invalid'">   
             </div>
             <div class="form-group">
-              <label for="inputGrupo" class="col-form-label">Grupo</label>
+              <label for="inputGrupo" class="col-form-label">Grupo</label><b class="text-danger">*</b>
               <select id="inputGrupo" class="form-control" th:field="*{grupo}" th:classappend="${#fields.hasErrors('grupo')} ? 'is-invalid'">
                 <option value="" selected th:text="#{selecione.grupo}"></option>
                 <option th:each="grupo : ${grupoList}" th:value="${grupo.id}" th:text="${grupo.nome}"></option>
@@ -136,40 +138,26 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-            <label class="col-form-label">Foto</label>
-            <div class="box-profile">
-              <div class="text-center mb-4">
-                <img id="foto" class="img-fluid" style="height:160px"
-                     th:src="@{${imagem}}"
-                     alt="User profile picture"></img><!-- class="profile-user-img img-fluid img-circle" -->
-              
-              </div>
-  
-              <div class="form-group">
-                <!-- <div class="btn btn-default btn-file">
-                  <i class="fas fa-image"></i> Clique para escolher uma imagem...
-                  <input id="foto" type="file" name="attachment">
+              <label class="col-form-label">Foto</label>
+              <div class="box-profile">
+                <div class="text-center mb-4">
+                  <img id="foto" class="img-fluid" style="height:160px"
+                       th:src="@{${imagem}}"
+                       alt="User profile picture"></img><!-- class="profile-user-img img-fluid img-circle" -->
                 </div>
-                <p class="help-block">Max. 32MB</p> -->
-                <div class="input-group">
-                  <div class="custom-file">
-                    <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
-                    <label class="custom-file-label" for="exampleInputFile">Clique para alterar a imagem...</label>
+    
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                      <label class="custom-file-label" for="exampleInputFile">Clique para alterar a imagem...</label>
+                    </div>
                   </div>
-                  <!-- <div class="input-group-append">
-                    <span class="input-group-text" id="">Upload</span>
-                  </div> -->
                 </div>
               </div>
             </div>
           </div>
-          </div>
         </div>
-        <!-- <div class="row">
-          <div class="col-md-12">
-            <p class="text-muted">Campo marcados com * são obrigatórios.</p>
-          </div>
-        </div> -->
       </div>
     </div>
     <!-- /.card -->

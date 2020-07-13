@@ -165,7 +165,7 @@ public class CaixaController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/pagamento", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/pagamento", method = RequestMethod.POST)
 	public ModelAndView iniciarPagamento(Venda venda, Errors  errors) {		
 				
 		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
@@ -179,7 +179,7 @@ public class CaixaController {
 		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
 		/*Passagem da lista de itens do objeto venda construído no servidor
 		para o recebido pelo POST do form, devido ao fato de não poder se obter
-		a lista de itens não persistidos (sem id) */ 
+		a lista de itens não persistidos (sem id)  
 		venda.setItemList(new ArrayList<Item>());
 		for(Item item : this.venda.getItemList()) {
 			venda.getItemList().add(item);
@@ -198,9 +198,26 @@ public class CaixaController {
 		
 		mv.addObject("venda", venda);
 		return mv;
+	}*/
+	
+	@RequestMapping(value = "/pagamento", method = RequestMethod.PUT)
+	public ModelAndView iniciarPagamento() {		
+		
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #conteudo");
+		
+		venda.setStatus(StatusVenda.ABERTA);
+		venda.setDesconto(OpcoesDesconto.ZERO);
+		venda.setValorDesconto(new BigDecimal(0.0));
+		venda.setTotal(venda.getSubtotal());
+		venda.setDataVenda(new Date());
+		venda.setSaldo(BigDecimal.ZERO);
+		venda = vendaService.salvar(venda);
+		
+		mv.addObject("venda", venda);
+		return mv;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)
+	/*@RequestMapping(method = RequestMethod.POST)
 	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
 		
 		if(venda.getSaldo()!=null) {
@@ -220,12 +237,52 @@ public class CaixaController {
 			attributes.addFlashAttribute("mensagem", "Venda concluída com sucesso!");
 			return "redirect:/caixa/venda/"+venda.getId();
 		}
+	}*/
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
+		
+		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
+			errors.rejectValue("subtotal", null, "Subtotal não pode ser 0");
+		}
+		
+		if(venda.getSaldo()!=null) {
+			if(venda.getSaldo().compareTo(venda.getTotal())==-1) {
+				errors.rejectValue("saldo", null, "Erro: Saldo insuficiente");
+			}
+		}
+		
+		if(errors.hasErrors()) {
+			return REGISTRADORA_VIEW;
+		} else {
+			venda.setStatus(StatusVenda.FINALIZADA);
+			BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
+			venda.setTroco(troco);
+			
+			venda = vendaService.salvar(venda);
+			attributes.addFlashAttribute("mensagem", "Venda concluída com sucesso!");
+			return "redirect:/caixa/venda/"+venda.getId();
+		}
 	}
 	
-	@RequestMapping(value = "{venda}/desconto/{desconto}")
+	/*@RequestMapping(value = "{venda}/desconto/{desconto}")
 	public ModelAndView aplicarDesconto(@PathVariable("venda") Venda venda, @PathVariable("desconto") OpcoesDesconto opcao) {		
 		
 		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW + " :: #conteudo");
+		venda.setDesconto(opcao);
+		BigDecimal valorDesconto = venda.getSubtotal().multiply(new BigDecimal(venda.getDesconto().getNumero())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		BigDecimal total = venda.getSubtotal().subtract(valorDesconto);
+		venda.setValorDesconto(valorDesconto);
+		venda.setTotal(total);
+
+		mv.addObject("venda", venda);
+		return mv;
+	}*/
+	
+	@RequestMapping(value = "/desconto/{desconto}")
+	public ModelAndView aplicarDesconto(@PathVariable("desconto") OpcoesDesconto opcao) {		
+		
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #conteudo");
 		venda.setDesconto(opcao);
 		BigDecimal valorDesconto = venda.getSubtotal().multiply(new BigDecimal(venda.getDesconto().getNumero())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		BigDecimal total = venda.getSubtotal().subtract(valorDesconto);

@@ -17,46 +17,44 @@ $('#modalConfirmacao').on('show.bs.modal', function(event){
 	
 });
 
-  $('[role="form"]').validate({
+$('[role="form"]').validate({
 	errorElement: 'span',
 	errorPlacement: function (error, element) {
-	  error.addClass('invalid-feedback');
-	  element.closest('.form-group').append(error);
+		error.addClass('invalid-feedback');
+		element.closest('.form-group').append(error);
 	},
 	highlight: function (element, errorClass, validClass) {
-	  $(element).addClass('is-invalid');
+		$(element).addClass('is-invalid');
 	},
 	unhighlight: function (element, errorClass, validClass) {
-	  $(element).removeClass('is-invalid');
+		$(element).removeClass('is-invalid');
 	}
-  });
+});
 
-	$.validator.addMethod('celular', function (value, element) {
-	    value = value.replace(/[_()-\s]/g, "");
-	    if (value == '0000000000') {
-	        return (this.optional(element) || false);
-	    } else if (value == '00000000000') {
-	        return (this.optional(element) || false);
-	    } 
-	    if (["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]
-	    .indexOf(value.substring(0, 2)) != -1) {
-	        return (this.optional(element) || false);
-	    }
-	    if (value.length < 11) {
-	        return (this.optional(element) || false);
-	    }
-	    if (["6", "7", "8", "9"].indexOf(value.substring(2, 3)) == -1) {
-	        return (this.optional(element) || false);
-	    }
-	    return (this.optional(element) || true);
-	}, 'Informe um número de telefone celular válido');
+$.validator.addMethod('celular', function (value, element) {
+    value = value.replace(/[_()-\s]/g, "");
+    if (value == '0000000000') {
+        return (this.optional(element) || false);
+    } else if (value == '00000000000') {
+        return (this.optional(element) || false);
+    } 
+    if (["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]
+    .indexOf(value.substring(0, 2)) != -1) {
+        return (this.optional(element) || false);
+    }
+    if (value.length < 11) {
+        return (this.optional(element) || false);
+    }
+    if (["6", "7", "8", "9"].indexOf(value.substring(2, 3)) == -1) {
+        return (this.optional(element) || false);
+    }
+    return (this.optional(element) || true);
+}, 'Informe um número de telefone celular válido');
 	
 	
-	$.validator.addMethod("customDate", function(value, element) {
-		return moment(value, 'DD/MM/YYYY', true).isValid();
-	},
-	"Por favor forneça uma data válida"
-	);
+$.validator.addMethod("customDate", function(value, element) {
+	return moment(value, 'DD/MM/YYYY', true).isValid();
+}, "Por favor forneça uma data válida");
 
 	
 $(function(){

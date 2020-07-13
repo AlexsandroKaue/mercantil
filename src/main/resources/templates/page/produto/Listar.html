@@ -50,7 +50,8 @@
           <thead>
             <tr>
               <th class="text-center col-1" th:text="#{listagem.produto.coluna.id}"></th>
-              <th th:text="#{listagem.produto.coluna.descricao}" ></th>
+              <th th:text="#{descricao}" ></th>
+              <th class="text-center col-2" th:text="#{marca}" ></th>
               <th class="text-center col-2" th:text="#{listagem.produto.coluna.categoria}"></th>
               <th class="text-center col-2" th:text="#{listagem.produto.coluna.acoes}">Ações</th>
             </tr>
@@ -59,6 +60,7 @@
             <tr th:each="produto : ${produtos}">
               <td class="text-center" th:text="${produto.codigo}"></td>
               <td th:text="${produto.descricao}"></td>
+              <td class="text-center" th:text="${produto.marca}"></td>
               <td class="text-center" th:text="${produto.categoria!=null?produto.categoria.descricao:null}">                    
               <td class="text-center">
                 <a th:href="@{/lotes?produtoId={id}(id=${produto.id})}" class="btn btn-link btn-sm"

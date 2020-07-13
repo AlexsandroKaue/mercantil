@@ -8,7 +8,7 @@
 </head>
 
   <section layout:fragment="container">
-    <form role="form" id="clienteForm" method="POST" 
+    <form role="form" id="clienteForm" enctype="multipart/form-data" method="POST" 
       th:action="@{/clientes}" th:object="${cliente}">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
       <header layout:insert="~{cabecalho}"></header>
@@ -36,8 +36,10 @@
       </div> -->
       <div class="card-body">
         <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
-        <div class="row">
-          <p class="text-muted">Campo marcados com * são obrigatórios.</p>
+        <p class="text-muted">Campo marcados com * são obrigatórios.</p>
+        
+        <div class="tab-custom-content">
+          <p class="lead mb-0">Dados Pessoais</p>
         </div>
         <div class="row">
           <div class="col-md-4">
@@ -49,6 +51,8 @@
               <label for="inputEmail" class="col-form-label">Email</label>
               <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
             </div>
+         </div>
+         <div class="col-md-4">
             <div class="form-group">
               <label for="inputTelefone" class="col-form-label">Telefone*</label>
               <input type="text" autofocus="autofocus" class="form-control" id="inputTelefone" th:field="*{telefone}" th:classappend="${#fields.hasErrors('telefone')} ? 'is-invalid'" 
@@ -59,8 +63,50 @@
               <input type="text" autofocus="autofocus" class="form-control" id="inputCpf" th:field="*{cpf}" th:classappend="${#fields.hasErrors('cpf')} ? 'is-invalid'"
               data-inputmask='"mask": "999.999.999-99"' data-mask>
             </div>
+            <div class="form-group">
+              <label for="inputDataNascimento" class="col-form-label">Data de Nascimento</label>
+              <input type="text" autocomplete="off" class="form-control js-date" name="datefilter" id="inputDataNascimento" th:field="*{dataNascimento}" th:classappend="${#fields.hasErrors('dataNascimento')} ? is-invalid">
+            </div>
           </div>
           <div class="col-md-4">
+            <div class="form-group">
+            <label class="col-form-label">Foto</label>
+            <div class="box-profile">
+              <div class="text-center mb-4">
+                <img id="foto" class="img-fluid" style="height:160px"
+                     th:src="@{${imagem}}"
+                     alt="User profile picture"></img><!-- class="profile-user-img img-fluid img-circle" -->
+              
+              </div>
+  
+              <div class="form-group">
+                <!-- <div class="btn btn-default btn-file">
+                  <i class="fas fa-image"></i> Clique para escolher uma imagem...
+                  <input id="foto" type="file" name="attachment">
+                </div>
+                <p class="help-block">Max. 32MB</p> -->
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                    <label class="custom-file-label" for="exampleInputFile">Clique para alterar a imagem...</label>
+                  </div>
+                  <!-- <div class="input-group-append">
+                    <span class="input-group-text" id="">Upload</span>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          </div>
+          
+          <div class="tab-custom-content">
+            <p class="lead mb-0">Endereço</p>
+          </div>
+          
+          <div class="row">
+          <div class="col-md-4">
+            
             <div class="form-group">
               <label for="inputLogradouro" class="col-form-label">Logradouro</label>
               <input type="text" class="form-control" id="inputLogradouro" th:field="*{endereco.logradouro}" th:classappend="${#fields.hasErrors('endereco.logradouro')} ? 'is-invalid'">
@@ -70,17 +116,18 @@
               <label for="inputNumero" class="col-form-label">Número</label>
               <input type="text" class="form-control" id="inputNumero" th:field="*{endereco.numero}" th:classappend="${#fields.hasErrors('endereco.numero')} ? 'is-invalid'">
             </div>
-          
+          </div>
+          <div class="col-md-4">
             <div class="form-group">
               <label for="inputBairro" class="col-form-label">Bairro</label>
               <input type="text" class="form-control" id="inputBairro" th:field="*{endereco.bairro}" th:classappend="${#fields.hasErrors('endereco.bairro')} ? 'is-invalid'">
             </div>
-          </div>
-          <div class="col-md-4">
             <div class="form-group">
               <label for="inputCep" class="col-form-label">Cep</label>
               <input type="text" class="form-control" id="inputCep" th:field="*{endereco.cep}" th:classappend="${#fields.hasErrors('endereco.cep')} ? 'is-invalid'" data-inputmask='"mask": "99999-999"' data-mask>
             </div>
+            </div>
+            <div class="col-md-4">
             <div class="form-group">
               <label for="inputCidade" class="col-form-label">Cidade</label>
               <input type="text" class="form-control" id="inputCidade" th:field="*{endereco.cidade}" th:classappend="${#fields.hasErrors('endereco.cidade')} ? 'is-invalid'">
@@ -102,8 +149,8 @@
   <div layout:fragment="js-validator">
     <script id="validador">
       $('#inputNome').rules('add', {
-        required: true,
-        maxlength: 100,
+      	required: true,
+      	maxlength: 100,
         messages: { 
         	maxlength: "O  campo nome não pode conter mais de 100 caracteres",
             required: "Por favor, digite um nome para o usuário"
@@ -118,13 +165,19 @@
         }
       });
       $('#inputTelefone').rules('add', {
-          celular: true,
-          required: true,
-          messages: { 
-              celular: "Por favor digite um telefone válido",
-              required: "Por favor, digite o telefone"
-          }
-        });
+      	celular: true,
+        required: true,
+        messages: { 
+          celular: "Por favor digite um telefone válido",
+          required: "Por favor, digite o telefone"
+        }
+      });
+      $('#inputDataNascimento').rules('add', {
+        customDate: true,
+        messages: { 
+          customDate: "Por favor digite uma data válida"
+        }
+      });
       
       
       function readURL(input) {
@@ -142,6 +195,7 @@
   	$("#exampleInputFile").change(function() {
   	  readURL(this);
   	});
+    
       
   	</script>
   </div>
