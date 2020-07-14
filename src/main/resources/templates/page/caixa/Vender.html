@@ -123,13 +123,13 @@
                       </div>
                       
                       <div class="col-md-4 align-items-start flex-column">
-                        <div class="row mb-auto">
+                        <!-- <div class="row mb-auto">
                           <div class="col-md-12">
                             <div class=" text-right">
-                              <!-- <button type="submit" class="btn btn-primary btn-flat py-2 btn-block">
+                              <button type="submit" class="btn btn-primary btn-flat py-2 btn-block">
                                 <i class="fas fa-cart-plus mr-2"></i>
                                 Pagamento
-                              </button> -->
+                              </button>
                               <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
                                class="js-pagamento btn btn-primary btn-flat py-2 btn-block">
                                 <i class="fas fa-cart-plus mr-2"></i>
@@ -137,9 +137,9 @@
                               </button>
                             </div>
                           </div>
-                        </div>
+                        </div> -->
                         
-                        <div class="progress-group text-right mt-auto">
+                        <!-- <div class="progress-group text-right mt-auto">
                           <h2><span class="text">Subtotal</span></h2>
                           <div class="bg-gray py-2 px-3 ">
                             <input type="hidden" th:field="*{subtotal}"></input>
@@ -149,38 +149,87 @@
                             </h2>
                           </div>
                        </div>
-                       <!-- /.progress-group -->
+                       /.progress-group -->
+                       
+                        
+                        <div class="row" >
+                          
+                          <div class="col-12">
+                          <div layout:insert="~{mensagem_geral}"></div>
+                          <div layout:insert="~{mensagem_erro}"></div>
+                            <div class="table-responsive">
+                              <table class="table">
+                                <tr>
+                                  <th class="lead mt-2" style="width:50%">Subtotal:</th>
+                                  <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
+                                </tr>
+                                <tr>
+                                  <th class="lead form-inline">
+                                    Desconto
+                                    <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
+                                      th:attr="data-url-base-desconto=@{/caixa/desconto}">
+                                      <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
+                                    </select>
+                                  </th>
+                                  <td id="desconto-valor"><p class="mb-0" th:text="|R$ *{{valorDesconto}}|">R$ 0,00</p></td>
+                                </tr>
+                                <tr>
+                                  <th class="lead">Total:</th>
+                                  <td id="total"><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
+                                </tr>
+                                <tr>
+                                  <th class="lead">Saldo:</th>
+                                  <td>
+                                    <div class="input-group input-group-lg">
+                                      <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}" th:classappend="${#fields.hasErrors('saldo')} ? 'is-invalid'"></input>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                              <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalCancelamento">
+                                  Cancelar
+                                </button>
+                                <button type="submit" id="finalizar" class="btn btn-md btn-success">
+                                  <i class="far fa-credit-card"></i> 
+                                  Finalizar
+                                </button>
+                              </div>
+                              
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                   <!-- /.row -->
-                  <div class="card-footer py-0">
+                  <!-- <div class="card-footer py-0">
                     <div class="row">
                       <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
-                          <!-- <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span> -->
+                          <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span>
                           <h5 class="description-header">Cliente</h5>
                           <span class="description-text">Fernanda Araújo</span>
                         </div>
-                        <!-- /.description-block -->
+                        /.description-block
                       </div>
-                      <!-- /.col -->
+                      /.col
                       <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
-                          <!-- <span class="description-p0ercentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
-                          <h5 class="description-header">$10,390.90</h5> -->
+                          <span class="description-p0ercentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
+                          <h5 class="description-header">$10,390.90</h5>
                         </div>
-                        <!-- /.description-block -->
+                        /.description-block
                       </div>
-                      <!-- /.col -->
+                      /.col
                       <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
-                          <!-- <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
-                          <h5 class="description-header">$24,813.53</h5> -->
+                          <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
+                          <h5 class="description-header">$24,813.53</h5>
                         </div>
-                        <!-- /.description-block -->
+                        /.description-block
                       </div>
-                      <!-- /.col -->
+                      /.col
                       <div class="col-sm-3 col-6">
                         <div class="description-block">
                           <h5 class="description-header">Status</h5>
@@ -189,11 +238,11 @@
                             Registrando
                           </span>
                         </div>
-                        <!-- /.description-block -->
+                        /.description-block
                       </div>
                     </div>
-                    <!-- /.row -->
-                  </div>
+                    /.row
+                  </div> -->
                 </div>
                 <!-- /.card -->
               </div>
@@ -623,22 +672,24 @@
   	    "<div class='select2-result-repository clearfix'>" +
   	      "<div class='select2-result-repository__avatar'><img src='/custom/img/sem-imagem_3.png'/></div>" +
   	      "<div class='select2-result-repository__meta'>" +
-  	      	"<div class='select2-result-repository__description'></div>" +
+  	      	"<div class='select2-result-repository__description' id='codigo'></div>" +
   	        "<div class='select2-result-repository__title'></div>" +
+  	      	"<div class='select2-result-repository__description' id='categoria'><i class='fa fa-flash'></i> </div>" +
   	        /* "<div class='select2-result-repository__statistics'>" +
-  	          "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> </div>" +
-  	          "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
-  	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +
-  	        "</div>" + */
+  	      		"<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> </div>" +
+  	    		"<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
+  	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +	
+  	        "</div>" +  */
   	      "</div>" +
   	    "</div>"
   	  );
 
-  	  $container.find(".select2-result-repository__description").text(repo.codigo);
+  	  $container.find(".select2-result-repository__description#codigo").text(repo.codigo);
   	  $container.find(".select2-result-repository__title").text(repo.descricao);
-  	  /* $container.find(".select2-result-repository__forks").append(123 + " Forks");
+  	  $container.find(".select2-result-repository__description#categoria").text(repo.categoria.descricao);
+  	  /* $container.find(".select2-result-repository__forks").append(123 + " Forks"); */
   	  $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
-  	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers"); */
+  	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers");
 
   	  return $container;
   	}
@@ -707,7 +758,8 @@
 		
 		response.done(function(e){
 			$('#modalConfirmarRemocaoItem').modal('hide');
-			$('#conteudo').html(e);
+			$('#conteudo').replaceWith(e);
+			$('.js-example-data-ajax').click();
 		});
 		
 		response.fail(function(e){
@@ -756,9 +808,10 @@
 		});
   		
   		response.done(function(e){
-  			$('#modal-default').modal('hide');
+  			//$('#modal-default').modal('hide');
   			$('#conteudo').replaceWith(e);
-  			$('#modal-default').modal('show');
+  			$('.js-example-data-ajax').click();
+  			//$('#modal-default').modal('show');
 		});
 		
 		response.fail(function(e){
@@ -772,6 +825,12 @@
 			allowZero:'true',
 			formatOnBlur:false});
 	});
+  	
+  	/* $('#container').on('scroll', '#listaDeItens', function(){
+  	    scrolled=true;
+  	}); */
+  	var element = document.getElementById("listaDeItens");
+  	element.scrollTop = element.scrollHeight;
 	
 	/* $(document).ajaxComplete(function(event, xhr, settings) {
 		if() {

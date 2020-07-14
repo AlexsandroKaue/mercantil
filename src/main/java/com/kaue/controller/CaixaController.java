@@ -73,13 +73,28 @@ public class CaixaController {
 		
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW);
 		
+		inicializarVenda();
+		
 		venda.setItemList(new ArrayList<Item>());
 		venda.setDesconto(OpcoesDesconto.ZERO); 
 		venda.setSubtotal(new BigDecimal(0.0));
+		venda.setValorDesconto(new BigDecimal(0.0));
+		venda.setTotal(venda.getSubtotal());
 		
 		mv.addObject("venda", venda);
 		
 		return mv;
+	}
+	
+	private void inicializarVenda() {
+		venda.setStatus(StatusVenda.ABERTA);
+		venda.setItemList(new ArrayList<Item>());
+		venda.setDesconto(OpcoesDesconto.ZERO);
+		venda.setValorDesconto(new BigDecimal(0.0));
+		venda.setSubtotal(new BigDecimal(0.0));
+		venda.setTotal(venda.getSubtotal());
+		venda.setSaldo(BigDecimal.ZERO);
+		venda.setDataVenda(new Date());
 	}
 	
 	@RequestMapping(value = "/incluir/{codigo}")
@@ -119,6 +134,9 @@ public class CaixaController {
 				subtotal = subtotal.add(it.getValor().multiply(new BigDecimal(it.getQuantidade())));
 			}
 			venda.setSubtotal(subtotal);
+			venda.setTotal(venda.getSubtotal());
+			venda.setDesconto(OpcoesDesconto.ZERO);
+			venda.setValorDesconto(new BigDecimal(0.0));
 		}
 
 		mv.addObject("venda", venda);
@@ -150,6 +168,9 @@ public class CaixaController {
 			subtotal = subtotal.add(it.getValor().multiply(new BigDecimal(it.getQuantidade())));
 		}
 		venda.setSubtotal(subtotal);
+		venda.setTotal(venda.getSubtotal());
+		venda.setDesconto(OpcoesDesconto.ZERO);
+		venda.setValorDesconto(new BigDecimal(0.0));
 		
 		mv.addObject("venda", venda);
 		mv.addObject("item", item);
@@ -242,8 +263,9 @@ public class CaixaController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
 		
+		venda.setDataVenda(new Date());
 		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
-			errors.rejectValue("subtotal", null, "Subtotal não pode ser 0");
+			errors.rejectValue("subtotal", null, "Erro: Subtotal não pode ser 0,00");
 		}
 		
 		if(venda.getSaldo()!=null) {
