@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
   
-  <div class="alert alert-danger js-fade mb-2" role="alert" th:if="${#fields.hasAnyErrors()}" th:fragment="alert">
+  <div class="alert alert-danger mb-2" role="alert" th:if="${#fields.hasAnyErrors()}" th:fragment="alert">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <div th:each="detailedError : ${#fields.detailedErrors()}">
       <i class="icon fas fa-exclamation-triangle"></i>

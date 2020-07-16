@@ -12,11 +12,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,11 +36,13 @@ import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.enumeration.OpcoesDesconto;
 import com.kaue.enumeration.StatusVenda;
 import com.kaue.model.Categoria;
+import com.kaue.model.Registro;
 import com.kaue.model.Fornecedor;
 import com.kaue.model.Item;
 import com.kaue.model.Produto;
 import com.kaue.model.Venda;
 import com.kaue.service.ProdutoService;
+import com.kaue.service.RelatorioService;
 import com.kaue.service.VendaService;
 
 @Controller
@@ -51,22 +57,28 @@ public class CaixaController {
 	ResourceLoader resourceLoader;
 	
 	@Autowired
+	ServletContext servletContext;
+	
+	@Autowired
 	private VendaService vendaService;
 	
 	@Autowired
 	private ProdutoService produtoService;
+	
+	@Autowired
+	private RelatorioService relatorioService;
 	
 	private Venda venda;
 	
 	@RequestMapping
 	public ModelAndView showRegistradora() {
 		venda = new Venda();
-		Resource resource = resourceLoader.getResource("classpath:cupom.txt");
+		Resource resource = resourceLoader.getResource("classpath:registro.txt");
 		File file = null;
-		String cupom = null;
+		String registro = null;
 		try {
 			file = resource.getFile();
-			cupom = new String(Files.readAllBytes(file.toPath()));
+			registro = new String(Files.readAllBytes(file.toPath()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -182,6 +194,7 @@ public class CaixaController {
 	@RequestMapping(value = "/venda/{id}")
 	public ModelAndView detalhesVenda(@PathVariable("id") Venda venda) {
 		ModelAndView mv = new ModelAndView(RECIBO_VIEW);
+		gerarRelatorio(venda.getItemList());
 		mv.addObject("venda", venda);
 		return mv;
 	}
@@ -359,6 +372,48 @@ public class CaixaController {
 		model.addAttribute("emptySearchError", false);
 		model.addAttribute("inclusaoVaziaErro", false);
 	}
+	
+	public void gerarRelatorio(List<Item> itemList) {
+		try {
+			List<Registro> registroList = new ArrayList<Registro>();
+			Registro registro = null;
+			for(Item item : itemList) {
+				registro = new Registro();
+				registro.setCodigo(item.getProduto().getCodigo());
+				registro.setDescricao(item.getProduto().getDescricao());
+				registro.setQuantidade(Integer.toString(item.getQuantidade()));
+				registroList.add(registro);
+			}
+			
+			String nomeArquivo = "cupom";
+			String formatoSaida = "pdf";
+			String origem = getRealPath(new File("resources/jrxml/" + nomeArquivo + ".jrxml").getPath());
+			String destino = getRealPath(new File("resources/jrxml/" + nomeArquivo+ "." + formatoSaida).getPath());
+
+			try {
+				Resource resourceOrigem = resourceLoader.getResource("classpath:static/jrxml/cupom.jrxml");
+				File file = resourceOrigem.getFile();
+				String origem = file.getAbsolutePath();
+				String destino = new File(ResourceUtils.getFile("classpath:static/jrxml").getAbsolutePath()+"")
+				relatorioService.gerarRelatorioEmPdf(registroList, null, origem, destino);
+				setRelatorioPdf(new DefaultStreamedContent(new FileInputStream(destino), formatoSaida, nomeArquivo+"."+formatoSaida));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String getRealPath(final String caminho) {
+		final String requestContextPath = servletContext.getRealPath("/");
+		final String path = requestContextPath + caminho;
+		return path;
+	}
+	
+	
 	
 	
 }
