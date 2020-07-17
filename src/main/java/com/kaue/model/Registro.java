@@ -4,6 +4,7 @@ public class Registro {
 	private String codigo;
 	private String descricao;
 	private String quantidade;
+	private String valorUnitario;
 	
 	public String getCodigo() {
 		return codigo;
@@ -22,6 +23,12 @@ public class Registro {
 	}
 	public void setQuantidade(String quantidade) {
 		this.quantidade = quantidade;
+	}
+	public String getValorUnitario() {
+		return valorUnitario;
+	}
+	public void setValorUnitario(String valorUnitario) {
+		this.valorUnitario = valorUnitario;
 	}
 	
 }

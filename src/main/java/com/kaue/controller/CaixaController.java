@@ -73,15 +73,6 @@ public class CaixaController {
 	@RequestMapping
 	public ModelAndView showRegistradora() {
 		venda = new Venda();
-		Resource resource = resourceLoader.getResource("classpath:registro.txt");
-		File file = null;
-		String registro = null;
-		try {
-			file = resource.getFile();
-			registro = new String(Files.readAllBytes(file.toPath()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW);
 		
@@ -134,10 +125,10 @@ public class CaixaController {
 					item = new Item();
 					item.setProduto(produto);
 					item.setValor(produto.getValorDeVenda());
-					item.setVenda(venda);
 					item.setQuantidade(1);
 					
 					venda.getItemList().add(item);
+					item.setVenda(venda);
 				}
 			}
 			
@@ -171,6 +162,7 @@ public class CaixaController {
 					item.setQuantidade(item.getQuantidade()-1);
 				} else {
 					itemIterator.remove();
+					item.setVenda(null);
 				}
 			}
 		}
@@ -194,7 +186,8 @@ public class CaixaController {
 	@RequestMapping(value = "/venda/{id}")
 	public ModelAndView detalhesVenda(@PathVariable("id") Venda venda) {
 		ModelAndView mv = new ModelAndView(RECIBO_VIEW);
-		gerarRelatorio(venda.getItemList());
+		List<Item> itemList = new ArrayList<Item>(venda.getItemList());
+		gerarRelatorio(itemList);
 		mv.addObject("venda", venda);
 		return mv;
 	}
@@ -276,7 +269,7 @@ public class CaixaController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
 		
-		venda.setDataVenda(new Date());
+		
 		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
 			errors.rejectValue("subtotal", null, "Erro: Subtotal não pode ser 0,00");
 		}
@@ -286,7 +279,10 @@ public class CaixaController {
 				errors.rejectValue("saldo", null, "Erro: Saldo insuficiente");
 			}
 		}
-		
+		venda.setDataVenda(new Date());
+		for(Item item : venda.getItemList()) { 
+			item.setVenda(venda);
+		}
 		if(errors.hasErrors()) {
 			return REGISTRADORA_VIEW;
 		} else {
@@ -380,29 +376,23 @@ public class CaixaController {
 			for(Item item : itemList) {
 				registro = new Registro();
 				registro.setCodigo(item.getProduto().getCodigo());
-				registro.setDescricao(item.getProduto().getDescricao());
+				registro.setDescricao(item.getProduto().getDescricao().toUpperCase());
 				registro.setQuantidade(Integer.toString(item.getQuantidade()));
+				registro.setValorUnitario(item.getValor().toString());
 				registroList.add(registro);
 			}
 			
-			String nomeArquivo = "cupom";
-			String formatoSaida = "pdf";
-			String origem = getRealPath(new File("resources/jrxml/" + nomeArquivo + ".jrxml").getPath());
-			String destino = getRealPath(new File("resources/jrxml/" + nomeArquivo+ "." + formatoSaida).getPath());
-
-			try {
-				Resource resourceOrigem = resourceLoader.getResource("classpath:static/jrxml/cupom.jrxml");
-				File file = resourceOrigem.getFile();
-				String origem = file.getAbsolutePath();
-				String destino = new File(ResourceUtils.getFile("classpath:static/jrxml").getAbsolutePath()+"")
-				relatorioService.gerarRelatorioEmPdf(registroList, null, origem, destino);
-				setRelatorioPdf(new DefaultStreamedContent(new FileInputStream(destino), formatoSaida, nomeArquivo+"."+formatoSaida));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			System.out.println(ResourceUtils.getFile("classpath:jrxml").getAbsolutePath());
+			System.out.println(ResourceUtils.getFile("classpath:jrxml").getPath());
+			System.out.println(ResourceUtils.getFile("classpath:jrxml").getCanonicalPath());
+			System.out.println(new File("jrxml").getPath());
+			String path = ResourceUtils.getFile("classpath:jrxml").getAbsolutePath();
+			String origem = path + "/cupom.jrxml";
+			String destino = path + "/cupom.pdf";
+			relatorioService.gerarRelatorioEmPdf(registroList, null, origem, destino);
+			
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

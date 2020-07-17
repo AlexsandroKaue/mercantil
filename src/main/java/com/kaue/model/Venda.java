@@ -65,7 +65,7 @@ public class Venda {
 	@Enumerated(EnumType.STRING)
 	private StatusVenda status;
 	
-	@OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<Item> itemList;
 
 	public Long getId() {

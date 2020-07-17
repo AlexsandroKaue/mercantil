@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.13.0.final using JasperReports Library version 6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="226" pageHeight="842" columnWidth="206" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="88b84082-70fc-4cd1-b9ee-2c7952c550be">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="codigo" class="java.lang.String"/>
+	<field name="descricao" class="java.lang.String"/>
+	<field name="quantidade" class="java.lang.String"/>
+	<field name="valorUnitario" class="java.lang.String"/>
+	<columnHeader>
+		<band height="10">
+			<staticText>
+				<reportElement x="0" y="0" width="206" height="10" uuid="11a1ccd2-6542-47e6-a514-4b4878ddbed3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+					<topPen lineWidth="0.5" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="5.4"/>
+				</textElement>
+				<text><![CDATA[ # | COD | DESC | QTD |UN| VL UN R$ | (VL TR R$) * | VL ITEM R$]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="206" height="8" uuid="81b10d4f-8581-494e-9160-129b6c26a078">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="5.4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["00"+$V{PAGE_NUMBER}+" "+$F{codigo}+" "+$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="8" width="206" height="8" uuid="c50bfc3d-6bd3-4e5c-a696-135243df8ad4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="5.4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["       "+$F{quantidade}+",000 Un x         "+$F{valorUnitario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
