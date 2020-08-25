@@ -28,11 +28,15 @@ public class Item {
 	
 	@ManyToOne
 	private Venda venda;
-	
-	private Integer quantidade;
+		
+	@NumberFormat(pattern = "#,###0.000")
+	private BigDecimal quantidade;
 	
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valor;
+	
+	@NumberFormat(pattern = "#,##0.00")
+	private BigDecimal valorTotal;
 
 	public Long getId() {
 		return id;
@@ -83,19 +87,27 @@ public class Item {
 		return true;
 	}
 
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
-
 	public BigDecimal getValor() {
 		return valor;
 	}
 
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
+	}
+
+	public BigDecimal getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(BigDecimal quantidade) {
+		this.quantidade = quantidade;
+	}
+
+	public BigDecimal getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(BigDecimal valorTotal) {
+		this.valorTotal = valorTotal;
 	}
 }

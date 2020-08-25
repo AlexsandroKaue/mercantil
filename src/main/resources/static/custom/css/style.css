@@ -129,6 +129,10 @@
  color:#c6dcef
 }
 
+.select2-results__option.select2-results__message:empty {
+    display: none;
+}
+
 
 
 

@@ -5,6 +5,7 @@ public class Registro {
 	private String descricao;
 	private String quantidade;
 	private String valorUnitario;
+	private String valorItem;
 	
 	public String getCodigo() {
 		return codigo;
@@ -30,5 +31,12 @@ public class Registro {
 	public void setValorUnitario(String valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
+	public String getValorItem() {
+		return valorItem;
+	}
+	public void setValorItem(String valorItem) {
+		this.valorItem = valorItem;
+	}
+	
 	
 }

@@ -5,6 +5,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -28,6 +33,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kaue.dao.filter.CategoriaFilter;
 import com.kaue.dao.filter.FornecedorFilter;
 import com.kaue.dao.filter.ProdutoFilter;
+import com.kaue.enumeration.StatusTitulo;
+import com.kaue.enumeration.Unitario;
 import com.kaue.model.Categoria;
 import com.kaue.model.Fornecedor;
 import com.kaue.model.Lote;
@@ -65,6 +72,7 @@ public class ProdutoController {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		Produto produto = new Produto();
 		produto.setQuantidade(0);
+		produto.setImagemBase64(buscarImagemPadrao());
 		mv.addObject("produto", produto);
 		return mv;
 	}
@@ -72,9 +80,16 @@ public class ProdutoController {
 	@RequestMapping("{id}")
 	public ModelAndView showFormEditar(@PathVariable("id") Produto produto) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
-		File foto = buscarImagemDoProduto("produto_"+produto.getCodigo());
-		if(foto!=null) {
-			mv.addObject("imagem", foto.getPath());
+		byte[] bytes = produto.getImagem();
+		if(bytes != null) {
+			try {
+				String encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+				produto.setImagemBase64(encodedfile);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		} else {
+			produto.setImagemBase64(buscarImagemPadrao());
 		}
 		mv.addObject("produto", produto);
 		return mv;
@@ -108,21 +123,19 @@ public class ProdutoController {
 				url = "redirect:/produtos/"+produto.getId();
 			}
 			
-			produto = produtoService.salvar(produto);
 			
 			boolean hasFileUploaded = !multipartFile.isEmpty();
 			if(hasFileUploaded) {
-				boolean ok = false;
-				InputStream is = null;
+				byte[] bytes = null;
 				try {
-					is = multipartFile.getInputStream();
-					ok = salvarImagemDoProduto(is, "produto_"+produto.getCodigo());
-				} catch (IOException e) {}
-				
-				if(!ok) {
+					bytes = multipartFile.getBytes();
+					produto.setImagem(bytes);
+				} catch (IOException e) {
 					attributes.addFlashAttribute("aviso", "Não foi possível salvar a imagem");
 				}
 			}
+			
+			produto = produtoService.salvar(produto);
 			return url;
 		} catch(DataIntegrityViolationException e) {
 			errors.rejectValue("dataDeVencimento", null, e.getMessage());
@@ -168,29 +181,26 @@ public class ProdutoController {
 		return fornecedorList;
 	}
 	
-	private boolean salvarImagemDoProduto(InputStream is, String name) {
-		try {
-			BufferedImage bufferedImage = ImageIO.read(is);
-			if(bufferedImage!=null) {
-				File file = ResourceUtils.getFile("classpath:static/custom/img/produto");
-				file = new File(file.getAbsolutePath()+"/"+name);
-				ImageIO.write(bufferedImage, "png", file);
-			} else {
-				return false;
-			}
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
+	@ModelAttribute
+	public List<Unitario> todosUnitarios(){
+		return Arrays.asList(Unitario.values());
 	}
 	
-	private File buscarImagemDoProduto(String name) {
-		File file = null;
-		try {
-			ResourceUtils.getFile("classpath:static/custom/img/produto/"+name);
-			file = new File("/custom/img/produto/"+name);
-		} catch (FileNotFoundException e) {}
+	private String buscarImagemPadrao() {
 		
-		return file;
+		String base64 = null;
+		try {
+			File file = ResourceUtils.getFile("classpath:static/custom/img/produto/sem-imagem_2.jpg");
+			Path path = file.toPath();
+			byte[] bytes = Files.readAllBytes(path);
+			
+			base64 = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return base64;
 	}
 }

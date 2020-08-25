@@ -10,9 +10,6 @@
   <section layout:fragment="container" th:fragment="container" id="containerSection" class="disabled">
     
     <div id="conteudo">
-      <section>
-      
-      </section>
     
       <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa}" th:object="${venda}">
         
@@ -20,10 +17,11 @@
     
           <div class="container-fluid">
             <div class="row mb-2" layout:fragment="cabecalho">
-              <div class="col-sm-12 m-0">
-                <select class="js-example-data-ajax" 
-                        th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir}"
-                        style="width: 100%;"></select>
+              <div class="col-sm-7 m-0">
+                <select class="js-buscar-produto" 
+                        th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir},
+                        data-url-selecionar-balanca=@{/caixa/balanca}"
+                        style="width: 100%;"></select><!-- class="js-example-data-ajax" -->
               </div>
             </div>
             <!-- /.row -->
@@ -33,224 +31,157 @@
         <!-- <div class="pt-2"></div> -->
         <section class="content">
           <div class="container-fluid">
-            <!-- <div layout:insert="~{mensagem_geral}"></div>
-            <div layout:insert="~{mensagem_erro}"></div> -->
             <div class="row">
-              <div class="col-md-12">
+              <!-- <div class="row" > -->
+              <!-- <div class="col-md-5"></div> -->
+              <div class="col-md-7">
+                <div class="bg-white py-2 px-2" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
+                  <ul class="items-list" style="height: 25px; margin-bottom: 0px">
+                    <li>
+                      <div class="row">
+                        <div class="col-md-4 text-left">
+                          <h5 class="lead mb-0">
+                            <b>Produto</b>
+                          </h5>
+                        </div>
+                        <div class="col-md-4 text-center">
+                          <h5 class="lead mb-0">
+                            <b>Quantidade x Preço Unitário</b>
+                          </h5>
+                        </div>
+                        <div class="col-md-3 text-right">
+                          <h5 class="lead mb-0">
+                            <b>Preço Total</b>
+                          </h5>
+                        </div>
+                        <div class="col-md-1"></div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
+                  <div class="chart">
+                    <input type="hidden" th:field="*{id}"></input>
+                    <input type="hidden" th:field="*{dataVenda}"></input>
+                    <input type="hidden" th:field="*{subtotal}"></input>
+                    <input type="hidden" th:field="*{total}"></input>
+                    <input type="hidden" th:field="*{valorDesconto}"></input>
+                    <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
+                      
+                      <th:block th:each="item, rowStat : *{itemList}">
+                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].produto}"></input>
+                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].quantidade}"></input>
+                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valor}"></input>
+                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].venda}"></input>
+                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valorTotal}"></input>
+                          <li class="item">
+                          <div class="row align-items-end">
+                           <div class="col-md-4 text-left">
+                            <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
+                            <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>  
+                           </div>
+                          <div class="col-md-4 text-center">
+                             <h6 id="quantidade" th:text="|${{item.quantidade}}${item.produto.unitario} x ${{item.valor}}|"></h6>
+                          </div>
+                          <div class="col-md-3 text-right">
+                             <h5 th:text="|R$ ${{item.valorTotal}}|"></h5>
+                          </div>
+                          <div class="col-md-1 text-center">
+                            <h6>
+                             <a data-toggle="modal" data-target="#modalConfirmarRemocaoItem" class="text-muted btn-sm"
+                              th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao}"
+                              title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                              <i class="fas fa-trash"></i>
+                            </a>
+                            </h6>
+                          </div>
+                          </div>
+                        </li>
+                        <li class="linha border-bottom">
+                        </li>
+                      </th:block>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- <div class="col-md-4 align-items-start flex-column"> -->
+                <!-- <div class="row mb-auto">
+                  <div class="col-md-12">
+                    <div class=" text-right">
+                      <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+                       class="js-pagamento btn btn-primary btn-flat py-2 btn-block">
+                        <i class="fas fa-cart-plus mr-2"></i>
+                        Pagamento
+                      </button>
+                    </div>
+                  </div>
+                </div> -->
+              <!-- </div> -->
+            <!-- </div> -->
+            
+              <div class="col-md-5">
                 <div class="card card-default">
                   <!-- <div class="card-header"></div> -->
                   <div class="card-body">
-                    <!-- <div class="row mb-2 align-items-center">
-                      <div class="col-md-9">
-                        <select class="js-example-data-ajax" 
-                        th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir}"
-                        style="width: 100%;"></select>
-                      </div>
-                      <div class="col-md-3 text-center">
-                        
-                      </div>
-                    </div> -->
-                    
-                    <div class="row" >
-                      <!-- <div class="col-md-5"></div> -->
-                      <div class="col-md-8">
-                        <div class="bg-white py-2 px-2" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
-                          <ul class="items-list" style="height: 25px; margin-bottom: 0px">
-                            <li>
-                              <div class="row">
-                                <div class="col-md-4 text-left">
-                                  <h5 class="lead mb-0">
-                                    Descrição
-                                  </h5>
-                                </div>
-                                <div class="col-md-4 text-center">
-                                  <h5 class="lead mb-0">
-                                    Quantidade x Preço Unitário
-                                  </h5>
-                                </div>
-                                <div class="col-md-3 text-right">
-                                  <h5 class="lead mb-0">
-                                    Preço Total
-                                  </h5>
-                                </div>
-                                <div class="col-md-1"></div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                        
-                        <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
-                          <div class="chart">
-                            <input type="hidden" th:field="*{id}"></input>
-                            <input type="hidden" th:field="*{dataVenda}"></input>
-                            <input type="hidden" th:field="*{subtotal}"></input>
-                            <input type="hidden" th:field="*{total}"></input>
-                            <input type="hidden" th:field="*{valorDesconto}"></input>
-                            <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
-                              <th:block th:each="item, rowStat : *{itemList}">
-                                  <input type="hidden" th:field="*{itemList[__${rowStat.index}__].produto}"></input>
-                                  <input type="hidden" th:field="*{itemList[__${rowStat.index}__].quantidade}"></input>
-                                  <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valor}"></input>
-                                  <input type="hidden" th:field="*{itemList[__${rowStat.index}__].venda}"></input>
-                                  <li class="item">
-                                  <div class="row align-items-end">
-                                   <div class="col-md-4 text-left">
-                                      <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>
-                                      <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
-                                   </div>
-                                  <div class="col-md-4 text-center">
-                                     <h6 id="quantidade" th:text="|${item.quantidade}un x ${{item.valor}}|"></h6>
-                                  </div>
-                                  <div class="col-md-3 text-right">
-                                     <h5 th:text="|R$ ${item.quantidade*item.valor}|"></h5>
-                                  </div>
-                                  <div class="col-md-1 text-center">
-                                    <h6>
-                                     <a data-toggle="modal" data-target="#modalConfirmarRemocaoItem" class="text-muted btn-sm"
-                                      th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao}"
-                                      title="Excluir" rel="tooltip" data-placement="top"><!--  -->
-                                      <i class="fas fa-trash"></i>
-                                    </a>
-                                    </h6>
-                                  </div>
-                                  </div>
-                                </li>
-                                <li class="linha border-bottom">
-                                </li>
-                              </th:block>
-                            </ul>
-                          </div>
-                        </div>
+                    <div layout:insert="~{mensagem_geral}"></div>
+                <div layout:insert="~{mensagem_erro}"></div>
+                <div class="row" >
+                  <!-- <div class="col-md-12"> -->
+                    <div class="table-responsive">
+                      <table class="table">
+                        <tr>
+                          <th class="lead mt-2" style="width:50%"><b>Subtotal:</b></th>
+                          <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
+                        </tr>
+                        <tr>
+                          <th class="lead form-inline">
+                            <b>Desconto</b>
+                            <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
+                              th:attr="data-url-base-desconto=@{/caixa/desconto}">
+                              <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
+                            </select>
+                          </th>
+                          <td id="desconto-valor"><p class="mb-0" th:text="|R$ *{{valorDesconto}}|">R$ 0,00</p></td>
+                        </tr>
+                        <tr>
+                          <th class="lead"><b>Total:</b></th>
+                          <td id="total"><h2 class="mb-0 bg-gray" th:text="|R$ *{{total}}|"></h2></td>
+                        </tr>
+                        <tr>
+                          <th class="lead"><b>Saldo:</b></th>
+                          <td>
+                            <div class="input-group input-group-lg">
+                              <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}"></input>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                      <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                          <i class="fas fa-undo-alt"></i>
+                          Voltar
+                        </button>
+                        <button type="submit" id="finalizar" class="btn btn-md btn-success">
+                          <i class="far fa-credit-card"></i> 
+                          Finalizar
+                        </button>
                       </div>
                       
-                      <div class="col-md-4 align-items-start flex-column">
-                        <!-- <div class="row mb-auto">
-                          <div class="col-md-12">
-                            <div class=" text-right">
-                              <button type="submit" class="btn btn-primary btn-flat py-2 btn-block">
-                                <i class="fas fa-cart-plus mr-2"></i>
-                                Pagamento
-                              </button>
-                              <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                               class="js-pagamento btn btn-primary btn-flat py-2 btn-block">
-                                <i class="fas fa-cart-plus mr-2"></i>
-                                Pagamento
-                              </button>
-                            </div>
-                          </div>
-                        </div> -->
-                        
-                        <!-- <div class="progress-group text-right mt-auto">
-                          <h2><span class="text">Subtotal</span></h2>
-                          <div class="bg-gray py-2 px-3 ">
-                            <input type="hidden" th:field="*{subtotal}"></input>
-                            <h2 id="subtotal" th:text="|R$ *{{subtotal}}|" 
-                              class="js-subtotal mb-0" 
-                              style="font-family: 'Nimbus Sans Narrow', Times, monospace;">
-                            </h2>
-                          </div>
-                       </div>
-                       /.progress-group -->
-                       
-                        
-                        <div class="row" >
-                          
-                          <div class="col-12">
-                          <div layout:insert="~{mensagem_geral}"></div>
-                          <div layout:insert="~{mensagem_erro}"></div>
-                            <div class="table-responsive">
-                              <table class="table">
-                                <tr>
-                                  <th class="lead mt-2" style="width:50%">Subtotal:</th>
-                                  <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
-                                </tr>
-                                <tr>
-                                  <th class="lead form-inline">
-                                    Desconto
-                                    <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
-                                      th:attr="data-url-base-desconto=@{/caixa/desconto}">
-                                      <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
-                                    </select>
-                                  </th>
-                                  <td id="desconto-valor"><p class="mb-0" th:text="|R$ *{{valorDesconto}}|">R$ 0,00</p></td>
-                                </tr>
-                                <tr>
-                                  <th class="lead">Total:</th>
-                                  <td id="total"><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
-                                </tr>
-                                <tr>
-                                  <th class="lead">Saldo:</th>
-                                  <td>
-                                    <div class="input-group input-group-lg">
-                                      <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}" th:classappend="${#fields.hasErrors('saldo')} ? 'is-invalid'"></input>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </table>
-                              <div class="d-flex justify-content-between">
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalCancelamento">
-                                  Cancelar
-                                </button>
-                                <button type="submit" id="finalizar" class="btn btn-md btn-success">
-                                  <i class="far fa-credit-card"></i> 
-                                  Finalizar
-                                </button>
-                              </div>
-                              
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
+                  <!-- </div> -->
+                </div>
                   </div>
-                  <!-- /.row -->
-                  <!-- <div class="card-footer py-0">
-                    <div class="row">
-                      <div class="col-sm-3 col-6">
-                        <div class="description-block border-right">
-                          <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span>
-                          <h5 class="description-header">Cliente</h5>
-                          <span class="description-text">Fernanda Araújo</span>
-                        </div>
-                        /.description-block
-                      </div>
-                      /.col
-                      <div class="col-sm-3 col-6">
-                        <div class="description-block border-right">
-                          <span class="description-p0ercentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
-                          <h5 class="description-header">$10,390.90</h5>
-                        </div>
-                        /.description-block
-                      </div>
-                      /.col
-                      <div class="col-sm-3 col-6">
-                        <div class="description-block border-right">
-                          <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
-                          <h5 class="description-header">$24,813.53</h5>
-                        </div>
-                        /.description-block
-                      </div>
-                      /.col
-                      <div class="col-sm-3 col-6">
-                        <div class="description-block">
-                          <h5 class="description-header">Status</h5>
-                          <span class="description-text">
-                            <i class="fas fa-circle text-yellow"></i>
-                            Registrando
-                          </span>
-                        </div>
-                        /.description-block
-                      </div>
-                    </div>
-                    /.row
-                  </div> -->
                 </div>
                 <!-- /.card -->
               </div>
             </div>
           </div>
         </section>
-        <div class="modal" id="modal-default">
+        
+        
+        <div class="modal show" id="modal-pagamento">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
@@ -261,7 +192,7 @@
               </div>
               <div class="modal-body">
                 <div layout:insert="~{mensagem_geral}"></div>
-                <div layout:insert="~{mensagem_erro}"></div>
+                <div id="mensagemErro" layout:insert="~{mensagem_erro}"></div>
                 <div class="row" >
                   <div class="col-12">
                     <div class="table-responsive">
@@ -282,38 +213,33 @@
                         </tr>
                         <tr>
                           <th class="lead">Total:</th>
-                          <td id="total"><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
+                          <td id="total"><h2 class="mb-0" th:text="|R$ *{{total}}|"></h2></td>
                         </tr>
                         <tr>
                           <th class="lead">Saldo:</th>
                           <td>
                             <div class="input-group input-group-lg">
-                              <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}" th:classappend="${#fields.hasErrors('saldo')} ? 'is-invalid'"></input>
+                              <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}"></input>
                             </div>
                           </td>
                         </tr>
                       </table>
-                      <!-- <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalCancelamento">
-                          Cancelar
+                      <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                          <i class="fas fa-undo-alt"></i>
+                          Voltar
                         </button>
                         <button type="submit" id="finalizar" class="btn btn-md btn-success">
                           <i class="far fa-credit-card"></i> 
                           Finalizar
                         </button>
-                      </div> -->
+                      </div>
                       
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Voltar</button>
-                <button type="submit" id="finalizar" class="btn btn-md btn-success">
-                  <i class="far fa-credit-card"></i> 
-                  Finalizar
-                </button>
-              </div>
+              <div class="modal-footer justify-content-between"></div>
             </div>
             <!-- /.modal-content -->
           </div>
@@ -324,248 +250,56 @@
     
     </div>
     
-    <div class="modal" id="modalEscolherCliente">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">
-              Clientes
-            </h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          
-          <div class="modal-body">
-            <div class="row d-flex align-items-stretch">
-              <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-                <div class="card bg-light">
-                  <div class="card-header text-muted border-bottom-0"></div>
-                  <div class="card-body pt-0">
-                    <div class="row">
-                      <div class="col-7">
-                        <h2 class="lead"><b>Marcos Novaes</b></h2>
-                      </div>
-                      <div class="col-5 text-center">
-                        <img th:src="@{/dist/img/user1-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
-                      </div>
-                    </div>
-                    <div class="row mt-2">
-                      <div class="col-12">
-                        <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                        <ul class="ml-4 mb-0 fa-ul text-muted">
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <div class="text-right">
-                      <a href="#" class="btn btn-sm bg-teal">
-                        <i class="fas fa-comments"></i>
-                      </a>
-                      <a href="#" class="btn btn-sm btn-primary">
-                        <i class="fas fa-user"></i> Selecionar
-                      </a>
-                    </div>
-                  </div>
-                </div>
+    <div class="modal fade" id="modalBalanca">
+        <form id="itemForm" role="form" method="POST" th:action="@{/caixa/incluir}" th:object="${item}">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Informe o peso</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
-              <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-                <div class="card bg-light">
-                  <div class="card-header text-muted border-bottom-0"></div>
-                  <div class="card-body pt-0">
-                    <div class="row">
-                      <div class="col-7">
-                        <h2 class="lead"><b>José Alves</b></h2>
-                      </div>
-                      <div class="col-5 text-center">
-                        <img th:src="@{/dist/img/user2-160x160.jpg}" alt="" class="img-circle img-fluid"></img>
-                      </div>
-                    </div>
-                    <div class="row mt-2">
-                      <div class="col-12">
-                        <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                        <ul class="ml-4 mb-0 fa-ul text-muted">
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: Demo Street 123, Demo City 04312, NJ</li>
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <div class="text-right">
-                      <a href="#" class="btn btn-sm bg-teal">
-                        <i class="fas fa-comments"></i>
-                      </a>
-                      <a href="#" class="btn btn-sm btn-primary">
-                        <i class="fas fa-user"></i> Selecionar
-                      </a>
+              <div class="modal-body">
+                <div class="row">
+                  <input type="hidden" id="inputCodigoProduto" th:field="*{produto.codigo}"></input>
+                  <input type="hidden" id="inputUnitario" th:field="*{produto.unitario}"></input>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="col-form-label">Produto</label>
+                      <p id="descricaoProduto" th:text="*{produto.descricao}">Descrição do Produto</p>
                     </div>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="inputQuantidade" class="col-form-label">Peso</label>
+                      <input type="text" id="inputQuantidade" autofocus="autofocus" th:field="*{quantidade}" class="form-control js-currency"></input>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="inputValorQuilo" class="col-form-label">Valor Kg</label>
+                      <input type="text" readonly="readonly" id="inputValorQuilo" th:field="*{produto.valorDeVenda}" class="form-control"></input>
+                    </div>
+                  </div>
+                  
+               </div>
               </div>
-              <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-                <div class="card bg-light">
-                  <div class="card-header text-muted border-bottom-0"></div>
-                  <div class="card-body pt-0">
-                    <div class="row">
-                      <div class="col-7">
-                        <h2 class="lead"><b>Fernanda Araújo</b></h2>
-                      </div>
-                      <div class="col-5 text-center">
-                        <img th:src="@{/dist/img/user4-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
-                      </div>
-                    </div>
-                    <div class="row mt-2">
-                      <div class="col-12">
-                        <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                        <ul class="ml-4 mb-0 fa-ul text-muted">
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <div class="text-right">
-                      <a href="#" class="btn btn-sm bg-teal">
-                        <i class="fas fa-comments"></i>
-                      </a>
-                      <a href="#" class="btn btn-sm btn-primary">
-                        <i class="fas fa-user"></i> Selecionar
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-                <div class="card bg-light">
-                  <div class="card-header text-muted border-bottom-0"></div>
-                  <div class="card-body pt-0">
-                    <div class="row">
-                      <div class="col-7">
-                        <h2 class="lead"><b>Marcos Novaes</b></h2>
-                      </div>
-                      <div class="col-5 text-center">
-                        <img th:src="@{/dist/img/user1-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
-                      </div>
-                    </div>
-                    <div class="row mt-2">
-                      <div class="col-12">
-                        <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                        <ul class="ml-4 mb-0 fa-ul text-muted">
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <div class="text-right">
-                      <a href="#" class="btn btn-sm bg-teal">
-                        <i class="fas fa-comments"></i>
-                      </a>
-                      <a href="#" class="btn btn-sm btn-primary">
-                        <i class="fas fa-user"></i> Selecionar
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-                <div class="card bg-light">
-                  <div class="card-header text-muted border-bottom-0"></div>
-                  <div class="card-body pt-0">
-                    <div class="row">
-                      <div class="col-7">
-                        <h2 class="lead"><b>José Alves</b></h2>
-                      </div>
-                      <div class="col-5 text-center">
-                        <img th:src="@{/dist/img/user2-160x160.jpg}" alt="" class="img-circle img-fluid"></img>
-                      </div>
-                    </div>
-                    <div class="row mt-2">
-                      <div class="col-12">
-                        <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                        <ul class="ml-4 mb-0 fa-ul text-muted">
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: Demo Street 123, Demo City 04312, NJ</li>
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <div class="text-right">
-                      <a href="#" class="btn btn-sm bg-teal">
-                        <i class="fas fa-comments"></i>
-                      </a>
-                      <a href="#" class="btn btn-sm btn-primary">
-                        <i class="fas fa-user"></i> Selecionar
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-                <div class="card bg-light">
-                  <div class="card-header text-muted border-bottom-0"></div>
-                  <div class="card-body pt-0">
-                    <div class="row">
-                      <div class="col-7">
-                        <h2 class="lead"><b>Fernanda Araújo</b></h2>
-                      </div>
-                      <div class="col-5 text-center">
-                        <img th:src="@{/dist/img/user4-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
-                      </div>
-                    </div>
-                    <div class="row mt-2">
-                      <div class="col-12">
-                        <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                        <ul class="ml-4 mb-0 fa-ul text-muted">
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
-                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <div class="text-right">
-                      <a href="#" class="btn btn-sm bg-teal">
-                        <i class="fas fa-comments"></i>
-                      </a>
-                      <a href="#" class="btn btn-sm btn-primary">
-                        <i class="fas fa-user"></i> Selecionar
-                      </a>
-                    </div>
-                  </div>
-                </div>
+              <div class="modal-footer justify-content-between">
+               <button type="button" class="btn btn-md btn-danger" data-dismiss="modal">Cancelar</button>
+               <button type="button" class="btn btn-md btn-success js-selecionar-item-balanca" 
+               th:attr="data-url-base=@{/caixa/incluir/}" th:text="#{incluir}">Incluir</button><!-- js-selecionar-item-balanca -->
               </div>
             </div>
-            
+            <!-- /.modal-content -->
           </div>
-          
-          <div class="card-footer">
-            <nav aria-label="Contacts Page Navigation">
-              <ul class="pagination justify-content-center m-0">
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                <li class="page-item"><a class="page-link" href="#">6</a></li>
-                <li class="page-item"><a class="page-link" href="#">7</a></li>
-                <li class="page-item"><a class="page-link" href="#">8</a></li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-        <!-- /.modal-content -->
+          <!-- /.modal-dialog -->
+        </form>
       </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
+      <!-- /.modal -->
   
     <div class="modal fade" id="modalConfirmarRemocaoItem" tabindex="-1" data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog">
@@ -595,7 +329,9 @@
     
   </section>
   
-  <script layout:fragment="js-validator">
+  <script layout:fragment="js-validator" th:inline="javascript">
+  
+    	
   	var currencyformatter = new Intl.NumberFormat('pt-BR', {
 	  style: "currency",
 	  currency: "BRL",
@@ -616,53 +352,54 @@
   	    // Trigger the button element with a click
   	    $('.js-buscar-produto').click();
   	  }
-  	});  	
-  	
-    $("#container").ready(function() {
-    	$('.js-example-data-ajax').click();
-    });
-  	
-  	$("#container").on("click", ".js-example-data-ajax", function(event){
-  		var seletor = $(event.currentTarget);
-		var url = seletor.data('url-buscar-item');
-		
-  		$(this).select2({
-  	      language: "pt-BR",
-    	  ajax: {
-    	    url: url,
-    	    dataType: 'json',
-    	    delay: 250,
-    	    data: function (params) {
-    	      return {
-    	        q: params.term, // search term
-    	        page: params.page || 1 
-    	      };
-    	    },
-    	    processResults: function (data, params) {
-    	      // parse the results into the format expected by Select2
-    	      // since we are using custom formatting functions we do not need to
-    	      // alter the remote JSON data, except to indicate that infinite
-    	      // scrolling can be used
-    	      params.page = params.page || 1;
-  
-    	      return {
-    	        results: data.items,
-    	        pagination: {
-    	          more: (params.page * data.page_size) < data.total_count
-    	        }
-    	      };
-    	    },
-    	    cache: true
-    	  },
-    	  placeholder: 'Procure por um produto',
-    	  minimumInputLength: 1,
-    	  templateResult: formatRepo,
-    	  templateSelection: formatRepoSelection
-    	});
-  		
   	});
   	
-    
+  	function startSelect2(){
+  		var seletor = $('.js-buscar-produto');
+  		var url = seletor.data('url-buscar-item');
+  		
+  		$(seletor).select2({
+  	      language: "pt-BR",
+  	  	  ajax: {
+  	  	    url: url,
+  	  	    dataType: 'json',
+  	  	    delay: 250,
+  	  	    data: function (params) {
+  	  	      return {
+  	  	        q: params.term, // search term
+  	  	        page: params.page || 1 
+  	  	      };
+  	  	    },
+  	  	    processResults: function (data, params) {
+  	  	      // parse the results into the format expected by Select2
+  	  	      // since we are using custom formatting functions we do not need to
+  	  	      // alter the remote JSON data, except to indicate that infinite
+  	  	      // scrolling can be used
+  	  	      params.page = params.page || 1;
+
+  	  	      return {
+  	  	        results: data.items,
+  	  	        pagination: {
+  	  	          more: (params.page * data.page_size) < data.total_count
+  	  	        }
+  	  	      };
+  	  	    },
+  	  	    cache: true
+  	  	  },
+  	  	  placeholder: 'Procure por um produto',
+  	  	  minimumInputLength: 1,
+  	  	  templateResult: formatRepo,
+  	  	  templateSelection: formatRepoSelection,
+  	  	  multiple: true
+  	  	});
+  	  	$(seletor).select2('focus');
+  	}
+  	
+  	$('#container').on("select2:open",".js-buscar-produto", function (e) { console.log("select2:open", e); });
+  	
+  	$(document).ready(function(event){
+  		startSelect2();
+  	});
 
   	function formatRepo (repo) {
   	  if (repo.loading) {
@@ -671,24 +408,26 @@
 
   	  var $container = $(
   	    "<div class='select2-result-repository clearfix'>" +
-  	      "<div class='select2-result-repository__avatar'><img src='/custom/img/sem-imagem_3.png'/></div>" +
+  	      "<div class='select2-result-repository__avatar'><img id='image' style='height:available' src='' /></div>" +
   	      "<div class='select2-result-repository__meta'>" +
   	      	"<div class='select2-result-repository__description' id='codigo'></div>" +
   	        "<div class='select2-result-repository__title'></div>" +
-  	      	"<div class='select2-result-repository__description' id='categoria'><i class='fa fa-flash'></i> </div>" +
+  	      	"<div class='select2-result-repository__forks'></div>" +
+  	      	/* "<div class='select2-result-repository__description' id='categoria'><i class='fa fa-flash'></i> </div>" + */
   	        /* "<div class='select2-result-repository__statistics'>" +
-  	      		"<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> </div>" +
-  	    		"<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
+  	      		"<div class='select2-result-repository__forks'></div>" +
+  	    		/*"<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
   	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +	
   	        "</div>" +  */
   	      "</div>" +
   	    "</div>"
   	  );
 
+  	  $container.find("#image").attr('src', 'data:image/png;base64,'+repo.imagemBase64);
   	  $container.find(".select2-result-repository__description#codigo").text(repo.codigo);
   	  $container.find(".select2-result-repository__title").text(repo.descricao);
-  	  $container.find(".select2-result-repository__description#categoria").text(repo.categoria.descricao);
-  	  /* $container.find(".select2-result-repository__forks").append(123 + " Forks"); */
+  	  /* $container.find(".select2-result-repository__description#categoria").text(repo.categoria.descricao); */
+  	  /* $container.find(".select2-result-repository__forks").text(repo.categoria.descricao); */
   	  $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
   	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers");
 
@@ -698,36 +437,118 @@
   	function formatRepoSelection (repo) {
   	  return repo.full_name || repo.text;
   	}
-    
-    $('#container').on('select2:select','.js-example-data-ajax', function (e) {
-    	
+  	
+    $('#container').on('select2:select','.js-buscar-produto', function(e) {
+
+    	var data = e.params.data;
     	var seletor = $(e.currentTarget);
-		var url = seletor.data('url-selecionar-item');
     	
-		if(!url.endsWith('/')){
+    	if(data.unitario == 'Kg') {
+    		mostrarModalBalanca(e);
+    		$('.js-buscar-produto').find('option').replaceWith();
+    	} else {
+      		var url = seletor.data('url-selecionar-item');
+      		var codigo = data.codigo;
+        	var unitario = data.unitario;
+        	var quantidade = 1;
+      		
+      		var item = {
+      	  	      "produto" : {
+      	  	    	  "codigo" : codigo,
+      	  	    	  "unitario" : unitario
+      	  	      },
+      	  	      "quantidade" : quantidade
+      	  	   };
+      	
+        	console.log(JSON.stringify(item));
+        	
+        	var response = $.ajax({
+        		url: url,
+        		type: 'POST',
+        		contentType : 'application/json; charset=utf-8',
+        		data: JSON.stringify(item),
+    		});
+        	
+        	response.done(function(e){
+    			$('#conteudo').replaceWith(e);
+    			$('#listaDeItens').scrollTop(330);
+    		});
+        	response.fail(function(e){
+        		alert('Erro incluindo item');
+    		});  		
+    	}
+    	
+    });
+    
+    function mostrarModalBalanca(e) {
+    	e.preventDefault();
+    	var data = e.params.data;
+    	var seletor = $(e.currentTarget);
+    	var url = seletor.data('url-selecionar-balanca');
+    	
+    	if(!url.endsWith('/')){
 			url += '/';
 		}
-		
-        var data = e.params.data;
-        url += data.codigo;
-        
-        var response = $.ajax({
+    	url += data.codigo;
+    	var response = $.ajax({
 			url: url,
 			type: 'PUT'
 		});
-		
-		response.done(function(e){
-			var html = $.parseHTML(e);
-			$('#conteudo').replaceWith(html);
-			$('.js-example-data-ajax').click();
+    	
+    	response.done(function(e){
+			$('#modalBalanca').replaceWith(e);
+			$('#modalBalanca').modal('show');
 		});
-		
-		response.fail(function(e){
-			alert('Erro incluindo item');
+    	response.fail(function(e){
+			alert('Erro pesando item');
 		});
+    }
+    
+    $('#container').on('shown.bs.modal', '#modalBalanca', function(event){
+    	$('#inputQuantidade').maskMoney({
+    		precision: 3,
+    		decimal:',', 
+    		thousands:'.', 
+    		allowZero:'true',
+    		formatOnBlur:false});
+    	$('#inputQuantidade').focus();
     });
     
-
+    $('#container').on('click', '.js-selecionar-item-balanca', function(event){
+    	var botao = $(event.currentTarget);
+    	var url = botao.data('url-base');
+    	
+    	var codigo = $('#modalBalanca').find('input#inputCodigoProduto').val();
+    	var quantidade = $('#modalBalanca').find('input#inputQuantidade').val().replace(',','.');
+    	var unitario = $('#modalBalanca').find('input#inputUnitario').val();
+    	
+    	var item = {
+    	  	      "produto" : {
+    	  	    	  "codigo" : codigo,
+    	  	    	  "unitario" : unitario
+    	  	      },
+    	  	      "quantidade" : quantidade
+    	  	   };
+    	
+      	console.log(JSON.stringify(item));
+      	
+      	var response = $.ajax({
+      		url: url,
+      		type: 'POST',
+      		contentType : 'application/json; charset=utf-8',
+      		data: JSON.stringify(item),
+  		});
+    	
+    	response.done(function(e){
+    		$('#modalBalanca').modal('hide');
+			$('#conteudo').replaceWith(e);
+			$('#listaDeItens').scrollTop(330);
+		});
+    	
+    	response.fail(function(e){
+			alert('Erro incluindo item');
+		});  		
+    }); 
     
 	$('#container').on('show.bs.modal', '#modalConfirmarRemocaoItem', function(event){
     	var button = $(event.relatedTarget); // Button that triggered the modal
@@ -760,7 +581,7 @@
 		response.done(function(e){
 			$('#modalConfirmarRemocaoItem').modal('hide');
 			$('#conteudo').replaceWith(e);
-			$('.js-example-data-ajax').click();
+			$('#listaDeItens').scrollTop(330);
 		});
 		
 		response.fail(function(e){
@@ -780,8 +601,8 @@
 		});
 		
 		response.done(function(e){
-			$('#conteudo').replaceWith(e);
-  			$('#modal-default').modal('toggle');
+			$('#modal-pagamento').replaceWith(e);
+  			$('#modal-pagamento').modal('show');
   		});
 		
 		response.fail(function(e){
@@ -809,36 +630,271 @@
 		});
   		
   		response.done(function(e){
-  			//$('#modal-default').modal('hide');
   			$('#conteudo').replaceWith(e);
-  			$('.js-example-data-ajax').click();
-  			//$('#modal-default').modal('show');
 		});
 		
 		response.fail(function(e){
+			console.log(e);
 			alert('Erro aplicando desconto');
 		});
   	});
-  	
-  	$(document).ajaxComplete(function() {
-		$('.js-currency').maskMoney({decimal:',', 
-			thousands:'.', 
-			allowZero:'true',
-			formatOnBlur:false});
-	});
-  	
-  	/* $('#container').on('scroll', '#listaDeItens', function(){
-  	    scrolled=true;
-  	}); */
-  	var element = document.getElementById("listaDeItens");
-  	element.scrollTop = element.scrollHeight;
-	
-	/* $(document).ajaxComplete(function(event, xhr, settings) {
-		if() {
-			
+
+	$(document).ajaxComplete(function(event, xhr, settings) {		
+		var url = settings.url;
+		console.log(url);
+		if(!url.includes('buscarItem')){
+			startSelect2();
 		}
-		$('.js-example-data-ajax').click();
-	}); */
+		if(url.includes('balanca')) {
+			$('.js-currency').maskMoney({decimal:',', 
+				thousands:'.', 
+				allowZero:'true',
+				formatOnBlur:false});
+		}
+	});
   </script>
+  
+  <div class="modal" id="modalEscolherCliente">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            Clientes
+          </h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="row d-flex align-items-stretch">
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0"></div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>Marcos Novaes</b></h2>
+                    </div>
+                    <div class="col-5 text-center">
+                      <img th:src="@{/dist/img/user1-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-12">
+                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a href="#" class="btn btn-sm bg-teal">
+                      <i class="fas fa-comments"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-primary">
+                      <i class="fas fa-user"></i> Selecionar
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0"></div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>José Alves</b></h2>
+                    </div>
+                    <div class="col-5 text-center">
+                      <img th:src="@{/dist/img/user2-160x160.jpg}" alt="" class="img-circle img-fluid"></img>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-12">
+                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: Demo Street 123, Demo City 04312, NJ</li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a href="#" class="btn btn-sm bg-teal">
+                      <i class="fas fa-comments"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-primary">
+                      <i class="fas fa-user"></i> Selecionar
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0"></div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>Fernanda Araújo</b></h2>
+                    </div>
+                    <div class="col-5 text-center">
+                      <img th:src="@{/dist/img/user4-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-12">
+                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a href="#" class="btn btn-sm bg-teal">
+                      <i class="fas fa-comments"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-primary">
+                      <i class="fas fa-user"></i> Selecionar
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0"></div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>Marcos Novaes</b></h2>
+                    </div>
+                    <div class="col-5 text-center">
+                      <img th:src="@{/dist/img/user1-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-12">
+                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a href="#" class="btn btn-sm bg-teal">
+                      <i class="fas fa-comments"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-primary">
+                      <i class="fas fa-user"></i> Selecionar
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0"></div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>José Alves</b></h2>
+                    </div>
+                    <div class="col-5 text-center">
+                      <img th:src="@{/dist/img/user2-160x160.jpg}" alt="" class="img-circle img-fluid"></img>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-12">
+                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: Demo Street 123, Demo City 04312, NJ</li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a href="#" class="btn btn-sm bg-teal">
+                      <i class="fas fa-comments"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-primary">
+                      <i class="fas fa-user"></i> Selecionar
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0"></div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>Fernanda Araújo</b></h2>
+                    </div>
+                    <div class="col-5 text-center">
+                      <img th:src="@{/dist/img/user4-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-12">
+                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a href="#" class="btn btn-sm bg-teal">
+                      <i class="fas fa-comments"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-primary">
+                      <i class="fas fa-user"></i> Selecionar
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+        <div class="card-footer">
+          <nav aria-label="Contacts Page Navigation">
+            <ul class="pagination justify-content-center m-0">
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">4</a></li>
+              <li class="page-item"><a class="page-link" href="#">5</a></li>
+              <li class="page-item"><a class="page-link" href="#">6</a></li>
+              <li class="page-item"><a class="page-link" href="#">7</a></li>
+              <li class="page-item"><a class="page-link" href="#">8</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
     
 </html>

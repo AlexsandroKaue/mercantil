@@ -46,8 +46,8 @@ import com.kaue.service.RelatorioService;
 import com.kaue.service.VendaService;
 
 @Controller
-@RequestMapping("/caixa")
-public class CaixaController {
+@RequestMapping("/caixa2")
+public class CaixaControllerSemAjax {
 
 	static final String REGISTRADORA_VIEW = "page/caixa/Vender";
 	static final String PAGAMENTO_VIEW = "page/caixa/Pagamento";
@@ -223,8 +223,12 @@ public class CaixaController {
 		while(itemIterator.hasNext()) {
 			item = itemIterator.next();
 			if(item.getProduto().getCodigo().equals(codigo)) {
-				itemIterator.remove();
-				item.setVenda(null);
+				/*if(item.getQuantidade().compareTo(new BigDecimal(1))>=0) {
+					item.setQuantidade(item.getQuantidade().subtract(new BigDecimal(1)));
+				} else {*/
+					itemIterator.remove();
+					item.setVenda(null);
+				/* } */
 			}
 		}
 		
@@ -243,6 +247,51 @@ public class CaixaController {
 	    return mv;
 		
 	}
+	
+	/*@RequestMapping(value = "/incluir", method = RequestMethod.POST)
+	public ModelAndView incluirItem(@Validated Item item, Errors errors) {
+		
+		ModelAndView mv = null;
+		mv = new ModelAndView(REGISTRADORA_VIEW);
+		
+		if(!errors.hasErrors()) {
+			
+			if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
+			
+			String codigo = item.getProduto().getCodigo();
+					
+			if(codigo != null) {
+				Produto produto = produtoService.buscarPorCodigo(codigo);
+				item.setProduto(produto);
+				BigDecimal valor = item.getQuantidade().multiply(produto.getValorDeVenda());
+				item.setValor(valor);
+				
+				venda.getItemList().add(item);
+				item.setVenda(venda);
+			}
+			
+			BigDecimal subtotal = new BigDecimal(0.0);
+			for(Item it : venda.getItemList()) {
+				subtotal = subtotal.add(it.getValor().multiply(it.getQuantidade()));
+			}
+			venda.setSubtotal(subtotal);
+			venda.setTotal(venda.getSubtotal());
+			venda.setDesconto(OpcoesDesconto.ZERO);
+			venda.setValorDesconto(new BigDecimal(0.0));		
+		}
+		mv.addObject("venda", venda);
+		mv.addObject("item", item);
+	    return mv;
+	}*/
+	
+	/*
+	 * @RequestMapping(value = "/incluir", method = RequestMethod.POST) public
+	 * ModelAndView getSearchUserProfiles(@RequestBody Item item, HttpServletRequest
+	 * request) { String codigo = item.getProduto().getCodigo(); BigDecimal
+	 * quantidade = item.getQuantidade();
+	 * 
+	 * // your logic next return null; }
+	 */
 	
 	@RequestMapping(value = "/balanca/{codigo}")
 	public ModelAndView mostrarBalanca(@PathVariable("codigo") String codigo, Model model) {
@@ -270,6 +319,41 @@ public class CaixaController {
 		return mv;
 	}
 	
+	/*@RequestMapping(value = "/pagamento", method = RequestMethod.POST)
+	public ModelAndView iniciarPagamento(Venda venda, Errors  errors) {		
+				
+		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
+			errors.rejectValue("subtotal", null, "Subtotal não pode ser 0");
+		}
+	
+		if(errors.hasErrors()) {
+			return new ModelAndView(REGISTRADORA_VIEW);
+		}
+		
+		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
+		/*Passagem da lista de itens do objeto venda construído no servidor
+		para o recebido pelo POST do form, devido ao fato de não poder se obter
+		a lista de itens não persistidos (sem id)  
+		venda.setItemList(new ArrayList<Item>());
+		for(Item item : this.venda.getItemList()) {
+			venda.getItemList().add(item);
+			item.setVenda(venda);
+		}
+		
+		venda.setStatus(StatusVenda.ABERTA);
+		venda.setDesconto(OpcoesDesconto.ZERO);
+		venda.setValorDesconto(new BigDecimal(0.0));
+		venda.setTotal(venda.getSubtotal());
+		venda.setDataVenda(new Date());
+		venda.setSaldo(BigDecimal.ZERO);
+		venda = vendaService.salvar(venda);
+
+		venda = vendaService.buscarPorId(venda.getId());
+		
+		mv.addObject("venda", venda);
+		return mv;
+	}*/
+	
 	@RequestMapping(value = "/pagamento", method = RequestMethod.PUT)
 	public ModelAndView iniciarPagamento() {		
 		
@@ -286,18 +370,40 @@ public class CaixaController {
 		mv.addObject("venda", venda);
 		return mv;
 	}
+	
+	/*@RequestMapping(method = RequestMethod.POST)
+	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
 		
+		if(venda.getSaldo()!=null) {
+			if(venda.getSaldo().compareTo(venda.getTotal())==-1) {
+				errors.rejectValue("saldo", null, "Saldo não suficiente");
+			}
+		}
+		
+		if(errors.hasErrors()) {
+			return PAGAMENTO_VIEW;
+		} else {
+			venda.setStatus(StatusVenda.FINALIZADA);
+			BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
+			venda.setTroco(troco);
+			
+			venda = vendaService.salvar(venda);
+			attributes.addFlashAttribute("mensagem", "Venda concluída com sucesso!");
+			return "redirect:/caixa/venda/"+venda.getId();
+		}
+	}*/
+	
 	@RequestMapping(method = RequestMethod.POST)
 	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
 		
 		
 		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
-			errors.rejectValue("subtotal", null, "Erro: A compra não pode ser vazia!");
+			errors.rejectValue("subtotal", null, "Erro: Subtotal não pode ser 0,00");
 		}
 		
 		if(venda.getSaldo()!=null) {
 			if(venda.getSaldo().compareTo(venda.getTotal())==-1) {
-				errors.rejectValue("saldo", null, "Erro: Saldo insuficiente!");
+				errors.rejectValue("saldo", null, "Erro: Saldo insuficiente");
 			}
 		}
 		venda.setDataVenda(new Date());
@@ -318,10 +424,24 @@ public class CaixaController {
 		}
 	}
 	
+	/*@RequestMapping(value = "{venda}/desconto/{desconto}")
+	public ModelAndView aplicarDesconto(@PathVariable("venda") Venda venda, @PathVariable("desconto") OpcoesDesconto opcao) {		
+		
+		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW + " :: #conteudo");
+		venda.setDesconto(opcao);
+		BigDecimal valorDesconto = venda.getSubtotal().multiply(new BigDecimal(venda.getDesconto().getNumero())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		BigDecimal total = venda.getSubtotal().subtract(valorDesconto);
+		venda.setValorDesconto(valorDesconto);
+		venda.setTotal(total);
+
+		mv.addObject("venda", venda);
+		return mv;
+	}*/
+	
 	@RequestMapping(value = "/desconto/{desconto}")
 	public ModelAndView aplicarDesconto(@PathVariable("desconto") OpcoesDesconto opcao) {		
 		
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #conteudo");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #modal-pagamento");
 		venda.setDesconto(opcao);
 		BigDecimal valorDesconto = venda.getSubtotal().multiply(new BigDecimal(venda.getDesconto().getNumero())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		BigDecimal total = venda.getSubtotal().subtract(valorDesconto);

@@ -2,6 +2,9 @@
 <!-- Created with Jaspersoft Studio version 6.13.0.final using JasperReports Library version 6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="226" pageHeight="842" columnWidth="206" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="88b84082-70fc-4cd1-b9ee-2c7952c550be">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="valorDesconto" class="java.lang.String"/>
+	<parameter name="valorTotalItem" class="java.lang.String"/>
+	<parameter name="valorTotal" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -9,10 +12,11 @@
 	<field name="descricao" class="java.lang.String"/>
 	<field name="quantidade" class="java.lang.String"/>
 	<field name="valorUnitario" class="java.lang.String"/>
+	<field name="valorItem" class="java.lang.String"/>
 	<columnHeader>
-		<band height="10">
+		<band height="31">
 			<staticText>
-				<reportElement x="0" y="0" width="206" height="10" uuid="11a1ccd2-6542-47e6-a514-4b4878ddbed3">
+				<reportElement x="0" y="21" width="206" height="10" uuid="11a1ccd2-6542-47e6-a514-4b4878ddbed3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -22,33 +26,109 @@
 					<bottomPen lineWidth="0.5" lineStyle="Dashed" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Courier New" size="5.4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
 				</textElement>
-				<text><![CDATA[ # | COD | DESC | QTD |UN| VL UN R$ | (VL TR R$) * | VL ITEM R$]]></text>
+				<text><![CDATA[ # |  COD  |  DESC  |  QTD  |  UN  |   VL UN R$  |   VL ITEM R$]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="53" y="5" width="100" height="10" uuid="edc76e56-8db2-445b-b68b-5f8928979f49">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Courier New" size="6" pdfFontName="Courier"/>
+				</textElement>
+				<text><![CDATA[Recibo de compra]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="35" splitType="Stretch">
+		<band height="19" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="206" height="8" uuid="81b10d4f-8581-494e-9160-129b6c26a078">
+				<reportElement x="0" y="9" width="160" height="8" uuid="c50bfc3d-6bd3-4e5c-a696-135243df8ad4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Courier New" size="5.4"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression><![CDATA["    "+$F{quantidade}+",000 Un x         "+$F{valorUnitario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="9" width="46" height="8" uuid="2f253087-ed2e-40f0-b948-b0fe7fbad424">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="10ce3ecc-3e5e-46fc-a7f2-7a19bf29ed6b"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorItem}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="1" width="206" height="8" uuid="df5db7ef-3ddb-4499-a610-545530465c30">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
 				</textElement>
 				<textFieldExpression><![CDATA["00"+$V{PAGE_NUMBER}+" "+$F{codigo}+" "+$F{descricao}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="0" y="8" width="206" height="8" uuid="c50bfc3d-6bd3-4e5c-a696-135243df8ad4">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Courier New" size="5.4"/>
-				</textElement>
-				<textFieldExpression><![CDATA["       "+$F{quantidade}+",000 Un x         "+$F{valorUnitario}]]></textFieldExpression>
-			</textField>
 		</band>
 	</detail>
+	<columnFooter>
+		<band height="24">
+			<staticText>
+				<reportElement x="69" y="0" width="100" height="8" uuid="3ac8aad6-029b-4fa8-9b9d-67fa92fc25d4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
+				</textElement>
+				<text><![CDATA[Valor total dos itens:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="8" width="100" height="8" uuid="76e5f75f-3f04-40c5-ad81-eb342467c85a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
+				</textElement>
+				<text><![CDATA[Valor do desconto:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="16" width="100" height="8" uuid="280247b2-6557-4efd-ba1f-3f59f568f3bc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="169" y="0" width="37" height="8" uuid="9dbfa510-a8e3-4a25-babd-05cfeabc2f99">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{valorTotalItem}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="169" y="8" width="37" height="8" uuid="5082e93e-8923-45f5-aced-a6faa68050c8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{valorDesconto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="169" y="16" width="37" height="8" uuid="5e86479c-92eb-47ce-9dd7-1c3b9bc42c8a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="5.4" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{valorTotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
 </jasperReport>

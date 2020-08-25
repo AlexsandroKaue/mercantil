@@ -1,11 +1,12 @@
 package com.kaue.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,8 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -24,6 +24,7 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.NumberFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.kaue.enumeration.Unitario;
 
 @Entity
 @Audited
@@ -56,6 +57,15 @@ public class Produto {
 	@OrderBy("id desc")
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Lote> loteList;
+	
+	@NotNull(message = "O campo unitário é obrigatório")
+	@Enumerated(EnumType.STRING)
+	private Unitario unitario;
+	
+	private byte[] imagem;
+	
+	@Transient
+	private String imagemBase64;
 	
 	public Long getId() {
 		return id;
@@ -121,6 +131,22 @@ public class Produto {
 		this.marca = marca;
 	}
 
+	public Unitario getUnitario() {
+		return unitario;
+	}
+
+	public void setUnitario(Unitario unitario) {
+		this.unitario = unitario;
+	}
+	
+	public byte[] getImagem() {
+		return imagem;
+	}
+
+	public void setImagem(byte[] imagem) {
+		this.imagem = imagem;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -144,6 +170,14 @@ public class Produto {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public String getImagemBase64() {
+		return imagemBase64;
+	}
+
+	public void setImagemBase64(String imagemBase64) {
+		this.imagemBase64 = imagemBase64;
 	}
 
 }

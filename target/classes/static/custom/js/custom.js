@@ -75,7 +75,7 @@ $(function(){
 		formatOnBlur:false});
 	
 	$('[data-mask]').inputmask();
-	
+		
 	$('.js-atualizar-status').on('click', function(event) {
 		event.preventDefault();
 		

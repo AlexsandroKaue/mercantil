@@ -51,7 +51,8 @@
           <div class="col-md-4">
               <div class="form-group">
                 <label for="inputCnpj" class="col-form-label">Cnpj</label>
-                <input type="text" class="form-control" id="inputCnpj" th:field="*{cnpj}" th:classappend="${#fields.hasErrors('cnpj')} ? 'is-invalid'" data-inputmask='"mask": "99.999.999/9999-99"' data-mask>   
+                <input type="text" class="form-control" id="inputCnpj" th:field="*{cnpj}" th:classappend="${#fields.hasErrors('cnpj')} ? 'is-invalid'" 
+                data-inputmask='"mask": "99.999.999/9999-99"' data-mask>   
               </div>
             </div>
             <div class="col-md-4">
@@ -112,28 +113,26 @@
     <!-- /.card -->
   </section>
   
-  <div layout:fragment="js-validator">
-    <script id="validador">
-      $('#inputNome').rules('add', {
-        required: true,
-        messages: { 
-            required: "Por favor digite um nome para o fornecedor"
-        }
-      });
-      $('#inputEmail').rules('add', {
-        email: true,
-        messages: { 
-            email: "Por favor digite um email válido"
-        }
-      });
-      $('#inputTelefone').rules('add', {
-        celular: true,
-        messages: { 
-            celular: "Por favor digite um telefone válido"
-        }
-      });
-  	</script>
-  </div>
+  <script layout:fragment="js-validator">
+    $('#inputNome').rules('add', {
+      required: true,
+      messages: { 
+          required: "Por favor digite um nome para o fornecedor"
+      }
+    });
+    $('#inputEmail').rules('add', {
+      email: true,
+      messages: { 
+          email: "Por favor digite um email válido"
+      }
+    });
+    $('#inputTelefone').rules('add', {
+      celular: true,
+      messages: { 
+          celular: "Por favor digite um telefone válido"
+      }
+    });
+  </script>
   
     
 </html>
