@@ -31,43 +31,42 @@
         <!-- <div class="pt-2"></div> -->
         <section class="content">
           <div class="container-fluid">
-            <div class="row">
+            <div class="row align-items-end">
               <!-- <div class="row" > -->
               <!-- <div class="col-md-5"></div> -->
               <div class="col-md-7">
-                <div class="bg-white py-2 px-2" style="border-style: solid; border-width: 2px; border-color: #cbd3da;">
-                  <ul class="items-list" style="height: 25px; margin-bottom: 0px">
-                    <li>
-                      <div class="row">
-                        <div class="col-md-4 text-left">
-                          <h5 class="lead mb-0">
-                            <b>Produto</b>
-                          </h5>
-                        </div>
-                        <div class="col-md-4 text-center">
-                          <h5 class="lead mb-0">
-                            <b>Quantidade x Preço Unitário</b>
-                          </h5>
-                        </div>
-                        <div class="col-md-3 text-right">
-                          <h5 class="lead mb-0">
-                            <b>Preço Total</b>
-                          </h5>
-                        </div>
-                        <div class="col-md-1"></div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-                
-                <div style="border-style: none solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
-                  <div class="chart">
+                <!-- <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4"> -->
+                  <div class="chart" style=" height: 400px; border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
+                    <div class="bg-white py-2 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
+                      <ul class="items-list" style="height: 25px; margin-bottom: 0px">
+                        <li>
+                          <div class="row">
+                            <div class="col-md-4 text-left">
+                              <h5 class="lead mb-0">
+                                <b>Produto</b>
+                              </h5>
+                            </div>
+                            <div class="col-md-4 text-center">
+                              <h5 class="lead mb-0">
+                                <b>Quantidade x Preço Unitário</b>
+                              </h5>
+                            </div>
+                            <div class="col-md-3 text-right">
+                              <h5 class="lead mb-0">
+                                <b>Preço Total</b>
+                              </h5>
+                            </div>
+                            <div class="col-md-1"></div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
                     <input type="hidden" th:field="*{id}"></input>
                     <input type="hidden" th:field="*{dataVenda}"></input>
                     <input type="hidden" th:field="*{subtotal}"></input>
                     <input type="hidden" th:field="*{total}"></input>
                     <input type="hidden" th:field="*{valorDesconto}"></input>
-                    <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px">
+                    <ul id="listaDeItens" data-widget="todo-list" class="items-list">
                       
                       <th:block th:each="item, rowStat : *{itemList}">
                           <input type="hidden" th:field="*{itemList[__${rowStat.index}__].produto}"></input>
@@ -103,7 +102,7 @@
                       </th:block>
                     </ul>
                   </div>
-                </div>
+                <!-- </div> -->
               </div>
               
               <!-- <div class="col-md-4 align-items-start flex-column"> -->
@@ -121,61 +120,97 @@
               <!-- </div> -->
             <!-- </div> -->
             
-              <div class="col-md-5">
-                <div class="card card-default">
+            <div class="col-md-5">
+              <div class="chart" style="height: 400px">
+                <div class="bg-gray py-2 px-3 align-top">
+                  <h2 class="mb-0">
+                    $80.00
+                  </h2>
+                  <h4 class="mt-0">
+                    <small>Ex Tax: $80.00 </small>
+                  </h4>
+                </div>
+                <div class="card card-default align-bottom" style="margin-top:190px">
                   <!-- <div class="card-header"></div> -->
                   <div class="card-body">
-                    <div layout:insert="~{mensagem_geral}"></div>
-                <div layout:insert="~{mensagem_erro}"></div>
-                <div class="row" >
-                  <!-- <div class="col-md-12"> -->
-                    <div class="table-responsive">
-                      <table class="table">
-                        <tr>
-                          <th class="lead mt-2" style="width:50%"><b>Subtotal:</b></th>
-                          <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
-                        </tr>
-                        <tr>
-                          <th class="lead form-inline">
-                            <b>Desconto</b>
-                            <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
-                              th:attr="data-url-base-desconto=@{/caixa/desconto}">
-                              <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
-                            </select>
-                          </th>
-                          <td id="desconto-valor"><p class="mb-0" th:text="|R$ *{{valorDesconto}}|">R$ 0,00</p></td>
-                        </tr>
-                        <tr>
-                          <th class="lead"><b>Total:</b></th>
-                          <td id="total"><h2 class="mb-0 bg-gray" th:text="|R$ *{{total}}|"></h2></td>
-                        </tr>
-                        <tr>
-                          <th class="lead"><b>Saldo:</b></th>
-                          <td>
-                            <div class="input-group input-group-lg">
-                              <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}"></input>
-                            </div>
-                          </td>
-                        </tr>
-                      </table>
-                      <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                          <i class="fas fa-undo-alt"></i>
-                          Voltar
-                        </button>
-                        <button type="submit" id="finalizar" class="btn btn-md btn-success">
-                          <i class="far fa-credit-card"></i> 
-                          Finalizar
-                        </button>
+                    <div class="row" >
+                      <div class="table-responsive">
+                        <table class="table">
+                          <tr>
+                            <th class="lead mt-2" style="width:50%"><h2>Subtotal:</h2></th>
+                            <td id="subtotal" class="js-subtotal"><h2 th:text="|R$ *{{subtotal}}|">R$ 0,00</h2></td>
+                          </tr>
+                        </table>
+                        <!-- <div class="d-flex justify-content-between">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <i class="fas fa-undo-alt"></i>
+                            Voltar
+                          </button>
+                          <button type="submit" id="finalizar" class="btn btn-md btn-success">
+                            <i class="far fa-credit-card"></i> 
+                            Finalizar
+                          </button>
+                        </div> -->
                       </div>
-                      
                     </div>
-                  <!-- </div> -->
-                </div>
                   </div>
                 </div>
-                <!-- /.card -->
+                <!-- /.card --> 
+               </div>
               </div>
+            
+              <!-- <div class="col-md-5">
+                <div class="card card-default">
+                  <div class="card-header"></div>
+                  <div class="card-body">
+                    <div layout:insert="~{mensagem_geral}"></div>
+                    <div layout:insert="~{mensagem_erro}"></div>
+                    <div class="row" >
+                      <div class="table-responsive">
+                        <table class="table">
+                          <tr>
+                            <th class="lead mt-2" style="width:50%"><b>Subtotal:</b></th>
+                            <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
+                          </tr>
+                          <tr>
+                            <th class="lead form-inline">
+                              <b>Desconto</b>
+                              <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
+                                th:attr="data-url-base-desconto=@{/caixa/desconto}">
+                                <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
+                              </select>
+                            </th>
+                            <td id="desconto-valor"><p class="mb-0" th:text="|R$ *{{valorDesconto}}|">R$ 0,00</p></td>
+                          </tr>
+                          <tr>
+                            <th class="lead"><b>Total:</b></th>
+                            <td id="total"><h2 class="mb-0 bg-gray" th:text="|R$ *{{total}}|"></h2></td>
+                          </tr>
+                          <tr>
+                            <th class="lead"><b>Saldo:</b></th>
+                            <td>
+                              <div class="input-group input-group-lg">
+                                <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}"></input>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                        <div class="d-flex justify-content-between">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <i class="fas fa-undo-alt"></i>
+                            Voltar
+                          </button>
+                          <button type="submit" id="finalizar" class="btn btn-md btn-success">
+                            <i class="far fa-credit-card"></i> 
+                            Finalizar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                /.card
+              </div> -->
             </div>
           </div>
         </section>
