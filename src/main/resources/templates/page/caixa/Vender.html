@@ -121,22 +121,40 @@
             <!-- </div> -->
             
             <div class="col-md-5">
-              <div class="chart" style="height: 400px">
-                <div class="bg-yellow py-2 px-3 align-top">
-                  <h2 class="mb-0">
-                    $80.00
-                  </h2>
-                  <h4 class="mt-0">
-                    <small>Ex Tax: $80.00 </small>
-                  </h4>
-                </div>
-                <div class="bg-gray py-2 px-3" style="margin-top:220px">
-                        <h4 class="mb-0">
-                          <small>Subtotal</small>
-                        </h4>
-                        <h2 class="mt-0" th:text="|R$ *{{subtotal}}|">
-                        </h2>
-                      </div>
+              
+              <div class="d-flex flex-column" style="height: 400px;">
+                  <div class="mb-auto">
+                    <div class="bg-white py-2 px-3" style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da;">
+                      <h2 class="mb-0">
+                        $80.00
+                      </h2>
+                      <h4 class="mt-0">
+                        <small>Ex Tax: $80.00 </small>
+                      </h4>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <div class="btn btn-primary btn-lg btn-flat">
+                      <i class="fas fa-cart-plus fa-lg mr-2"></i> 
+                      Efetuar Pagamento
+                    </div>
+    
+                    <div class="btn btn-default btn-lg btn-flat">
+                      <i class="fas fa-heart fa-lg mr-2"></i> 
+                      Add to Wishlist
+                    </div>
+                  </div>
+                  <div class="bg-gray py-2 px-3">
+                    <h4 class="mb-0">
+                      <small>Subtotal</small>
+                    </h4>
+                    <h2 class="mt-0" th:text="|R$ *{{subtotal}}|">
+                    </h2>
+                  </div>
+                  
+                
+                
+                
                 <!-- <div class="card card-default align-bottom" style="margin-top:190px">
                   <div class="card-header"></div>
                   <div class="card-body">
