@@ -122,7 +122,7 @@
             
             <div class="col-md-5">
               <div class="chart" style="height: 400px">
-                <div class="bg-gray py-2 px-3 align-top">
+                <div class="bg-yellow py-2 px-3 align-top">
                   <h2 class="mb-0">
                     $80.00
                   </h2>
@@ -130,18 +130,26 @@
                     <small>Ex Tax: $80.00 </small>
                   </h4>
                 </div>
-                <div class="card card-default align-bottom" style="margin-top:190px">
-                  <!-- <div class="card-header"></div> -->
+                <div class="bg-gray py-2 px-3" style="margin-top:220px">
+                        <h4 class="mb-0">
+                          <small>Subtotal</small>
+                        </h4>
+                        <h2 class="mt-0" th:text="|R$ *{{subtotal}}|">
+                        </h2>
+                      </div>
+                <!-- <div class="card card-default align-bottom" style="margin-top:190px">
+                  <div class="card-header"></div>
                   <div class="card-body">
                     <div class="row" >
+                      
                       <div class="table-responsive">
-                        <table class="table">
+                        <table>
                           <tr>
                             <th class="lead mt-2" style="width:50%"><h2>Subtotal:</h2></th>
-                            <td id="subtotal" class="js-subtotal"><h2 th:text="|R$ *{{subtotal}}|">R$ 0,00</h2></td>
+                            <td id="subtotal" class="bg-gray js-subtotal"><h2 th:text="|R$ *{{subtotal}}|">R$ 0,00</h2></td>
                           </tr>
                         </table>
-                        <!-- <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between">
                           <button type="button" class="btn btn-danger" data-dismiss="modal">
                             <i class="fas fa-undo-alt"></i>
                             Voltar
@@ -150,11 +158,11 @@
                             <i class="far fa-credit-card"></i> 
                             Finalizar
                           </button>
-                        </div> -->
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- /.card --> 
                </div>
               </div>
