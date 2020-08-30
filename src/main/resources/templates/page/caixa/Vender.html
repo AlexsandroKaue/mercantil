@@ -42,23 +42,23 @@
                 <!-- <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4"> -->
                   <div class="chart" style=" height: 400px; border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
                     <div class="bg-white py-2 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
-                      <ul class="items-list" style="height: 25px; margin-bottom: 0px">
+                      <ul class="items-list" style="height: 1.8em; margin-bottom: 0px">
                         <li>
                           <div class="row">
                             <div class="col-md-4 text-left">
-                              <h5 class="lead mb-0">
-                                <b>Produto</b>
-                              </h5>
+                              <h4 class="mb-0">
+                                Produto
+                              </h4>
                             </div>
                             <div class="col-md-4 text-center">
-                              <h5 class="lead mb-0">
-                                <b>Quantidade x Preço Unitário</b>
-                              </h5>
+                              <h4 class="mb-0">
+                                Quantidade x Preço Unitário
+                              </h4>
                             </div>
                             <div class="col-md-3 text-right">
-                              <h5 class="lead mb-0">
-                                <b>Preço Total</b>
-                              </h5>
+                              <h4 class="mb-0">
+                                Total Item
+                              </h4>
                             </div>
                             <div class="col-md-1"></div>
                           </div>
@@ -70,7 +70,7 @@
                     <input type="hidden" th:field="*{subtotal}"></input>
                     <input type="hidden" th:field="*{total}"></input>
                     <input type="hidden" th:field="*{valorDesconto}"></input>
-                    <ul id="listaDeItens" data-widget="todo-list" class="items-list">
+                    <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="overflow: scroll;">
                       
                       <th:block th:each="item, rowStat : *{itemList}">
                           <input type="hidden" th:field="*{itemList[__${rowStat.index}__].produto}"></input>
@@ -293,7 +293,7 @@
                           <th class="lead">Saldo:</th>
                           <td>
                             <div class="input-group input-group-lg">
-                              <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}"></input>
+                              <input type="text" autofocus="autofocus" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}"></input>
                             </div>
                           </td>
                         </tr>
@@ -588,6 +588,10 @@
     	$('#inputQuantidade').focus();
     });
     
+    $('#container').on('shown.bs.modal', '#modal-pagamento', function(event){
+    	$('#inputSaldo').focus();
+    });
+    
     $('#container').on('click', '.js-selecionar-item-balanca', function(event){
     	var botao = $(event.currentTarget);
     	var url = botao.data('url-base');
@@ -720,12 +724,12 @@
 		if(!url.includes('buscarItem')){
 			startSelect2();
 		}
-		if(url.includes('balanca')) {
+		/* if(url.includes('balanca')) { */
 			$('.js-currency').maskMoney({decimal:',', 
 				thousands:'.', 
 				allowZero:'true',
 				formatOnBlur:false});
-		}
+		/* } */
 	});
   </script>
   

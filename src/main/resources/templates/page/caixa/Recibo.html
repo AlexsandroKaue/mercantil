@@ -17,32 +17,41 @@
   
   <section layout:fragment="conteudo">
     <div class="row">
-    <div class="col-md-12">
-    <div class="card card-default">
-      <!-- <div class="card-header"></div> -->
+      <div class="col-md-6">
+        <div class="bg-white py-2 px-3">
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <th class="lead">Total:</th>
+                <td><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
+              </tr>
+              <tr>
+                <th class="lead">Pagamento:</th>
+                <td id="subtotal"><h3 class="mb-0" th:text="|R$ *{{saldo}}|"></h3></td>
+              </tr>
+              <tr>
+                <th class="lead mt-2" style="width:50%">Troco:</th>
+                <td id="subtotal"><h3 class="mb-0" th:text="|R$ *{{troco}}|"></h3></td>
+              </tr>
+              
+            </table>
+          </div>
+          
+        </div>
+        <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+           class="btn btn-warning btn-lg btn-flat mt-4">
+            <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
+            <i class="fas fa-print fa-lg mr-2"></i>
+            Imprimir comprovante
+          </button>
+      </div>
+    <!-- <div class="card card-default">
+      <div class="card-header"></div>
       <div class="card-body">
       
         <div class="row" >
         
-          <div class="col-md-6">
-            <div class="table-responsive">
-              <table class="table">
-                <tr>
-                  <th class="lead">Total:</th>
-                  <td><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
-                </tr>
-                <tr>
-                  <th class="lead">Pagamento:</th>
-                  <td id="subtotal"><h3 class="mb-0" th:text="|R$ *{{saldo}}|"></h3></td>
-                </tr>
-                <tr>
-                  <th class="lead mt-2" style="width:50%">Troco:</th>
-                  <td id="subtotal"><h3 class="mb-0" th:text="|R$ *{{troco}}|"></h3></td>
-                </tr>
-                
-              </table>
-            </div>
-          </div>
+          
           
           <div class="col-md-6">
             <div style="border-style: solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
@@ -54,12 +63,11 @@
 
           </div>
         </div>
-        <!-- /.row -->
-        <!-- <div class="card-footer py-0"></div> -->
+        /.row
+        <div class="card-footer py-0"></div>
       
     </div>
-    <!-- /.card -->
-    </div>
+    /.card -->
     </div>
   </section>
   
