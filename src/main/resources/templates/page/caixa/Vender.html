@@ -30,8 +30,12 @@
         </div>
         <!-- <div class="pt-2"></div> -->
         <section class="content">
+          
           <div class="container-fluid">
-            <div class="row align-items-end">
+            <div layout:insert="~{mensagem_geral}"></div>
+            <div layout:insert="~{mensagem_erro}"></div>
+            
+            <div class="row">
               <!-- <div class="row" > -->
               <!-- <div class="col-md-5"></div> -->
               <div class="col-md-7">
@@ -134,15 +138,24 @@
                     </div>
                   </div>
                   <div class="mb-4">
-                    <div class="btn btn-primary btn-lg btn-flat">
+                    <!-- <div class="btn btn-primary btn-lg btn-flat">
                       <i class="fas fa-cart-plus fa-lg mr-2"></i> 
                       Efetuar Pagamento
-                    </div>
+                      
+                    </div> -->
+                    
+                    <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+                     class="js-pagamento btn btn-primary btn-lg btn-flat">
+                      <i class="fas fa-cart-plus fa-lg mr-2"></i>
+                      Efetuar Pagamento
+                    </button>
+                    
+                    
     
-                    <div class="btn btn-default btn-lg btn-flat">
+                    <!-- <div class="btn btn-default btn-lg btn-flat">
                       <i class="fas fa-heart fa-lg mr-2"></i> 
                       Add to Wishlist
-                    </div>
+                    </div> -->
                   </div>
                   <div class="bg-gray py-2 px-3">
                     <h4 class="mb-0">
@@ -252,12 +265,11 @@
                 </button>
               </div>
               <div class="modal-body">
-                <div layout:insert="~{mensagem_geral}"></div>
-                <div id="mensagemErro" layout:insert="~{mensagem_erro}"></div>
                 <div class="row" >
                   <div class="col-12">
                     <div class="table-responsive">
                       <table class="table">
+                        <th:block th:id="dados-pagamento">
                         <tr>
                           <th class="lead mt-2" style="width:50%">Subtotal:</th>
                           <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
@@ -276,6 +288,7 @@
                           <th class="lead">Total:</th>
                           <td id="total"><h2 class="mb-0" th:text="|R$ *{{total}}|"></h2></td>
                         </tr>
+                        </th:block>
                         <tr>
                           <th class="lead">Saldo:</th>
                           <td>
@@ -662,7 +675,7 @@
 		});
 		
 		response.done(function(e){
-			$('#modal-pagamento').replaceWith(e);
+			$('#conteudo').replaceWith(e);
   			$('#modal-pagamento').modal('show');
   		});
 		
@@ -691,11 +704,12 @@
 		});
   		
   		response.done(function(e){
+  			$('#modal-pagamento').modal('hide');
   			$('#conteudo').replaceWith(e);
+  			$('#modal-pagamento').modal('show');
 		});
 		
 		response.fail(function(e){
-			console.log(e);
 			alert('Erro aplicando desconto');
 		});
   	});
