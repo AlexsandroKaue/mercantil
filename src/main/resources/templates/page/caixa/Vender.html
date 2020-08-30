@@ -18,12 +18,10 @@
           <div class="container-fluid">
             <div class="row mb-2" layout:fragment="cabecalho">
               <div class="col-sm-7 m-0">
-                <div class="input-group input-group-lg">
-                  <select class="js-buscar-produto" 
-                          th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir},
-                          data-url-selecionar-balanca=@{/caixa/balanca}"
-                          style="width: 100%;"></select><!-- class="js-example-data-ajax" -->
-                </div>
+                <select class="js-buscar-produto" 
+                 th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir},
+                 data-url-selecionar-balanca=@{/caixa/balanca}"
+                 style="width: 100%;"></select>
               </div>
             </div>
             <!-- /.row -->
@@ -130,18 +128,20 @@
               
               <div class="d-flex flex-column" style="height: 400px;">
                   <div class="mb-auto">
-                  
-                    <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                     id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat">
-                      <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
-                      <i class="fas fa-money-bill-wave"></i>
-                      Efetuar Pagamento (F1)
-                    </button>
-                    <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                     class="js-pagamento btn btn-warning btn-lg btn-flat">
-                      <i class="fas fa-book-open"></i>
-                      Venda na Conta (F2)
-                    </button>
+                   
+                    <div class="d-flex justify-content-between">
+                      <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+                       id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat">
+                        <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
+                        <i class="fas fa-money-bill-wave"></i>
+                        Efetuar Pagamento (F2)
+                      </button>
+                      <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+                       class="js-pagamento btn btn-warning btn-lg btn-flat">
+                        <i class="fas fa-book-open"></i>
+                        Venda na Conta (F3)
+                      </button>
+                    </div>
                     <!-- <div class="bg-white py-2 px-3" style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da;">
                       <h2 class="mb-0">
                         Produto
@@ -309,7 +309,7 @@
                           <th class="lead">Saldo:</th>
                           <td>
                             <div class="input-group input-group-lg">
-                              <input type="text" autofocus="autofocus" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}"></input>
+                              <input type="text" autofocus="autofocus" class="js-currency form-control" th:id="inputSaldo" th:field="*{saldo}"></input>
                             </div>
                           </td>
                         </tr>
@@ -437,11 +437,23 @@
   	$(document).on('keyup', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
   	  console.log(event.keyCode);
-  	  if (event.keyCode === 112) {
+  	  if (event.keyCode === 113) {
   	    // Cancel the default action, if needed
   	    event.preventDefault();
   	    // Trigger the button element with a click
   	    $('#botaoPagamento').click();
+  	  }
+  	});
+ 	
+ // Execute a function when the user releases a key on the keyboard
+  	$(document).on('keyup', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  console.log(event.keyCode);
+  	  if (event.keyCode === 112) {
+  	    // Cancel the default action, if needed
+  	    event.preventDefault();
+  	    // Trigger the button element with a click
+  	  	startSelect2();
   	  }
   	});
  	
@@ -478,7 +490,7 @@
   	  	    },
   	  	    cache: true
   	  	  },
-  	  	  placeholder: 'Procure por um produto',
+  	  	  placeholder: 'Procure por um produto (F1)',
   	  	  minimumInputLength: 1,
   	  	  templateResult: formatRepo,
   	  	  templateSelection: formatRepoSelection,
@@ -607,7 +619,7 @@
     });
     
     $('#container').on('shown.bs.modal', '#modal-pagamento', function(event){
-    	$('#inputSaldo').focus();
+    	$('#inputSaldo').click();
     });
     
     $('#container').on('click', '.js-selecionar-item-balanca', function(event){
@@ -699,6 +711,7 @@
 		response.done(function(e){
 			$('#conteudo').replaceWith(e);
   			$('#modal-pagamento').modal('show');
+  			$('#inputSaldo').focus();
   		});
 		
 		response.fail(function(e){

@@ -39,15 +39,15 @@
           
         </div>
         <div class="d-flex justify-content-between">
-          <a class="btn btn-warning btn-lg btn-flat mt-4"
+          <a id="linkComprovante" class="btn btn-warning btn-lg btn-flat mt-4"
            th:href="@{/caixa/venda/{id}/comprovante(id=${venda.id})}">
-            <i class="fas fa-print fa-lg mr-2"></i>
-            Imprimir comprovante
+            <i class="fas fa-receipt mr-2"></i>
+            Imprimir comprovante (F1)
           </a>
-          <a class="btn btn-danger btn-lg btn-flat mt-4"
+          <a id="linkRetornar" class="btn btn-danger btn-lg btn-flat mt-4"
            th:href="@{/caixa}">
-            <i class="fas fa-undo-alt fa-lg mr-2"></i>
-            Retornar para o Caixa
+            <i class="fas fa-undo-alt mr-2"></i>
+            Retornar para o Caixa (F2)
           </a>
         </div>
       </div>
@@ -55,6 +55,19 @@
   </section>
   
   <script layout:fragment="js-validator">
+  	$(document).on('keyup', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  console.log(event.keyCode);
+  	  if (event.keyCode === 112) { //f1
+  	    // Cancel the default action, if needed
+  	    event.preventDefault();
+  	    // Trigger the button element with a click
+  	    $('#linkComprovante')[0].click();
+  	  } else if(event.keyCode === 113){
+  		event.preventDefault();
+  	    $('#linkRetornar')[0].click();
+  	  }
+  	});
   </script>
     
 </html>
