@@ -130,30 +130,44 @@
               
               <div class="d-flex flex-column" style="height: 400px;">
                   <div class="mb-auto">
-                    <div class="bg-white py-2 px-3" style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da;">
+                  
+                    <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+                     id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat">
+                      <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
+                      <i class="fas fa-money-bill-wave"></i>
+                      Efetuar Pagamento (F1)
+                    </button>
+                    <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+                     class="js-pagamento btn btn-warning btn-lg btn-flat">
+                      <i class="fas fa-book-open"></i>
+                      Venda na Conta (F2)
+                    </button>
+                    <!-- <div class="bg-white py-2 px-3" style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da;">
                       <h2 class="mb-0">
-                        $80.00
+                        Produto
                       </h2>
                       <h4 class="mt-0">
                         <small>Ex Tax: $80.00 </small>
                       </h4>
-                    </div>
-                  </div>
-                  <div class="mb-4">
-                    <!-- <div class="btn btn-primary btn-lg btn-flat">
-                      <i class="fas fa-cart-plus fa-lg mr-2"></i> 
-                      Efetuar Pagamento
-                      
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th class="lead mt-2" ><b>Quantidade</b></th>
+                            <th class="lead mt-2" ><b>Valor Unitário</b></th>
+                            <th class="lead mt-2" ><b>Valor Total</b></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><p class="mb-0">5</p></td>
+                            <td><p class="mb-0">2,00</p></td>
+                            <td><p class="mb-0">10,00</p></td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div> -->
-                    
-                    <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                     class="js-pagamento btn btn-primary btn-lg btn-flat">
-                      <i class="fas fa-cart-plus fa-lg mr-2"></i>
-                      Efetuar Pagamento
-                    </button>
-                    
-                    
-    
+                  </div>
+                  <div class="mb-4">    
                     <!-- <div class="btn btn-default btn-lg btn-flat">
                       <i class="fas fa-heart fa-lg mr-2"></i> 
                       Add to Wishlist
@@ -161,10 +175,10 @@
                   </div>
                   <div class="bg-gray py-2 px-3">
                     <h4 class="mb-0">
-                      <small>Subtotal</small>
+                      <!-- <small> -->Subtotal<!-- </small> -->
                     </h4>
-                    <h2 class="mt-0" th:text="|R$ *{{subtotal}}|">
-                    </h2>
+                    <h1 class="mt-0" th:text="|R$ *{{subtotal}}|">
+                    </h1>
                   </div>
                   
                 
@@ -305,7 +319,7 @@
                           <i class="fas fa-undo-alt"></i>
                           Voltar
                         </button>
-                        <button type="submit" id="finalizar" class="btn btn-md btn-success">
+                        <button type="submit" id="finalizar" class="btn btn-md btn-primary">
                           <i class="far fa-credit-card"></i> 
                           Finalizar
                         </button>
@@ -420,15 +434,17 @@
 	});
   	
  	// Execute a function when the user releases a key on the keyboard
-  	$('#container').on('keyup', '#inputCodigoProduto', function(event) {
+  	$(document).on('keyup', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
-  	  if (event.keyCode === 13) {
+  	  console.log(event.keyCode);
+  	  if (event.keyCode === 112) {
   	    // Cancel the default action, if needed
   	    event.preventDefault();
   	    // Trigger the button element with a click
-  	    $('.js-buscar-produto').click();
+  	    $('#botaoPagamento').click();
   	  }
   	});
+ 	
   	
   	function startSelect2(){
   		var seletor = $('.js-buscar-produto');
