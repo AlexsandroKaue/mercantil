@@ -38,36 +38,19 @@
           </div>
           
         </div>
-        <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-           class="btn btn-warning btn-lg btn-flat mt-4">
-            <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
+        <div class="d-flex justify-content-between">
+          <a class="btn btn-warning btn-lg btn-flat mt-4"
+           th:href="@{/caixa/venda/{id}/comprovante(id=${venda.id})}">
             <i class="fas fa-print fa-lg mr-2"></i>
             Imprimir comprovante
-          </button>
-      </div>
-    <!-- <div class="card card-default">
-      <div class="card-header"></div>
-      <div class="card-body">
-      
-        <div class="row" >
-        
-          
-          
-          <div class="col-md-6">
-            <div style="border-style: solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
-              <div class="chart" style="height: 330px">
-                
-              </div>
-            </div>
-          </div>
-
-          </div>
+          </a>
+          <a class="btn btn-danger btn-lg btn-flat mt-4"
+           th:href="@{/caixa}">
+            <i class="fas fa-undo-alt fa-lg mr-2"></i>
+            Retornar para o Caixa
+          </a>
         </div>
-        /.row
-        <div class="card-footer py-0"></div>
-      
-    </div>
-    /.card -->
+      </div>
     </div>
   </section>
   

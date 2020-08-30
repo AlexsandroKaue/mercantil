@@ -1,10 +1,13 @@
 package com.kaue.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -15,8 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -264,11 +269,50 @@ public class CaixaController {
 	@RequestMapping(value = "/venda/{id}")
 	public ModelAndView detalhesVenda(@PathVariable("id") Venda venda) {
 		ModelAndView mv = new ModelAndView(RECIBO_VIEW);
-		List<Item> itemList = new ArrayList<Item>(venda.getItemList());
-		gerarRelatorio(itemList);
 		mv.addObject("venda", venda);
 		return mv;
 	}
+	
+	
+	@RequestMapping(value="/venda/{id}/comprovante", method=RequestMethod.GET)
+	@ResponseBody
+	public void downloadFile(@PathVariable("id") Venda venda, HttpServletResponse response) {
+		gerarRelatorio(venda);
+		String path = "";
+		try {
+			path = ResourceUtils.getFile("classpath:jrxml").getAbsolutePath();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		String fileName = path + "/cupom.pdf";
+        response.setContentType("application/pdf");//vnd.openxmlformats-officedocument.spreadsheetml.sheet
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"", fileName);
+        response.setHeader(headerKey, headerValue);
+        FileInputStream inputStream;
+        try {
+            inputStream = new FileInputStream(fileName);
+            try {
+                int c;
+                while ((c = inputStream.read()) != -1) {
+                	response.getWriter().write(c);
+                }
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    response.getWriter().close();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+	
+		
 	
 	@RequestMapping(value = "/pagamento", method = RequestMethod.PUT)
 	public ModelAndView iniciarPagamento() {		
@@ -383,10 +427,11 @@ public class CaixaController {
 		return Arrays.asList(OpcoesDesconto.values());
 	}
 	
-	public void gerarRelatorio(List<Item> itemList) {
+	public void gerarRelatorio(Venda venda) {
 		try {
 			List<Registro> registroList = new ArrayList<Registro>();
 			Registro registro = null;
+			List<Item> itemList = venda.getItemList();
 			for(Item item : itemList) {
 				registro = new Registro();
 				registro.setCodigo(item.getProduto().getCodigo());

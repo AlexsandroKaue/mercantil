@@ -18,10 +18,12 @@
           <div class="container-fluid">
             <div class="row mb-2" layout:fragment="cabecalho">
               <div class="col-sm-7 m-0">
-                <select class="js-buscar-produto" 
-                        th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir},
-                        data-url-selecionar-balanca=@{/caixa/balanca}"
-                        style="width: 100%;"></select><!-- class="js-example-data-ajax" -->
+                <div class="input-group input-group-lg">
+                  <select class="js-buscar-produto" 
+                          th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir},
+                          data-url-selecionar-balanca=@{/caixa/balanca}"
+                          style="width: 100%;"></select><!-- class="js-example-data-ajax" -->
+                </div>
               </div>
             </div>
             <!-- /.row -->
