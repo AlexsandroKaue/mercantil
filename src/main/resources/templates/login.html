@@ -23,7 +23,7 @@
 <style th:inline="css">
   .bg-img {
     /* The image used */
-    background-image: url( [[@{/custom/img/mini-mercadinho.jpg}]] );
+    background-image: url( [[@{/dist/img/mini-mercadinho.jpg}]] );
     /* background-color: #cccccc; */
   
     min-height: 380px;
@@ -38,9 +38,9 @@
 </style>
 <body class="hold-transition login-page bg-img">
 <div class="login-box">
-  <div class="login-logo">
+  <!-- <div class="login-logo bg-white">
     <a th:href="@{#}"><b>Mercadinho</b>RHG</a>
-  </div>
+  </div> -->
   <!-- /.login-logo -->
   <div class="alert alert-danger" role="alert" th:if="${!#strings.isEmpty(errorMessage)}">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -49,6 +49,9 @@
   </div>
   <div class="card">
     <div class="card-body login-card-body">
+      <div class="login-logo">
+        <a th:href="@{#}"><b>Mercadinho</b>RHG</a>
+      </div>
       <p class="login-box-msg">Realize login para iniciar sua sessão</p>
       <form th:action="@{/login}" method="POST">
         <div class="input-group mb-3">
