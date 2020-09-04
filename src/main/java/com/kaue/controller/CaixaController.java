@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -21,12 +20,13 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,14 +38,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.enumeration.OpcoesDesconto;
 import com.kaue.enumeration.StatusVenda;
 import com.kaue.model.Categoria;
+import com.kaue.model.Cliente;
 import com.kaue.model.Item;
 import com.kaue.model.Produto;
 import com.kaue.model.Registro;
 import com.kaue.model.Venda;
+import com.kaue.service.ClienteService;
 import com.kaue.service.ProdutoService;
 import com.kaue.service.RelatorioService;
 import com.kaue.service.VendaService;
@@ -71,15 +74,15 @@ public class CaixaController {
 	private ProdutoService produtoService;
 	
 	@Autowired
+	private ClienteService clienteService;
+	
+	@Autowired
 	private RelatorioService relatorioService;
 	
 	private Venda venda;
 	
 	@ModelAttribute
 	public void addAttributes(Model model){
-		//model.addAttribute("produtoList", new ArrayList<Produto>());
-		//model.addAttribute("emptySearchError", false);
-		//model.addAttribute("inclusaoVaziaErro", false);
 		Item item = new Item();
 		item.setProduto(new Produto());
 		model.addAttribute("item", item);
@@ -93,12 +96,6 @@ public class CaixaController {
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW);
 		
 		inicializarVenda();
-		
-		venda.setItemList(new ArrayList<Item>());
-		venda.setDesconto(OpcoesDesconto.ZERO); 
-		venda.setSubtotal(new BigDecimal(0.0));
-		venda.setValorDesconto(new BigDecimal(0.0));
-		venda.setTotal(venda.getSubtotal());
 		
 		mv.addObject("venda", venda);
 		
@@ -114,6 +111,12 @@ public class CaixaController {
 		venda.setTotal(venda.getSubtotal());
 		venda.setSaldo(BigDecimal.ZERO);
 		venda.setDataVenda(new Date());
+		venda.setItemList(new ArrayList<Item>());
+		venda.setDesconto(OpcoesDesconto.ZERO); 
+		venda.setSubtotal(new BigDecimal(0.0));
+		venda.setValorDesconto(new BigDecimal(0.0));
+		venda.setTotal(venda.getSubtotal());
+		//venda.setCliente(new Cliente());
 	}
 	
 	@RequestMapping(value = "/incluir/{codigo}")
@@ -334,13 +337,12 @@ public class CaixaController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
 		
-		
 		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
 			errors.rejectValue("subtotal", null, "Erro: A compra não pode ser vazia!");
 		}
 		
 		if(venda.getSaldo()!=null) {
-			if(venda.getSaldo().compareTo(venda.getTotal())==-1) {
+			if(venda.getSaldo().compareTo(venda.getTotal())==-1 && venda.getCliente() == null) {
 				errors.rejectValue("saldo", null, "Erro: Saldo insuficiente!");
 			}
 		}
@@ -422,9 +424,64 @@ public class CaixaController {
 		return data;
 	}
 	
+	@RequestMapping(value = "/buscarCliente", produces = "application/json")
+	public @ResponseBody Map<String, Object> buscarCliente(@RequestParam("q") String q, @RequestParam("page") Integer page) throws IOException {
+		
+		String termo = q;
+		List<Cliente> clienteList = new ArrayList<Cliente>();
+		Long quantidadeDeClientes = 0L;
+		Long pageSize = 3L;
+		if(termo != null && !termo.trim().isEmpty()) {
+			ClienteFilter filtro = new ClienteFilter();
+
+			filtro.getCliente().setNome(termo);
+			filtro.getCliente().setCpf(termo);
+			filtro.setPage(new Long(page.intValue()-1));
+			filtro.setPageSize(pageSize);
+			
+			clienteList = clienteService.pesquisar(filtro);
+			if(clienteList != null && clienteList.size()>0) {
+				for(Cliente cliente : clienteList) {
+					byte[] bytes = null;//cliente.getImagem();
+					if(bytes == null) {
+						File file = ResourceUtils.getFile("classpath:static/custom/img/produto/sem-imagem_2.jpg");
+						Path path = file.toPath();
+						bytes = Files.readAllBytes(path);
+					}
+					String encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+					cliente.setImagemBase64(encodedfile);
+				}
+			}
+			
+			quantidadeDeClientes = clienteService.contar(filtro);
+		} 
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("clientes", clienteList);
+		data.put("total_count", quantidadeDeClientes);
+		data.put("page_size", pageSize);
+		
+		return data;
+	}
+	
+	@RequestMapping(value = "/selecionarCliente/{id}")
+	public ModelAndView selecionarCliente(@PathVariable("id") Cliente cliente) {
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
+		venda.setCliente(cliente);
+		mv.addObject("venda", venda);
+		return mv;
+	}
+	
 	@ModelAttribute
 	public List<OpcoesDesconto> todasOpcoesDesconto(){
 		return Arrays.asList(OpcoesDesconto.values());
+	}
+	
+	@ModelAttribute
+	public List<Cliente> todosClientes(){
+		List<Cliente> clienteList = new ArrayList<Cliente>();
+		clienteList = clienteService.pesquisar(new ClienteFilter());
+		return clienteList;
 	}
 	
 	public void gerarRelatorio(Venda venda) {

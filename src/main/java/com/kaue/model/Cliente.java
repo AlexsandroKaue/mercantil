@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -45,6 +46,9 @@ public class Cliente {
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Endereco endereco;
+	
+	@Transient
+	private String imagemBase64;
 
 	public Long getId() {
 		return id;
@@ -125,5 +129,13 @@ public class Cliente {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public String getImagemBase64() {
+		return imagemBase64;
+	}
+
+	public void setImagemBase64(String imagemBase64) {
+		this.imagemBase64 = imagemBase64;
 	}
 }

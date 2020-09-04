@@ -12,9 +12,16 @@
     <div id="conteudo">
     
       <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa}" th:object="${venda}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+        <input type="hidden" th:field="*{id}"></input>
+        <input type="hidden" th:field="*{dataVenda}"></input>
+        <input type="hidden" th:field="*{subtotal}"></input>
+        <input type="hidden" th:field="*{total}"></input>
+        <input type="hidden" th:field="*{valorDesconto}"></input>
+        <input type="hidden" th:field="*{status}"></input>
+        <input type="hidden" th:field="*{cliente}"></input>
         
         <div class="content-header" style="padding-left:0px; padding-right:0px; padding-bottom:5px">
-    
           <div class="container-fluid">
             <div class="row mb-2" layout:fragment="cabecalho">
               <div class="col-sm-7 m-0">
@@ -28,7 +35,6 @@
           </div>
           <!-- /.container-fluid -->
         </div>
-        <!-- <div class="pt-2"></div> -->
         <section class="content">
           
           <div class="container-fluid">
@@ -36,8 +42,6 @@
             <div layout:insert="~{mensagem_erro}"></div>
             
             <div class="row">
-              <!-- <div class="row" > -->
-              <!-- <div class="col-md-5"></div> -->
               <div class="col-md-7">
                 <!-- <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4"> -->
                   <div class="chart" style=" height: 400px; border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
@@ -65,11 +69,6 @@
                         </li>
                       </ul>
                     </div>
-                    <input type="hidden" th:field="*{id}"></input>
-                    <input type="hidden" th:field="*{dataVenda}"></input>
-                    <input type="hidden" th:field="*{subtotal}"></input>
-                    <input type="hidden" th:field="*{total}"></input>
-                    <input type="hidden" th:field="*{valorDesconto}"></input>
                     <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="overflow: scroll;">
                       
                       <th:block th:each="item, rowStat : *{itemList}">
@@ -108,171 +107,44 @@
                   </div>
                 <!-- </div> -->
               </div>
-              
-              <!-- <div class="col-md-4 align-items-start flex-column"> -->
-                <!-- <div class="row mb-auto">
-                  <div class="col-md-12">
-                    <div class=" text-right">
-                      <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                       class="js-pagamento btn btn-primary btn-flat py-2 btn-block">
-                        <i class="fas fa-cart-plus mr-2"></i>
-                        Pagamento
-                      </button>
-                    </div>
-                  </div>
-                </div> -->
-              <!-- </div> -->
-            <!-- </div> -->
             
             <div class="col-md-5">
               
               <div class="d-flex flex-column" style="height: 400px;">
-                  <div class="mb-auto">
-                   
-                    <div class="d-flex justify-content-between">
-                      <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                       id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat">
-                        <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
-                        <i class="fas fa-money-bill-wave"></i>
-                        Efetuar Pagamento (F2)
-                      </button>
-                      <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                       class="js-pagamento btn btn-warning btn-lg btn-flat">
-                        <i class="fas fa-book-open"></i>
-                        Venda na Conta (F3)
-                      </button>
-                    </div>
-                    <!-- <div class="bg-white py-2 px-3" style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da;">
-                      <h2 class="mb-0">
-                        Produto
-                      </h2>
-                      <h4 class="mt-0">
-                        <small>Ex Tax: $80.00 </small>
-                      </h4>
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th class="lead mt-2" ><b>Quantidade</b></th>
-                            <th class="lead mt-2" ><b>Valor Unitário</b></th>
-                            <th class="lead mt-2" ><b>Valor Total</b></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td><p class="mb-0">5</p></td>
-                            <td><p class="mb-0">2,00</p></td>
-                            <td><p class="mb-0">10,00</p></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div> -->
+                <div class="mb-auto">
+                 
+                  <div class="d-flex justify-content-between">
+                    <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+                     id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat">
+                      <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
+                      <i class="fas fa-money-bill-wave"></i>
+                      Efetuar Pagamento (F2)
+                    </button>
+                    <button type="button" data-toggle="modal" data-target="#modal-cliente"
+                     class="btn btn-warning btn-lg btn-flat">
+                      <i class="fas fa-book-open"></i>
+                      Venda na Conta (F3)
+                    </button>
                   </div>
-                  <div class="mb-4">    
-                    <!-- <div class="btn btn-default btn-lg btn-flat">
-                      <i class="fas fa-heart fa-lg mr-2"></i> 
-                      Add to Wishlist
-                    </div> -->
-                  </div>
-                  <div class="bg-gray py-2 px-3">
-                    <h4 class="mb-0">
-                      <!-- <small> -->Subtotal<!-- </small> -->
-                    </h4>
-                    <h1 class="mt-0" th:text="|R$ *{{subtotal}}|">
-                    </h1>
-                  </div>
-                  
-                
-                
-                
-                <!-- <div class="card card-default align-bottom" style="margin-top:190px">
-                  <div class="card-header"></div>
-                  <div class="card-body">
-                    <div class="row" >
-                      
-                      <div class="table-responsive">
-                        <table>
-                          <tr>
-                            <th class="lead mt-2" style="width:50%"><h2>Subtotal:</h2></th>
-                            <td id="subtotal" class="bg-gray js-subtotal"><h2 th:text="|R$ *{{subtotal}}|">R$ 0,00</h2></td>
-                          </tr>
-                        </table>
-                        <div class="d-flex justify-content-between">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <i class="fas fa-undo-alt"></i>
-                            Voltar
-                          </button>
-                          <button type="submit" id="finalizar" class="btn btn-md btn-success">
-                            <i class="far fa-credit-card"></i> 
-                            Finalizar
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-                <!-- /.card --> 
+                </div>
+                <div class="bg-gray py-2 px-3">
+                  <h4 class="mb-0">
+                    <!-- <small> -->Subtotal<!-- </small> -->
+                  </h4>
+                  <h1 class="mt-0" th:text="|R$ *{{subtotal}}|">
+                  </h1>
+                </div>
                </div>
               </div>
             
-              <!-- <div class="col-md-5">
-                <div class="card card-default">
-                  <div class="card-header"></div>
-                  <div class="card-body">
-                    <div layout:insert="~{mensagem_geral}"></div>
-                    <div layout:insert="~{mensagem_erro}"></div>
-                    <div class="row" >
-                      <div class="table-responsive">
-                        <table class="table">
-                          <tr>
-                            <th class="lead mt-2" style="width:50%"><b>Subtotal:</b></th>
-                            <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
-                          </tr>
-                          <tr>
-                            <th class="lead form-inline">
-                              <b>Desconto</b>
-                              <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
-                                th:attr="data-url-base-desconto=@{/caixa/desconto}">
-                                <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
-                              </select>
-                            </th>
-                            <td id="desconto-valor"><p class="mb-0" th:text="|R$ *{{valorDesconto}}|">R$ 0,00</p></td>
-                          </tr>
-                          <tr>
-                            <th class="lead"><b>Total:</b></th>
-                            <td id="total"><h2 class="mb-0 bg-gray" th:text="|R$ *{{total}}|"></h2></td>
-                          </tr>
-                          <tr>
-                            <th class="lead"><b>Saldo:</b></th>
-                            <td>
-                              <div class="input-group input-group-lg">
-                                <input type="text" class="js-currency form-control" id="inputSaldo" th:field="*{saldo}"></input>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                        <div class="d-flex justify-content-between">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <i class="fas fa-undo-alt"></i>
-                            Voltar
-                          </button>
-                          <button type="submit" id="finalizar" class="btn btn-md btn-success">
-                            <i class="far fa-credit-card"></i> 
-                            Finalizar
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                /.card
-              </div> -->
             </div>
           </div>
         </section>
-        
-        
-        <div class="modal show" id="modal-pagamento">
-          <div class="modal-dialog modal-dialog-centered">
+                
+        <div class="modal" id="modal-pagamento" 
+         tabindex="-1" data-keyboard="true"
+         role="dialog" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
+          <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <h4 class="modal-title">Pagamento</h4>
@@ -283,9 +155,9 @@
               <div class="modal-body">
                 <div class="row" >
                   <div class="col-12">
+                    
                     <div class="table-responsive">
                       <table class="table">
-                        <th:block th:id="dados-pagamento">
                         <tr>
                           <th class="lead mt-2" style="width:50%">Subtotal:</th>
                           <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
@@ -304,12 +176,11 @@
                           <th class="lead">Total:</th>
                           <td id="total"><h2 class="mb-0" th:text="|R$ *{{total}}|"></h2></td>
                         </tr>
-                        </th:block>
                         <tr>
                           <th class="lead">Saldo:</th>
                           <td>
                             <div class="input-group input-group-lg">
-                              <input type="text" autofocus="autofocus" class="js-currency form-control" th:id="inputSaldo" th:field="*{saldo}"></input>
+                              <input type="text" class="js-currency input_saldo form-control" id="inputSaldo" th:field="*{saldo}"></input>
                             </div>
                           </td>
                         </tr>
@@ -317,79 +188,129 @@
                       <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">
                           <i class="fas fa-undo-alt"></i>
-                          Voltar
+                          Voltar (ESC)
                         </button>
                         <button type="submit" id="finalizar" class="btn btn-md btn-primary">
                           <i class="far fa-credit-card"></i> 
-                          Finalizar
+                          Finalizar (ENTER)
                         </button>
                       </div>
-                      
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="modal-footer justify-content-between"></div>
             </div>
             <!-- /.modal-content -->
           </div>
           <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
-      </form>
-    
-    </div>
-    
-    <div class="modal fade" id="modalBalanca">
-        <form id="itemForm" role="form" method="POST" th:action="@{/caixa/incluir}" th:object="${item}">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+        
+        <div class="modal" id="modal-cliente" 
+         tabindex="-1" data-keyboard="true"
+         role="dialog" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Informe o peso</h4>
+                <h4 class="modal-title">Selecione um Cliente</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                <div class="row">
-                  <input type="hidden" id="inputCodigoProduto" th:field="*{produto.codigo}"></input>
-                  <input type="hidden" id="inputUnitario" th:field="*{produto.unitario}"></input>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label class="col-form-label">Produto</label>
-                      <p id="descricaoProduto" th:text="*{produto.descricao}">Descrição do Produto</p>
+                <div class="row" >
+                  <div class="col-12">
+                    <div class="tab">
+                      <select id="selectClient" class="js-buscar-cliente" 
+                       th:attr="data-url-buscar-cliente=@{/caixa/buscarCliente}, data-url-selecionar-cliente=@{/caixa/selecionarCliente}"
+                       style="width: 100%;"></select>
+                      <input placeholder="Escoha o cliente..." class="form-control mt-2 required" oninput="this.className = ''" name="fname"
+                       th:if="*{cliente}" th:field="*{cliente.nome}" readonly="readonly">
+                      <input placeholder="Escoha o cliente..." class="form-control mt-2 required" oninput="this.className = ''" name="fname"
+                       th:unless="*{cliente}" readonly="readonly"></input>
+                    </div>
+                    <div class="tab"><!-- Contact Info: -->
+                      <!-- <p><input placeholder="E-mail..." oninput="this.className = ''" name="email"></p>
+                      <p><input placeholder="Phone..." oninput="this.className = ''" name="phone"></p> -->
+                    </div>
+                    <div style="overflow:auto;">
+                      <div style="float:right;">
+                      
+                      </div>
+                    </div>
+                    <!-- Circles which indicates the steps of the form: -->
+                    <div style="text-align:center;margin-top:40px;">
+                      <span class="step"></span>
+                      <span class="step"></span>
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="inputQuantidade" class="col-form-label">Peso</label>
-                      <input type="text" id="inputQuantidade" autofocus="autofocus" th:field="*{quantidade}" class="form-control js-currency"></input>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="inputValorQuilo" class="col-form-label">Valor Kg</label>
-                      <input type="text" readonly="readonly" id="inputValorQuilo" th:field="*{produto.valorDeVenda}" class="form-control"></input>
-                    </div>
-                  </div>
-                  
-               </div>
               </div>
               <div class="modal-footer justify-content-between">
-               <button type="button" class="btn btn-md btn-danger" data-dismiss="modal">Cancelar</button>
-               <button type="button" class="btn btn-md btn-success js-selecionar-item-balanca" 
-               th:attr="data-url-base=@{/caixa/incluir/}" th:text="#{incluir}">Incluir</button><!-- js-selecionar-item-balanca -->
+                <button type="button" id="prevBtn" class="btn btn-md btn-danger" onclick="nextPrev(-1)">Anterior</button>
+                <button type="button" id="nextBtn" class="btn btn-md btn-success" onclick="nextPrev(1)">Próximo</button>
               </div>
             </div>
             <!-- /.modal-content -->
           </div>
           <!-- /.modal-dialog -->
-        </form>
-      </div>
-      <!-- /.modal -->
+        </div>
+        <!-- /.modal -->
+        
+      </form>
+    
+    </div>
+    
+    <div class="modal fade" id="modalBalanca" tabindex="-1" data-keyboard="true" data-backdrop="static">
+      <form id="itemForm" role="form" method="POST" th:action="@{/caixa/incluir}" th:object="${item}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Informe o peso</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <input type="hidden" id="inputCodigoProduto" th:field="*{produto.codigo}"></input>
+                <input type="hidden" id="inputUnitario" th:field="*{produto.unitario}"></input>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-form-label">Produto</label>
+                    <p id="descricaoProduto" th:text="*{produto.descricao}">Descrição do Produto</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="inputQuantidade" class="col-form-label">Peso</label>
+                    <input type="text" id="inputQuantidade" th:field="*{quantidade}" class="form-control js-currency"></input>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="inputValorQuilo" class="col-form-label">Valor Kg</label>
+                    <input type="text" readonly="readonly" id="inputValorQuilo" th:field="*{produto.valorDeVenda}" class="form-control"></input>
+                  </div>
+                </div>
+                
+             </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+             <button type="button" class="btn btn-md btn-danger" data-dismiss="modal">Cancelar</button>
+             <button type="button" class="btn btn-md btn-success js-selecionar-item-balanca" 
+             th:attr="data-url-base=@{/caixa/incluir/}" th:text="#{incluir}">Incluir</button><!-- js-selecionar-item-balanca -->
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </form>
+    </div>
+    <!-- /.modal -->
   
     <div class="modal fade" id="modalConfirmarRemocaoItem" tabindex="-1" data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog">
@@ -436,7 +357,6 @@
  	// Execute a function when the user releases a key on the keyboard
   	$(document).on('keyup', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
-  	  console.log(event.keyCode);
   	  if (event.keyCode === 113) {
   	    // Cancel the default action, if needed
   	    event.preventDefault();
@@ -445,18 +365,29 @@
   	  }
   	});
  	
- // Execute a function when the user releases a key on the keyboard
+ 	// Execute a function when the user releases a key on the keyboard
   	$(document).on('keyup', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
-  	  console.log(event.keyCode);
   	  if (event.keyCode === 112) {
   	    // Cancel the default action, if needed
   	    event.preventDefault();
   	    // Trigger the button element with a click
-  	  	startSelect2();
+  	  	$('.js-buscar-produto').select2('focus');
   	  }
   	});
- 	
+ 
+ 	// Execute a function when the user releases a key on the keyboard
+  	$('#modal-pagamento').on('keyup', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  console.log(event.keyCode);
+  	  if (event.keyCode === 27) { //Esc
+  	    // Cancel the default action, if needed
+  	    console.log('Esc:'+event.keyCode);
+  	    event.preventDefault();
+  	    // Trigger the button element with a click
+  	  	$(this).modal('hide');
+  	  }
+  	});
   	
   	function startSelect2(){
   		var seletor = $('.js-buscar-produto');
@@ -496,14 +427,52 @@
   	  	  templateSelection: formatRepoSelection,
   	  	  multiple: true
   	  	});
-  	  	$(seletor).select2('focus');
   	}
   	
-  	$('#container').on("select2:open",".js-buscar-produto", function (e) { console.log("select2:open", e); });
-  	
-  	$(document).ready(function(event){
-  		startSelect2();
-  	});
+  	function startSelect2Cliente(){
+  		
+  		currentTab = 0; // Current tab is set to be the first tab (0)
+  		showTab(currentTab); // Display the current tab
+  		
+  		var seletorCliente = $('.js-buscar-cliente');
+  		var url = seletorCliente.data('url-buscar-cliente');
+  		
+  		$(seletorCliente).select2({
+  	      language: "pt-BR",
+		  //dropdownParent: $('.modal-body', '#modal-cliente'),
+  	  	  ajax: {
+  	  	    url: url,
+  	  	    dataType: 'json',
+  	  	    delay: 250,
+  	  	    data: function (params) {
+  	  	      return {
+  	  	        q: params.term, // search term
+  	  	        page: params.page || 1 
+  	  	      };
+  	  	    },
+  	  	    processResults: function (data, params) {
+  	  	      // parse the results into the format expected by Select2
+  	  	      // since we are using custom formatting functions we do not need to
+  	  	      // alter the remote JSON data, except to indicate that infinite
+  	  	      // scrolling can be used
+  	  	      params.page = params.page || 1;
+
+  	  	      return {
+  	  	        results: data.clientes,
+  	  	        pagination: {
+  	  	          more: (params.page * data.page_size) < data.total_count
+  	  	        }
+  	  	      };
+  	  	    },
+  	  	    cache: true
+  	  	  },
+  	  	  placeholder: 'Procure por um cliente',
+  	  	  minimumInputLength: 1,
+  	  	  templateResult: formatRepoCliente,
+  	  	  templateSelection: formatRepoSelection,
+  	  	  multiple: true
+  	  	});
+  	}
 
   	function formatRepo (repo) {
   	  if (repo.loading) {
@@ -534,6 +503,39 @@
   	  /* $container.find(".select2-result-repository__forks").text(repo.categoria.descricao); */
   	  $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
   	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers");
+
+  	  return $container;
+  	}
+  	
+  	function formatRepoCliente (repo) {
+  	  if (repo.loading) {
+  	    return repo.text;
+  	  }
+
+  	  var $container = $(
+  	    "<div class='select2-result-repository clearfix'>" +
+  	      "<div class='select2-result-repository__avatar'><img id='image' style='height:available' src='' /></div>" +
+  	      "<div class='select2-result-repository__meta'>" +
+  	      	"<div class='select2-result-repository__description'></div>" +
+  	        "<div class='select2-result-repository__title'></div>" +
+  	      	"<div class='select2-result-repository__forks'></div>" +
+  	      	/* "<div class='select2-result-repository__description' id='categoria'><i class='fa fa-flash'></i> </div>" + */
+  	        /* "<div class='select2-result-repository__statistics'>" +
+  	      		"<div class='select2-result-repository__forks'></div>" +
+  	    		/*"<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
+  	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +	
+  	        "</div>" +  */
+  	      "</div>" +
+  	    "</div>"
+  	  );
+
+  	  $container.find("#image").attr('src', 'data:image/png;base64,'+repo.imagemBase64);
+  	  $container.find(".select2-result-repository__description").text(repo.nome);
+  	  $container.find(".select2-result-repository__title").text(repo.nome);
+  	  /* $container.find(".select2-result-repository__description#categoria").text(repo.categoria.descricao); */
+  	  /* $container.find(".select2-result-repository__forks").text(repo.categoria.descricao); */
+  	  /* $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
+  	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers"); */
 
   	  return $container;
   	}
@@ -584,6 +586,35 @@
     	
     });
     
+    $('#container').on('select2:select','.js-buscar-cliente', function(e) {
+
+    	var data = e.params.data;
+    	var seletor = $(e.currentTarget);
+    	
+  		var url = seletor.data('url-selecionar-cliente');
+  		var id = data.id;
+  		
+  		if(!url.endsWith('/')){
+			url += '/';
+		}
+    	url += data.id;
+      	
+      	var response = $.ajax({
+      		url: url,
+      		type: 'GET'
+  		});
+      	
+      	response.done(function(e){
+      		$('#modal-cliente').modal('hide');
+      		$('#conteudo').replaceWith(e);
+  			$('#modal-cliente').modal('show');
+  		});
+      	response.fail(function(e){
+      		alert('Erro incluindo cliente');
+  		}); 
+    	
+    });
+    
     function mostrarModalBalanca(e) {
     	e.preventDefault();
     	var data = e.params.data;
@@ -618,9 +649,32 @@
     	$('#inputQuantidade').focus();
     });
     
+    /* $('#container').on('show.bs.modal', '#modalBalanca', function(event){
+    	$(this).removeClass('fade');
+    }); */
+    
     $('#container').on('shown.bs.modal', '#modal-pagamento', function(event){
-    	$('#inputSaldo').click();
+    	$('#inputSaldo').maskMoney({
+    		decimal:',',
+    		thousands:'.', 
+			allowZero:'true',
+			formatOnBlur:false}).focus();
+    	$('#inputSaldo').focus();
     });
+    
+    $('#myModal').on('shown.bs.modal', function () {
+    	  $('#myInput').trigger('focus')
+    	})
+    
+    $('#container').on('shown.bs.modal', '#modal-cliente', function(event){
+    	startSelect2Cliente();
+		$('#selectClient').select2('focus');
+    });
+    
+    $('#container').on('hidden.bs.modal', '#modal-cliente', function(event){
+    	$('.js-buscar-produto').select2('focus');
+    });
+   
     
     $('#container').on('click', '.js-selecionar-item-balanca', function(event){
     	var botao = $(event.currentTarget);
@@ -709,9 +763,9 @@
 		});
 		
 		response.done(function(e){
+			$('#modal-pagamento').modal('hide');
 			$('#conteudo').replaceWith(e);
   			$('#modal-pagamento').modal('show');
-  			$('#inputSaldo').focus();
   		});
 		
 		response.fail(function(e){
@@ -749,20 +803,195 @@
 		});
   	});
 
+	$(document).ready(function(event){
+  		startSelect2();
+  		$('.js-buscar-produto').select2('focus');
+  	});
+	
 	$(document).ajaxComplete(function(event, xhr, settings) {		
 		var url = settings.url;
-		console.log(url);
-		if(!url.includes('buscarItem')){
+		
+		console.log('url: '+url)
+		if(!(url.includes('buscarItem'))){
 			startSelect2();
 		}
+		if(!(url.includes('buscarCliente'))){
+			startSelect2Cliente();
+		}
+		
+		if(($("#modal-cliente").data('bs.modal') || {})._isShown) {
+			$('.js-buscar-cliente').select2('focus');
+		} else {
+			$('.js-buscar-produto').select2('focus');
+		}
+		
+		
+		
+		currentTab = 0; // Current tab is set to be the first tab (0)
+		showTab(currentTab); // Display the current tab
+
 		/* if(url.includes('balanca')) { */
-			$('.js-currency').maskMoney({decimal:',', 
+			/* $('.js-currency').maskMoney({decimal:',', 
 				thousands:'.', 
 				allowZero:'true',
-				formatOnBlur:false});
+				formatOnBlur:false}); */
 		/* } */
 	});
+	
+	var currentTab = 0; // Current tab is set to be the first tab (0)
+	showTab(currentTab); // Display the current tab
+
+	function showTab(n) {
+	  // This function will display the specified tab of the form...
+	  var x = document.getElementsByClassName("tab");
+	  x[n].style.display = "block";
+	  //... and fix the Previous/Next buttons:
+	  if (n == 0) {
+	    document.getElementById("prevBtn").style.display = "none";
+	  } else {
+	    document.getElementById("prevBtn").style.display = "inline";
+	  }
+	  if (n == (x.length - 1)) {
+	    document.getElementById("nextBtn").innerHTML = "Finalizar";
+	  } else {
+	    document.getElementById("nextBtn").innerHTML = "Próximo";
+	  }
+	  //... and run a function that will display the correct step indicator:
+	  fixStepIndicator(n)
+	}
+
+	function nextPrev(n) {
+	  // This function will figure out which tab to display
+	  var x = document.getElementsByClassName("tab");
+	  // Exit the function if any field in the current tab is invalid:
+	  if (n == 1 && !validateForm()) return false;
+	  // Hide the current tab:
+	  x[currentTab].style.display = "none";
+	  // Increase or decrease the current tab by 1:
+	  currentTab = currentTab + n;
+	  // if you have reached the end of the form...
+	  if (currentTab >= x.length) {
+	    // ... the form gets submitted:
+	    document.getElementById("caixaForm").submit();
+	    return false;
+	  }
+	  // Otherwise, display the correct tab:
+	  showTab(currentTab);
+	}
+
+	function validateForm() {
+	  // This function deals with validation of the form fields
+	  var x, y, i, valid = true;
+	  x = document.getElementsByClassName("tab");
+	  y = x[currentTab].getElementsByClassName("required");
+	  // A loop that checks every input field in the current tab:
+	  for (i = 0; i < y.length; i++) {
+	    // If a field is empty...
+	    if (y[i].value == "") {
+	      // add an "invalid" class to the field:
+	      y[i].className += " invalid";
+	      // and set the current valid status to false
+	      valid = false;
+	    }
+	  }
+	  // If the valid status is true, mark the step as finished and valid:
+	  if (valid) {
+	    document.getElementsByClassName("step")[currentTab].className += " finish";
+	  }
+	  return valid; // return the valid status
+	}
+
+	function fixStepIndicator(n) {
+	  // This function removes the "active" class of all steps...
+	  var i, x = document.getElementsByClassName("step");
+	  for (i = 0; i < x.length; i++) {
+	    x[i].className = x[i].className.replace(" active", "");
+	  }
+	  //... and adds the "active" class on the current step:
+	  x[n].className += " active";
+	}
   </script>
+  
+  <style layout:fragment="extra-style">
+    #modal-cliente * {
+      box-sizing: border-box;
+    }
+    
+    #modal-cliente body {
+      background-color: #f1f1f1;
+    }
+    
+    /* #modal-cliente #regForm {
+      background-color: #ffffff;
+      margin: 100px auto;
+      font-family: Raleway;
+      padding: 40px;
+      width: 70%;
+      min-width: 300px;
+    } */
+    
+    #modal-cliente h1 {
+      text-align: center;  
+    }
+    
+    .input_saldo {
+      padding: 10px;
+      width: 100%;
+      font-size: 25px;
+      font-family: Raleway;
+      border: 1px solid #aaaaaa;
+    }
+    
+    /* Mark input boxes that gets an error on validation: */
+    #modal-cliente input.invalid {
+      background-color: #ffdddd;
+    }
+    
+    /* Hide all steps by default: */
+    #modal-cliente .tab {
+      display: none;
+    }
+    
+    /* #modal-cliente button {
+      background-color: #4CAF50;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 17px;
+      font-family: Raleway;
+      cursor: pointer;
+    }
+    
+    #modal-cliente button:hover {
+      opacity: 0.8;
+    } */
+    
+    /* #modal-cliente #prevBtn {
+      background-color: #bbbbbb;
+    } */
+    
+    /* Make circles that indicate the steps of the form: */
+    #modal-cliente .step {
+      height: 15px;
+      width: 15px;
+      margin: 0 2px;
+      background-color: #bbbbbb;
+      border: none;  
+      border-radius: 50%;
+      display: inline-block;
+      opacity: 0.5;
+    }
+    
+    #modal-cliente .step.active {
+      opacity: 1;
+    }
+    
+    /* Mark the steps that are finished and valid: */
+    #modal-cliente .step.finish {
+      background-color: #4CAF50;
+    }
+  
+  </style>
   
   <div class="modal" id="modalEscolherCliente">
     <div class="modal-dialog modal-lg">
