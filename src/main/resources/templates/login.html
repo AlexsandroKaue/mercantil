@@ -20,7 +20,23 @@
   <!-- Google Font: Source Sans Pro -->
   <link type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"></link>
 </head>
-<body class="hold-transition login-page">
+<style th:inline="css">
+  .bg-img {
+    /* The image used */
+    background-image: url( [[@{/custom/img/mini-mercadinho.jpg}]] );
+    /* background-color: #cccccc; */
+  
+    min-height: 380px;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
+
+</style>
+<body class="hold-transition login-page bg-img">
 <div class="login-box">
   <div class="login-logo">
     <a th:href="@{#}"><b>Mercadinho</b>RHG</a>
