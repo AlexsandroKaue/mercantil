@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kaue.model.Registro;
 import com.kaue.service.RelatorioService;
 
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -23,7 +24,7 @@ import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 @Service
 public class RelatorioServiceImpl implements RelatorioService{
 
-	public void gerarRelatorioEmPdf(List<Registro> registros, Map<String, Object> param, String origem, String destino) throws JRException {
+	public void gerarRelatorioEmPdf(List<Registro> registros, Map<String, Object> param, String origem, String sub, String destino) throws JRException {
 		JasperReport jasper = JasperCompileManager.compileReport(origem);
 		JRBeanCollectionDataSource fonteDadosBean = new JRBeanCollectionDataSource(registros, false);
 		JasperPrint print = JasperFillManager.fillReport(jasper, param, fonteDadosBean);

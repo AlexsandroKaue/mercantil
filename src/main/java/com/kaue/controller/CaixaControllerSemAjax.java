@@ -524,7 +524,7 @@ public class CaixaControllerSemAjax {
 			String path = ResourceUtils.getFile("classpath:jrxml").getAbsolutePath();
 			String origem = path + "/cupom.jrxml";
 			String destino = path + "/cupom.pdf";
-			relatorioService.gerarRelatorioEmPdf(registroList, param, origem, destino);
+			//relatorioService.gerarRelatorioEmPdf(registroList, param, origem, destino);
 			
 			
 		} catch (Exception e) {

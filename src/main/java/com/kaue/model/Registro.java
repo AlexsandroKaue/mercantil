@@ -6,6 +6,8 @@ public class Registro {
 	private String quantidade;
 	private String valorUnitario;
 	private String valorItem;
+	private String unitario;
+	private String posicao;
 	
 	public String getCodigo() {
 		return codigo;
@@ -36,6 +38,18 @@ public class Registro {
 	}
 	public void setValorItem(String valorItem) {
 		this.valorItem = valorItem;
+	}
+	public String getUnitario() {
+		return unitario;
+	}
+	public void setUnitario(String unitario) {
+		this.unitario = unitario;
+	}
+	public String getPosicao() {
+		return posicao;
+	}
+	public void setPosicao(String posicao) {
+		this.posicao = posicao;
 	}
 	
 	

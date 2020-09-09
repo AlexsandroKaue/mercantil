@@ -255,7 +255,7 @@ public class CaixaController {
 	@RequestMapping(value = "/balanca/{codigo}")
 	public ModelAndView mostrarBalanca(@PathVariable("codigo") String codigo, Model model) {
 		
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #modalBalanca");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #modal-balanca");
 		if(!codigo.isEmpty()) {
 			Produto produto = produtoService.buscarPorCodigo(codigo);
 			if(produto != null) {
@@ -489,13 +489,16 @@ public class CaixaController {
 			List<Registro> registroList = new ArrayList<Registro>();
 			Registro registro = null;
 			List<Item> itemList = venda.getItemList();
+			int count = 0;
 			for(Item item : itemList) {
 				registro = new Registro();
 				registro.setCodigo(item.getProduto().getCodigo());
 				registro.setDescricao(item.getProduto().getDescricao().toUpperCase());
-				registro.setQuantidade(item.getQuantidade().toString());
-				registro.setValorUnitario(item.getValor().toString());
-				registro.setValorItem(item.getValor().multiply(item.getQuantidade()).toString());
+				registro.setQuantidade(item.getQuantidade().toString().replace(".", ","));
+				registro.setValorUnitario(item.getValor().toString().replace(".", ","));
+				registro.setValorItem(item.getValorTotal().toString().replace(".", ","));
+				registro.setUnitario(item.getProduto().getUnitario().getSigla());
+				registro.setPosicao(String.format("%03d", ++count));
 				registroList.add(registro);
 			}
 			Map<String, Object> param = new HashMap<String, Object>();
@@ -506,7 +509,8 @@ public class CaixaController {
 			String path = ResourceUtils.getFile("classpath:jrxml").getAbsolutePath();
 			String origem = path + "/cupom.jrxml";
 			String destino = path + "/cupom.pdf";
-			relatorioService.gerarRelatorioEmPdf(registroList, param, origem, destino);
+			String sub = path + "/sub-cupom.jrxml";
+			relatorioService.gerarRelatorioEmPdf(registroList, param, origem, sub, destino);
 			
 			
 		} catch (Exception e) {

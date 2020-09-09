@@ -9,7 +9,7 @@ import net.sf.jasperreports.engine.JRException;
 
 public interface RelatorioService {
 	
-	public void gerarRelatorioEmPdf(List<Registro> registroList, Map<String, Object> param, String origem, String destino)
+	public void gerarRelatorioEmPdf(List<Registro> registroList, Map<String, Object> param, String origem, String sub, String destino)
 			throws JRException;
 	
 	public void gerarRelatorioEmExcel(List<Registro> registroList, Map<String, Object> param, String origem, String destino)

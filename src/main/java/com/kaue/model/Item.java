@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.Digits;
 
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.NumberFormat;
@@ -29,6 +30,7 @@ public class Item {
 	@ManyToOne
 	private Venda venda;
 		
+	@Digits(integer=19, fraction=3)
 	@NumberFormat(pattern = "#,###0.000")
 	private BigDecimal quantidade;
 	

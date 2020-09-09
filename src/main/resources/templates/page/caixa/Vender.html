@@ -180,7 +180,7 @@
                           <th class="lead">Saldo:</th>
                           <td>
                             <div class="input-group input-group-lg">
-                              <input type="text" class="js-currency input_saldo form-control" id="inputSaldo" th:field="*{saldo}"></input>
+                              <input type="text" id="inputSaldo" class="form-control js-currency" th:field="*{saldo}"></input>
                             </div>
                           </td>
                         </tr>
@@ -274,7 +274,7 @@
     
     </div>
     
-    <div class="modal fade" id="modalBalanca" tabindex="-1" data-keyboard="true" data-backdrop="static">
+    <div class="modal" id="modal-balanca" tabindex="-1" data-keyboard="true">
       <form id="itemForm" role="form" method="POST" th:action="@{/caixa/incluir}" th:object="${item}">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
         <div class="modal-dialog">
@@ -367,6 +367,49 @@
 	  minimumFractionDigits: 2
 	});
   	
+  	$('#container').on('shown.bs.modal', '#modal-balanca', function(event){
+    	$('#inputQuantidade').maskMoney({
+    		precision: 3,
+    		decimal:',', 
+    		thousands:'.', 
+    		allowZero:'true',
+    		formatOnBlur:false});
+    	
+    	setTimeout(function() {
+    		$('#inputQuantidade').focus();
+      	}, 0);
+    });
+    
+    $('#container').on('shown.bs.modal', '#modal-pagamento', function(event){
+    	$('#inputSaldo').maskMoney({
+    		decimal:',',
+    		thousands:'.', 
+			allowZero:'true',
+			formatOnBlur:false});
+    	
+    	setTimeout(function() {
+    		$('#inputSaldo').val('0.00');
+    		$('#inputSaldo').trigger('focus');
+      	}, 0);
+    });
+    
+    $('#container').on('shown.bs.modal', '#modal-cliente', function(event){
+    	startSelect2Cliente();
+		setTimeout(function() {
+			$('#selectClient').select2('focus');
+      	}, 0);
+    });
+    
+    $('#container').on('hidden.bs.modal', '#modal-cliente', function(event){
+    	$('.js-buscar-produto').select2('focus');
+    });
+    $('#container').on('hidden.bs.modal', '#modal-pagamento', function(event){
+    	$('.js-buscar-produto').select2('focus');
+    });
+    $('#container').on('hidden.bs.modal', '#modal-balanca', function(event){
+    	$('.js-buscar-produto').select2('focus');
+    });
+  	
  	// Execute a function when the user releases a key on the keyboard
   	$(document).on('keyup', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
@@ -375,6 +418,7 @@
   	    event.preventDefault();
   	    // Trigger the button element with a click
   	    $('#botaoPagamento').click();
+  	    
   	  }
   	});
  	
@@ -644,58 +688,21 @@
 		});
     	
     	response.done(function(e){
-			$('#modalBalanca').replaceWith(e);
-			$('#modalBalanca').modal('show');
+			$('#modal-balanca').replaceWith(e);
+			$('#modal-balanca').modal('show');
 		});
     	response.fail(function(e){
 			alert('Erro pesando item');
 		});
     }
     
-    $('#container').on('shown.bs.modal', '#modalBalanca', function(event){
-    	$('#inputQuantidade').maskMoney({
-    		precision: 3,
-    		decimal:',', 
-    		thousands:'.', 
-    		allowZero:'true',
-    		formatOnBlur:false});
-    	$('#inputQuantidade').focus();
-    });
-    
-    /* $('#container').on('show.bs.modal', '#modalBalanca', function(event){
-    	$(this).removeClass('fade');
-    }); */
-    
-    $('#container').on('shown.bs.modal', '#modal-pagamento', function(event){
-    	$('#inputSaldo').maskMoney({
-    		decimal:',',
-    		thousands:'.', 
-			allowZero:'true',
-			formatOnBlur:false}).focus();
-    	$('#inputSaldo').focus();
-    });
-    
-    $('#myModal').on('shown.bs.modal', function () {
-    	  $('#myInput').trigger('focus')
-    	})
-    
-    $('#container').on('shown.bs.modal', '#modal-cliente', function(event){
-    	startSelect2Cliente();
-		$('#selectClient').select2('focus');
-    });
-    
-    $('#container').on('hidden.bs.modal', '#modal-cliente', function(event){
-    	$('.js-buscar-produto').select2('focus');
-    });
-   
-    
     $('#container').on('click', '.js-selecionar-item-balanca', function(event){
     	var botao = $(event.currentTarget);
     	var url = botao.data('url-base');
     	
-    	var codigo = $('#modalBalanca').find('input#inputCodigoProduto').val();
-    	var quantidade = $('#modalBalanca').find('input#inputQuantidade').val().replace(',','.');
-    	var unitario = $('#modalBalanca').find('input#inputUnitario').val();
+    	var codigo = $('#modal-balanca').find('input#inputCodigoProduto').val();
+    	var quantidade = $('#modal-balanca').find('input#inputQuantidade').val().replace(',','.');
+    	var unitario = $('#modal-balanca').find('input#inputUnitario').val();
     	
     	var item = {
     	  	      "produto" : {
@@ -715,7 +722,7 @@
   		});
     	
     	response.done(function(e){
-    		$('#modalBalanca').modal('hide');
+    		$('#modal-balanca').modal('hide');
 			$('#conteudo').replaceWith(e);
 			$('#listaDeItens').scrollTop(330);
 		});
@@ -776,9 +783,11 @@
 		});
 		
 		response.done(function(e){
+			console.log('pagamento');
 			$('#modal-pagamento').modal('hide');
 			$('#conteudo').replaceWith(e);
-  			$('#modal-pagamento').modal('show');
+			$('#modal-pagamento').modal('show');
+  			
   		});
 		
 		response.fail(function(e){
