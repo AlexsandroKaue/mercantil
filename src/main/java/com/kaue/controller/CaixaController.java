@@ -472,6 +472,14 @@ public class CaixaController {
 		return mv;
 	}
 	
+	@RequestMapping(value = "/removerCliente")
+	public ModelAndView removerCliente() {
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
+		venda.setCliente(null);
+		mv.addObject("venda", venda);
+		return mv;
+	}
+	
 	@ModelAttribute
 	public List<OpcoesDesconto> todasOpcoesDesconto(){
 		return Arrays.asList(OpcoesDesconto.values());
