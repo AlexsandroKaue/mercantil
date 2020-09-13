@@ -42,6 +42,7 @@ import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.enumeration.OpcoesDesconto;
 import com.kaue.enumeration.StatusVenda;
+import com.kaue.enumeration.Unitario;
 import com.kaue.model.Categoria;
 import com.kaue.model.Cliente;
 import com.kaue.model.Item;
@@ -80,6 +81,8 @@ public class CaixaController {
 	private RelatorioService relatorioService;
 	
 	private Venda venda;
+	
+	private Cliente cliente;
 	
 	@ModelAttribute
 	public void addAttributes(Model model){
@@ -338,7 +341,7 @@ public class CaixaController {
 	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
 		
 		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
-			errors.rejectValue("subtotal", null, "Erro: A compra não pode ser vazia!");
+			errors.rejectValue("subtotal", null, "Erro: A lista não pode estar vazia!");
 		}
 		
 		if(venda.getSaldo()!=null) {
@@ -359,6 +362,21 @@ public class CaixaController {
 			venda.setTroco(troco);
 			
 			venda = vendaService.salvar(venda);
+			List<Item> itemList = venda.getItemList();
+			
+			/* Atualiza a quantidade do produto */
+			for(Item item : itemList) {
+				if(item.getProduto().getUnitario() == Unitario.Un) {
+					Produto produto = item.getProduto();
+					Integer quantidadeAtual = produto.getQuantidade();
+					Integer quantidadeNova = quantidadeAtual - item.getQuantidade().intValueExact();
+					if(quantidadeNova < 0) {
+						quantidadeNova = 0;
+					}
+					produto.setQuantidade(quantidadeNova);
+					produto = produtoService.salvar(produto);
+				}
+			}
 			attributes.addFlashAttribute("mensagem", "Venda concluída com sucesso!");
 			return "redirect:/caixa/venda/"+venda.getId();
 		}
@@ -467,6 +485,7 @@ public class CaixaController {
 	@RequestMapping(value = "/selecionarCliente/{id}")
 	public ModelAndView selecionarCliente(@PathVariable("id") Cliente cliente) {
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
+		/* this.cliente = cliente; */
 		venda.setCliente(cliente);
 		mv.addObject("venda", venda);
 		return mv;

@@ -23,6 +23,8 @@
         
         <div class="content-header" style="padding-left:0px; padding-right:0px; padding-bottom:5px">
           <div class="container-fluid">
+            <div layout:insert="~{mensagem_geral}"></div>
+            <div layout:insert="~{mensagem_erro}"></div>
             <div class="row mb-2" layout:fragment="cabecalho">
               <div class="col-sm-7 m-0">
                 <select class="js-buscar-produto" 
@@ -37,10 +39,7 @@
         </div>
         <section class="content">
           
-          <div class="container-fluid">
-            <div layout:insert="~{mensagem_geral}"></div>
-            <div layout:insert="~{mensagem_erro}"></div>
-            
+          <div class="container-fluid">            
             <div class="row">
               <div class="col-md-7">
                 <!-- <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4"> -->
@@ -110,11 +109,9 @@
                       </th:block>
                     </ul>
                     <div class="bg-white py-2 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
-                      
-                         <div class="col-md-12">
-                          <h5>Nenhum item incluído</h5> 
-                         </div>
-                      
+                      <div class="col-md-12">
+                        <h5>Nenhum item incluído</h5> 
+                      </div>
                     </div>
                   </div>
                 <!-- </div> -->
@@ -217,56 +214,6 @@
           <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
-        
-        <!-- <div class="modal" id="modal-cliente" 
-         tabindex="-1" data-keyboard="true"
-         role="dialog" aria-labelledby="..." aria-hidden="true">data-keyboard="true" data-backdrop="static"
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title">Selecione o Cliente</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="row" >
-                  <div class="col-12 painelCliente">
-                    <select id="selectClient" class="js-buscar-cliente input_saldo" 
-                     th:attr="data-url-buscar-cliente=@{/caixa/buscarCliente}, data-url-selecionar-cliente=@{/caixa/selecionarCliente}"
-                     style="width: 100%;"></select>
-                     
-                     <div class="card bg-light mt-3" th:if="*{cliente}">
-                      <div class="card-header text-muted border-bottom-0">Cliente selecionado</div>
-                      <div class="card-body pt-2">
-                        <div class="row">
-                          <div class="col-12">
-                            <h2 class="lead"><b th:text="*{cliente.nome}"></b></h2>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <input placeholder="Escoha o cliente..." class="form-control mt-2 required" oninput="this.className = ''" name="fname"
-                     th:unless="*{cliente}" readonly="readonly"></input>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  <i class="fas fa-undo-alt"></i>
-                  Voltar (ESC)
-                </button>
-                <button type="button" id="finalizar" class="btn btn-md btn-primary" onclick="validateForm()">
-                  <i class="far fa-credit-card"></i> 
-                  Finalizar (ENTER)
-                </button>
-              </div>
-            </div>
-            /.modal-content
-          </div>
-          /.modal-dialog
-        </div>
-        /.modal -->
         
         <div class="modal" id="modal-cliente" 
          tabindex="-1" data-keyboard="true"
@@ -625,7 +572,7 @@
 
   	  var $container = $(
   	    "<div class='select2-result-repository clearfix'>" +
-  	      "<div class='select2-result-repository__avatar'><img id='image' style='height:available' src='' /></div>" +
+  	      "<div class='select2-result-repository__avatar'><img id='image' style='height:60px' src='' /></div>" +
   	      "<div class='select2-result-repository__meta'>" +
   	      	"<div class='select2-result-repository__description' id='codigo'></div>" +
   	        "<div class='select2-result-repository__title'></div>" +
@@ -639,14 +586,30 @@
   	      "</div>" +
   	    "</div>"
   	  );
+  	  
+  	  $container = $(
+  	  	"<li class='products-list product-list-in-card  py-2 item'>"+
+          "<div class='product-img'>"+
+            "<img id='image' src='' alt='Product Image'>"+
+          "</div>"+
+          "<span id='preco' class='badge badge-warning float-right'></span>"+
+          "<div class='product-info'>"+
+            "<span class='product-title mb-0'></span>"+
+            "<span class='product-description'></span>"+
+          "</div>"+
+        "</li>"
+  	  );
 
   	  $container.find("#image").attr('src', 'data:image/png;base64,'+repo.imagemBase64);
-  	  $container.find(".select2-result-repository__description#codigo").text(repo.codigo);
-  	  $container.find(".select2-result-repository__title").text(repo.descricao);
+  	  $container.find(".product-title").text(repo.descricao);
+  	  $container.find("#preco").text(currencyformatter.format(repo.valorDeVenda));
+  	  $container.find(".product-description").text(repo.categoria.descricao);
+  	  /*$container.find(".select2-result-repository__description#codigo").text(repo.codigo);
+  	  $container.find(".select2-result-repository__title").text(repo.descricao); */
   	  /* $container.find(".select2-result-repository__description#categoria").text(repo.categoria.descricao); */
   	  /* $container.find(".select2-result-repository__forks").text(repo.categoria.descricao); */
-  	  $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
-  	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers");
+  	  /* $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
+  	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers"); */
 
   	  return $container;
   	}
@@ -1137,248 +1100,5 @@
     }
   
   </style>
-  
-  <div class="modal" id="modalEscolherCliente">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">
-            Clientes
-          </h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        
-        <div class="modal-body">
-          <div class="row d-flex align-items-stretch">
-            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-              <div class="card bg-light">
-                <div class="card-header text-muted border-bottom-0"></div>
-                <div class="card-body pt-0">
-                  <div class="row">
-                    <div class="col-7">
-                      <h2 class="lead"><b>Marcos Novaes</b></h2>
-                    </div>
-                    <div class="col-5 text-center">
-                      <img th:src="@{/dist/img/user1-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-12">
-                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                      <ul class="ml-4 mb-0 fa-ul text-muted">
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer">
-                  <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal">
-                      <i class="fas fa-comments"></i>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-primary">
-                      <i class="fas fa-user"></i> Selecionar
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-              <div class="card bg-light">
-                <div class="card-header text-muted border-bottom-0"></div>
-                <div class="card-body pt-0">
-                  <div class="row">
-                    <div class="col-7">
-                      <h2 class="lead"><b>José Alves</b></h2>
-                    </div>
-                    <div class="col-5 text-center">
-                      <img th:src="@{/dist/img/user2-160x160.jpg}" alt="" class="img-circle img-fluid"></img>
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-12">
-                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                      <ul class="ml-4 mb-0 fa-ul text-muted">
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: Demo Street 123, Demo City 04312, NJ</li>
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer">
-                  <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal">
-                      <i class="fas fa-comments"></i>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-primary">
-                      <i class="fas fa-user"></i> Selecionar
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-              <div class="card bg-light">
-                <div class="card-header text-muted border-bottom-0"></div>
-                <div class="card-body pt-0">
-                  <div class="row">
-                    <div class="col-7">
-                      <h2 class="lead"><b>Fernanda Araújo</b></h2>
-                    </div>
-                    <div class="col-5 text-center">
-                      <img th:src="@{/dist/img/user4-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-12">
-                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                      <ul class="ml-4 mb-0 fa-ul text-muted">
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer">
-                  <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal">
-                      <i class="fas fa-comments"></i>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-primary">
-                      <i class="fas fa-user"></i> Selecionar
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-              <div class="card bg-light">
-                <div class="card-header text-muted border-bottom-0"></div>
-                <div class="card-body pt-0">
-                  <div class="row">
-                    <div class="col-7">
-                      <h2 class="lead"><b>Marcos Novaes</b></h2>
-                    </div>
-                    <div class="col-5 text-center">
-                      <img th:src="@{/dist/img/user1-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-12">
-                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                      <ul class="ml-4 mb-0 fa-ul text-muted">
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer">
-                  <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal">
-                      <i class="fas fa-comments"></i>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-primary">
-                      <i class="fas fa-user"></i> Selecionar
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-              <div class="card bg-light">
-                <div class="card-header text-muted border-bottom-0"></div>
-                <div class="card-body pt-0">
-                  <div class="row">
-                    <div class="col-7">
-                      <h2 class="lead"><b>José Alves</b></h2>
-                    </div>
-                    <div class="col-5 text-center">
-                      <img th:src="@{/dist/img/user2-160x160.jpg}" alt="" class="img-circle img-fluid"></img>
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-12">
-                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                      <ul class="ml-4 mb-0 fa-ul text-muted">
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: Demo Street 123, Demo City 04312, NJ</li>
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer">
-                  <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal">
-                      <i class="fas fa-comments"></i>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-primary">
-                      <i class="fas fa-user"></i> Selecionar
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-              <div class="card bg-light">
-                <div class="card-header text-muted border-bottom-0"></div>
-                <div class="card-body pt-0">
-                  <div class="row">
-                    <div class="col-7">
-                      <h2 class="lead"><b>Fernanda Araújo</b></h2>
-                    </div>
-                    <div class="col-5 text-center">
-                      <img th:src="@{/dist/img/user4-128x128.jpg}" alt="" class="img-circle img-fluid"></img>
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-12">
-                      <!-- <p class="text-muted text-sm"><b>Sobre: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                      <ul class="ml-4 mb-0 fa-ul text-muted">
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Endereço: Demo Street 123, Demo City 04312, NJ</li>
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Telefone #: + 800 - 12 12 23 52</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer">
-                  <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal">
-                      <i class="fas fa-comments"></i>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-primary">
-                      <i class="fas fa-user"></i> Selecionar
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-        </div>
-        
-        <div class="card-footer">
-          <nav aria-label="Contacts Page Navigation">
-            <ul class="pagination justify-content-center m-0">
-              <li class="page-item active"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">4</a></li>
-              <li class="page-item"><a class="page-link" href="#">5</a></li>
-              <li class="page-item"><a class="page-link" href="#">6</a></li>
-              <li class="page-item"><a class="page-link" href="#">7</a></li>
-              <li class="page-item"><a class="page-link" href="#">8</a></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
     
 </html>
