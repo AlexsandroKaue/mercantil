@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
@@ -32,6 +33,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kaue.dao.filter.GrupoFilter;
 import com.kaue.dao.filter.UsuarioFilter;
 import com.kaue.enumeration.StatusUsuario;
+import com.kaue.model.Cliente;
+import com.kaue.model.Endereco;
 import com.kaue.model.Grupo;
 import com.kaue.model.Usuario;
 import com.kaue.service.GrupoService;
@@ -101,6 +104,7 @@ public class UsuarioController {
 			url = "redirect:/usuarios/"+usuario.getId();
 		}
 		
+		usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
 		usuario = usuarioService.salvar(usuario);
 		
 		boolean hasFileUploaded = !multipartFile.isEmpty();
@@ -124,13 +128,16 @@ public class UsuarioController {
 	public @ResponseBody Map<String, Object> alterarSenha(@RequestBody Map<String, String> dados) {
 		Map<String, Object> response = new HashMap<String, Object>();
 		
+		
 		String senhaAtual = dados.get("senhaAtual");
 		String novaSenha = dados.get("novaSenha");
 		Long id = Long.parseLong(dados.get("id"));
 		Usuario usuario = usuarioService.buscarPorId(id);
-		boolean ok = usuario.getSenha().equals(senhaAtual);
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		boolean ok =  encoder.matches(senhaAtual, usuario.getSenha());
 		if(ok) {
-			usuario.setSenha(novaSenha);
+			usuario.setSenha(new BCryptPasswordEncoder().encode(novaSenha));
 			usuario = usuarioService.salvar(usuario);
 			response.put("ok", true);
 			response.put("mensagem", "Senha atualizada com sucesso");
@@ -168,7 +175,7 @@ public class UsuarioController {
 	
 	@RequestMapping(value = "/detalhes/{id}")
 	public ModelAndView detalhes(@PathVariable("id") Usuario usuario) {
-		ModelAndView mv = new ModelAndView(LISTAR_VIEW + " :: #modalDetalhesUsuario");
+		ModelAndView mv = new ModelAndView(LISTAR_VIEW + " :: #modalDetalhes");
 		mv.addObject("usuario", usuario);
 		File foto = buscarFotoDoUsuario("user_"+usuario.getId());
 		if(foto!=null) {

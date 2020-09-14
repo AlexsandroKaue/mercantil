@@ -50,6 +50,10 @@ $.validator.addMethod('celular', function (value, element) {
     }
     return (this.optional(element) || true);
 }, 'Informe um número de telefone celular válido');
+
+$.validator.addMethod('filesize', function (value, element, param) {
+    return this.optional(element) || (element.files[0].size <= (param*1024*1024))
+}, 'A imagem deve ser menor que {0}MB');
 	
 	
 $.validator.addMethod("customDate", function(value, element) {

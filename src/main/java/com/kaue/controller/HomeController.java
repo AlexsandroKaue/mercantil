@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,7 @@ public class HomeController {
 	
 	@GetMapping("/login-error")
 	public String login(HttpServletRequest request, Model model) {
-		
+		System.out.println(new BCryptPasswordEncoder().encode("123"));
 		HttpSession session = request.getSession(false); 
 		String errorMessage = null;
 		if (session != null) { 

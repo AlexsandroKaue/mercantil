@@ -44,24 +44,27 @@
               <div class="col-md-7">
                 <!-- <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4"> -->
                   <div class="chart" style=" height: 400px; border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
-                    <div class="bg-white py-2 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
-                      <ul class="items-list" style="height: 1.8em; margin-bottom: 0px">
+                    <div class="bg-white pt-3 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
+                      <ul class="items-list" style="height: 1.5em; margin-bottom: 0px">
                         <li>
                           <div class="row">
                             <div class="col-md-4 text-left">
-                              <h4 class="mb-0">
+                              <!-- <h4 class="mb-0">
                                 Produto
-                              </h4>
+                              </h4> -->
+                              <label>Produto</label>
                             </div>
                             <div class="col-md-4 text-center">
-                              <h4 class="mb-0">
+                              <!-- <h4 class="mb-0">
                                 Quantidade x Preço Unitário
-                              </h4>
+                              </h4> -->
+                              <label>Quantidade x Preço Unitário</label>
                             </div>
                             <div class="col-md-3 text-right">
-                              <h4 class="mb-0">
+                              <!-- <h4 class="mb-0">
                                 Total Item
-                              </h4>
+                              </h4> -->
+                              <label>Total Item</label>
                             </div>
                             <div class="col-md-1"></div>
                           </div>
@@ -72,7 +75,7 @@
                     <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="overflow: scroll;">
                       <li th:if="*{#lists.isEmpty(itemList)}">
                          <div class="col-md-12">
-                          <h5>Nenhum item incluído.</h5> 
+                          <p class="mt-2">Nenhum item incluído.</p> 
                          </div>
                       </li>
                       <th:block th:each="item, rowStat : *{itemList}">
@@ -169,7 +172,7 @@
                       <table class="table">
                         <tr>
                           <th class="lead mt-2" style="width:50%">Subtotal:</th>
-                          <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|R$ *{{subtotal}}|">R$ 0,00</p></td>
+                          <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|*{{subtotal}}|">R$ 0,00</p></td>
                         </tr>
                         <tr>
                           <th class="lead form-inline">
@@ -179,18 +182,21 @@
                               <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
                             </select>
                           </th>
-                          <td id="desconto-valor"><p class="mb-0" th:text="|R$ *{{valorDesconto}}|">R$ 0,00</p></td>
+                          <td id="desconto-valor"><p class="mb-0" th:text="|*{{valorDesconto}}|">0,00</p></td>
                         </tr>
                         <tr>
                           <th class="lead">Total:</th>
-                          <td id="total"><h2 class="mb-0" th:text="|R$ *{{total}}|"></h2></td>
+                          
+                          <td id="total">
+                          <div class="bg-gray py-2 px-3"><h2 class="mb-0" th:text="|*{{total}}|"></h2>
+                          </div></td>
                         </tr>
                         <tr>
                           <th class="lead">Saldo:</th>
                           <td>
-                            <div class="input-group input-group-lg">
+                            <!-- <div class="input-group input-group-lg"> -->
                               <input type="text" id="inputSaldo" class="form-control js-currency input_saldo" th:field="*{saldo}"></input>
-                            </div>
+                            <!-- </div> -->
                           </td>
                         </tr>
                       </table>
@@ -255,7 +261,7 @@
                         </div>
                       </div>
                     </div>
-                    <input placeholder="Nenhum cliente selecionado." class="form-control mt-2 required" oninput="this.className = ''" name="fname"
+                    <input placeholder="Nenhum cliente selecionado." class="form-control mt-3 required" oninput="this.className = ''" name="fname"
                      th:unless="*{cliente}" readonly="readonly"></input>
                   </div>
                   <div class="tab">
@@ -594,16 +600,16 @@
           "</div>"+
           "<span id='preco' class='badge badge-warning float-right'></span>"+
           "<div class='product-info'>"+
+          	"<span class='product-description'></span>"+
             "<span class='product-title mb-0'></span>"+
-            "<span class='product-description'></span>"+
           "</div>"+
         "</li>"
   	  );
 
   	  $container.find("#image").attr('src', 'data:image/png;base64,'+repo.imagemBase64);
   	  $container.find(".product-title").text(repo.descricao);
-  	  $container.find("#preco").text(currencyformatter.format(repo.valorDeVenda));
-  	  $container.find(".product-description").text(repo.categoria.descricao);
+  	  $container.find("#preco").text(currencyformatter.format(repo.valorDeVenda)+' '+repo.unitario);
+  	  $container.find(".product-description").text('Cod.: '+repo.codigo);
   	  /*$container.find(".select2-result-repository__description#codigo").text(repo.codigo);
   	  $container.find(".select2-result-repository__title").text(repo.descricao); */
   	  /* $container.find(".select2-result-repository__description#categoria").text(repo.categoria.descricao); */
@@ -1043,9 +1049,9 @@
     }
     
     .input_saldo {
-      padding: 10px;
+      /* padding: 10px; */
       width: 100%;
-      font-size: 25px;
+      font-size: 27px;
       font-family: Raleway;
       border: 1px solid #aaaaaa;
     }

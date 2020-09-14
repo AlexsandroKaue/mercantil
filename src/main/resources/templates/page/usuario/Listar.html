@@ -94,6 +94,102 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+    
+    <div class="modal fade" id="modalDetalhes"
+     tabindex="-1" data-keyboard="true" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Detalhes do Usuário</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              
+                
+              <div class="col-5 text-center">
+                <div class="text-center">
+                  <img th:src="@{${imagem}}" class="img-fluid" style="height: 100px"
+                  alt="User profile picture"></img>
+                </div>
+                
+                <!-- <div class="card-body box-profile">
+                <div class="text-center">
+                  <img class="profile-user-img img-fluid "
+                       th:src="@{${imagem}}"
+                       alt="User profile picture">
+                </div>
+
+                <h3 class="profile-username text-center" th:text="${usuario.nome}">Nina Mcintire</h3>
+
+                <p class="text-muted text-center">Software Engineer</p>
+
+                <ul class="list-group list-group-unbordered mb-3">
+                  <li class="list-group-item">
+                    <b>Followers</b> <a class="float-right">1,322</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Following</b> <a class="float-right">543</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Friends</b> <a class="float-right">13,287</a>
+                  </li>
+                </ul>
+
+                <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+              </div> -->
+              </div>
+                  
+              <div class="col-7">
+                <!-- <h2 class="lead"><b th:text="${usuario.nome}"></b></h2> -->
+                <h3 class="profile-username" th:text="${usuario.nome}">Nina Mcintire</h3>
+                <ul class="ml-4 mb-0 fa-ul text-muted">
+                  <li class="small">
+                    <span class="fa-li">
+                    <i class="fas fa-lg fa-at"></i></span>
+                    <h6 class="mb-0">Email:</h6> 
+                    <h6 th:text="#{nao.informado}" th:if="${#strings.isEmpty(usuario.email)}"></h6>
+                    <h6 th:text="${usuario.email}" th:if="${!#strings.isEmpty(usuario.email)}"></h6>
+                  </li>
+                  <li class="small">
+                    <span class="fa-li">
+                    <i class="fas fa-lg fa-phone"></i></span> 
+                    <h6 class="mb-0">Telefone:</h6> 
+                    <h6 th:text="#{nao.informado}" th:if="${#strings.isEmpty(usuario.telefone)}"></h6>
+                    <h6 th:text="${usuario.telefone}" th:if="${!#strings.isEmpty(usuario.telefone)}"></h6>
+                  </li>
+                  <li class="small">
+                    <span class="fa-li">
+                    <i class="fas fa-lg fa-users-cog"></i></span>
+                    <h6 class="mb-0">Grupo:</h6> 
+                    <h6 th:text="#{nao.informado}" th:if="${#strings.isEmpty(usuario.grupo)}"></h6>
+                    <h6 th:text="${usuario.grupo.nome}" th:if="${!#strings.isEmpty(usuario.grupo)}"></h6>
+                  </li>
+                  <li class="small">
+                    <span class="fa-li">
+                    <i class="fas fa-lg fa-check-square"></i></span>
+                    <h6 class="mb-0">Ativo:</h6> 
+                    <h6 th:text="#{nao.informado}" th:if="${#strings.isEmpty(usuario.ativo)}"></h6>
+                    <h6 th:text="${usuario.ativo.descricao}" th:if="${!#strings.isEmpty(usuario.ativo)}"></h6>
+                  </li>
+                </ul>
+              </div>
+              
+            </div>
+          </div>
+          
+          <div class="modal-footer float-right">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
   </section>
   
   <div layout:fragment="titulo">
@@ -143,17 +239,17 @@
               <td class="text-center" th:text="${usuario.ativo.descricao}"></td>
               <td class="text-center">
                 <a th:attr="data-url-detalhes=@{/usuarios/detalhes/{id}(id=${usuario.id})}" th:href="@{#}" 
-                  data-toggle="modal" data-target="#modalDetalhesUsuario" class="btn btn-link btn-sm"
+                  class="js-usuario-detalhes btn btn-sm btn-warning"
                   title="Visualizar" rel="tooltip" data-placement="top">
                   <i class="fas fa-eye"></i>
                 </a>
-                <a th:href="@{/usuarios/{id}(id=${usuario.id})}" class="btn btn-link btn-sm"
+                <a th:href="@{/usuarios/{id}(id=${usuario.id})}" class="btn btn-sm btn-primary"
                   title="Editar" rel="tooltip" data-placement="top">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
-                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-sm btn-danger" 
                   th:href="@{#}" th:attr="data-id=${usuario.id}, data-descricao=${usuario.nome}"
-                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                  title="Excluir" rel="tooltip" data-placement="top">
                   <i class="fas fa-trash"></i>
                 </a>
               </td>
@@ -168,38 +264,19 @@
     <!-- /.card -->
   </section>
   
-  <div layout:fragment="js-validator">
-    <script id="validador">
-      /* $('#container').on('click', '.js-detalhes-usuario', function(event){
-    	  event.preventDefault();
-    	  var botao = $(event.currentTarget);
-  		  var url = botao.attr('href');
-  		  var response = $.ajax({
-  			  type: 'GET',
-  			  url: url
-  		  });
-  		  
-  		  response.done(function(e){
-  			$('#modalDetalhesUsuario').html(e);
-  		  });
-  		  
-  		  response.done(function(e){
-			  
-		  });
-      }); */
-      
-      $('#container').on('show.bs.modal', '#modalDetalhesUsuario', function(event){
-  		var botao = $(event.relatedTarget); // Button that triggered the modal
+  <script layout:fragment="js-validator">
+    $('#container').on('click', '.js-usuario-detalhes', function(event){
+  		var botao = $(event.currentTarget);
   		var url = botao.data('url-detalhes');
-  		console.log(url);
+
   		var response = $.ajax({
 			  type: 'GET',
 			  url: url
 		  });
 		  
     	response.done(function(e){
-    		var modalDialog = $(e).find('.modal-dialog');
-    		$('#modalDetalhesUsuario').html(modalDialog);
+    		$('#modalDetalhes').replaceWith(e);
+    		$('#modalDetalhes').modal('show');
     	});
     	  
     	response.fail(function(e){
@@ -207,7 +284,6 @@
     	});
   		
   	});
-    </script>
-  </div>
+  </script>
   
 </html>

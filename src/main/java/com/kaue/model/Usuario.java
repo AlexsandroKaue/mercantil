@@ -42,6 +42,8 @@ public class Usuario {
 	
 	private String foto;
 	
+	private String telefone;
+	
 	@Enumerated(EnumType.STRING)
 	private StatusUsuario ativo;
 	
@@ -147,6 +149,14 @@ public class Usuario {
 
 	public void setImagem(byte[] imagem) {
 		this.imagem = imagem;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 	
 	

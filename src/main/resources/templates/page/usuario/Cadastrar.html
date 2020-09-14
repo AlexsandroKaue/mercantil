@@ -8,7 +8,7 @@
 </head>
 
   <section layout:fragment="container">
-    <form role="form" id="usuarioForm" enctype="multipart/form-data" method="POST" 
+    <form role="form" id="usuarioForm" enctype="multipart/form-data" method="POST"
       th:action="@{/usuarios}" th:object="${usuario}">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
       <header layout:insert="~{cabecalho}"></header>
@@ -109,15 +109,17 @@
               <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
             </div>
             <div class="form-group">
+              <label for="inputTelefone" class="col-form-label">Telefone</label>
+              <input type="text" class="form-control" id="inputTelefone" th:field="*{telefone}" th:classappend="${#fields.hasErrors('telefone')} ? 'is-invalid'"
+               data-inputmask='"mask": "(99) 99999-9999"' data-mask>   
+            </div>
+            <div class="form-group">
               <label for="inputStatus" class="col-form-label">Ativo?</label>
               <select id="inputStatus" class="form-control" th:field="*{ativo}">
                 <!-- <option value="" selected th:text="#{selecione.estado}"></option> -->
                 <option th:each="status : ${statusUsuarioList}" th:value="${status}" th:text="${status.descricao}"></option>
               </select>
             </div>
-            <!-- <div class="form-group">
-              <p class="text-muted">Campo marcados com * são obrigatórios.</p>
-            </div> --> 
           </div>
           <div class="col-md-4">
             <div class="form-group">
@@ -126,7 +128,8 @@
             </div>
             <div class="form-group">
               <label for="inputSenha" class="col-form-label">Senha</label><b class="text-danger">*</b>
-              <input type="password" class="form-control" id="inputSenha" th:field="*{senha}" th:classappend="${#fields.hasErrors('senha')} ? 'is-invalid'">   
+              <input type="password" class="form-control" id="inputSenha" th:field="*{senha}" 
+                th:classappend="${#fields.hasErrors('senha')} ? 'is-invalid'" autocomplete="off">   
             </div>
             <div class="form-group">
               <label for="inputGrupo" class="col-form-label">Grupo</label><b class="text-danger">*</b>
@@ -201,17 +204,24 @@
             required: "Por favor, escolha um grupo"
         }
       });
-      
+      $('#inputImagem').rules('add', {
+          extension: "jpg,jpeg,png",
+          filesize: 5,
+          messages: { 
+        	  extension: "Formato inválido, apenas: jpg, jpeg ou png.",
+          }
+      });
       
       function readURL(input) {
     	  if (input.files && input.files[0]) {
-    	    var reader = new FileReader();
+    		var reader = new FileReader();
     	    
     	    reader.onload = function(e) {
     	      $('#foto').attr('src', e.target.result);
     	    }
     	    
     	    reader.readAsDataURL(input.files[0]); // convert to base64 string
+    	    $('#inputImagem').valid();
     	  }
     	}
 
