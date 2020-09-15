@@ -47,6 +47,8 @@ public class Cliente {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Endereco endereco;
 	
+	private byte[] imagem;
+	
 	@Transient
 	private String imagemBase64;
 
@@ -137,5 +139,13 @@ public class Cliente {
 
 	public void setImagemBase64(String imagemBase64) {
 		this.imagemBase64 = imagemBase64;
+	}
+
+	public byte[] getImagem() {
+		return imagem;
+	}
+
+	public void setImagem(byte[] imagem) {
+		this.imagem = imagem;
 	}
 }

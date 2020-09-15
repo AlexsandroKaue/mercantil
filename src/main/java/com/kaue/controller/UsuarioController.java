@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,28 +57,20 @@ public class UsuarioController {
 	
 	@Autowired
 	private GrupoService grupoService;
-	
-	@ModelAttribute
-	public void addAttributes(Model model){
-		model.addAttribute("usuario", new Usuario());
-		model.addAttribute("imagem", "/custom/img/users/sem-imagem_2.jpg");
-	}
-	
+		
 	@RequestMapping("/novo")
 	public ModelAndView showFormNovo() {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
+		Usuario usuario = new Usuario();
+		usuario.setImagemBase64(usuarioService.carregarImagem("User_"+usuario.getId()));
+		mv.addObject("usuario", usuario);
 		return mv;
 	}
 	
 	@RequestMapping("{id}")
 	public ModelAndView showFormEditar(@PathVariable("id") Usuario usuario) {
 		ModelAndView mv = new ModelAndView(ALTERAR_VIEW);
-		
-		File foto = buscarFotoDoUsuario("user_"+usuario.getId());
-		if(foto!=null) {
-			mv.addObject("imagem", foto.getPath());
-		}
-
+		usuario.setImagemBase64(usuarioService.carregarImagem("User_"+usuario.getId()));
 		mv.addObject("senhaAtual");
 		mv.addObject("novaSenha");
 		mv.addObject("novaSenhaConfirmacao");
@@ -85,7 +81,6 @@ public class UsuarioController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String salvar(@Validated Usuario usuario, @RequestParam("file") MultipartFile multipartFile,
 			Errors errors, RedirectAttributes attributes) {
-		String mensagem = "";
 		
 		if(usuario.getId()==null && usuarioService.buscarPorLogin(usuario.getLogin())!=null) {
 			errors.rejectValue("login", null, "Já existe um usuário com este login.");
@@ -97,30 +92,24 @@ public class UsuarioController {
 
 		String url = "";
 		if(usuario.getId()==null) {
-			mensagem = "Usuario cadastrado com sucesso!";
+			attributes.addFlashAttribute("mensagem", "Usuário cadastrado com sucesso!");
 			url = "redirect:/usuarios/novo";
 		} else {
-			mensagem = "Usuario alterado com sucesso!";
+			attributes.addFlashAttribute("mensagem", "Usuário alterado com sucesso!");
 			url = "redirect:/usuarios/"+usuario.getId();
 		}
-		
 		usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
-		usuario = usuarioService.salvar(usuario);
 		
 		boolean hasFileUploaded = !multipartFile.isEmpty();
 		if(hasFileUploaded) {
-			boolean ok = false;
-			InputStream is = null;
 			try {
-				is = multipartFile.getInputStream();
-				ok = salvarFotoDoUsuario(is, "user_"+usuario.getId());
-			} catch (IOException e) {}
-			
-			if(!ok) {
+				usuarioService.salvarImagem(multipartFile, "User_"+usuario.getId());
+			} catch (Exception e) {
 				attributes.addFlashAttribute("aviso", "Não foi possível salvar a imagem");
 			}
 		}
-		attributes.addFlashAttribute("mensagem", mensagem);
+		
+		usuario = usuarioService.salvar(usuario);
 		return url;
 	}
 	
@@ -175,12 +164,10 @@ public class UsuarioController {
 	
 	@RequestMapping(value = "/detalhes/{id}")
 	public ModelAndView detalhes(@PathVariable("id") Usuario usuario) {
-		ModelAndView mv = new ModelAndView(LISTAR_VIEW + " :: #modalDetalhes");
+		ModelAndView mv = new ModelAndView(LISTAR_VIEW + " :: #modal-detalhes");
+		usuario.setImagemBase64(usuarioService.carregarImagem("User_"+usuario.getId()));
 		mv.addObject("usuario", usuario);
-		File foto = buscarFotoDoUsuario("user_"+usuario.getId());
-		if(foto!=null) {
-			mv.addObject("imagem", foto.getPath());
-		}
+		
 		return mv;
 	}
 	
@@ -199,32 +186,5 @@ public class UsuarioController {
 	public List<Grupo> todosGrupos(){
 		return grupoService.pesquisar(new GrupoFilter());
 	}
-	
-	private File buscarFotoDoUsuario(String name) {
-		File file = null;
-		try {
-			ResourceUtils.getFile("classpath:static/custom/img/users/"+name);
-			file = new File("/custom/img/users/"+name);
-		} catch (FileNotFoundException e) {}
-		
-		return file;
-	}
-	
-	private boolean salvarFotoDoUsuario(InputStream is, String name) {
-		try {
-			BufferedImage bufferedImage = ImageIO.read(is);
-			if(bufferedImage!=null) {
-				File file = ResourceUtils.getFile("classpath:static/custom/img/users");
-				file = new File(file.getAbsolutePath()+"/"+name);
-				ImageIO.write(bufferedImage, "png", file);
-			} else {
-				return false;
-			}
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
-	}
-	
 	
 }

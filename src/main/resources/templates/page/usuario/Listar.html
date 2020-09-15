@@ -14,89 +14,8 @@
       <header layout:insert="~{corpo}"></header>
     </form>
 
-    <div class="modal fade" id="modalConfirmacao" tabindex="-1" data-keyboard="false" data-backdrop="static">
-      <div class="modal-dialog">
-        <form th:attr="data-url-base=@{/usuarios}" method="POST">
-          <input type="hidden" name="_method" value="DELETE"></input>
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Confirmar exclusão</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>Deseja realmente excluir o usuário?</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Excluir</button>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </form>
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-    
-    <div class="modal fade" id="modalDetalhesUsuario">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Detalhes do Usuário</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="inputNome" class="col-form-label">Nome</label>
-                  <input type="text" disabled="disabled" autofocus="autofocus" class="form-control" id="inputNome" th:value="${usuario.nome}"/>
-                </div>
-                <div class="form-group">
-                  <label for="inputEmail" class="col-form-label">Email</label>
-                  <input type="email" disabled="disabled" class="form-control" id="inputEmail" th:value="${usuario.email}"/>   
-                </div>
-                <div class="form-group">
-                  <label for="inputLogin" class="col-form-label ">Login</label>
-                  <input type="text" disabled="disabled" class="form-control" id="inputLogin" th:value="${usuario.login}"/>     
-                </div>  
-                <div class="form-group">
-                  <label for="inputStatus" class="col-form-label">Ativo?</label>
-                  <input type="text" disabled="disabled" class="form-control" id="inputStatus" th:value="${usuario.ativo}"/>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label class="col-form-label">Foto</label>
-                  <div class="box-profile">
-                    <div class="text-center mb-4">
-                      <img id="foto" class="img-fluid" style="height:160px"
-                           th:src="@{${imagem}}"
-                           alt="User profile picture"></img><!-- class="profile-user-img img-fluid img-circle" -->
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer float-right">
-            <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button> -->
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-    
-    <div class="modal fade" id="modalDetalhes"
-     tabindex="-1" data-keyboard="true" role="dialog">
+    <div class="modal fade" id="modal-detalhes"
+     tabindex="-1" data-keyboard="true" role="dialog" >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -105,41 +24,14 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" th:if="${usuario}">
             <div class="row">
-              
-                
               <div class="col-5 text-center">
                 <div class="text-center">
-                  <img th:src="@{${imagem}}" class="img-fluid" style="height: 100px"
-                  alt="User profile picture"></img>
+                  <img th:src="|data:image/png;base64,${usuario.imagemBase64}|"
+                   class="img-fluid" style="height: 160px"
+                   alt="Image do perfil do cliente"></img>
                 </div>
-                
-                <!-- <div class="card-body box-profile">
-                <div class="text-center">
-                  <img class="profile-user-img img-fluid "
-                       th:src="@{${imagem}}"
-                       alt="User profile picture">
-                </div>
-
-                <h3 class="profile-username text-center" th:text="${usuario.nome}">Nina Mcintire</h3>
-
-                <p class="text-muted text-center">Software Engineer</p>
-
-                <ul class="list-group list-group-unbordered mb-3">
-                  <li class="list-group-item">
-                    <b>Followers</b> <a class="float-right">1,322</a>
-                  </li>
-                  <li class="list-group-item">
-                    <b>Following</b> <a class="float-right">543</a>
-                  </li>
-                  <li class="list-group-item">
-                    <b>Friends</b> <a class="float-right">13,287</a>
-                  </li>
-                </ul>
-
-                <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
-              </div> -->
               </div>
                   
               <div class="col-7">
@@ -182,10 +74,36 @@
           
           <div class="modal-footer float-right">
             <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
-            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
           </div>
         </div>
         <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    
+    <div class="modal fade" id="modalConfirmacao" tabindex="-1" data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog">
+        <form th:attr="data-url-base=@{/usuarios}" method="POST">
+          <input type="hidden" name="_method" value="DELETE"></input>
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirmar exclusão</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Deseja realmente excluir o usuário?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Excluir</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </form>
       </div>
       <!-- /.modal-dialog -->
     </div>
@@ -275,8 +193,9 @@
 		  });
 		  
     	response.done(function(e){
-    		$('#modalDetalhes').replaceWith(e);
-    		$('#modalDetalhes').modal('show');
+    		console.log(e);
+    		$('#modal-detalhes').replaceWith(e);
+    		$('#modal-detalhes').modal('show');
     	});
     	  
     	response.fail(function(e){

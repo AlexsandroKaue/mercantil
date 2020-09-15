@@ -1,14 +1,14 @@
 package com.kaue.controller;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,6 @@ import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.enumeration.Estado;
 import com.kaue.model.Cliente;
 import com.kaue.model.Endereco;
-import com.kaue.model.Usuario;
 import com.kaue.service.ClienteService;
 import com.kaue.service.GrupoService;
 
@@ -59,6 +58,7 @@ public class ClienteController {
 	public ModelAndView showFormNovo() {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		Cliente cliente = new Cliente();
+		cliente.setImagemBase64(carregarImagem(cliente.getImagem()));
 		mv.addObject("cliente", cliente);
 		return mv;
 	}
@@ -66,12 +66,7 @@ public class ClienteController {
 	@RequestMapping("{id}")
 	public ModelAndView showFormEditar(@PathVariable("id") Cliente cliente) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
-		
-		File foto = buscarFotoDoCliente("cliente_"+cliente.getId());
-		if(foto!=null) {
-			mv.addObject("imagem", foto.getPath());
-		}
-		
+		cliente.setImagemBase64(carregarImagem(cliente.getImagem()));
 		mv.addObject("cliente", cliente);
 		return mv;
 	}
@@ -79,7 +74,6 @@ public class ClienteController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String salvar(@Validated Cliente cliente, @RequestParam("file") MultipartFile multipartFile,
 			Errors errors, RedirectAttributes attributes) {
-		String mensagem = "";
 		String url = "";
 		
 		try {
@@ -87,30 +81,25 @@ public class ClienteController {
 				return CADASTRAR_VIEW;
 			}
 			if(cliente.getId()==null) {
-				mensagem = "Cliente cadastrado com sucesso!";
 				url = "redirect:/clientes/novo";
+				attributes.addFlashAttribute("mensagem", "Cliente cadastrado com sucesso!");
 			} else {
-				mensagem = "Cliente alterado com sucesso!";
+				attributes.addFlashAttribute("mensagem", "Cliente alterado com sucesso!");
 				url = "redirect:/clientes/"+cliente.getId();
 			}
 			
-			cliente = clienteService.salvar(cliente);
-			
 			boolean hasFileUploaded = !multipartFile.isEmpty();
 			if(hasFileUploaded) {
-				boolean ok = false;
-				InputStream is = null;
+				byte[] bytes = null;
 				try {
-					is = multipartFile.getInputStream();
-					ok = salvarFotoDoCliente(is, "cliente_"+cliente.getId());
-				} catch (IOException e) {}
-				
-				if(!ok) {
+					bytes = multipartFile.getBytes();
+					cliente.setImagem(bytes);
+				} catch (IOException e) {
 					attributes.addFlashAttribute("aviso", "Não foi possível salvar a imagem");
 				}
 			}
 			
-			attributes.addFlashAttribute("mensagem", mensagem);
+			cliente = clienteService.salvar(cliente);
 			return url;
 		} catch(IllegalArgumentException e) {
 			errors.rejectValue("dataNascimento", null, e.getMessage());
@@ -168,12 +157,9 @@ public class ClienteController {
 			}
 		}
 		
+		cliente.setImagemBase64(carregarImagem(cliente.getImagem()));
 		mv.addObject("cliente", cliente);
 		mv.addObject("enderecoFormatado", enderecoFormatado);
-		File foto = buscarFotoDoCliente("cliente_"+cliente.getId()); 
-		if(foto!=null) {
-			mv.addObject("imagem", foto.getPath()); 
-		}
 		
 		return mv;
 	}
@@ -189,30 +175,36 @@ public class ClienteController {
 		return clienteList;
 	}
 	
-	private File buscarFotoDoCliente(String name) {
-		File file = null;
-		try {
-			ResourceUtils.getFile("classpath:static/custom/img/clientes/"+name);
-			file = new File("/custom/img/clientes/"+name);
-		} catch (FileNotFoundException e) {}
+	private String buscarImagemPadrao() {
 		
-		return file;
+		String encodedfile = null;
+		try {
+			File file = ResourceUtils.getFile("classpath:static/custom/img/produto/sem-imagem_2.jpg");
+			Path path = file.toPath();
+			byte[] bytes = Files.readAllBytes(path);
+			
+			encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return encodedfile;
 	}
 	
-	private boolean salvarFotoDoCliente(InputStream is, String name) {
-		try {
-			BufferedImage bufferedImage = ImageIO.read(is);
-			if(bufferedImage!=null) {
-				File file = ResourceUtils.getFile("classpath:static/custom/img/clientes");
-				file = new File(file.getAbsolutePath()+"/"+name);
-				ImageIO.write(bufferedImage, "png", file);
-			} else {
-				return false;
+	private String carregarImagem(byte[] bytes) {
+		String encodedfile = null;
+		if(bytes != null) {
+			try {
+				encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				encodedfile = buscarImagemPadrao();
 			}
-		} catch (IOException e) {
-			return false;
+		} else {
+			encodedfile = buscarImagemPadrao();
 		}
-		return true;
+		return encodedfile;
 	}
 	
 	

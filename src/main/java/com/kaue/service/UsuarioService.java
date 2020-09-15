@@ -2,6 +2,8 @@ package com.kaue.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.kaue.dao.filter.UsuarioFilter;
 import com.kaue.model.Usuario;
 
@@ -13,4 +15,6 @@ public interface UsuarioService {
 	public Long contar(UsuarioFilter filtro);
 	public Usuario buscarPorId(Long id);
 	public Usuario buscarPorLogin(String login);
+	public void salvarImagem(MultipartFile file, String nome) throws Exception;
+	public String carregarImagem(String nome);
 }
