@@ -14,7 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.CategoriaFilter;
+import com.kaue.dao.filter.UsuarioFilter;
 import com.kaue.model.Categoria;
+import com.kaue.model.Usuario;
 import com.kaue.service.CategoriaService;
 
 @Controller
@@ -54,7 +56,17 @@ public class CategoriaController {
 	
 	@RequestMapping
 	public ModelAndView pesquisar(@ModelAttribute("filtro") CategoriaFilter filtro) {
-		//List<Categoria> categoriaList = categoriaDAO.findAll(Sort.by(Sort.Direction.ASC, "id"));
+		if(!filtro.isAvancada()) {
+			String termo = filtro.getTermo();
+			if(termo!=null) {
+				filtro.getCategoria().setNome(termo);
+				filtro.getCategoria().setDescricao(termo);
+				try {
+					Long id = Long.parseLong(termo);
+					filtro.getCategoria().setId(id);
+				} catch(NumberFormatException nfe) {}
+			}
+		}
 		List<Categoria> categoriaList = categoriaService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);
 		mv.addObject("categorias", categoriaList);

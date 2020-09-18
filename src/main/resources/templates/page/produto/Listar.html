@@ -35,7 +35,7 @@
             <div class="input-group">
               <input class="form-control" 
                 placeholder="Qual produto você está procurando?" autofocus="autofocus"
-                th:field="*{descricao}"/>
+                th:field="*{descricao}" onload="setTimeout(function(){$(this).focus();},1);"/>
               <div class="input-group-append">
                 <button type="submit" class="btn btn-default">
                   <i class="fas fa-search"></i>
@@ -46,8 +46,8 @@
           </div>
         </div>
       
-        <table class="table table-bordered table-striped js-tabela">
-          <thead>
+        <table class="table table-bordered table-striped table-sm js-tabela">
+          <thead  style="background-color: #fffed4">
             <tr>
               <th class="text-center col-1" th:text="#{listagem.produto.coluna.id}"></th>
               <th th:text="#{descricao}" ></th>

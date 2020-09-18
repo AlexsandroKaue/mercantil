@@ -1,5 +1,6 @@
 package com.kaue.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.kaue.dao.filter.CategoriaFilter;
 import com.kaue.dao.filter.FornecedorFilter;
 import com.kaue.model.Categoria;
 import com.kaue.model.Fornecedor;
+import com.kaue.model.Usuario;
 import com.kaue.service.CategoriaService;
 import com.kaue.service.FornecedorService;
 
@@ -32,8 +34,11 @@ public class CategoriaServiceImpl implements CategoriaService{
 
 	@Override
 	public List<Categoria> pesquisar(CategoriaFilter filtro) {
-		String descricao = filtro.getDescricao() == null ? "" : filtro.getDescricao();
-		return categoriaDAO.findByDescricaoContainingIgnoreCaseOrderByIdDesc(descricao);
+		List<Categoria> categoriaList = categoriaDAO.findCategoriaByFiltro(filtro);
+		if(categoriaList==null) {
+			categoriaList = new ArrayList<Categoria>();
+		}
+		return categoriaList;
 	}
 
 	

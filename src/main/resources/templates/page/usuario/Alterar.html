@@ -141,9 +141,10 @@
               <label class="col-form-label">Foto</label>
               <div class="box-profile">
                 <div class="text-center mb-4">
-                 <img id="foto" class="img-fluid" style="height:160px"
+                 <input type="hidden" th:field="*{foto}"></input>
+                 <img id="imagem" class="img-fluid" style="height:160px"
                   th:src="|data:image/png;base64,*{imagemBase64}|"
-                  alt="User profile picture"></img><!-- class="profile-user-img img-fluid img-circle" -->
+                  alt="User profile picture"></img>
                 </div>
                   <div class="input-group">
                     <div class="custom-file">
@@ -211,7 +212,7 @@
     	    var reader = new FileReader();
     	    
     	    reader.onload = function(e) {
-    	      $('#foto').attr('src', e.target.result);
+    	      $('#imagem').attr('src', e.target.result);
     	    }
     	    
     	    reader.readAsDataURL(input.files[0]); // convert to base64 string

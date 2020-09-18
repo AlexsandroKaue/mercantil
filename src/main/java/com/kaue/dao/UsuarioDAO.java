@@ -12,4 +12,5 @@ public interface UsuarioDAO extends JpaRepository<Usuario, Long>, UsuarioReposit
 	public List<Usuario> findByNomeContainingIgnoreCaseOrderByIdDesc(String nome);
 	
 	public Usuario findByLogin(String login);
+	
 }

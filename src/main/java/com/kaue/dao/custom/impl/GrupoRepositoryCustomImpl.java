@@ -30,7 +30,11 @@ public class GrupoRepositoryCustomImpl implements GrupoRepositoryCustom{
         List<Predicate> predicates = prepararPredicadosDaConsulta(grupoFiltro, cb, grupo);
         
         if(predicates.size()>0) {
-        	query.select(grupo).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        	if(grupoFiltro.isAvancada()) {
+        		query.select(grupo).where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+        	} else {
+        		query.select(grupo).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        	}
         } else {
         	query.select(grupo);
         }
@@ -59,7 +63,11 @@ public class GrupoRepositoryCustomImpl implements GrupoRepositoryCustom{
         List<Predicate> predicates = prepararPredicadosDaConsulta(grupoFiltro, cb, grupo);
         
         if(predicates.size()>0) {
-        	query.select(cb.count(grupo)).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        	if(grupoFiltro.isAvancada()) {
+        		query.select(cb.count(grupo)).where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+        	} else {
+        		query.select(cb.count(grupo)).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        	}
         } else {
         	query.select(cb.count(grupo));
         }

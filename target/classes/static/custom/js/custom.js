@@ -1,22 +1,3 @@
-$('#modalConfirmacao').on('show.bs.modal', function(event){
-	
-	var button = $(event.relatedTarget); // Button that triggered the modal
-	var id = button.data('id'); // Extract info from data-* attributes
-	var descricao = button.data('descricao');
-	
-	var modal = $(this);
-	var form = modal.find('form');
-	var action = form.data('url-base');
-	/*var action = form.attr('action');*/
-	if(!action.endsWith('/')){
-		action += '/';
-	}
-	form.attr('action',action + id);
-	modal.find('.modal-body p').html('Deseja realmente excluir o registro <strong>'+descricao+'</strong>?');
-	/*alert(id);*/
-	
-});
-
 $('[role="form"]').validate({
 	errorElement: 'span',
 	errorPlacement: function (error, element) {
@@ -54,14 +35,38 @@ $.validator.addMethod('celular', function (value, element) {
 $.validator.addMethod('filesize', function (value, element, param) {
     return this.optional(element) || (element.files[0].size <= (param*1024*1024))
 }, 'A imagem deve ser menor que {0}MB');
-	
-	
+
+
 $.validator.addMethod("customDate", function(value, element) {
 	return moment(value, 'DD/MM/YYYY', true).isValid();
 }, "Por favor forneça uma data válida");
 
-	
 $(function(){
+	inicializar();
+});
+
+function inicializar() {
+	$('#modalConfirmacao').on('show.bs.modal', function(event){
+		
+		var button = $(event.relatedTarget); // Button that triggered the modal
+		var id = button.data('id'); // Extract info from data-* attributes
+		var descricao = button.data('descricao');
+		
+		var modal = $(this);
+		var form = modal.find('form');
+		var action = form.data('url-base');
+		/*var action = form.attr('action');*/
+		if(!action.endsWith('/')){
+			action += '/';
+		}
+		form.attr('action',action + id);
+		modal.find('.modal-body p').html('Deseja realmente excluir o registro <strong>'+descricao+'</strong>?');
+		/*alert(id);*/
+		
+	});
+
+	
+
 	$('[rel="tooltip"]').tooltip({
 		container: 'body',
 		boundary: 'scrollParent',
@@ -155,58 +160,62 @@ $(function(){
 		}
 	});
 	
-	/*$('.js-date').on('focusout', function() {
-		$(this).apply.daterangepicker
-		console.log($(this));
-		if (!picker.startDate.isValid()) {
-			$(this).val('');
-		} 
-	});*/
-	
 	$('.js-tabela').DataTable({
-      "paging": true,
-      "pageLength": 5,
+      paging: true,
+      pageLength: 15,
       /*"lengthChange": true,*/
-      "searching": false,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-      "lengthChange": false,
-      "aaSorting": [],
+      searching: false,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+      lengthChange: false,
+      aaSorting: [],
       /*"lengthMenu": [ 5, 10, 15, 20 ],*/
-      /*"columnDefs": [
-    	    { "orderable": false, "targets": [0,5] }
-    	  ],*/
-      "ordering": true,
-      "language": {
-          "lengthMenu": "Mostrar _MENU_ registro por página",
-          "zeroRecords": "Nothing found - sorry",
-          "info": "Total de registros: _MAX_",
-          "infoEmpty": "Nenhum registro encontrado",
-          "infoFiltered": "",
-          "search": "Pesquisa",
-          "zeroRecords":    "Nenhum registro encontrado",
-          "paginate": {
-              "first":      "Primeiro",
-              "last":       "Último",
-              "next":       "Próximo",
-              "previous":   "Anterior"
+      columnDefs:[{ "orderable": false, "targets": [-1] }],
+      ordering: true,
+      language: {
+          lengthMenu: "Mostrar _MENU_ registro por página",
+          info: "Total de registros: _MAX_",
+          infoEmpty: "Nenhum registro encontrado",
+          infoFiltered: "teste",
+          search: "Pesquisa",
+          zeroRecords:    "Nenhum registro encontrado",
+          paginate: {
+              first:      "Primeiro",
+              last:       "Último",
+              next:       "Próximo",
+              previous:   "Anterior"
           }
-      }
+      },
+      destroy: true
     });
 
 	
 	$('.js-fade').fadeTo(5000, 1, function() {
 		$(this).slideUp( "slow", function() {});
-	});
-	
+	});	
+}
+
+
+$(document).ajaxSend(function(e, xhr, options) {
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
-	 
-	$(document).ajaxSend(function(e, xhr, options) {
-	    xhr.setRequestHeader(header, token);
-	});
+	xhr.setRequestHeader(header, token);
 });
+
+
+/*$(document).ready(function() {*/
+	//inicializar();
+	
+/*});*/
+
+/*$(document).ajaxComplete(function() {
+	inicializar();
+});*/
+
+
+	
+
 
 
 

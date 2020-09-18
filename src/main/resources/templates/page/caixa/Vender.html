@@ -7,309 +7,305 @@
   <title th:text="#{mercadinho}"></title>
 </head>
 
-  <section layout:fragment="container" th:fragment="container" id="containerSection" class="disabled">
+  <section layout:fragment="container">
     
-    <div id="conteudo">
-    
-      <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa}" th:object="${venda}">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-        <input type="hidden" th:field="*{id}"></input>
-        <input type="hidden" th:field="*{dataVenda}"></input>
-        <input type="hidden" th:field="*{subtotal}"></input>
-        <input type="hidden" th:field="*{total}"></input>
-        <input type="hidden" th:field="*{valorDesconto}"></input>
-        <input type="hidden" th:field="*{status}"></input>
-        <input type="hidden" th:field="*{cliente}"></input>
-        
-        <div class="content-header" style="padding-left:0px; padding-right:0px; padding-bottom:5px">
-          <div class="container-fluid">
-            <div layout:insert="~{mensagem_geral}"></div>
-            <div layout:insert="~{mensagem_erro}"></div>
-            <div class="row mb-2" layout:fragment="cabecalho">
-              <div class="col-sm-7 m-0">
-                <select class="js-buscar-produto" 
-                 th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir},
-                 data-url-selecionar-balanca=@{/caixa/balanca}"
-                 style="width: 100%;"></select>
-              </div>
+    <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa}" th:object="${venda}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+      <input type="hidden" th:field="*{id}"></input>
+      <input type="hidden" th:field="*{dataVenda}"></input>
+      <input type="hidden" th:field="*{subtotal}"></input>
+      <input type="hidden" th:field="*{total}"></input>
+      <input type="hidden" th:field="*{valorDesconto}"></input>
+      <input type="hidden" th:field="*{status}"></input>
+      <input type="hidden" th:field="*{cliente}"></input>
+      
+      <div class="content-header" style="padding-left:0px; padding-right:0px; padding-bottom:5px">
+        <div class="container-fluid">
+          <div layout:insert="~{mensagem_geral}"></div>
+          <div layout:insert="~{mensagem_erro}"></div>
+          <div class="row mb-2" layout:fragment="cabecalho">
+            <div class="col-sm-7 m-0">
+              <select class="js-buscar-produto" 
+               th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir},
+               data-url-selecionar-balanca=@{/caixa/balanca}"
+               style="width: 100%;"></select>
             </div>
-            <!-- /.row -->
           </div>
-          <!-- /.container-fluid -->
+          <!-- /.row -->
         </div>
-        <section class="content">
-          
-          <div class="container-fluid">            
-            <div class="row">
-              <div class="col-md-7">
-                <!-- <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4"> -->
-                  <div class="chart" style=" height: 400px; border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
-                    <div class="bg-white pt-3 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
-                      <ul class="items-list" style="height: 1.5em; margin-bottom: 0px">
-                        <li>
-                          <div class="row">
-                            <div class="col-md-4 text-left">
-                              <!-- <h4 class="mb-0">
-                                Produto
-                              </h4> -->
-                              <label>Produto</label>
-                            </div>
-                            <div class="col-md-4 text-center">
-                              <!-- <h4 class="mb-0">
-                                Quantidade x Preço Unitário
-                              </h4> -->
-                              <label>Quantidade x Preço Unitário</label>
-                            </div>
-                            <div class="col-md-3 text-right">
-                              <!-- <h4 class="mb-0">
-                                Total Item
-                              </h4> -->
-                              <label>Total Item</label>
-                            </div>
-                            <div class="col-md-1"></div>
+        <!-- /.container-fluid -->
+      </div>
+      <section class="content">
+        
+        <div class="container-fluid">            
+          <div class="row">
+            <div class="col-md-7">
+              <!-- <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4"> -->
+                <div class="chart" style=" height: 400px; border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4">
+                  <div class="bg-white pt-3 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
+                    <ul class="items-list" style="height: 1.5em; margin-bottom: 0px">
+                      <li>
+                        <div class="row">
+                          <div class="col-md-4 text-left">
+                            <!-- <h4 class="mb-0">
+                              Produto
+                            </h4> -->
+                            <label>Produto</label>
                           </div>
-                        </li>
-                      </ul>
-                    </div>
-                    
-                    <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="overflow: scroll;">
-                      <li th:if="*{#lists.isEmpty(itemList)}">
-                         <div class="col-md-12">
-                          <p class="mt-2">Nenhum item incluído.</p> 
-                         </div>
-                      </li>
-                      <th:block th:each="item, rowStat : *{itemList}">
-                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].produto}"></input>
-                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].quantidade}"></input>
-                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valor}"></input>
-                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].venda}"></input>
-                          <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valorTotal}"></input>
-                          <li class="item">
-                          <div class="row align-items-end">
-                           <div class="col-md-4 text-left">
-                            <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
-                            <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>  
-                           </div>
                           <div class="col-md-4 text-center">
-                             <h6 id="quantidade" th:text="|${{item.quantidade}}${item.produto.unitario} x ${{item.valor}}|"></h6>
+                            <!-- <h4 class="mb-0">
+                              Quantidade x Preço Unitário
+                            </h4> -->
+                            <label>Quantidade x Preço Unitário</label>
                           </div>
                           <div class="col-md-3 text-right">
-                             <h5 th:text="|R$ ${{item.valorTotal}}|"></h5>
+                            <!-- <h4 class="mb-0">
+                              Total Item
+                            </h4> -->
+                            <label>Total Item</label>
                           </div>
-                          <div class="col-md-1 text-center">
+                          <div class="col-md-1"></div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="overflow: scroll;">
+                    <li th:if="*{#lists.isEmpty(itemList)}">
+                       <div class="col-md-12">
+                        <p class="mt-2">Nenhum item incluído.</p> 
+                       </div>
+                    </li>
+                    <th:block th:each="item, rowStat : *{itemList}">
+                        <input type="hidden" th:field="*{itemList[__${rowStat.index}__].produto}"></input>
+                        <input type="hidden" th:field="*{itemList[__${rowStat.index}__].quantidade}"></input>
+                        <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valor}"></input>
+                        <input type="hidden" th:field="*{itemList[__${rowStat.index}__].venda}"></input>
+                        <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valorTotal}"></input>
+                        <li class="item">
+                        <div class="row align-items-end">
+                         <div class="col-md-4 text-left">
+                          <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
+                          <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>  
+                         </div>
+                        <div class="col-md-4 text-center">
+                           <h6 id="quantidade" th:text="|${{item.quantidade}}${item.produto.unitario} x ${{item.valor}}|"></h6>
+                        </div>
+                        <div class="col-md-3 text-right">
+                           <h5 th:text="|R$ ${{item.valorTotal}}|"></h5>
+                        </div>
+                        <div class="col-md-1 text-center">
+                          <h6>
+                           <a data-toggle="modal" data-target="#modalConfirmarRemocaoItem" class="text-muted btn-sm"
+                            th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao}"
+                            title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                            <i class="fas fa-trash"></i>
+                           </a>
+                          </h6>
+                        </div>
+                        </div>
+                      </li>
+                      <li class="linha border-bottom">
+                      </li>
+                    </th:block>
+                  </ul>
+                  <div class="bg-white py-2 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
+                    <div class="col-md-12">
+                      <h5>Nenhum item incluído</h5> 
+                    </div>
+                  </div>
+                </div>
+              <!-- </div> -->
+            </div>
+          
+          <div class="col-md-5">
+            
+            <div class="d-flex flex-column" style="height: 400px;">
+              <div class="mb-auto">
+               
+                <div class="d-flex justify-content-between">
+                  <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
+                   id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat">
+                    <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
+                    <i class="fas fa-money-bill-wave"></i>
+                    Efetuar Pagamento (F2)
+                  </button>
+                  <button type="button" data-toggle="modal" data-target="#modal-cliente"
+                   class="btn btn-warning btn-lg btn-flat">
+                    <i class="fas fa-book-open"></i>
+                    Venda na Conta (F3)
+                  </button>
+                </div>
+              </div>
+              <div class="bg-gray py-2 px-3">
+                <h4 class="mb-0">
+                  <!-- <small> -->Subtotal<!-- </small> -->
+                </h4>
+                <h1 class="mt-0" th:text="|R$ *{{subtotal}}|">
+                </h1>
+              </div>
+             </div>
+            </div>
+          
+          </div>
+        </div>
+      </section>
+              
+      <div class="modal" id="modal-pagamento" 
+       tabindex="-1" data-keyboard="true"
+       role="dialog" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Pagamento</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row" >
+                <div class="col-12">
+                  
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tr>
+                        <th class="lead mt-2" style="width:50%">Subtotal:</th>
+                        <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|*{{subtotal}}|">R$ 0,00</p></td>
+                      </tr>
+                      <tr>
+                        <th class="lead form-inline">
+                          Desconto
+                          <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
+                            th:attr="data-url-base-desconto=@{/caixa/desconto}">
+                            <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
+                          </select>
+                        </th>
+                        <td id="desconto-valor"><p class="mb-0" th:text="|*{{valorDesconto}}|">0,00</p></td>
+                      </tr>
+                      <tr>
+                        <th class="lead">Total:</th>
+                        
+                        <td id="total">
+                        <div class="bg-gray py-2 px-3"><h2 class="mb-0" th:text="|*{{total}}|"></h2>
+                        </div></td>
+                      </tr>
+                      <tr>
+                        <th class="lead">Saldo:</th>
+                        <td>
+                          <!-- <div class="input-group input-group-lg"> -->
+                            <input type="text" id="inputSaldo" class="form-control js-currency input_saldo" th:field="*{saldo}"></input>
+                          <!-- </div> -->
+                        </td>
+                      </tr>
+                    </table>
+                    <div class="d-flex justify-content-between">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fas fa-undo-alt"></i>
+                        Voltar (ESC)
+                      </button>
+                      <button type="submit" id="finalizar" class="btn btn-md btn-primary">
+                        <i class="far fa-credit-card"></i> 
+                        Finalizar (ENTER)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+      
+      <div class="modal" id="modal-cliente" 
+       tabindex="-1" data-keyboard="true"
+       role="dialog" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Venda na Conta</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- <div class="row" > -->
+                
+                <!-- One "tab" for each step in the form: -->
+                <div class="tab">
+                  <p class="mb-1">Selecione um cliente:</p>
+                  <select id="selectClient" class="js-buscar-cliente input_saldo" 
+                   th:attr="data-url-buscar-cliente=@{/caixa/buscarCliente}, data-url-selecionar-cliente=@{/caixa/selecionarCliente}"
+                   style="width: 100%;" oninput="this.className"></select>
+                   
+                   <div class="card bg-light mt-3" th:if="*{cliente}">
+                    <div class="card-header text-muted border-bottom-0"><span class="text-success">Cliente selecionado</span></div>
+                    <div class="card-body pt-2">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="d-flex justify-content-between">
+                            <h2 class="lead"><b th:text="*{cliente.nome}"></b></h2>
                             <h6>
-                             <a data-toggle="modal" data-target="#modalConfirmarRemocaoItem" class="text-muted btn-sm"
-                              th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao}"
-                              title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                             <a data-toggle="modal" class="js-remover-cliente text-muted btn-sm"
+                              th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
+                              title="Excluir" rel="tooltip" data-placement="top">
                               <i class="fas fa-trash"></i>
                              </a>
                             </h6>
                           </div>
-                          </div>
-                        </li>
-                        <li class="linha border-bottom">
-                        </li>
-                      </th:block>
-                    </ul>
-                    <div class="bg-white py-2 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
-                      <div class="col-md-12">
-                        <h5>Nenhum item incluído</h5> 
+                        </div>
                       </div>
                     </div>
                   </div>
-                <!-- </div> -->
-              </div>
-            
-            <div class="col-md-5">
-              
-              <div class="d-flex flex-column" style="height: 400px;">
-                <div class="mb-auto">
-                 
-                  <div class="d-flex justify-content-between">
-                    <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                     id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat">
-                      <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
-                      <i class="fas fa-money-bill-wave"></i>
-                      Efetuar Pagamento (F2)
-                    </button>
-                    <button type="button" data-toggle="modal" data-target="#modal-cliente"
-                     class="btn btn-warning btn-lg btn-flat">
-                      <i class="fas fa-book-open"></i>
-                      Venda na Conta (F3)
-                    </button>
+                  <input placeholder="Nenhum cliente selecionado." class="form-control mt-3 required" oninput="this.className = ''" name="fname"
+                   th:unless="*{cliente}" readonly="readonly"></input>
+                </div>
+                <div class="tab">
+                  <p class="mb-1">Confirme a compra:</p>
+                    <div class="card bg-light" th:if="*{cliente}">
+                    <div class="card-body pt-2">
+                      <div class="row">
+                        <div class="col-12">
+                            Cliente:
+                            <p th:if="*{cliente}" class="lead"><b th:text="*{cliente.nome}"></b></p>
+                            Total(R$):
+                            <p class="lead"><b th:text="|*{{total}}|"></b></p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div class="bg-gray py-2 px-3">
-                  <h4 class="mb-0">
-                    <!-- <small> -->Subtotal<!-- </small> -->
-                  </h4>
-                  <h1 class="mt-0" th:text="|R$ *{{subtotal}}|">
-                  </h1>
-                </div>
-               </div>
-              </div>
-            
-            </div>
-          </div>
-        </section>
-                
-        <div class="modal" id="modal-pagamento" 
-         tabindex="-1" data-keyboard="true"
-         role="dialog" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title">Pagamento</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="row" >
-                  <div class="col-12">
                     
-                    <div class="table-responsive">
-                      <table class="table">
-                        <tr>
-                          <th class="lead mt-2" style="width:50%">Subtotal:</th>
-                          <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|*{{subtotal}}|">R$ 0,00</p></td>
-                        </tr>
-                        <tr>
-                          <th class="lead form-inline">
-                            Desconto
-                            <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
-                              th:attr="data-url-base-desconto=@{/caixa/desconto}">
-                              <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
-                            </select>
-                          </th>
-                          <td id="desconto-valor"><p class="mb-0" th:text="|*{{valorDesconto}}|">0,00</p></td>
-                        </tr>
-                        <tr>
-                          <th class="lead">Total:</th>
-                          
-                          <td id="total">
-                          <div class="bg-gray py-2 px-3"><h2 class="mb-0" th:text="|*{{total}}|"></h2>
-                          </div></td>
-                        </tr>
-                        <tr>
-                          <th class="lead">Saldo:</th>
-                          <td>
-                            <!-- <div class="input-group input-group-lg"> -->
-                              <input type="text" id="inputSaldo" class="form-control js-currency input_saldo" th:field="*{saldo}"></input>
-                            <!-- </div> -->
-                          </td>
-                        </tr>
-                      </table>
-                      <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                          <i class="fas fa-undo-alt"></i>
-                          Voltar (ESC)
-                        </button>
-                        <button type="submit" id="finalizar" class="btn btn-md btn-primary">
-                          <i class="far fa-credit-card"></i> 
-                          Finalizar (ENTER)
-                        </button>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
+                <!-- Circles which indicates the steps of the form: -->
+                <div style="text-align:center;margin-top:40px;">
+                  <span class="step"></span>
+                  <span class="step"></span>
+                </div>
+              <!-- </div> -->
             </div>
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-        
-        <div class="modal" id="modal-cliente" 
-         tabindex="-1" data-keyboard="true"
-         role="dialog" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title">Venda na Conta</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <!-- <div class="row" > -->
-                  
-                  <!-- One "tab" for each step in the form: -->
-                  <div class="tab">
-                    <p class="mb-1">Selecione um cliente:</p>
-                    <select id="selectClient" class="js-buscar-cliente input_saldo" 
-                     th:attr="data-url-buscar-cliente=@{/caixa/buscarCliente}, data-url-selecionar-cliente=@{/caixa/selecionarCliente}"
-                     style="width: 100%;" oninput="this.className"></select>
-                     
-                     <div class="card bg-light mt-3" th:if="*{cliente}">
-                      <div class="card-header text-muted border-bottom-0"><span class="text-success">Cliente selecionado</span></div>
-                      <div class="card-body pt-2">
-                        <div class="row">
-                          <div class="col-12">
-                            <div class="d-flex justify-content-between">
-                              <h2 class="lead"><b th:text="*{cliente.nome}"></b></h2>
-                              <h6>
-                               <a data-toggle="modal" class="js-remover-cliente text-muted btn-sm"
-                                th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
-                                title="Excluir" rel="tooltip" data-placement="top">
-                                <i class="fas fa-trash"></i>
-                               </a>
-                              </h6>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <input placeholder="Nenhum cliente selecionado." class="form-control mt-3 required" oninput="this.className = ''" name="fname"
-                     th:unless="*{cliente}" readonly="readonly"></input>
-                  </div>
-                  <div class="tab">
-                    <p class="mb-1">Confirme a compra:</p>
-                      <div class="card bg-light" th:if="*{cliente}">
-                      <div class="card-body pt-2">
-                        <div class="row">
-                          <div class="col-12">
-                              Cliente:
-                              <p th:if="*{cliente}" class="lead"><b th:text="*{cliente.nome}"></b></p>
-                              Total(R$):
-                              <p class="lead"><b th:text="|*{{total}}|"></b></p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                      
-                  </div>
-                  <!-- Circles which indicates the steps of the form: -->
-                  <div style="text-align:center;margin-top:40px;">
-                    <span class="step"></span>
-                    <span class="step"></span>
-                  </div>
-                <!-- </div> -->
-              </div>
-              <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-md btn-default" id="prevBtn" onclick="nextPrev(-1)">Anterior</button>
-                <button type="button" class="btn btn-md btn-primary" id="nextBtn" onclick="nextPrev(1)">Próximo</button>
-                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">
-                  <i class="fas fa-undo-alt"></i>
-                  Voltar (ESC)
-                </button>
-                <button type="button" id="finalizar" class="btn btn-md btn-primary" onclick="validateForm()">
-                  <i class="far fa-credit-card"></i> 
-                  Finalizar (ENTER)
-                </button> -->
-              </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-md btn-default" id="prevBtn" onclick="nextPrev(-1)">Anterior</button>
+              <button type="button" class="btn btn-md btn-primary" id="nextBtn" onclick="nextPrev(1)">Próximo</button>
+              <!-- <button type="button" class="btn btn-default" data-dismiss="modal">
+                <i class="fas fa-undo-alt"></i>
+                Voltar (ESC)
+              </button>
+              <button type="button" id="finalizar" class="btn btn-md btn-primary" onclick="validateForm()">
+                <i class="far fa-credit-card"></i> 
+                Finalizar (ENTER)
+              </button> -->
             </div>
-            <!-- /.modal-content -->
           </div>
-          <!-- /.modal-dialog -->
+          <!-- /.modal-content -->
         </div>
-        <!-- /.modal -->
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+      
+    </form>
         
-      </form>
-    
-    </div>
-    
     <div class="modal" id="modal-balanca" tabindex="-1" data-keyboard="true">
       <form id="itemForm" role="form" method="POST" th:action="@{/caixa/incluir}" th:object="${item}">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
@@ -403,7 +399,7 @@
 	  minimumFractionDigits: 2
 	});
   	
-  	$('#container').on('shown.bs.modal', '#modal-balanca', function(event){
+  	$('#ancora').on('shown.bs.modal', '#modal-balanca', function(event){
     	$('#inputQuantidade').maskMoney({
     		precision: 3,
     		decimal:',', 
@@ -416,7 +412,7 @@
       	}, 0);
     });
     
-    $('#container').on('shown.bs.modal', '#modal-pagamento', function(event){
+    $('#ancora').on('shown.bs.modal', '#modal-pagamento', function(event){
     	$('#inputSaldo').maskMoney({
     		decimal:',',
     		thousands:'.', 
@@ -429,7 +425,7 @@
       	}, 0);
     });
     
-    $('#container').on('shown.bs.modal', '#modal-cliente', function(event){
+    $('#ancora').on('shown.bs.modal', '#modal-cliente', function(event){
     	startSelect2Cliente();
     	currentTab = 0;
     	showTab(currentTab);
@@ -438,17 +434,17 @@
       	}, 0);
     });
     
-    $('#container').on('hidden.bs.modal', '#modal-cliente', function(event){
+    $('#ancora').on('hidden.bs.modal', '#modal-cliente', function(event){
     	$('.js-buscar-produto').select2('focus');
     });
-    $('#container').on('hidden.bs.modal', '#modal-pagamento', function(event){
+    $('#ancora').on('hidden.bs.modal', '#modal-pagamento', function(event){
     	$('.js-buscar-produto').select2('focus');
     });
-    $('#container').on('hidden.bs.modal', '#modal-balanca', function(event){
+    $('#ancora').on('hidden.bs.modal', '#modal-balanca', function(event){
     	$('.js-buscar-produto').select2('focus');
     });
     
-    $('#container').on('click', '.js-buscar-produto', function(event){
+    $('#ancora').on('click', '.js-buscar-produto', function(event){
     	console.log('clicou na barra de pesquisa de produtos');
     });
   	
@@ -657,7 +653,7 @@
   	  return repo.full_name || repo.text;
   	}
   	
-    $('#container').on('select2:select','.js-buscar-produto', function(e) {
+    $('#ancora').on('select2:select','.js-buscar-produto', function(e) {
 
     	var data = e.params.data;
     	var seletor = $(e.currentTarget);
@@ -689,7 +685,7 @@
     		});
         	
         	response.done(function(e){
-    			$('#conteudo').replaceWith(e);
+    			$('#caixaForm').replaceWith(e);
     			$('#listaDeItens').scrollTop(330);
     		});
         	response.fail(function(e){
@@ -699,7 +695,7 @@
     	
     });
     
-    $('#container').on('select2:select','.js-buscar-cliente', function(e) {
+    $('#ancora').on('select2:select','.js-buscar-cliente', function(e) {
 
     	var data = e.params.data;
     	var seletor = $(e.currentTarget);
@@ -719,7 +715,7 @@
       	
       	response.done(function(e){
       		$('#modal-cliente').modal('hide');
-      		$('#conteudo').replaceWith(e);
+      		$('#caixaForm').replaceWith(e);
       		currentTab = 0;
       		showTab(currentTab);
   			$('#modal-cliente').modal('show');
@@ -730,7 +726,7 @@
     	
     });
     
-    $('#container').on('click','.js-remover-cliente', function(e) {
+    $('#ancora').on('click','.js-remover-cliente', function(e) {
 
     	var botao = $(e.currentTarget);
     	
@@ -743,7 +739,7 @@
       	
       	response.done(function(e){
       		$('#modal-cliente').modal('hide');
-      		$('#conteudo').replaceWith(e);
+      		$('#caixaForm').replaceWith(e);
       		currentTab = 0;
       		showTab(currentTab);
   			$('#modal-cliente').modal('show');
@@ -778,7 +774,7 @@
 		});
     }
     
-    $('#container').on('click', '.js-selecionar-item-balanca', function(event){
+    $('#ancora').on('click', '.js-selecionar-item-balanca', function(event){
     	var botao = $(event.currentTarget);
     	var url = botao.data('url-base');
     	
@@ -805,7 +801,7 @@
     	
     	response.done(function(e){
     		$('#modal-balanca').modal('hide');
-			$('#conteudo').replaceWith(e);
+			$('#caixaForm').replaceWith(e);
 			$('#listaDeItens').scrollTop(330);
 		});
     	
@@ -814,7 +810,7 @@
 		});  		
     }); 
     
-	$('#container').on('show.bs.modal', '#modalConfirmarRemocaoItem', function(event){
+	$('#ancora').on('show.bs.modal', '#modalConfirmarRemocaoItem', function(event){
     	var button = $(event.relatedTarget); // Button that triggered the modal
     	var codigo = button.data('codigo'); // Extract info from data-* attributes
     	var descricao = button.data('descricao');
@@ -830,7 +826,7 @@
     	modal.find('.modal-body p').html('Deseja realmente excluir o item <strong>'+descricao+'</strong> da lista?');    	
     });
 	
-	$('#container').on('click', '.js-remover', function(event) {
+	$('#ancora').on('click', '.js-remover', function(event) {
   		event.preventDefault();
 		
 		var botaoExcluir = $(event.currentTarget);
@@ -844,7 +840,7 @@
 		
 		response.done(function(e){
 			$('#modalConfirmarRemocaoItem').modal('hide');
-			$('#conteudo').replaceWith(e);
+			$('#caixaForm').replaceWith(e);
 			$('#listaDeItens').scrollTop(330);
 		});
 		
@@ -854,7 +850,7 @@
 		
 	});
 	
-	$('#container').on('click', '.js-pagamento', function(event){
+	$('#ancora').on('click', '.js-pagamento', function(event){
 		
 		var botao = $(event.currentTarget);
 		var url = botao.data('url-base');
@@ -867,7 +863,7 @@
 		response.done(function(e){
 			console.log('pagamento');
 			$('#modal-pagamento').modal('hide');
-			$('#conteudo').replaceWith(e);
+			$('#caixaForm').replaceWith(e);
 			$('#modal-pagamento').modal('show');
   			
   		});
@@ -877,7 +873,7 @@
 		});
 	});
 	
-	$('#container').on('change', '.js-desconto', function(event) {
+	$('#ancora').on('change', '.js-desconto', function(event) {
   		event.preventDefault();
   		
   		var seletor = $(event.currentTarget);
@@ -898,7 +894,7 @@
   		
   		response.done(function(e){
   			$('#modal-pagamento').modal('hide');
-  			$('#conteudo').replaceWith(e);
+  			$('#caixaForm').replaceWith(e);
   			$('#modal-pagamento').modal('show');
 		});
 		

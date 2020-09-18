@@ -109,14 +109,16 @@ public class ClienteController {
 	
 	@RequestMapping
 	public ModelAndView pesquisar(@ModelAttribute("filtro") ClienteFilter filtro) {
-		String termo = filtro.getTermo();
-		if(termo!=null) {
-			filtro.getCliente().setNome(termo);
-			filtro.getCliente().setEmail(termo);
-			try {
-				Long id = Long.parseLong(termo);
-				filtro.getCliente().setId(id);
-			} catch(NumberFormatException nfe) {}
+		if(!filtro.isAvancada()) {
+			String termo = filtro.getTermo();
+			if(termo!=null) {
+				filtro.getCliente().setNome(termo);
+				filtro.getCliente().setEmail(termo);
+				try {
+					Long id = Long.parseLong(termo);
+					filtro.getCliente().setId(id);
+				} catch(NumberFormatException nfe) {}
+			}
 		}
 		List<Cliente> clienteList = clienteService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);

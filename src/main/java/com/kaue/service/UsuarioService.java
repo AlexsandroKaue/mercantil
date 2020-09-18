@@ -15,6 +15,7 @@ public interface UsuarioService {
 	public Long contar(UsuarioFilter filtro);
 	public Usuario buscarPorId(Long id);
 	public Usuario buscarPorLogin(String login);
-	public void salvarImagem(MultipartFile file, String nome) throws Exception;
+	public String salvarImagem(MultipartFile file, String nome) throws Exception;
 	public String carregarImagem(String nome);
+	public Long obterIdAtual();
 }

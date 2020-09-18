@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.GrupoFilter;
 import com.kaue.enumeration.StatusTitulo;
+import com.kaue.model.Categoria;
 import com.kaue.model.Grupo;
 import com.kaue.service.GrupoService;
 
@@ -56,15 +57,16 @@ public class GrupoController {
 	
 	@RequestMapping
 	public ModelAndView pesquisar(@ModelAttribute("filtro") GrupoFilter filtro) {
-		//List<Grupo> grupoList = grupoDAO.findAll(Sort.by(Sort.Direction.ASC, "id"));
-		String termo = filtro.getTermo();
-		if(termo!=null) {
-			filtro.getGrupo().setNome(termo);
-			filtro.getGrupo().setDescricao(termo);
-			try {
-				Long id = Long.parseLong(termo);
-				filtro.getGrupo().setId(id);
-			} catch(NumberFormatException nfe) {}
+		if(!filtro.isAvancada()) {
+			String termo = filtro.getTermo();
+			if(termo!=null) {
+				filtro.getGrupo().setNome(termo);
+				filtro.getGrupo().setDescricao(termo);
+				try {
+					Long id = Long.parseLong(termo);
+					filtro.getGrupo().setId(id);
+				} catch(NumberFormatException nfe) {}
+			}
 		}
 		List<Grupo> grupoList = grupoService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);

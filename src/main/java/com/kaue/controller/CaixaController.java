@@ -126,7 +126,7 @@ public class CaixaController {
 	public ModelAndView incluirItem(@PathVariable("codigo") String codigo, Model model) {
 		
 		ModelAndView mv = null;
-		mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
+		mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
 		
 		if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
 		
@@ -177,7 +177,7 @@ public class CaixaController {
 		BigDecimal quantidade = i.getQuantidade();
 		
 		ModelAndView mv = null;
-		mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
+		mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
 		
 		if(venda.getItemList() == null) venda.setItemList(new ArrayList<Item>());
 		
@@ -227,7 +227,7 @@ public class CaixaController {
 	
 	@RequestMapping(value = "/excluir/{codigo}")
 	public ModelAndView excluirItem(@PathVariable("codigo") String codigo) {
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
 		
 		Iterator<Item> itemIterator = venda.getItemList().iterator();
 		Item item = null;
@@ -323,7 +323,7 @@ public class CaixaController {
 	@RequestMapping(value = "/pagamento", method = RequestMethod.PUT)
 	public ModelAndView iniciarPagamento() {		
 		
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #conteudo");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #caixaForm");
 		
 		venda.setStatus(StatusVenda.ABERTA);
 		venda.setDesconto(OpcoesDesconto.ZERO);
@@ -385,7 +385,7 @@ public class CaixaController {
 	@RequestMapping(value = "/desconto/{desconto}")
 	public ModelAndView aplicarDesconto(@PathVariable("desconto") OpcoesDesconto opcao) {		
 		
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #conteudo");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #caixaForm");
 		venda.setDesconto(opcao);
 		BigDecimal valorDesconto = venda.getSubtotal().multiply(new BigDecimal(venda.getDesconto().getNumero())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		BigDecimal total = venda.getSubtotal().subtract(valorDesconto);
@@ -484,7 +484,7 @@ public class CaixaController {
 	
 	@RequestMapping(value = "/selecionarCliente/{id}")
 	public ModelAndView selecionarCliente(@PathVariable("id") Cliente cliente) {
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
 		/* this.cliente = cliente; */
 		venda.setCliente(cliente);
 		mv.addObject("venda", venda);
@@ -493,7 +493,7 @@ public class CaixaController {
 	
 	@RequestMapping(value = "/removerCliente")
 	public ModelAndView removerCliente() {
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #conteudo");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
 		venda.setCliente(null);
 		mv.addObject("venda", venda);
 		return mv;

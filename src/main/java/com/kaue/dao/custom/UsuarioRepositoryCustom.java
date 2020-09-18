@@ -9,4 +9,6 @@ public interface UsuarioRepositoryCustom {
 
 	public List<Usuario> findUsuarioByFiltro(UsuarioFilter usuarioFiltro);
 	public Long countUsuarioByFiltro(UsuarioFilter usuarioFiltro);
+	public Long obterMaxId();
+
 }

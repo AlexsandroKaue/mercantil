@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MimeType;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kaue.dao.UsuarioDAO;
@@ -68,20 +69,28 @@ public class UsuarioServiceImpl implements UsuarioService{
 	}
 
 	@Override
-	public void salvarImagem(MultipartFile imagem, String nome) throws Exception {
-		InputStream is = imagem.getResource().getInputStream();
-		if(is!=null) {
-			Path resourcePath = Paths.get("./src/main/resources/static/custom/img/users/"+nome+".jpg");
+	public String salvarImagem(MultipartFile imagem, String nome) throws Exception {
+		InputStream is = imagem.getInputStream();
+		byte[] bytes = imagem.getBytes();
+		if(bytes!=null) {
+			String extensao = "jpg";
+			if(imagem.getContentType().equals("image/png")) {
+				extensao = "png";
+			} else if(imagem.getContentType().equals("image/gif")) {
+				extensao = "gif";
+			}
+			String filename = nome +"."+extensao;
+			Path resourcePath = Paths.get("./src/main/resources/static/custom/img/users/"+filename);
 			Path absolutePath = resourcePath.toAbsolutePath();
-			BufferedImage image = ImageIO.read(imagem.getResource().getInputStream());
-		    ImageIO.write(image, "jpg", absolutePath.toFile());
+			Files.write(absolutePath, bytes);
+		    return filename;
 		}
-		//Files.write(absolutePath, bytes);
+		return null;
 	}
 
 	@Override
 	public String carregarImagem(String nome) {
-		Path resourcePath = Paths.get("./src/main/resources/static/custom/img/users/"+nome+".jpg");
+		Path resourcePath = Paths.get("./src/main/resources/static/custom/img/users/"+nome);
 		Path absolutePath = resourcePath.toAbsolutePath();
 	    return tranformarEmImagemBase64(absolutePath);
 	}
@@ -125,5 +134,11 @@ public class UsuarioServiceImpl implements UsuarioService{
 		
 		return encodedfile;
 	}
+
+	@Transactional
+	public Long obterIdAtual() {
+		return usuarioDAO.obterMaxId();
+	}
+	
 	
 }

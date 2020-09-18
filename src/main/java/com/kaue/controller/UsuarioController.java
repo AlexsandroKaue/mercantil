@@ -1,26 +1,14 @@
 package com.kaue.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ResourceUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,7 +26,6 @@ import com.kaue.dao.filter.GrupoFilter;
 import com.kaue.dao.filter.UsuarioFilter;
 import com.kaue.enumeration.StatusUsuario;
 import com.kaue.model.Cliente;
-import com.kaue.model.Endereco;
 import com.kaue.model.Grupo;
 import com.kaue.model.Usuario;
 import com.kaue.service.GrupoService;
@@ -57,12 +44,14 @@ public class UsuarioController {
 	
 	@Autowired
 	private GrupoService grupoService;
+	
+	private UsuarioFilter filtro = new UsuarioFilter();
 		
 	@RequestMapping("/novo")
 	public ModelAndView showFormNovo() {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		Usuario usuario = new Usuario();
-		usuario.setImagemBase64(usuarioService.carregarImagem("User_"+usuario.getId()));
+		usuario.setImagemBase64(usuarioService.carregarImagem(usuario.getFoto()));
 		mv.addObject("usuario", usuario);
 		return mv;
 	}
@@ -70,7 +59,7 @@ public class UsuarioController {
 	@RequestMapping("{id}")
 	public ModelAndView showFormEditar(@PathVariable("id") Usuario usuario) {
 		ModelAndView mv = new ModelAndView(ALTERAR_VIEW);
-		usuario.setImagemBase64(usuarioService.carregarImagem("User_"+usuario.getId()));
+		usuario.setImagemBase64(usuarioService.carregarImagem(usuario.getFoto()));
 		mv.addObject("senhaAtual");
 		mv.addObject("novaSenha");
 		mv.addObject("novaSenhaConfirmacao");
@@ -99,17 +88,21 @@ public class UsuarioController {
 			url = "redirect:/usuarios/"+usuario.getId();
 		}
 		usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
-		
+				
 		boolean hasFileUploaded = !multipartFile.isEmpty();
 		if(hasFileUploaded) {
 			try {
-				usuarioService.salvarImagem(multipartFile, "User_"+usuario.getId());
+				Long proxId = usuarioService.obterIdAtual()+1;
+				String filename = usuarioService.salvarImagem(multipartFile, "User_"+proxId);
+				usuario.setFoto(filename);
+				//usuario = usuarioService.salvar(usuario);//atualizar campo da foto
 			} catch (Exception e) {
 				attributes.addFlashAttribute("aviso", "Não foi possível salvar a imagem");
 			}
 		}
 		
 		usuario = usuarioService.salvar(usuario);
+		
 		return url;
 	}
 	
@@ -139,19 +132,23 @@ public class UsuarioController {
 	}
 	
 	@RequestMapping
-	public ModelAndView pesquisar(@ModelAttribute("filtro") UsuarioFilter filtro) {
-		String termo = filtro.getTermo();
-		if(termo!=null) {
-			filtro.getUsuario().setNome(termo);
-			filtro.getUsuario().setEmail(termo);
-			try {
-				Long id = Long.parseLong(termo);
-				filtro.getUsuario().setId(id);
-			} catch(NumberFormatException nfe) {}
+	public ModelAndView pesquisar(UsuarioFilter filtro) {
+		if(filtro==null) filtro = new UsuarioFilter();
+		if(!filtro.isAvancada()) {
+			String termo = filtro.getTermo();
+			if(termo!=null) {
+				filtro.getUsuario().setNome(termo);
+				filtro.getUsuario().setEmail(termo);
+				try {
+					Long id = Long.parseLong(termo);
+					filtro.getUsuario().setId(id);
+				} catch(NumberFormatException nfe) {}
+			}
 		}
 		List<Usuario> usuarioList = usuarioService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);
 		mv.addObject("usuarios", usuarioList);
+		mv.addObject("filtro", filtro);
 		return mv;
 	}
 	
@@ -165,7 +162,7 @@ public class UsuarioController {
 	@RequestMapping(value = "/detalhes/{id}")
 	public ModelAndView detalhes(@PathVariable("id") Usuario usuario) {
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW + " :: #modal-detalhes");
-		usuario.setImagemBase64(usuarioService.carregarImagem("User_"+usuario.getId()));
+		usuario.setImagemBase64(usuarioService.carregarImagem(usuario.getFoto()));
 		mv.addObject("usuario", usuario);
 		
 		return mv;
@@ -186,5 +183,23 @@ public class UsuarioController {
 	public List<Grupo> todosGrupos(){
 		return grupoService.pesquisar(new GrupoFilter());
 	}
+	
+	/*
+	 * @ModelAttribute public void addAttributes(Model model) {
+	 * model.addAttribute("filtro", new UsuarioFilter());
+	 * //model.addAttribute("isPesquisaAvancada", false); }
+	 */
+	
+	@RequestMapping(value = "/pesquisaAvancada") 
+	public ModelAndView pesquisaAvancada() { 
+		//ModelAndView mv = new ModelAndView(LISTAR_VIEW);
+		filtro.setAvancada(!filtro.isAvancada()); 
+		ModelAndView mv = pesquisar(filtro);
+		 
+		return mv; 
+	}
+	 
+	
+	
 	
 }
