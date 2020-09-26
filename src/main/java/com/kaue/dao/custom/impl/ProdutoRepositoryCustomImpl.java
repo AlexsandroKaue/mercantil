@@ -15,7 +15,9 @@ import javax.persistence.criteria.Root;
 
 import com.kaue.dao.custom.ProdutoRepositoryCustom;
 import com.kaue.dao.filter.ProdutoFilter;
+import com.kaue.enumeration.Unitario;
 import com.kaue.model.Produto;
+import com.kaue.model.Usuario;
 
 public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
 
@@ -31,7 +33,11 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         List<Predicate> predicates = prepararPredicadosDaConsulta(produtoFiltro, cb, produto);
         
         if(predicates.size()>0) {
-        	query.select(produto).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        	if(produtoFiltro.isAvancada()) {
+        		query.select(produto).where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+        	} else {
+        		query.select(produto).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        	}
         } else {
         	query.select(produto);
         }
@@ -59,7 +65,11 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         List<Predicate> predicates = prepararPredicadosDaConsulta(produtoFiltro, cb, produto);
         
         if(predicates.size()>0) {
-        	query.select(cb.count(produto)).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        	if(produtoFiltro.isAvancada()) {
+        		query.select(cb.count(produto)).where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+        	} else {
+        		query.select(cb.count(produto)).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        	}
         } else {
         	query.select(cb.count(produto));
         }
@@ -78,21 +88,50 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         Path<String> codigoPath = null;
         Path<String> descricaoPath = null;
         Path<String> categoriaPath = null;
-        if(produtoFiltro.getCodigo()!=null) {
+        Path<String> marcaPath = null;
+        Path<Integer> quantidadePath = null;
+        Path<Unitario> unitarioPath = null;
+        
+        if(produtoFiltro.getProduto().getCodigo()!=null) {
         	codigoPath = produto.get("codigo");
-        	predicates.add(cb.like(codigoPath, "%"+produtoFiltro.getCodigo()+"%"));
+        	predicates.add(cb.like(codigoPath, "%"+produtoFiltro.getProduto().getCodigo()+"%"));
         }
-        if(produtoFiltro.getDescricao()!=null) {
+        if(produtoFiltro.getProduto().getDescricao()!=null) {
         	descricaoPath = produto.get("descricao");
-        	predicates.add(cb.like(cb.upper(descricaoPath), "%"+produtoFiltro.getDescricao().toUpperCase()+"%"));
+        	predicates.add(cb.like(cb.upper(descricaoPath), "%"+produtoFiltro.getProduto().getDescricao().toUpperCase()+"%"));
         }
-        if(produtoFiltro.getCategoria()!=null) {
+        if(produtoFiltro.getProduto().getCategoria()!=null) {
         	categoriaPath = produto.get("categoria").get("descricao");
         	predicates.add(cb.like(cb.upper(categoriaPath), 
-        			"%"+produtoFiltro.getCategoria().getDescricao().toUpperCase()+"%"));
+        			"%"+produtoFiltro.getProduto().getCategoria().getDescricao().toUpperCase()+"%"));
+        }
+        if(produtoFiltro.getProduto().getMarca()!=null) {
+        	marcaPath = produto.get("marca");
+        	predicates.add(cb.like(cb.upper(marcaPath), "%"+produtoFiltro.getProduto().getMarca().toUpperCase()+"%"));
+        }
+        if(produtoFiltro.getProduto().getQuantidade()!=null) {
+        	quantidadePath = produto.get("quantidade");
+        	predicates.add(cb.le(quantidadePath, produtoFiltro.getProduto().getQuantidade()));
+        }
+        if(produtoFiltro.getProduto().getUnitario()!=null) {
+        	unitarioPath = produto.get("unitario");
+        	predicates.add(cb.equal(unitarioPath, produtoFiltro.getProduto().getUnitario()));
         }
         
         return predicates;
+	}
+	
+	@Override
+	public Long obterMaxId() {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<Produto> produto = query.from(Produto.class);
+        
+        query.select(cb.max(produto.get("id")));
+        
+        TypedQuery<Long> typedQuery = entityManager.createQuery(query);
+		
+		return typedQuery.getSingleResult();
 	}
 
 }

@@ -3,6 +3,8 @@ package com.kaue.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -19,17 +21,25 @@ public class ProdutoServiceImpl implements ProdutoService{
 	private ProdutoDAO produtoDAO;
 
 	@Override
-	public Produto salvar(Produto produto) {
+	public Produto salvar(Produto produto) throws Exception {
 		try {
 			return produtoDAO.save(produto);
 		} catch(DataIntegrityViolationException e) {
 			throw new IllegalArgumentException("Formato de data inválido");
+		} catch (Exception e) {
+			throw new Exception("Ocorreu um erro ao tentar salvar o produto.");
 		}
 	}
 
 	@Override
-	public void excluir(Long codigo) {
-		produtoDAO.deleteById(codigo);
+	public void excluir(Long codigo) throws Exception {
+		try {
+			produtoDAO.deleteById(codigo);
+		} catch(DataIntegrityViolationException e) {
+			throw new Exception("Não foi possível excluir o produto porque está associado a outras partes do sistema.");
+		} catch(Exception e) {
+			throw new Exception("Ocorreu um erro ao tentar excluir o produto.");
+		}
 	}
 
 	@Override
@@ -59,6 +69,11 @@ public class ProdutoServiceImpl implements ProdutoService{
 	public Produto buscarPorCodigo(String codigo) {
 		String cod = (codigo == null ? "" : codigo);
 		return produtoDAO.findByCodigo(cod);
+	}
+
+	@Transactional
+	public Long obterIdAtual() {
+		return produtoDAO.obterMaxId();
 	}
 	
 }

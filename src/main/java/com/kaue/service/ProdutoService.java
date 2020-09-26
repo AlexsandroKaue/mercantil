@@ -7,10 +7,11 @@ import com.kaue.model.Produto;
 
 public interface ProdutoService {
 
-	public Produto salvar(Produto produto);
-	public void excluir(Long codigo);
+	public Produto salvar(Produto produto) throws Exception;
+	public void excluir(Long codigo) throws Exception;
 	public List<Produto> pesquisar(ProdutoFilter filtro);
 	public Long contar(ProdutoFilter filtro);
 	public Produto buscarPorCodigo(String codigo);
 	public Produto buscarPorId(Long id);
+	public Long obterIdAtual();
 }

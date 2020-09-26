@@ -374,7 +374,11 @@ public class CaixaController {
 						quantidadeNova = 0;
 					}
 					produto.setQuantidade(quantidadeNova);
-					produto = produtoService.salvar(produto);
+					try {
+						produto = produtoService.salvar(produto);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			attributes.addFlashAttribute("mensagem", "Venda concluída com sucesso!");
@@ -408,12 +412,12 @@ public class CaixaController {
 
 			try {
 				Integer codigo = Integer.parseInt(termo);
-				filtro.setCodigo(String.format("%010d" , codigo));
+				filtro.getProduto().setCodigo(String.format("%010d" , codigo));
 			} catch(NumberFormatException nfe) {}
 
-			filtro.setDescricao(termo);
-			filtro.setCategoria(new Categoria());
-			filtro.getCategoria().setDescricao(termo);
+			filtro.getProduto().setDescricao(termo);
+			filtro.getProduto().setCategoria(new Categoria());
+			filtro.getProduto().getCategoria().setDescricao(termo);
 			filtro.setPage(new Long(page.intValue()-1));
 			filtro.setPageSize(pageSize);
 			
@@ -543,5 +547,13 @@ public class CaixaController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@RequestMapping(value = "/administracao")
+	public ModelAndView acessarAdministracao() {
+		ModelAndView mv = new ModelAndView("page/caixa/Administracao");
+		mv.addObject("caixa", new Venda());
+		
+		return mv;
 	}
 }

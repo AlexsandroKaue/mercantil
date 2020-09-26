@@ -1,18 +1,14 @@
 package com.kaue.controller;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -33,13 +29,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kaue.dao.filter.CategoriaFilter;
 import com.kaue.dao.filter.FornecedorFilter;
 import com.kaue.dao.filter.ProdutoFilter;
-import com.kaue.enumeration.StatusTitulo;
 import com.kaue.enumeration.Unitario;
 import com.kaue.model.Categoria;
 import com.kaue.model.Fornecedor;
 import com.kaue.model.Lote;
 import com.kaue.model.Produto;
-import com.kaue.model.Usuario;
 import com.kaue.service.CategoriaService;
 import com.kaue.service.FornecedorService;
 import com.kaue.service.ProdutoService;
@@ -115,8 +109,8 @@ public class ProdutoController {
 			String url = "";
 			if(produto.getId()==null) {
 				attributes.addFlashAttribute("mensagem", "Produto cadastrado com sucesso!");
-				produto = produtoService.salvar(produto);
-				produto.setCodigo(String.format("%010d" , produto.getId()));
+				Long idAtual = produtoService.obterIdAtual();
+				produto.setCodigo(String.format("%010d" , idAtual+1));
 				url = "redirect:/produtos/novo";
 			} else {
 				attributes.addFlashAttribute("mensagem", "Produto alterado com sucesso!");
@@ -135,7 +129,12 @@ public class ProdutoController {
 				}
 			}
 			
-			produto = produtoService.salvar(produto);
+			try {
+				produto = produtoService.salvar(produto);
+			} catch (Exception e) {
+				attributes.addFlashAttribute("mensagem_erro", e.getMessage());
+			}
+			
 			return url;
 		} catch(DataIntegrityViolationException e) {
 			errors.rejectValue("dataDeVencimento", null, e.getMessage());
@@ -145,16 +144,18 @@ public class ProdutoController {
 	
 	@RequestMapping
 	public ModelAndView pesquisar(@ModelAttribute("filtro") ProdutoFilter filtro) {
-		
-		if(filtro.getDescricao() != null) {
-			String termo = filtro.getDescricao();
-			try {
-				Integer codigo = Integer.parseInt(termo);
-				filtro.setCodigo(String.format("%010d" , codigo));
-			} catch(NumberFormatException nfe) {}
-
-			filtro.setCategoria(new Categoria());
-			filtro.getCategoria().setDescricao(termo);
+		if(!filtro.isAvancada()) {
+			String termo = filtro.getTermo();
+			if(termo!=null) {
+				filtro.getProduto().setDescricao(termo);
+				filtro.getProduto().setMarca(termo);
+				filtro.getProduto().setCategoria(new Categoria());
+				filtro.getProduto().getCategoria().setDescricao(termo);
+				try {
+					Long id = Long.parseLong(termo);
+					filtro.getProduto().setId(id);
+				} catch(NumberFormatException nfe) {}
+			}
 		}
 		List<Produto> produtoList = produtoService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);
@@ -164,8 +165,13 @@ public class ProdutoController {
 	
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	public String excluir(@PathVariable Long id, RedirectAttributes attributes) {
-		produtoService.excluir(id);
-		attributes.addFlashAttribute("mensagem", "Produto excluído com sucesso!");
+		try {
+			produtoService.excluir(id);
+			attributes.addFlashAttribute("mensagem", "Produto excluído com sucesso!");
+		} catch (Exception e) {
+			attributes.addFlashAttribute("mensagem_erro", e.getMessage());
+		}
+
 		return "redirect:/produtos";
 	}
 	

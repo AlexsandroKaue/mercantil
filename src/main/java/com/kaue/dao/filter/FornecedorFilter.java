@@ -1,16 +1,17 @@
 package com.kaue.dao.filter;
 
-public class FornecedorFilter {
+import com.kaue.model.Fornecedor;
+
+public class FornecedorFilter extends GenericFilter {
 	
-	private String nome;
+	private Fornecedor fornecedor = new Fornecedor();
 
-	public String getNome() {
-		return nome;
+	public Fornecedor getFornecedor() {
+		return fornecedor;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
 	}
-
 	
 }

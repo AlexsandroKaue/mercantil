@@ -50,6 +50,8 @@ public class Produto {
 	
 	private Integer quantidade;
 	
+	private Integer quantidadeMinima;
+	
 	@NotNull(message = "A Categoria é obrigatória")
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Categoria categoria;
@@ -178,6 +180,14 @@ public class Produto {
 
 	public void setImagemBase64(String imagemBase64) {
 		this.imagemBase64 = imagemBase64;
+	}
+
+	public Integer getQuantidadeMinima() {
+		return quantidadeMinima;
+	}
+
+	public void setQuantidadeMinima(Integer quantidadeMinima) {
+		this.quantidadeMinima = quantidadeMinima;
 	}
 
 }

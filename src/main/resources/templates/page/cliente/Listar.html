@@ -230,41 +230,39 @@
     <!-- /.card -->
   </section>
   
-  <div layout:fragment="js-validator">
-    <script id="validador">
-      
-      $('#container').on('show.bs.modal', '#modalDetalhes', function(event){
-  		var botao = $(event.relatedTarget); // Button that triggered the modal
-  		var url = botao.data('url-detalhes');
-  		console.log(url);
-  		var response = $.ajax({
-			  type: 'GET',
-			  url: url
-		  });
-		  
-    	response.done(function(e){
-    		var modalDialog = $(e).find('.modal-dialog');
-    		$('#modalDetalhes').html(modalDialog);
-    	});
-    	  
-    	response.fail(function(e){
-    		alert('Erro ao carregar detalhes do cliente.');  
-    	});
-  		
+  <script layout:fragment="js-validator">
+    
+    $('#container').on('show.bs.modal', '#modalDetalhes', function(event){
+		var botao = $(event.relatedTarget); // Button that triggered the modal
+		var url = botao.data('url-detalhes');
+		console.log(url);
+		var response = $.ajax({
+		  type: 'GET',
+		  url: url
+	  });
+	  
+  	response.done(function(e){
+  		var modalDialog = $(e).find('.modal-dialog');
+  		$('#modalDetalhes').html(modalDialog);
   	});
-      
-    $('#ancora').on('click', '.pesquisa-padrao', function(event){
+  	  
+  	response.fail(function(e){
+  		alert('Erro ao carregar detalhes do cliente.');  
+  	});
+		
+	});
+    
+  	$('#ancora').on('click', '.pesquisa-padrao', function(event){
     	$('#filtroClienteForm').trigger("reset");
   		$('#inputAvancada').val(false);
   		document.getElementById("filtroClienteForm").submit(); 
-  	});
-    
-    $('#ancora').on('click', '.pesquisa-avancada', function(event){
+	});
+  
+  	$('#ancora').on('click', '.pesquisa-avancada', function(event){
     	$('#filtroClienteForm').trigger("reset");
     	$('#inputAvancada').val(true);
-  		document.getElementById("filtroClienteForm").submit(); 
-  	});
-    </script>
-  </div>
+		document.getElementById("filtroClienteForm").submit(); 
+	});
+  </script>
   
 </html>

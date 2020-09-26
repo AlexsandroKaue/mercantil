@@ -80,27 +80,31 @@ public class LoteController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String salvar(@Validated Lote lote, Errors errors, RedirectAttributes attributes) {
+	public String salvar(@Validated Lote lote, Errors errors, RedirectAttributes attributes) throws Exception {
 		if (errors.hasErrors()) {
 			return LISTAR_VIEW;
 		}
 		try {
 
-			Integer incremento = obterIncrementoProduto(lote);
+			Integer diferenca = obterDiferencaLote(lote);
 			
 			Produto produto = lote.getProduto();
-			if(incremento.intValue() != 0) { 
-				produto.setQuantidade(produto.getQuantidade()+incremento);
-			}
+			Integer total = produto.getQuantidade() + diferenca;
+			
+			produto.setQuantidade( total>=0 ? total : 0);
+			
 			if(produto.getLoteList()==null) produto.setLoteList(new ArrayList<Lote>());
 			if(produto.getLoteList().contains(lote)) {
 				produto.getLoteList().remove(lote);
 			}
 			produto.getLoteList().add(lote);
-			produtoService.salvar(produto);
+			if(lote.getId()==null) {
+				attributes.addFlashAttribute("mensagem", "Lote cadastrado com sucesso!");
+			} else {
+				attributes.addFlashAttribute("mensagem", "Lote alterado com sucesso!");
+			}
 			
-			/* loteService.salvar(lote); */
-			attributes.addFlashAttribute("mensagem", "Lote cadastrado com sucesso!");
+			produtoService.salvar(produto);
 			return "redirect:/lotes?produtoId="+lote.getProduto().getId();
 		} catch (DataIntegrityViolationException e) {
 			errors.rejectValue("dataDeVencimento", null, e.getMessage());
@@ -128,10 +132,15 @@ public class LoteController {
 		Produto produto = lote.getProduto();
 		produto.setQuantidade(produto.getQuantidade()-lote.getQuantidade());
 		produto.getLoteList().remove(lote);
-		produtoService.salvar(produto);
 
-		attributes.addFlashAttribute("mensagem", "Lote excluído com sucesso!");
-		return "redirect:/lotes?produtoId="+lote.getProduto().getId();
+		try {
+			produtoService.salvar(produto);
+			attributes.addFlashAttribute("mensagem", "Lote excluído com sucesso!");
+			return "redirect:/lotes?produtoId="+lote.getProduto().getId();
+		} catch (Exception e) {
+			attributes.addFlashAttribute("mensagem_erro", "Ocorreu um erro ao tentar exluir o lote.");
+			return "redirect:/lotes?produtoId="+lote.getProduto().getId();
+		}
 	}
 	
 	@ModelAttribute
@@ -140,7 +149,7 @@ public class LoteController {
 		return fornecedorList;
 	}
 
-	private Integer obterIncrementoProduto(Lote lote) {
+	private Integer obterDiferencaLote(Lote lote) {
 		Integer incremento = 0;
 
 		if (lote.getQuantidade() != null) {

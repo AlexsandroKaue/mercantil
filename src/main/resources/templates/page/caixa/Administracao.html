@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{principal}">
+<head>
+  <title th:text="#{mercadinho}"></title>
+</head>
+
+  <section layout:fragment="container">
+    <form role="form"  method="POST" th:object="${caixa}">
+      <!-- <header layout:insert="~{cabecalho}"></header> -->
+      <div class="pt-2"></div>
+      <header layout:insert="~{corpo}"></header>
+    </form>  
+  </section>
+  
+  <section layout:fragment="conteudo">
+    <div class="row">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-default btn-lg mb-2"
+         data-toggle="modal" data-target="#modal-default">Abrir caixa</button>
+        <div class="card card-success card-outline">
+          <div class="card-header">
+            <h3 class="card-title">
+              <small><i class="fas fa-edit"></i></small>
+              Informações do Caixa
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Nº do Caixa</label>
+                  <p>01</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label>Status</label>
+                <p>Aberto</p>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Abertura</label>
+                <p>25/09/2020 08:05</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Fechamento</label>
+                <p></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-primary card-tabs">
+        <div class="card-header p-0 pt-1">
+          <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Resumo por forma de pagamento</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Resumo por movimento</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content" id="custom-tabs-one-tabContent">
+            <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+               <div class="row">
+                <div class="col-sm-4">
+                  <div class="card card-warning card-outline" style="height: 320px">
+                    <div class="card-header">
+                      <h3 class="card-title">
+                        <small><i class="fas fa-edit"></i></small>
+                        Movimento em dinheiro do Caixa
+                      </h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-sm">
+                          <tr>
+                            <th style="width:50%">Valor inicial:</th>
+                            <td class="text-right">$250.30</td>
+                          </tr>
+                          <tr>
+                            <th>Vendas:</th>
+                            <td class="text-right">$10.34</td>
+                          </tr>
+                          <tr>
+                            <th>Recebimentos:</th>
+                            <td class="text-right">$5.80</td>
+                          </tr>
+                          <tr>
+                            <th>Reforço:</th>
+                            <td class="text-right">$265.24</td>
+                          </tr>
+                          <tr>
+                            <th>Sangria:</th>
+                            <td class="text-right">$265.24</td>
+                          </tr>
+                          <tr>
+                            <th>Saídas:</th>
+                            <td class="text-right">$265.24</td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="card card-primary card-outline" style="height: 320px">
+                    <div class="card-header">
+                      <h3 class="card-title">
+                        <small><i class="fas fa-edit"></i></small>
+                        Venda por forma de pagamento
+                      </h3>
+                    </div>
+                    <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-sm">
+                        <tr>
+                          <th style="width:70%">Dinheiro:</th>
+                          <td class="text-right">$250.30</td>
+                        </tr>
+                        <tr>
+                          <th>Cartão de crédito:</th>
+                          <td class="text-right">$10.34</td>
+                        </tr>
+                        <tr>
+                          <th>Cartão de débito:</th>
+                          <td class="text-right">$5.80</td>
+                        </tr>
+                        <tr>
+                          <th>Total:</th>
+                          <td class="text-right">$265.24</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  </div><!-- 
+                  
+                  <p>Venda por forma de pagamento</p> -->
+                  
+                </div>
+                <div class="col-sm-4">
+                  <!-- <p>Recebimentos por forma de pagamento</p> -->
+                  <div class="card card-primary card-outline" style="height: 320px">
+                    <div class="card-header">
+                      <h3 class="card-title">
+                        <small><i class="fas fa-edit"></i></small>
+                        Recebimentos por forma de pagamento
+                      </h3>
+                    </div>
+                    <div class="card-body">
+                      <table class="table table-sm">
+                        <tr>
+                          <th style="width:50%">Dinheiro:</th>
+                          <td class="text-right">$250.30</td>
+                        </tr>
+                        
+                        <tfoot>
+                          <tr>
+                          <th>Total:</th>
+                            <td class="text-right">$250.30</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+               </div>
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+               Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam. 
+            </div>            
+          </div>
+        </div>
+        <!-- /.card -->
+      </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" id="modal-default">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"><i class="fas fa-sync"></i> Abertura de Caixa</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label for="modalAbrirCaixaData" class="col-sm-2 col-form-label">Data</label>
+              <div class="col-sm-4">             
+                <input id="modalAbrirCaixaData" type="date" class="form-control"></input>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="modalAbrirCaixaValorInicial" class="col-sm-2 col-form-label">Valor inicial</label>
+              <div class="col-sm-4">             
+                <input id="modalAbrirCaixaValorInicial" type="text" class="form-control js-currency"></input>
+              </div>
+            </div>
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <small><i class="fas fa-edit"></i></small>
+                  Dados do caixa anterior
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-5">
+                    <dl class="row">
+                      <dt class="col-md-4">Nº do caixa</dt>
+                      <dd class="col-md-8">01</dd>
+                      <dt class="col-md-4">Abertura</dt>
+                      <dd class="col-md-8">25/09/2020 08:05</dd>
+                      <dt class="col-md-4">Fechamento</dt>
+                      <dd class="col-md-8">25/09/2020 21:38</dd>
+                    </dl>    
+                  </div>
+                  <div class="col-md-7">
+                    <dl class="row">
+                      <dt class="col-md-5">Observações</dt>
+                      <dd class="col-md-7"><a href="#">Visualize aqui</a><dd>
+                      <dt class="col-md-5">Usuário abertura</dt>
+                      <dd class="col-md-7">Raimundo Humberto</dd>
+                      <dt class="col-md-5">Usuário fechamento</dt>
+                      <dd class="col-md-7">Sandra</dd>
+                    </dl>    
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6 col-md-3">
+                    <div class="description-block border-right">
+                      <span class="description-percentage text-warning"><i class="fab fa-font-awesome-flag"></i></span>
+                      <h5 class="description-header">Valor inicial</h5>
+                      <span class="description-text">0,00</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-3">
+                    <div class="description-block border-right">
+                      <span class="description-percentage text-primary"><i class="fas fa-plus"></i></span>
+                      <h5 class="description-header">Entradas</h5>
+                      <span class="description-text">0,00</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-3">
+                    <div class="description-block border-right">
+                      <span class="description-percentage text-danger"><i class="fas fa-minus"></i></span>
+                      <h5 class="description-header">Saídas</h5>
+                      <span class="description-text">0,00</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-3">
+                    <div class="description-block border-right">
+                      <span class="description-percentage text-success"><i class="fas fa-money-bill"></i></span>
+                      <h5 class="description-header">Dinheiro (Gaveta)</h5>
+                      <span class="description-text">0,00</span>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            <small id="emailHelp" class="text-muted float-right">O valor final do caixa anterior sempre será o valor inicial do próximo caixa.</small>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
+            <button type="button" class="btn btn-primary">Abrir</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+  </section>
+  
+  
+  
+  <script layout:fragment="js-validator">
+  	$(document).on('keyup', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  console.log(event.keyCode);
+  	  if (event.keyCode === 112) { //f1
+  	    // Cancel the default action, if needed
+  	    event.preventDefault();
+  	    // Trigger the button element with a click
+  	    $('#linkComprovante')[0].click();
+  	  } else if(event.keyCode === 113){
+  		event.preventDefault();
+  	    $('#linkRetornar')[0].click();
+  	  }
+  	});
+  </script>
+    
+</html>

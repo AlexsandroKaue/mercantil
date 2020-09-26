@@ -37,7 +37,7 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
         .loginPage("/login") 
         // Mesmo sendo a página de login, precisamos avisar
         // ao Spring Security para liberar o acesso a ela.
-        .defaultSuccessUrl("/usuarios",true)
+        .defaultSuccessUrl("/inicio",true)
         .failureUrl("/login-error")
     	.permitAll()
     	.and()

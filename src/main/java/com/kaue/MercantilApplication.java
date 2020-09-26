@@ -49,7 +49,7 @@ public class MercantilApplication {
 	public static class MvcConfig implements WebMvcConfigurer {
 		@Override
 		public void addViewControllers(ViewControllerRegistry registry) {
-			registry.addRedirectViewController("/", "/usuarios");
+			registry.addRedirectViewController("/", "/inicio");
 		}
 	}
 }

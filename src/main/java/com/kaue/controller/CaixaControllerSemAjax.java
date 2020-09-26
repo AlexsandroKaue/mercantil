@@ -464,12 +464,12 @@ public class CaixaControllerSemAjax {
 
 			try {
 				Integer codigo = Integer.parseInt(termo);
-				filtro.setCodigo(String.format("%010d" , codigo));
+				filtro.getProduto().setCodigo(String.format("%010d" , codigo));
 			} catch(NumberFormatException nfe) {}
 
-			filtro.setDescricao(termo);
-			filtro.setCategoria(new Categoria());
-			filtro.getCategoria().setDescricao(termo);
+			filtro.getProduto().setDescricao(termo);
+			filtro.getProduto().setCategoria(new Categoria());
+			filtro.getProduto().getCategoria().setDescricao(termo);
 			filtro.setPage(new Long(page.intValue()-1));
 			filtro.setPageSize(pageSize);
 			

@@ -17,7 +17,8 @@
   </section>
   
   <section layout:fragment="titulo">
-    <h1 class="m-0 text-dark">Cadastro de Produtos</h1>
+    <h1 th:unless="*{id}" class="m-0 text-dark">Cadastrar Produto</h1>
+    <h1 th:if="*{id}" class="m-0 text-dark">Alterar Produto</h1>
   </section>
   
   <section layout:fragment="botoes">
@@ -50,24 +51,39 @@
               <label for="inputCategoria" class="col-form-label" th:text="#{categoria}"></label><b class="text-danger">*</b>
               <select id="selectCategoria" class="form-control" th:field="*{categoria}" th:classappend="${#fields.hasErrors('categoria')} ? 'is-invalid'">
                 <option value="" selected th:text="#{selecione.categoria}"></option>
-                <option th:each="categoria : ${categoriaList}" th:value="${categoria.id}" th:text="${categoria.descricao}"></option>
+                <option th:each="categoria : ${categoriaList}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>
               </select>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group">
-              <label for="inputQuantidade" class="col-form-label" th:text="#{quantidade}"></label>
-              <input type="text" readonly="readonly" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid'">
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="inputQuantidadeMinima" class="col-form-label">Qtd. Mínima</label>
+                  <input type="number" class="form-control" id="inputQuantidadeMinima" th:field="*{quantidadeMinima}" 
+                   th:classappend="${#fields.hasErrors('quantidadeMinima')} ? 'is-invalid'">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="inputQuantidade" class="col-form-label">Qtd. Total</label>
+                  <input type="text" readonly="readonly" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid'">
+                </div>
+              </div>
+              
             </div>
+            
             <div class="form-group">
               <label for="inputUnitario" class="col-form-label" th:text="#{unitario}"></label><b class="text-danger">*</b>
               <select id="selectUnitario" class="form-control" th:field="*{unitario}" th:classappend="${#fields.hasErrors('unitario')} ? 'is-invalid'">
-                <option value="" selected th:text="#{selecione.unitario}"></option>
+                <option value="" selected th:text="#{selecione.opcao}"></option>
                 <option th:each="unitario : ${unitarioList}" th:value="${unitario}" th:text="${unitario.descricao}"></option>
               </select>
             </div>
+            
             <div class="form-group">
-              <label for="inputValorVenda" class="col-form-label" th:text="#{cadastro.produto.label.valor.venda}"></label>
+              <label for="inputValorVenda" class="col-form-label" th:text="#{cadastro.produto.label.valor.venda}"></label><b class="text-danger">*</b>
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text">R$<!-- <i class="fas fa-phone"> --></i></span>
@@ -109,21 +125,35 @@
         $('#inputDescricao').rules('add', {
           required: true,
           messages: { 
-              required: "Por favor digite uma descrição para o produto"
+              required: "Por favor, digite uma descrição para o produto"
           }
         });
         $('#selectCategoria').rules('add', {
           required: true,
           messages: { 
-              required: "Por favor escolha uma categoria"
+              required: "Por favor, escolha uma categoria"
           }
         });
        $('#selectUnitario').rules('add', {
           required: true,
           messages: { 
-              required: "Por favor escolha um unitário"
+              required: "Por favor, escolha um unitário"
           }
         });
+       $('#inputValorVenda').rules('add', {
+           required: true,
+           messages: { 
+               required: "Por favor, digite uma valor de venda"
+           }
+         });
+       $('#inputQuantidadeMinima').rules('add', {
+           min: 1,
+           messages: { 
+               min: "Por favor, digite um valor maior que zero"
+               number: "Por favor, digite um número válido"
+           }
+         });
+       
       
       	function readURL(input) {
     	  if (input.files && input.files[0]) {

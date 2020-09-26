@@ -102,6 +102,15 @@ public class FornecedorController {
 	
 	@RequestMapping
 	public ModelAndView pesquisar(@ModelAttribute("filtro") FornecedorFilter filtro) {
+		if(!filtro.isAvancada()) {
+			String termo = filtro.getTermo();
+			filtro.getFornecedor().setNome(termo);
+			filtro.getFornecedor().setEmail(termo);
+			try {
+				Long id = Long.parseLong(termo);
+				filtro.getFornecedor().setId(id);
+			} catch(NumberFormatException nfe) {}
+		}
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);
 		List<Fornecedor> fornecedorList = fornecedorService.pesquisar(filtro);
 		mv.addObject("fornecedores", fornecedorList);

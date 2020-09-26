@@ -8,8 +8,8 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4" th:fragment="aside">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-      <img th:src="@{/dist/img/AdminLTELogo.png}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+    <a th:href="@{/inicio}" class="brand-link">
+      <img th:src="@{/custom/img/produto/logo-mercadinho.png}" alt="AdminLTE Logo" class="brand-image img-circle"
            style="opacity: .8"></img>
       <span class="brand-text font-weight-light">Mercadinho RHG</span>
     </a>
@@ -31,67 +31,144 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a th:href="@{/titulos}" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
               <p>
                 Títulos
               </p>
             </a>
-          </li>
-          <li class="nav-item">
-            <a th:href="@{/usuarios}" class="nav-link">
-              <i class="nav-icon fas fa-users"></i>
+          </li> -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <!-- <i class="nav-icon fas fa-chart-pie"></i> -->
+              <i class="nav-icon fas fa-edit"></i>
               <p>
-                Usuários
+                Cadastro
+                <i class="right fas fa-angle-left"></i>
               </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a th:href="@{/grupos}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Grupos
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{/usuarios}" class="nav-link">
+                  <!-- <i class="nav-icon fas fa-users"></i> -->
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Usuários
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{/clientes}" class="nav-link">
+                  <!-- <i class="nav-icon fas fa-user-friends"></i> -->
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Clientes
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{/fornecedores}" class="nav-link">
+                  <!-- <i class="nav-icon far fa-address-card"></i> -->
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Fornecedores
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{/categorias}" class="nav-link">
+                  <!-- <i class="nav-icon fas fa-layer-group"></i> -->
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Categorias
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{/produtos}" class="nav-link">
+                  <!-- <i class="nav-icon fas fa-dolly"></i> -->
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Produtos
+                  </p>
+                </a>
+              </li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <a th:href="@{/grupos}" class="nav-link">
-              <i class="nav-icon fas fa-tasks"></i>
-              <p>
-                Grupos
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a th:href="@{/clientes}" class="nav-link">
-              <i class="nav-icon fas fa-user-friends"></i>
-              <p>
-                Clientes
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a th:href="@{/caixa}" class="nav-link">
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <!-- <i class="nav-icon fas fa-chart-pie"></i> -->
               <i class="nav-icon fas fa-cash-register"></i>
               <p>
                 Caixa
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a th:href="@{/caixa}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Frente de loja
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{/caixa/administracao}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Administrador
+                  </p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-edit"></i>
+              <p>
+                Vendas<small> (em construção)</small>
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a th:href="@{/fornecedores}" class="nav-link">
-              <i class="nav-icon far fa-address-card"></i>
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-edit"></i>
               <p>
-                Fornecedores
+                Compras<small> (em construção)</small>
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a th:href="@{/produtos}" class="nav-link">
-              <i class="nav-icon fas fa-dolly"></i>
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-edit"></i>
               <p>
-                Produtos
+                Estoque<small> (em construção)</small>
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a th:href="@{/categorias}" class="nav-link">
-              <i class="nav-icon fas fa-layer-group"></i>
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-edit"></i>
               <p>
-                Categorias
+                Financeiro<small> (em construção)</small>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-edit"></i>
+              <p>
+                Relatórios<small> (em construção)</small>
               </p>
             </a>
           </li>

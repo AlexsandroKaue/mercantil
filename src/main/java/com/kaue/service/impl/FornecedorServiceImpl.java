@@ -1,5 +1,6 @@
 package com.kaue.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kaue.dao.FornecedorDAO;
 import com.kaue.dao.filter.FornecedorFilter;
+import com.kaue.model.Cliente;
 import com.kaue.model.Fornecedor;
 import com.kaue.service.FornecedorService;
 
@@ -28,8 +30,11 @@ public class FornecedorServiceImpl implements FornecedorService{
 
 	@Override
 	public List<Fornecedor> pesquisar(FornecedorFilter filtro) {
-		String nome = (filtro.getNome() == null ? "" : filtro.getNome());
-		return fornecedorDAO.findByNomeContainingIgnoreCaseOrderByIdDesc(nome);
+		List<Fornecedor> fornecedorList = fornecedorDAO.findFornecedorByFiltro(filtro);
+		if(fornecedorList==null) {
+			fornecedorList = new ArrayList<Fornecedor>();
+		}
+		return fornecedorList;
 	}
 	
 	

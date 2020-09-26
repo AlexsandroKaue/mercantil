@@ -12,8 +12,10 @@ import org.hibernate.envers.Audited;
 
 @Entity
 @Audited
-public class Categoria {
+public class Categoria extends PersistentEntityImpl {
 	
+	private static final long serialVersionUID = 6294317934527581227L;
+
 	@Id
 	@SequenceGenerator(name = "seq_categoria", sequenceName = "seq_categoria", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(generator = "seq_categoria" , strategy = GenerationType.SEQUENCE)
@@ -50,29 +52,18 @@ public class Categoria {
 		this.descricao = descricao;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
+	/*
+	 * @Override public int hashCode() { final int prime = 31; int result = 1;
+	 * result = prime * result + ((id == null) ? 0 : id.hashCode()); return result;
+	 * }
+	 */
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Categoria other = (Categoria) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+	/*
+	 * @Override public boolean equals(Object obj) { if (this == obj) return true;
+	 * if (obj == null) return false; if (getClass() != obj.getClass()) return
+	 * false; Categoria other = (Categoria) obj; if (id == null) { if (other.id !=
+	 * null) return false; } else if (!id.equals(other.id)) return false; return
+	 * true; }
+	 */
 
 }
