@@ -71,6 +71,9 @@ public class Venda {
 	
 	@ManyToOne
 	private Cliente cliente;
+	
+	@ManyToOne
+	private Caixa caixa;
 
 	public Long getId() {
 		return id;

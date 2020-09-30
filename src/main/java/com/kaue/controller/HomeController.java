@@ -22,7 +22,7 @@ public class HomeController {
 	
 	@GetMapping("/login-error")
 	public String login(HttpServletRequest request, Model model) {
-		System.out.println(new BCryptPasswordEncoder().encode("123"));
+	
 		HttpSession session = request.getSession(false); 
 		String errorMessage = null;
 		if (session != null) { 

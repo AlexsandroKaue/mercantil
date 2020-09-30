@@ -2,7 +2,7 @@ package com.kaue.dao.filter;
 
 import com.kaue.model.Categoria;
 
-public class CategoriaFilter extends GenericFilter{
+public class CategoriaFilter extends GenericFilter {
 	
 	private String descricao;
 	

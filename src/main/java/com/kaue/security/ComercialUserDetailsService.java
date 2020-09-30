@@ -41,7 +41,7 @@ public class ComercialUserDetailsService implements UserDetailsService {
       throw new UsernameNotFoundException("Usuário não encontrado!");
     }
      
-    return new UsuarioWeb(usuario.getNome(), usuario.getLogin(), usuario.getSenha(), authorities(usuario));
+    return new UsuarioWeb(usuario, authorities(usuario));
   }
    
   public Collection<? extends GrantedAuthority> authorities(Usuario usuario) {

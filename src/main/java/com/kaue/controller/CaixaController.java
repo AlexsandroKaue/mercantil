@@ -18,15 +18,17 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,18 +43,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.enumeration.OpcoesDesconto;
+import com.kaue.enumeration.StatusCaixa;
 import com.kaue.enumeration.StatusVenda;
 import com.kaue.enumeration.Unitario;
+import com.kaue.model.Caixa;
 import com.kaue.model.Categoria;
 import com.kaue.model.Cliente;
 import com.kaue.model.Item;
 import com.kaue.model.Produto;
 import com.kaue.model.Registro;
+import com.kaue.model.Titulo;
+import com.kaue.model.Usuario;
+import com.kaue.model.UsuarioWeb;
 import com.kaue.model.Venda;
+import com.kaue.service.CaixaService;
 import com.kaue.service.ClienteService;
 import com.kaue.service.ProdutoService;
 import com.kaue.service.RelatorioService;
 import com.kaue.service.VendaService;
+import com.kaue.util.HasValue;
 
 @Controller
 @RequestMapping("/caixa")
@@ -61,6 +70,7 @@ public class CaixaController {
 	static final String REGISTRADORA_VIEW = "page/caixa/Vender";
 	static final String PAGAMENTO_VIEW = "page/caixa/Pagamento";
 	static final String RECIBO_VIEW = "page/caixa/Recibo";
+	static final String ADMINISTRADOR_VIEW = "page/caixa/Administracao";
 	
 	@Autowired
 	ResourceLoader resourceLoader;
@@ -72,6 +82,9 @@ public class CaixaController {
 	private VendaService vendaService;
 	
 	@Autowired
+	private CaixaService caixaService;
+	
+	@Autowired
 	private ProdutoService produtoService;
 	
 	@Autowired
@@ -79,7 +92,7 @@ public class CaixaController {
 	
 	@Autowired
 	private RelatorioService relatorioService;
-	
+		
 	private Venda venda;
 	
 	private Cliente cliente;
@@ -90,6 +103,9 @@ public class CaixaController {
 		item.setProduto(new Produto());
 		model.addAttribute("item", item);
 		model.addAttribute("teste", "Teste de passagem de valor do thymeleaf para o javascript.");
+		Caixa caixaAtual = caixaService.obterCaixaMaisRecente();
+		model.addAttribute("caixaAtual", caixaAtual);
+		 
 	}
 	
 	@RequestMapping
@@ -549,11 +565,61 @@ public class CaixaController {
 		}
 	}
 	
-	@RequestMapping(value = "/administracao")
-	public ModelAndView acessarAdministracao() {
-		ModelAndView mv = new ModelAndView("page/caixa/Administracao");
-		mv.addObject("caixa", new Venda());
+	@RequestMapping(method = RequestMethod.POST, value = "/abrirCaixa")
+	public String abrirCaixa(@Validated Caixa caixa, Errors errors, RedirectAttributes attributes) {
 		
+		if(errors.hasErrors()) { 
+			return ADMINISTRADOR_VIEW; 
+		} 
+		
+		try {
+			caixa = caixaService.salvar(caixa);
+			attributes.addFlashAttribute("mensagem", "Caixa aberto com sucesso!");
+			return "redirect:/caixa/administracao";
+		} catch (Exception e) {
+			return ADMINISTRADOR_VIEW;
+		}
+	}
+	
+	@RequestMapping(value = "/administracao")
+	public ModelAndView initCaixa(Caixa caixa) {
+		ModelAndView mv = new ModelAndView(ADMINISTRADOR_VIEW);
+		
+		//Lembre: cadastrar um registro inicial na tabela Caixa.
+		Caixa caixaAtual = caixaService.obterCaixaMaisRecente();
+		if(caixaAtual.getStatus()==StatusCaixa.FECHADO) {
+			caixa = inicializaNovoCaixa(caixaAtual);
+		} else {
+			caixa = caixaAtual;
+		}
+		
+		mv.addObject("caixa", caixa);
 		return mv;
 	}
+	
+	public void fecharCaixa() {
+		
+	}
+	
+	private Caixa inicializaNovoCaixa(Caixa caixaAtual) {
+		Caixa caixa = new Caixa();
+		caixa.setNumero(1);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario usuarioLogado = ((UsuarioWeb)auth.getPrincipal()).getUsuario();
+		caixa.setUsuarioAbertura(usuarioLogado);
+		caixa.setDataAbertura(new Date());
+		caixa.setStatus(StatusCaixa.ABERTO);
+		caixa.setValorInicial(caixaAtual.getValorFinal());
+		caixa.setValorVendas(new BigDecimal(0.00));
+		caixa.setValorVendasEmDinheiro(new BigDecimal(0.00));
+		caixa.setValorVendasEmCartao(new BigDecimal(0.00));
+		caixa.setValorRecebimentos(new BigDecimal(0.00));
+		caixa.setValorReforco(new BigDecimal(0.00));
+		caixa.setValorEntradas(new BigDecimal(0.00));
+		caixa.setValorSangria(new BigDecimal(0.00));
+		caixa.setValorSaidas(new BigDecimal(0.00));
+		caixa.setValorGaveta(new BigDecimal(0.00));
+		return caixa;
+	}
+	
 }

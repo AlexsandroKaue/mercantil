@@ -112,6 +112,10 @@ function inicializar() {
 	$('.js-date').daterangepicker({
 	    singleDatePicker: true,
 	    /*showDropdowns: true,*/
+	    /*timePicker: true,*/
+	    showDropdowns: true,
+	    changeMonth: true,
+	    changeYear: true,
 	    minYear: 1901,
 	    /*maxYear: parseInt(moment().format('YYYY'),10),*/
 	    autoUpdateInput: false,
