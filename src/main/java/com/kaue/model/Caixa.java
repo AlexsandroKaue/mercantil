@@ -54,7 +54,7 @@ public class Caixa extends PersistentEntityImpl {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorRecebimentos;
 	
-	@DecimalMin(value = "0.00", message = "Valor de recebimentos não pode ser menor que zero")
+	@DecimalMin(value = "0.00", message = "Valor de reforço não pode ser menor que zero")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorReforco;
 	
@@ -66,12 +66,15 @@ public class Caixa extends PersistentEntityImpl {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorSaidas;
 	
+	@DecimalMin(value = "0.00", message = "Valor de entradas não pode ser menor que zero")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorEntradas;
 	
+	@DecimalMin(value = "0.00", message = "Valor final não pode ser menor que zero")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorFinal;
 	
+	@DecimalMin(value = "0.00", message = "Valor da gaveta não pode ser menor que zero")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorGaveta;
 	
@@ -79,13 +82,13 @@ public class Caixa extends PersistentEntityImpl {
 	private Integer numero;
 	
 	@NotNull(message = "O campo Data de Abertura é obrigatório")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataAbertura;
 
 	//@NotNull(message = "O campo Data de Abertura é obrigatório")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataFechamento;
 	
 	@ManyToOne
@@ -95,12 +98,12 @@ public class Caixa extends PersistentEntityImpl {
 	@ManyToOne
 	private Usuario usuarioFechamento;
 	
+	@Enumerated(EnumType.STRING)
+	private StatusCaixa status;
+	
 	/*
 	 * @OneToMany(mappedBy = "caixa") private List<Venda> vendaList;
 	 */
-	
-	@Enumerated(EnumType.STRING)
-	private StatusCaixa status;
 	
 	public Long getId() {
 		return id;

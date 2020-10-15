@@ -10,23 +10,50 @@
   <section layout:fragment="container">
     
    <!--  <form role="form" method="POST" th:action="@{/aberturaCaixa}" th:object="${caixa}"> -->
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-      <!-- <header layout:insert="~{cabecalho}"></header> -->
+      
+      <div class="content-header pb-0 px-0">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <!-- <div class="col-sm-6">
+              <section layout:fragment="titulo_da_pagina">
+                <h1 class="m-0 text-dark">Cadastro de Títulos</h1>
+              </section>
+            </div> -->
+            <div class="col-sm-12">
+              <div class="float-right">
+                <button type="button" class="btn btn-success btn-lg js-abrir-caixa"
+               th:attr="data-url-abrir-caixa=@{/caixa/abrir}" 
+               th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).FECHADO}">
+                <i class="fas fa-lock-open"></i> Abrir caixa
+               </button><!-- data-toggle="modal" data-target="#modal-abrir" -->
+              
+              <button type="button" class="btn btn-secondary btn-lg"
+               data-toggle="modal" data-target="#modal-fechar"
+               th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).ABERTO}"><i class="fas fa-lock"></i> Fechar caixa</button>
+              
+              <button type="button" class="btn btn-danger btn-lg"
+               data-toggle="modal" data-target="#modal-sangria"><i class="fas fa-minus"></i> Sangria</button>
+               
+              <button type="button" class="btn btn-primary btn-lg"
+               data-toggle="modal" data-target="#modal-reforco"><i class="fas fa-plus"></i> Reforço</button>
+               
+              <button type="button" class="btn btn-warning btn-lg"
+               data-toggle="modal" data-target="#modal-reforco"><i class="fas fa-print"></i> Resumo</button>   
+              </div>
+            </div>
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+      </div>
       <div class="pt-2"></div>
       <section class="content">
         <div class="container-fluid">
         
-          <!-- <div layout:insert="~{mensagem_geral}"></div>
-          <div layout:insert="~{mensagem_erro}"></div> -->
+          <div layout:insert="~{mensagem_geral}"></div>
           
           <div class="row">
             <div class="col-md-12">
-              <button type="button" class="btn btn-default btn-lg mb-2"
-               data-toggle="modal" data-target="#modal-abrir"
-               th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).FECHADO}"><i class="fas fa-lock-open"></i> Abrir caixa</button>
-              <!-- <button type="button" class="btn btn-default btn-lg mb-2"
-               data-toggle="modal" data-target="#modal-fechar"
-               th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).ABERTO}"><i class="fas fa-lock"></i> Fechar caixa</button> -->
               <div class="card card-success card-outline">
                 <div class="card-header">
                   <h3 class="card-title">
@@ -37,17 +64,17 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col-md-4">
-                      <div class="form-group row mb-0">
-                        <label class="col-md-4 col-form-label">Nº do Caixa:</label>
-                        <div class="col-sm-8">
+                      <div class="form-group row">
+                        <label class="col-md-auto col-form-label">Nº do Caixa:</label>
+                        <div class="col-md-8">
                           <input type="text" readonly class="form-control-plaintext" th:value="${caixaAtual.numero}"></input>
                         </div>
                       </div>  
                     </div>
                     <div class="col-md-8">
-                      <div class="form-group row mb-0">
-                        <label class="col-md-2 col-form-label">Status:</label>
-                        <div class="col-sm-8">
+                      <div class="form-group row">
+                        <label class="col-md-auto col-form-label">Status:</label>
+                        <div class="col-md-8">
                           <input type="text" readonly class="form-control-plaintext" th:value="${caixaAtual.status}"></input>
                         </div>
                       </div> 
@@ -56,31 +83,31 @@
                   </div>
                   <div class="row">
                     <div class="col-md-4">
-                      <div class="form-group row mb-0">
-                        <label class="col-md-4 col-form-label">Abertura:</label>
-                        <div class="col-sm-8">
+                      <div class="form-group row">
+                        <label class="col-md-auto col-form-label">Abertura:</label>
+                        <div class="col-md-8">
                           <input type="text" readonly class="form-control-plaintext" th:value="${{caixaAtual.dataAbertura}}"></input>
                         </div>
                       </div>
-                      <div class="form-group row mb-0">
-                        <label class="col-md-4 col-form-label">Fechamento:</label>
-                        <div class="col-sm-8">
+                      <div class="form-group row">
+                        <label class="col-md-auto col-form-label">Fechamento:</label>
+                        <div class="col-md-8">
                           <input type="text" readonly class="form-control-plaintext" th:value="${{caixaAtual.dataFechamento}}"></input>
                         </div>
                       </div>   
                     </div>
                     <div class="col-md-8">
-                      <div class="form-group row mb-0">
-                        <label class="col-md-4 col-form-label">Usuário Abertura:</label>
-                        <div class="col-sm-8">
+                      <div class="form-group row">
+                        <label class="col-md-auto col-form-label">Usuário Abertura:</label>
+                        <div class="col-md-8">
                           <p class="form-control-plaintext" 
                            th:if="${caixaAtual.usuarioAbertura != null}" 
                            th:text="${caixaAtual.usuarioAbertura.nome}"></p>
                         </div>
                       </div>
-                      <div class="form-group row mb-0">
-                        <label class="col-md-4 col-form-label">Usuário Fechamento:</label>
-                        <div class="col-sm-8">
+                      <div class="form-group row">
+                        <label class="col-md-auto col-form-label">Usuário Fechamento:</label>
+                        <div class="col-md-8">
                           <p class="form-control-plaintext" 
                            th:if="${caixaAtual.usuarioFechamento != null}" 
                            th:text="${caixaAtual.usuarioFechamento.nome}"></p>
@@ -120,27 +147,27 @@
                                   <table class="table table-sm table-striped">
                                     <tr>
                                       <th style="width:50%"><i class="fab fa-font-awesome-flag"></i> Valor inicial:</th>
-                                      <td class="text-right"><b>(+) 250,30</b></td>
+                                      <td class="text-right"><b th:text="|(+) ${{caixaAtual.valorInicial}}|"></b></td>
                                     </tr>
                                     <tr>
                                       <th><i class="fas fa-cash-register"></i> Vendas:</th>
-                                      <td class="text-right"><b>(+) 10,34</b></td>
+                                      <td class="text-right"><b th:text="|(+) ${{caixaAtual.valorVendas}}|"></b></td>
                                     </tr>
                                     <tr>
                                       <th><i class="fas fa-sign-in-alt"></i> Recebimentos:</th>
-                                      <td class="text-right"><b>(+) 5,80</b></td>
+                                      <td class="text-right"><b th:text="|(+) ${{caixaAtual.valorRecebimentos}}|"></b></td>
                                     </tr>
                                     <tr>
                                       <th><i class="fas fa-plus"></i> Reforço:</th>
-                                      <td class="text-right"><b>(+) 265,24</b></td>
+                                      <td class="text-right"><b th:text="|(+) ${{caixaAtual.valorReforco}}|"></b></td>
                                     </tr>
                                     <tr>
                                       <th><i class="fas fa-minus"></i> Sangria:</th>
-                                      <td class="text-right text-danger"><b>(-) 265,24</b></td>
+                                      <td class="text-right text-danger"><b th:text="|(-) ${{caixaAtual.valorSangria}}|"></b></td>
                                     </tr>
                                     <tr>
                                       <th><i class="fas fa-sign-out-alt"></i> Saídas:</th>
-                                      <td class="text-right text-danger"><b>(-) 50,00</b></td>
+                                      <td class="text-right text-danger"><b th:text="|(-) ${{caixaAtual.valorSaidas}}|"></b></td>
                                     </tr>
                                   </table>
                                 </div>
@@ -148,7 +175,7 @@
                               <table class="table table-sm table-borderless mb-0">
                                 <tr class="table-info">
                                   <th style="width:50%">Saldo atual:</th>
-                                  <td class="text-right"><b>216,34</b></td>
+                                  <td class="text-right"><b>0,00</b></td>
                                 </tr>
                               </table>
                             </div>
@@ -197,7 +224,6 @@
                         </div>
                       </div>
                       <div class="col-sm-4">
-                        <p>Recebimentos por forma de pagamento</p>
                         <div class="card card-primary card-outline" >
                           <div class="card-header">
                             <h3 class="card-title">
@@ -359,230 +385,289 @@
             </div>
           </div>
           
-          <form role="form" method="POST" th:action="@{/caixa/abrirCaixa}" th:object="${caixa}"
-           th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).FECHADO}">
-            <div class="modal fade" id="modal-abrir">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title"><i class="fas fa-sync"></i> Abertura de Caixa</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div layout:insert="~{mensagem_geral}"></div>
-                    <div layout:insert="~{mensagem_erro}"></div>
-                    <input type="hidden" th:field="*{numero}"></input>
-                    <input type="hidden" th:field="*{usuarioAbertura}"></input>
-                    <input type="hidden" th:field="*{status}"></input>
-                    <div class="form-group row">
-                      <label for="modalAbrirCaixaData" class="col-sm-2 col-form-label">Data</label>
-                      <div class="col-sm-4">             
-                        <input id="modalAbrirCaixaData" autofocus="autofocus" type="text" class="form-control js-date" th:field="*{{dataAbertura}}"></input>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="modalAbrirCaixaValorInicial" class="col-sm-2 col-form-label">Valor inicial</label>
-                      <div class="col-sm-4">             
-                        <input id="modalAbrirCaixaValorInicial" type="text" class="form-control js-currency" th:field="*{valorInicial}"></input>
-                      </div>
-                    </div>
-                    <div class="card card-primary card-outline" >
-                      <div class="card-header">
-                        <h3 class="card-title">
-                          <small><i class="fas fa-edit"></i></small>
-                          Dados do caixa anterior
-                        </h3>
-                      </div>
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-md-5">
-                            <dl class="row">
-                              <dt class="col-md-4">Nº do caixa</dt>
-                              <dd class="col-md-8" th:text="${caixaAtual.numero}"></dd>
-                              <dt class="col-md-4">Abertura</dt>
-                              <dd class="col-md-8" th:text="${{caixaAtual.dataAbertura}}"></dd>
-                              <dt class="col-md-4">Fechamento</dt>
-                              <dd class="col-md-8"></dd>
-                            </dl>    
-                          </div>
-                          <div class="col-md-7">
-                            <dl class="row">
-                              <dt class="col-md-5">Observações</dt>
-                              <dd class="col-md-7"><a href="#">Visualize aqui</a><dd>
-                              <dt class="col-md-5">Usuário abertura</dt>
-                              <dd class="col-md-7" th:text="${caixaAtual.usuarioAbertura.nome}"></dd>
-                              <dt class="col-md-5">Usuário fechamento</dt>
-                              <dd class="col-md-7"></dd>
-                            </dl>    
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-sm-6 col-md-3">
-                            <div class="description-block border-right">
-                              <span class="description-percentage text-warning"><i class="fab fa-font-awesome-flag"></i></span>
-                              <h5 class="description-header">Valor inicial</h5>
-                              <span class="description-text" th:text="${{caixaAtual.valorInicial}}"></span>
-                            </div>
-                          </div>
-                          <div class="col-sm-6 col-md-3">
-                            <div class="description-block border-right">
-                              <span class="description-percentage text-primary"><i class="fas fa-plus"></i></span>
-                              <h5 class="description-header">Entradas</h5>
-                              <span class="description-text" th:text="${{caixaAtual.valorEntradas}}"></span>
-                            </div>
-                          </div>
-                          <div class="col-sm-6 col-md-3">
-                            <div class="description-block border-right">
-                              <span class="description-percentage text-danger"><i class="fas fa-minus"></i></span>
-                              <h5 class="description-header">Saídas</h5>
-                              <span class="description-text" th:text="${{caixaAtual.valorSaidas}}"></span>
-                            </div>
-                          </div>
-                          <div class="col-sm-6 col-md-3">
-                            <div class="description-block border-right">
-                              <span class="description-percentage text-success"><i class="fas fa-money-bill"></i></span>
-                              <h5 class="description-header">Dinheiro (Gaveta)</h5>
-                              <span class="description-text" 
-                               th:text="${{caixaAtual.valorGaveta}}"></span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                      </div>
-                    </div>
-                    <small id="emailHelp" class="text-muted float-right">O valor final do caixa anterior sempre será o valor inicial do próximo caixa.</small>
-                  </div>
-                  <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
-                    <button type="submit" class="btn btn-primary">Abrir</button>
-                  </div>
-                  
-                </div>
-                <!-- /.modal-content -->
-              </div>
-              <!-- /.modal-dialog -->
-            </div>
-            <!-- /.modal -->
-          </form>
-          
-          <!-- <form role="form" method="POST" th:action="@{/caixa/fecharCaixa}" th:object="${caixa}"
-           th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).ABERTO}">
-            <div class="modal fade" id="modal-fechar">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title"><i class="fas fa-sync"></i> Abertura de Caixa</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div layout:insert="~{mensagem_geral}"></div>
-                    <div layout:insert="~{mensagem_erro}"></div>
-                    <input type="hidden" th:field="*{numero}"></input>
-                    <input type="hidden" th:field="*{usuarioAbertura}"></input>
-                    <div class="form-group row">
-                      <label for="modalFecharCaixaData" class="col-sm-2 col-form-label">Data</label>
-                      <div class="col-sm-4">             
-                        <input id="modalFecharCaixaData" autofocus="autofocus" type="text" class="form-control js-date" th:field="*{{dataAbertura}}"></input>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="modalFecharCaixaValorInicial" class="col-sm-2 col-form-label">Valor inicial</label>
-                      <div class="col-sm-4">             
-                        <input id="modalFecharCaixaValorInicial" type="text" class="form-control js-currency" th:field="*{valorInicial}"></input>
-                      </div>
-                    </div>
-                    <div class="card card-primary card-outline" >
-                      <div class="card-header">
-                        <h3 class="card-title">
-                          <small><i class="fas fa-edit"></i></small>
-                          Dados do caixa anterior
-                        </h3>
-                      </div>
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-md-5">
-                            <dl class="row">
-                              <dt class="col-md-4">Nº do caixa</dt>
-                              <dd class="col-md-8">01</dd>
-                              <dt class="col-md-4">Abertura</dt>
-                              <dd class="col-md-8">25/09/2020 08:05</dd>
-                              <dt class="col-md-4">Fechamento</dt>
-                              <dd class="col-md-8">25/09/2020 21:38</dd>
-                            </dl>    
-                          </div>
-                          <div class="col-md-7">
-                            <dl class="row">
-                              <dt class="col-md-5">Observações</dt>
-                              <dd class="col-md-7"><a href="#">Visualize aqui</a><dd>
-                              <dt class="col-md-5">Usuário abertura</dt>
-                              <dd class="col-md-7">Raimundo Humberto</dd>
-                              <dt class="col-md-5">Usuário fechamento</dt>
-                              <dd class="col-md-7">Sandra</dd>
-                            </dl>    
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-sm-6 col-md-3">
-                            <div class="description-block border-right">
-                              <span class="description-percentage text-warning"><i class="fab fa-font-awesome-flag"></i></span>
-                              <h5 class="description-header">Valor inicial</h5>
-                              <span class="description-text">0,00</span>
-                            </div>
-                          </div>
-                          <div class="col-sm-6 col-md-3">
-                            <div class="description-block border-right">
-                              <span class="description-percentage text-primary"><i class="fas fa-plus"></i></span>
-                              <h5 class="description-header">Entradas</h5>
-                              <span class="description-text">0,00</span>
-                            </div>
-                          </div>
-                          <div class="col-sm-6 col-md-3">
-                            <div class="description-block border-right">
-                              <span class="description-percentage text-danger"><i class="fas fa-minus"></i></span>
-                              <h5 class="description-header">Saídas</h5>
-                              <span class="description-text">0,00</span>
-                            </div>
-                          </div>
-                          <div class="col-sm-6 col-md-3">
-                            <div class="description-block border-right">
-                              <span class="description-percentage text-success"><i class="fas fa-money-bill"></i></span>
-                              <h5 class="description-header">Dinheiro (Gaveta)</h5>
-                              <span class="description-text">0,00</span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                      </div>
-                    </div>
-                    <small id="emailHelp" class="text-muted float-right">O valor final do caixa anterior sempre será o valor inicial do próximo caixa.</small>
-                  </div>
-                  <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
-                    <button type="submit" class="btn btn-primary">Abrir</button>
-                  </div>
-                  
-                </div>
-                /.modal-content
-              </div>
-              /.modal-dialog
-            </div>
-            /.modal
-          </form> -->
-          
         </div>
         <!-- container-fluid -->
       </section>
-    <!-- </form> --> 
+      
+      <div class="modal fade" id="modal-abrir">
+        <form role="form" id="formAbrirCaixa" method="POST" th:action="@{/caixa/abrirCaixa}" th:object="${caixa}">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title"><small><i class="fas fa-lock-open"></i></small> Abertura de Caixa</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body pb-0">
+                <div id="mensagemErroModalAbrirCaixa" layout:insert="~{mensagem_erro}"></div>
+                <input type="hidden" th:field="*{numero}"></input>
+                <input type="hidden" th:field="*{usuarioAbertura}"></input>
+                <input type="hidden" th:field="*{status}"></input>
+                <input type="hidden" th:field="*{valorVendas}"></input>
+                <input type="hidden" th:field="*{valorRecebimentos}"></input>
+                <input type="hidden" th:field="*{valorReforco}"></input>
+                <input type="hidden" th:field="*{valorSangria}"></input>
+                <input type="hidden" th:field="*{valorSaidas}"></input>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group row">
+                      <label for="modalAbrirCaixaValorInicial" class="col-sm-4 col-form-label">Valor inicial</label>
+                      <div class="col-sm-auto">             
+                        <input id="modalAbrirCaixaValorInicial" type="text" class="form-control js-currency" th:field="*{valorInicial}"></input>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group row">
+                      <label for="modalAbrirCaixaData" class="col-sm-4 col-form-label">Data abertura</label>
+                      <div class="col-sm-auto">             
+                        <input id="modalAbrirCaixaData" readonly class="form-control-plaintext" type="text" 
+                         th:field="*{{dataAbertura}}" th:classappend="${#fields.hasErrors('dataAbertura')} ? 'is-invalid'"></input>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="card card-primary" >
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <small><i class="fas fa-edit"></i></small>
+                      Informações do caixa corrente
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    
+                    <div class="row">
+                      <div class="col-md-6">
+                        <dl class="row">
+                          <dt class="col-md-5">Nº do caixa</dt>
+                          <dd class="col-md-7" th:text="${caixaAtual.numero}"></dd>
+                          <dt class="col-md-5">Dt. Abertura</dt>
+                          <dd class="col-md-7" th:text="${{caixaAtual.dataAbertura}}"></dd>
+                          <dt class="col-md-5">Dt. Fechamento</dt>
+                          <dd class="col-md-7"></dd>
+                        </dl>    
+                      </div>
+                      <div class="col-md-6">
+                        <dl class="row">
+                          <dt class="col-md-5">Observações</dt>
+                          <dd class="col-md-7"><a href="#">Visualize aqui</a><dd>
+                          <dt class="col-md-5">Usu. abertura</dt>
+                          <dd class="col-md-7" th:text="${caixaAtual.usuarioAbertura.nome}"></dd>
+                          <dt class="col-md-5">Usu. fechamento</dt>
+                          <dd class="col-md-6"></dd>
+                        </dl>    
+                      </div>
+                      <div class="col-md-12 ">
+                        <div class="d-flex flex-column">
+                          <div class="mb-auto">
+                            <div class="table-responsive">
+                              <table class="table table-sm table-striped">
+                                <tr>
+                                  <th style="width:50%">
+                                    <span class="text-warning"><small><i class="fab fa-font-awesome-flag"></i></small></span> Valor inicial:
+                                  </th>
+                                  <td class="text-left" th:text="|${{caixaAtual.valorInicial}}|"></td>
+                                </tr>
+                                <tr>
+                                  <th>
+                                    <span class="text-primary"><small><i class="fas fa-plus"></i></small></span> Entradas:
+                                  </th>
+                                  <td class="text-left" th:text="|${{caixaAtual.valorVendas}}|"></td>
+                                </tr>
+                                <tr>
+                                  <th>
+                                    <span class="text-danger"><small><i class="fas fa-minus"></i></small></span> Saídas:
+                                  </th>
+                                  <td class="text-left" th:text="|${{caixaAtual.valorRecebimentos}}|"></td>
+                                </tr>
+                                <tr>
+                                  <th>
+                                    <span class="text-success"><small><i class="fas fa-cash-register"></i></small></span> Gaveta:
+                                  </th>
+                                  <td class="text-left" th:text="|${{caixaAtual.valorReforco}}|"></td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    
+                    </div>
+                    
+                  </div>
+                  <div class="card-footer">
+                    <small class="float-right">O valor final do caixa anterior sempre será o valor inicial do próximo caixa.</small>
+                  </div>
+                </div>
+                
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
+                <button type="submit" class="btn btn-primary">Abrir</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </form>
+      </div>
+      <!-- /.modal -->
+    
+      <div class="modal fade" id="modal-fechar">
+        <form role="form" method="POST"
+         th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).ABERTO}">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title"><i class="fas fa-sync"></i> Fechamento de Caixa</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+              </div>
+              
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </form>
+      </div>
+      <!-- /.modal -->
+      
+      <form role="form" method="POST" th:action="@{/caixa/realizarSangria}" th:object="${movimentacao}">
+        <div class="modal fade" id="modal-sangria">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title"><i class="fas fa-sync"></i> Realizar Sangria do Caixa</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div id="mensagemGeralModalSangria" layout:insert="~{mensagem_geral}"></div>
+                <div id="mensagemErroModalSangria" layout:insert="~{mensagem_erro}"></div>
+                <input type="hidden" th:field="*{caixa}"></input>
+                <div class="card card-danger card-outline">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <small><i class="fas fa-edit"></i></small>
+                      Movimentação de dinheiro entre CONTAS e CAIXA
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <input type="hidden" th:field="*{caixa}"></input>
+                      <div class="col-md-12">
+                        <div class="form-group row justify-content-end">
+                          <label class="col col-form-label">Tipo de Movimento:</label>
+                          <div class="col-md-9">
+                            <select th:field="*{tipoMovimentacaoCaixa}" class="form-control select2" style="width: 100%;">
+                              <option th:each="tipo : ${tipoMovimentacaoCaixaList}" th:value="${tipo}" 
+                               th:text="${tipo.descricao}"></option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group row justify-content-end">
+                          <label class="col col-form-label">Conta de Destino:</label>
+                          <div class="col-md-9">
+                            <select class="form-control select2" style="width: 100%;">
+                              <option th:each="tipoConta : ${tipoContaList}" th:value="${tipoConta}" 
+                               th:text="${tipoConta.descricao}"></option>
+                            </select>
+                          </div>
+                        </div> 
+                      </div>
+                                            
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col col-form-label">Valor:</label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control js-currency" placeholder="Valor" 
+                             th:field="*{valor}"></input>
+                          </div>
+                        </div> 
+                      </div>
+                      
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col col-form-label">Valor Disponível:</label>
+                          <div class="col-md-7">
+                            <input type="text" class="form-control-plaintext" 
+                             th:value="${{caixaAtual.valorGaveta}}"></input>
+                          </div>
+                        </div> 
+                      </div>
+                      
+                      <div class="col-md-12">
+                        <div class="form-group row">
+                          <label class="col col-form-label">Motivo:</label>
+                          <div class="col-md-9">
+                            <input type="text" class="form-control" placeholder="Motivo" 
+                             th:field="*{motivo}"></input>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+              </div>
+              
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+      </form>
+      <!-- </form> -->
+      
+      <form role="form" method="POST">
+        <div class="modal fade" id="modal-reforco">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title"><i class="fas fa-sync"></i> Realizar Reforco do Caixa</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+              </div>
+              
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+      </form>
+      <!-- </form> -->
+      
   </section>  
   
   <script layout:fragment="js-validator">
   	$(document).on('keyup', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
-  	  console.log(event.keyCode);
   	  if (event.keyCode === 112) { //f1
   	    // Cancel the default action, if needed
   	    event.preventDefault();
@@ -593,6 +678,57 @@
   	    $('#linkRetornar')[0].click();
   	  }
   	});
+  	
+  	$(window).on('load',function(){
+  		msg = $('#mensagemErroModalAbrirCaixa span').html();
+  		if(msg){
+  			$('#modal-abrir').modal('show');
+  		} else {
+  			msg = $('#mensagemErroModalSangria span').html();
+  	  		if(msg){
+  	  			$('#modal-sangria').modal('show');
+  	  		}
+  		}
+  		
+	});
+  	
+  	$('#ancora').on('click', '.js-abrir-caixa', function(event){
+  		var botao = $(event.currentTarget);
+		var url = botao.data('url-abrir-caixa');
+		
+		var response = $.ajax({
+      		url: url,
+      		type: 'GET'
+  		});
+		response.done(function(e){
+			$('#loteForm').validate()
+			$('#modal-abrir').find('#modalAbrirCaixaData').val(e.date);			
+			$('#modal-abrir').modal('show');
+		});
+      	response.fail(function(e){
+      		alert('Erro abrindo novo caixa.');
+  		});
+  	});
+  	
+  	$('#ancora').on('hidden.bs.modal', '#modal-abrir', function() {
+  		$('#formAbrirCaixa').validate().resetForm();
+  		$('#formAbrirCaixa').find('.is-invalid').removeClass('is-invalid');
+  	});
+  	
+  	$('#ancora').on('shown.bs.modal', '#modal-abrir', function() {
+  		setTimeout(function() {
+  			$('#modalAbrirCaixaValorInicial').val(0);
+  			$('#modalAbrirCaixaValorInicial').focus();}, 0);
+  	});
+  	
+  	$('#modalAbrirCaixaData').rules('add', {
+      required: true,
+      customTime: true,
+      messages: { 
+          required: "Campo obrigatório.",
+          customTime: "Forneça a data no formato dd/mm/aaaa hh:mm"
+      }
+    });
   </script>
     
 </html>

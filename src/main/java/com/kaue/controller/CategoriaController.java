@@ -30,7 +30,7 @@ public class CategoriaController {
 	private CategoriaService categoriaService;
 	
 	@RequestMapping("/novo")
-	public ModelAndView showFormNovo(Categoria categoria) {
+	public ModelAndView showFormNovo() {//Categoria categoria
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		mv.addObject("categoria", new Categoria());
 		return mv;

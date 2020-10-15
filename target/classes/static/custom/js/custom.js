@@ -41,9 +41,16 @@ $.validator.addMethod("customDate", function(value, element) {
 	return moment(value, 'DD/MM/YYYY', true).isValid();
 }, "Por favor forneça uma data válida");
 
+$.validator.addMethod("customTime", function(value, element) {
+	return moment(value, 'DD/MM/YYYY HH:mm', true).isValid();
+}, "Por favor forneça uma data válida");
+
 $(function(){
 	inicializar();
+	//$('#ancora').on('ajaxComplete', inicializar());
 });
+
+
 
 function inicializar() {
 	$('#modalConfirmacao').on('show.bs.modal', function(event){
@@ -112,12 +119,10 @@ function inicializar() {
 	$('.js-date').daterangepicker({
 	    singleDatePicker: true,
 	    /*showDropdowns: true,*/
-	    /*timePicker: true,*/
 	    showDropdowns: true,
 	    changeMonth: true,
 	    changeYear: true,
 	    minYear: 1901,
-	    /*maxYear: parseInt(moment().format('YYYY'),10),*/
 	    autoUpdateInput: false,
 	    locale: {
 	    	cancelLabel: 'Clear',
@@ -128,6 +133,7 @@ function inicializar() {
 	        fromLabel: "De",
 	        toLabel: "Até",
 	        customRangeLabel: "Custom",
+	        
 	        daysOfWeek: [
 	            "Do",
 	            "Se",
@@ -161,6 +167,63 @@ function inicializar() {
 			$(this).val('');
 		} else {
 			$(this).val(picker.startDate.format('DD/MM/YYYY'));
+		}
+	});
+	
+	//Date range picker
+	$('.js-date-time').daterangepicker({
+	    singleDatePicker: true,
+	    /*showDropdowns: true,*/
+	    timePicker: true,
+	    timePicker24Hour: true,
+	    showDropdowns: true,
+	    changeMonth: true,
+	    changeYear: true,
+	    minYear: 1901,
+	    autoUpdateInput: false,
+	    locale: {
+	    	cancelLabel: 'Clear',
+	        format: "DD/MM/YYYY HH:mm",
+	        separator: " - ",
+	        applyLabel: "Aplicar",
+	        cancelLabel: "Cancelar",
+	        fromLabel: "De",
+	        toLabel: "Até",
+	        customRangeLabel: "Custom",
+	        
+	        daysOfWeek: [
+	            "Do",
+	            "Se",
+	            "Te",
+	            "Qu",
+	            "Qu",
+	            "Se",
+	            "Sa"
+	        ],
+	        monthNames: [
+	            "Janeiro",
+	            "Fevereiro",
+	            "Março",
+	            "Abril",
+	            "Maio",
+	            "Junho",
+	            "Julho",
+	            "Agosto",
+	            "Setembro",
+	            "Outubro",
+	            "Novembro",
+	            "Dezembro"
+	        ],
+	        firstDay: 0
+	    },
+	    
+	}).inputmask("99/99/9999 99:99");;
+	
+	$('.js-date-time').on('apply.daterangepicker', function(ev, picker) {
+		if (!picker.startDate.isValid()) {
+			$(this).val('');
+		} else {
+			$(this).val(picker.startDate.format('DD/MM/YYYY HH:mm'));
 		}
 	});
 	

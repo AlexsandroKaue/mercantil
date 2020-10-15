@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -18,16 +19,16 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,23 +46,25 @@ import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.enumeration.OpcoesDesconto;
 import com.kaue.enumeration.StatusCaixa;
 import com.kaue.enumeration.StatusVenda;
+import com.kaue.enumeration.TipoConta;
+import com.kaue.enumeration.TipoMovimentacaoCaixa;
 import com.kaue.enumeration.Unitario;
 import com.kaue.model.Caixa;
 import com.kaue.model.Categoria;
 import com.kaue.model.Cliente;
 import com.kaue.model.Item;
+import com.kaue.model.MovimentacaoCaixa;
 import com.kaue.model.Produto;
 import com.kaue.model.Registro;
-import com.kaue.model.Titulo;
 import com.kaue.model.Usuario;
 import com.kaue.model.UsuarioWeb;
 import com.kaue.model.Venda;
 import com.kaue.service.CaixaService;
 import com.kaue.service.ClienteService;
+import com.kaue.service.MovimentacaoCaixaService;
 import com.kaue.service.ProdutoService;
 import com.kaue.service.RelatorioService;
 import com.kaue.service.VendaService;
-import com.kaue.util.HasValue;
 
 @Controller
 @RequestMapping("/caixa")
@@ -92,6 +95,9 @@ public class CaixaController {
 	
 	@Autowired
 	private RelatorioService relatorioService;
+	
+	@Autowired
+	private MovimentacaoCaixaService movimentacaoCaixaService;
 		
 	private Venda venda;
 	
@@ -102,10 +108,28 @@ public class CaixaController {
 		Item item = new Item();
 		item.setProduto(new Produto());
 		model.addAttribute("item", item);
-		model.addAttribute("teste", "Teste de passagem de valor do thymeleaf para o javascript.");
-		Caixa caixaAtual = caixaService.obterCaixaMaisRecente();
-		model.addAttribute("caixaAtual", caixaAtual);
-		 
+	}
+	
+	@ModelAttribute
+	public List<TipoMovimentacaoCaixa> todosTipoMovimentacao(){
+		return Arrays.asList(TipoMovimentacaoCaixa.values());
+	}
+	
+	@ModelAttribute
+	public List<TipoConta> todosTipoConta(){
+		return Arrays.asList(TipoConta.values());
+	}	
+	
+	@ModelAttribute
+	public List<OpcoesDesconto> todasOpcoesDesconto(){
+		return Arrays.asList(OpcoesDesconto.values());
+	}
+	
+	@ModelAttribute
+	public List<Cliente> todosClientes(){
+		List<Cliente> clienteList = new ArrayList<Cliente>();
+		clienteList = clienteService.pesquisar(new ClienteFilter());
+		return clienteList;
 	}
 	
 	@RequestMapping
@@ -519,17 +543,9 @@ public class CaixaController {
 		return mv;
 	}
 	
-	@ModelAttribute
-	public List<OpcoesDesconto> todasOpcoesDesconto(){
-		return Arrays.asList(OpcoesDesconto.values());
-	}
 	
-	@ModelAttribute
-	public List<Cliente> todosClientes(){
-		List<Cliente> clienteList = new ArrayList<Cliente>();
-		clienteList = clienteService.pesquisar(new ClienteFilter());
-		return clienteList;
-	}
+	
+	
 	
 	public void gerarRelatorio(Venda venda) {
 		try {
@@ -566,8 +582,12 @@ public class CaixaController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/abrirCaixa")
-	public String abrirCaixa(@Validated Caixa caixa, Errors errors, RedirectAttributes attributes) {
+	public String abrirCaixa(@Validated @ModelAttribute("caixa") Caixa caixa, 
+			Errors errors, RedirectAttributes attributes, Model model) {
 		
+		model.addAttribute("movimentacao", inicializaNovaMovimentacaoCaixa());
+		model.addAttribute("caixaAtual", caixaService.obterCaixaMaisRecente());
+				
 		if(errors.hasErrors()) { 
 			return ADMINISTRADOR_VIEW; 
 		} 
@@ -581,24 +601,55 @@ public class CaixaController {
 		}
 	}
 	
+	@RequestMapping(method = RequestMethod.POST, value = "/realizarSangria")
+	public String sangriaCaixa(@Validated @ModelAttribute("movimentacao") MovimentacaoCaixa movimentacao, 
+			Errors errors, RedirectAttributes attributes, 
+			@ModelAttribute("caixa") Caixa caixa,
+			@ModelAttribute("caixaAtual") Caixa caixaAtual) {
+		
+		if(errors.hasErrors()) { 
+			return ADMINISTRADOR_VIEW; 
+		} 
+		
+		try {
+			movimentacao = movimentacaoCaixaService.salvar(movimentacao);
+			attributes.addFlashAttribute("mensagem", "Movimentação realizada com sucesso!");
+			return "redirect:/caixa/administracao";
+		} catch (Exception e) {
+			errors.reject(e.getMessage());
+			return ADMINISTRADOR_VIEW;
+		}
+	}
+	
 	@RequestMapping(value = "/administracao")
-	public ModelAndView initCaixa(Caixa caixa) {
-		ModelAndView mv = new ModelAndView(ADMINISTRADOR_VIEW);
+	public String initCaixa(Model model) {
 		
 		//Lembre: cadastrar um registro inicial na tabela Caixa.
 		Caixa caixaAtual = caixaService.obterCaixaMaisRecente();
-		if(caixaAtual.getStatus()==StatusCaixa.FECHADO) {
-			caixa = inicializaNovoCaixa(caixaAtual);
-		} else {
-			caixa = caixaAtual;
-		}
+		Caixa caixa = inicializaNovoCaixa(caixaAtual);
+		MovimentacaoCaixa movimentacaoCaixa = inicializaNovaMovimentacaoCaixa();
 		
-		mv.addObject("caixa", caixa);
-		return mv;
+		model.addAttribute("caixa", caixa);
+		model.addAttribute("caixaAtual", caixaAtual);
+		model.addAttribute("movimentacao", movimentacaoCaixa);
+		return ADMINISTRADOR_VIEW;
 	}
 	
-	public void fecharCaixa() {
-		
+	@RequestMapping(value = "/abrir")
+	public @ResponseBody Map<String, Object> obterData() {
+		Map<String, Object> map = new HashMap<>();
+		String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
+		map.put("date", formattedDate);
+		return map;
+	}
+	
+	@RequestMapping(value = "/fechar")
+	public ModelAndView showFormFecharCaixa() {
+		ModelAndView mv = new ModelAndView(ADMINISTRADOR_VIEW+" :: #modal-abrir");
+		Caixa caixaAtual = caixaService.obterCaixaMaisRecente();
+		Caixa caixa = inicializaNovoCaixa(caixaAtual);
+		mv.addObject("caixa", caixa);
+		return mv;
 	}
 	
 	private Caixa inicializaNovoCaixa(Caixa caixaAtual) {
@@ -607,19 +658,18 @@ public class CaixaController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario usuarioLogado = ((UsuarioWeb)auth.getPrincipal()).getUsuario();
 		caixa.setUsuarioAbertura(usuarioLogado);
-		caixa.setDataAbertura(new Date());
+		//caixa.setDataAbertura(new Date());
 		caixa.setStatus(StatusCaixa.ABERTO);
 		caixa.setValorInicial(caixaAtual.getValorFinal());
-		caixa.setValorVendas(new BigDecimal(0.00));
-		caixa.setValorVendasEmDinheiro(new BigDecimal(0.00));
-		caixa.setValorVendasEmCartao(new BigDecimal(0.00));
-		caixa.setValorRecebimentos(new BigDecimal(0.00));
-		caixa.setValorReforco(new BigDecimal(0.00));
-		caixa.setValorEntradas(new BigDecimal(0.00));
-		caixa.setValorSangria(new BigDecimal(0.00));
-		caixa.setValorSaidas(new BigDecimal(0.00));
-		caixa.setValorGaveta(new BigDecimal(0.00));
+		
 		return caixa;
+	}
+	
+	private MovimentacaoCaixa inicializaNovaMovimentacaoCaixa() {
+		MovimentacaoCaixa movimentacaoCaixa = new MovimentacaoCaixa();
+		Caixa caixaAtual = caixaService.obterCaixaMaisRecente();
+		movimentacaoCaixa.setCaixa(caixaAtual);
+		return movimentacaoCaixa;
 	}
 	
 }
