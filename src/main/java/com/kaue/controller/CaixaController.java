@@ -601,6 +601,24 @@ public class CaixaController {
 		}
 	}
 	
+	@RequestMapping(value = "/fecharCaixa/{id}")
+	public String fecharCaixa(@PathVariable("id") Caixa caixa, RedirectAttributes attributes) {
+				
+		caixa.setStatus(StatusCaixa.FECHADO);
+		caixa.setDataFechamento(new Date());
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario usuarioLogado = ((UsuarioWeb)auth.getPrincipal()).getUsuario();
+		caixa.setUsuarioFechamento(usuarioLogado);
+		try {
+			caixa = caixaService.salvar(caixa);
+			attributes.addFlashAttribute("mensagem", "Caixa fechado com sucesso!");
+			return "redirect:/caixa/administracao";
+		} catch (Exception e) {
+			return ADMINISTRADOR_VIEW;
+		}
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/realizarSangria")
 	public String sangriaCaixa(@Validated @ModelAttribute("movimentacao") MovimentacaoCaixa movimentacao, 
 			Errors errors, RedirectAttributes attributes, 

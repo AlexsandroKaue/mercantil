@@ -75,7 +75,12 @@
                       <div class="form-group row">
                         <label class="col-md-auto col-form-label">Status:</label>
                         <div class="col-md-8">
-                          <input type="text" readonly class="form-control-plaintext" th:value="${caixaAtual.status}"></input>
+                          <span class="badge badge-success" 
+                           th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).ABERTO}"
+                           th:text="${caixaAtual.status}"></span>
+                          <span class="badge badge-secondary" 
+                           th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).FECHADO}"
+                           th:text="${caixaAtual.status}"></span>
                         </div>
                       </div> 
                     </div>
@@ -409,6 +414,7 @@
                 <input type="hidden" th:field="*{valorReforco}"></input>
                 <input type="hidden" th:field="*{valorSangria}"></input>
                 <input type="hidden" th:field="*{valorSaidas}"></input>
+                <input type="hidden" th:field="*{valorEntradas}"></input>
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
@@ -446,7 +452,7 @@
                           <dt class="col-md-5">Dt. Abertura</dt>
                           <dd class="col-md-7" th:text="${{caixaAtual.dataAbertura}}"></dd>
                           <dt class="col-md-5">Dt. Fechamento</dt>
-                          <dd class="col-md-7"></dd>
+                          <dd class="col-md-7" th:text="${{caixaAtual.dataFechamento}}"></dd>
                         </dl>    
                       </div>
                       <div class="col-md-6">
@@ -456,38 +462,39 @@
                           <dt class="col-md-5">Usu. abertura</dt>
                           <dd class="col-md-7" th:text="${caixaAtual.usuarioAbertura.nome}"></dd>
                           <dt class="col-md-5">Usu. fechamento</dt>
-                          <dd class="col-md-6"></dd>
+                          <dd class="col-md-6" 
+                           th:text="${caixaAtual.usuarioFechamento!=null?caixaAtual.usuarioFechamento.nome:''}"></dd>
                         </dl>    
                       </div>
                       <div class="col-md-12 ">
                         <div class="d-flex flex-column">
                           <div class="mb-auto">
                             <div class="table-responsive">
-                              <table class="table table-sm table-striped">
-                                <tr>
-                                  <th style="width:50%">
-                                    <span class="text-warning"><small><i class="fab fa-font-awesome-flag"></i></small></span> Valor inicial:
-                                  </th>
-                                  <td class="text-left" th:text="|${{caixaAtual.valorInicial}}|"></td>
-                                </tr>
-                                <tr>
-                                  <th>
-                                    <span class="text-primary"><small><i class="fas fa-plus"></i></small></span> Entradas:
-                                  </th>
-                                  <td class="text-left" th:text="|${{caixaAtual.valorVendas}}|"></td>
-                                </tr>
-                                <tr>
-                                  <th>
-                                    <span class="text-danger"><small><i class="fas fa-minus"></i></small></span> Saídas:
-                                  </th>
-                                  <td class="text-left" th:text="|${{caixaAtual.valorRecebimentos}}|"></td>
-                                </tr>
-                                <tr>
-                                  <th>
-                                    <span class="text-success"><small><i class="fas fa-cash-register"></i></small></span> Gaveta:
-                                  </th>
-                                  <td class="text-left" th:text="|${{caixaAtual.valorReforco}}|"></td>
-                                </tr>
+                              <table class="table table-sm table-bordered ">
+                                <thead  class="table-secondary">
+                                  <tr>
+                                    <th class="col-3">
+                                      <span class="text-warning"><small><i class="fab fa-font-awesome-flag"></i></small></span> Valor Inicial
+                                    </th>
+                                    <th class="col-3">
+                                      <span class="text-primary"><small><i class="fas fa-plus"></i></small></span> Entradas
+                                    </th>
+                                    <th class="col-3">
+                                      <span class="text-danger"><small><i class="fas fa-minus"></i></small></span> Saídas
+                                    </th>
+                                    <th class="col-3">
+                                      <span class="text-success"><small><i class="fas fa-cash-register"></i></small></span> Gaveta
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td th:text="${{caixaAtual.valorInicial!=null?caixaAtual.valorInicial:'0,00'}}"></td>
+                                    <td th:text="${{caixaAtual.valorEntradas!=null?caixaAtual.valorEntradas:'0,00'}}"></td>
+                                    <td th:text="${{caixaAtual.valorSaidas!=null?caixaAtual.valorSaidas:'0,00'}}"></td>
+                                    <td th:text="${{caixaAtual.valorReforco!=null?caixaAtual.valorReforco:'0,00'}}">
+                                  </tr>
+                                </tbody>
                               </table>
                             </div>
                           </div>
@@ -516,8 +523,7 @@
       <!-- /.modal -->
     
       <div class="modal fade" id="modal-fechar">
-        <form role="form" method="POST"
-         th:if="${caixaAtual.status == T(com.kaue.enumeration.StatusCaixa).ABERTO}">
+        <form role="form" id="formFecharCaixa" method="POST" th:action="@{/caixa/fecharCaixa/{id}(id=${caixaAtual.id})}">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
@@ -527,7 +533,78 @@
                 </button>
               </div>
               <div class="modal-body">
-                
+                <div class="callout callout-info">
+                  <p>Antes de fechar o caixa é aconselhável fazer ao menos uma sangria de valores.</p>
+                </div>
+                <div class="card card-secondary" >
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <small><i class="fas fa-edit"></i></small>
+                      Informações do caixa corrente
+                    </h3>
+                  </div>
+                  
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <dl class="row">
+                          <dt class="col-md-5">Nº do caixa</dt>
+                          <dd class="col-md-7" th:text="${caixaAtual.numero}"></dd>
+                          <dt class="col-md-5">Dt. Abertura</dt>
+                          <dd class="col-md-7" th:text="${{caixaAtual.dataAbertura}}"></dd>
+                          <dt class="col-md-5">Dt. Fechamento</dt>
+                          <dd class="col-md-7" th:text="${{caixaAtual.dataFechamento}}"></dd>
+                        </dl>    
+                      </div>
+                      <div class="col-md-6">
+                        <dl class="row">
+                          <dt class="col-md-5">Observações</dt>
+                          <dd class="col-md-7"><a href="#">Visualize aqui</a><dd>
+                          <dt class="col-md-5">Usu. abertura</dt>
+                          <dd class="col-md-7" th:text="${caixaAtual.usuarioAbertura.nome}"></dd>
+                          <dt class="col-md-5">Usu. fechamento</dt>
+                          <dd class="col-md-6"
+                            th:text="${caixaAtual.usuarioFechamento!=null?caixaAtual.usuarioFechamento.nome:''}"></dd>
+                        </dl>    
+                      </div>
+                      <div class="col-md-12 ">
+                        <div class="d-flex flex-column">
+                          <div class="mb-auto">
+                            <div class="table-responsive">
+                              <table class="table table-sm table-bordered ">
+                                <thead  class="table-secondary">
+                                  <tr>
+                                    <th class="col-3">
+                                      <span class="text-warning"><small><i class="fab fa-font-awesome-flag"></i></small></span> Valor Inicial
+                                    </th>
+                                    <th class="col-3">
+                                      <span class="text-primary"><small><i class="fas fa-plus"></i></small></span> Entradas
+                                    </th>
+                                    <th class="col-3">
+                                      <span class="text-danger"><small><i class="fas fa-minus"></i></small></span> Saídas
+                                    </th>
+                                    <th class="col-3">
+                                      <span class="text-success"><small><i class="fas fa-cash-register"></i></small></span> Gaveta
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td th:text="${{caixaAtual.valorInicial!=null?caixaAtual.valorInicial:'0,00'}}"></td>
+                                    <td th:text="${{caixaAtual.valorEntradas!=null?caixaAtual.valorEntradas:'0,00'}}"></td>
+                                    <td th:text="${{caixaAtual.valorSaidas!=null?caixaAtual.valorSaidas:'0,00'}}"></td>
+                                    <td th:text="${{caixaAtual.valorReforco!=null?caixaAtual.valorReforco:'0,00'}}">
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
