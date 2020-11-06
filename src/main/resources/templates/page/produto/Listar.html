@@ -6,6 +6,15 @@
 <head>
   <title th:text="#{mercadinho}"></title>
 </head>
+  
+  <style layout:fragment="extra-style">
+    .table, .table td{
+      border-width:px;
+      border-style:solid;
+      border-color:grey;
+     }
+     
+  </style>
 
   <section layout:fragment="container">
     <form id="filtroProdutoForm" method="GET" th:action="@{/produtos}" th:object="${filtro}" role="form">
@@ -34,7 +43,7 @@
           <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
           <div class="col-sm-6" th:unless="*{avancada}">
             <div class="input-group">
-              <input class="form-control" 
+              <input class="form-control form-control-lg" 
                 placeholder="Qual produto você está procurando?" autofocus="autofocus"
                 th:field="*{termo}" onload="setTimeout(function(){$(this).focus();},1);"/>
               <div class="input-group-append">
@@ -101,7 +110,7 @@
           </div>
         </div>
       
-        <table class="table table-bordered table-hover table-sm js-tabela">
+        <table class="table table-bordered table-hover js-tabela">
           <thead  style="background-color: #fffed4">
             <tr>
               <th class="text-center col-1" th:text="#{listagem.produto.coluna.id}"></th>

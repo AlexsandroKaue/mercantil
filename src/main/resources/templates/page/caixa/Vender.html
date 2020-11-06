@@ -7,6 +7,13 @@
   <title th:text="#{mercadinho}"></title>
 </head>
 
+  <style layout:fragment="extra-style">
+    .select2-selection__rendered {
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-size: 20px !important;
+    }
+  </style>
+
   <section layout:fragment="container">
     
     <form id="caixaForm" role="form"  method="POST" th:action="@{/caixa}" th:object="${venda}">
@@ -25,10 +32,10 @@
           <div layout:insert="~{mensagem_erro}"></div>
           <div class="row mb-2" layout:fragment="cabecalho">
             <div class="col-sm-7 m-0">
-              <select class="js-buscar-produto" 
+              <ul class="js-buscar-produto" 
                th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir},
                data-url-selecionar-balanca=@{/caixa/balanca}"
-               style="width: 100%;"></select>
+               style="width: 100%;"></ul>
             </div>
           </div>
           <!-- /.row -->
@@ -41,22 +48,29 @@
           <div class="row">
             <div class="col-md-7">
               <!-- <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4"> -->
-                <div class="chart" style=" height: 400px; border-style: solid solid solid solid; border-width: 2px;border-color: #aaaaaa;background-color: #fffed4">
+                <div  style="border-style: solid solid solid solid; border-width: 2px;border-color: #aaaaaa;background-color: #fffed4">
+                  
                   <div class="bg-white pt-3 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;"><!-- #cbd3da -->
-                    <ul class="items-list" style="height: 1.5em; margin-bottom: 0px">
+                    <ul class="items-list" style="height: 2em; margin-bottom: 0px">
                       <li>
                         <div class="row">
+                          <div class="col-md-1 text-left">
+                            <!-- <h4 class="mb-0">
+                              Produto
+                            </h4> -->
+                            <label class="text-center">#</label>
+                          </div>
                           <div class="col-md-4 text-left">
                             <!-- <h4 class="mb-0">
                               Produto
                             </h4> -->
                             <label>Produto</label>
                           </div>
-                          <div class="col-md-4 text-center">
+                          <div class="col-md-3 text-center">
                             <!-- <h4 class="mb-0">
                               Quantidade x Preço Unitário
                             </h4> -->
-                            <label>Quantidade x Preço Unitário</label>
+                            <label>Qtd. x Preço Un.</label>
                           </div>
                           <div class="col-md-3 text-right">
                             <!-- <h4 class="mb-0">
@@ -70,7 +84,7 @@
                     </ul>
                   </div>
                   
-                  <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="overflow: scroll;">
+                  <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px;overflow: scroll;">
                     <li th:if="*{#lists.isEmpty(itemList)}">
                        <div class="col-md-12">
                         <p class="mt-2">Nenhum item incluído.</p> 
@@ -83,38 +97,45 @@
                         <input type="hidden" th:field="*{itemList[__${rowStat.index}__].venda}"></input>
                         <input type="hidden" th:field="*{itemList[__${rowStat.index}__].valorTotal}"></input>
                         <li class="item">
-                        <div class="row align-items-end">
-                         <div class="col-md-4 text-left">
-                          <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
-                          <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>  
-                         </div>
-                        <div class="col-md-4 text-center">
-                           <h6 id="quantidade" th:text="|${{item.quantidade}}${item.produto.unitario} x ${{item.valor}}|"></h6>
-                        </div>
-                        <div class="col-md-3 text-right">
-                           <h5 th:text="|R$ ${{item.valorTotal}}|"></h5>
-                        </div>
-                        <div class="col-md-1 text-center">
-                          <h6>
-                           <a data-toggle="modal" data-target="#modalConfirmarRemocaoItem" class="text-muted btn-sm"
-                            th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao}"
-                            title="Excluir" rel="tooltip" data-placement="top"><!--  -->
-                            <i class="fas fa-trash"></i>
-                           </a>
-                          </h6>
-                        </div>
-                        </div>
-                      </li>
+                          <div class="row align-items-end">
+                           <div class="col-md-1 text-left">
+                            <h6 th:text="${rowStat.index + 1}"></h6>  
+                           </div>
+                           <div class="col-md-4 text-left">
+                            <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
+                            <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>  
+                           </div>
+                          <div class="col-md-3 text-center">
+                             <h6 id="quantidade" th:text="|${{item.quantidade}}${item.produto.unitario} x ${{item.valor}}|"></h6>
+                          </div>
+                          <div class="col-md-3 text-right">
+                             <h5 th:text="|R$ ${{item.valorTotal}}|"></h5>
+                          </div>
+                          <div class="col-md-1 text-center">
+                            <h6>
+                             <a data-toggle="modal" data-target="#modalConfirmarRemocaoItem" class="text-muted btn-sm"
+                              th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao}"
+                              title="Remover item" rel="tooltip" data-placement="top"><!--  -->
+                              <i class="fas fa-trash"></i>
+                             </a>
+                            </h6>
+                          </div>
+                          </div>
+                        </li>
                       <li class="linha border-bottom">
                       </li>
                     </th:block>
                   </ul>
-                  <div class="bg-white py-2 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
-                    <div class="col-md-12">
-                      <h5>Nenhum item incluído</h5> 
-                    </div>
-                  </div>
+                  <!-- <ul class="items-list" >
+                      <li>Nenhum item incluído
+                      </li>
+                     </ul> -->
                 </div>
+                <!-- <div class="bg-white py-2 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
+                  <div class="col-md-12">
+                    <h5>Nenhum item incluído</h5> 
+                  </div>
+                </div> -->
               <!-- </div> -->
             </div>
           
@@ -154,7 +175,7 @@
       <div class="modal" id="modal-pagamento" 
        tabindex="-1" data-keyboard="true"
        role="dialog" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg ">
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title">Pagamento</h4>
@@ -162,14 +183,142 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body pb-0">
               <div class="row" >
                 <div class="col-12">
                   
                   <div class="table-responsive">
                     <table class="table">
                       <tr>
-                        <th class="lead mt-2" style="width:50%">Subtotal:</th>
+                        <th class="lead mt-2 text-right" style="width:30%">Forma de pagamento:</th>
+                        <td id="subtotal" class="js-subtotal">
+                          <!-- radio -->
+                          <div class="form-group clearfix">
+                            <div class="icheck-success">
+                              <input type="radio" id="radioPrimary1" name="r1" checked>
+                              <label for="radioPrimary1">
+                                Em espécie
+                              </label>
+                            </div>
+                            <div class="icheck-primary ">
+                              <input type="radio" id="radioPrimary2" name="r1">
+                              <label for="radioPrimary2">
+                                Cartão
+                              </label>
+                            </div>
+                            <div class="icheck-warning">
+                              <input type="radio" id="radioPrimary3" name="r1">
+                              <label for="radioPrimary3">
+                                Em conta
+                              </label>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="lead mt-2 text-right" style="width:30%"><p class="mb-1">Selecione um cliente:</p></th>
+                        <td>
+                          <!-- <ul id="selectClient2" class="js-buscar-cliente input_saldo" 
+                           th:attr="data-url-buscar-cliente=@{/caixa/buscarCliente}, data-url-selecionar-cliente=@{/caixa/selecionarCliente}"
+                           style="width: 100%;" oninput="this.className"></ul> -->
+                           
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default">
+                            Clique aqui
+                           </button>
+                           
+                           <div id="clienteSelecionado" class="card bg-light mt-3" hidden="hidden">
+                            <div class="card-header text-muted border-bottom-0"><span class="text-success">Cliente selecionado</span></div>
+                            <div class="card-body pt-0 mt-0">
+                              <div class="row">
+                                <div class="col-12">
+                                  <div class="row">
+                                  <div class="col-11">
+                                    <ul class="products-list product-list-in-card pl-2 pr-2">
+                                      <li class="item">
+                                        <div class="product-img">
+                                          <img th:src="@{/custom/img/clientes/sem-imagem_2.jpg}" alt="Product Image" 
+                                           class="img-size-50">
+                                        </div>
+                                        <div class="product-info">
+                                          <span href="javascript:void(0)" class="product-title" id="clienteSelecionadoNome"></span>
+                                          <span class="product-description" id="clienteSelecionadoEmail">
+                                            Email não informado
+                                          </span>
+                                          <span class="product-description" id="clienteSelecionadoTelefone">
+                                            Telefone não informado
+                                          </span>
+                                          
+                                        </div>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <div class="col-1">
+                                    <a data-toggle="modal" class="js-remover-cliente float-right text-muted btn-sm"
+                                      th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
+                                      title="Remover" rel="tooltip" data-placement="top">
+                                      <i class="fas fa-trash"></i></a>
+                                  </div>
+                                  </div>
+                                  
+                                  <!-- <div class="d-flex justify-content-between">
+                                    <p id="clienteSelecionadoNome"></p>
+                                    <h6>
+                                     <a data-toggle="modal" class="js-remover-cliente text-muted btn-sm"
+                                      th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
+                                      title="Remover" rel="tooltip" data-placement="top">
+                                      <i class="fas fa-trash"></i>
+                                     </a>
+                                    </h6>
+                                  </div> -->
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <input id="nenhumClienteSelecionado" placeholder="Nenhum cliente selecionado." 
+                           class="form-control mt-3 required" 
+                           oninput="this.className = ''" name="fname"
+                           readonly="readonly"></input>
+                        </td>
+                      </tr>
+                      <!-- <tr>
+                        <th class="lead mt-2 text-right" style="width:30%">Subtotal:</th>
+                        <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|*{{subtotal}}|">R$ 0,00</p></td>
+                      </tr> -->
+                      <!-- <tr>
+                        <th class="lead form-inline">
+                          Desconto
+                          <select id="desconto" class="js-desconto custom-select ml-1 mr-sm-2" th:field="*{desconto}" 
+                            th:attr="data-url-base-desconto=@{/caixa/desconto}">
+                            <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
+                          </select>
+                        </th>
+                        <td id="desconto-valor"><p class="mb-0" th:text="|*{{valorDesconto}}|">0,00</p></td>
+                      </tr> -->
+                      <!-- <tr>
+                        <th class="lead text-right">Total:</th>
+                        
+                        <td id="total">
+                        <h2 class="mb-0" th:text="|*{{total}}|"></h2>
+                        <div class="bg-gray py-2 px-3">
+                        </div></td>
+                      </tr>
+                      <tr>
+                        <th class="lead text-right">Saldo:</th>
+                        <td>
+                          <div class="input-group input-group-lg">
+                            <input type="text" id="inputSaldo" class="form-control form-control-lg js-currency input_saldo" th:field="*{saldo}"></input>
+                          </div>
+                        </td>
+                      </tr> -->
+                    </table>
+                  </div>
+                </div>
+                <!-- <div class="col-6">
+                  
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tr>
+                        <th class="lead mt-2 text-right" style="width:30%">Subtotal:</th>
                         <td id="subtotal" class="js-subtotal"><p class="mb-0" th:text="|*{{subtotal}}|">R$ 0,00</p></td>
                       </tr>
                       <tr>
@@ -183,34 +332,35 @@
                         <td id="desconto-valor"><p class="mb-0" th:text="|*{{valorDesconto}}|">0,00</p></td>
                       </tr>
                       <tr>
-                        <th class="lead">Total:</th>
+                        <th class="lead text-right">Total:</th>
                         
                         <td id="total">
-                        <div class="bg-gray py-2 px-3"><h2 class="mb-0" th:text="|*{{total}}|"></h2>
+                        <h2 class="mb-0" th:text="|*{{total}}|"></h2>
+                        <div class="bg-gray py-2 px-3">
                         </div></td>
                       </tr>
                       <tr>
-                        <th class="lead">Saldo:</th>
+                        <th class="lead text-right">Saldo:</th>
                         <td>
-                          <!-- <div class="input-group input-group-lg"> -->
-                            <input type="text" id="inputSaldo" class="form-control js-currency input_saldo" th:field="*{saldo}"></input>
-                          <!-- </div> -->
+                          <div class="input-group input-group-lg">
+                            <input type="text" id="inputSaldo" class="form-control form-control-lg js-currency input_saldo" th:field="*{saldo}"></input>
+                          </div>
                         </td>
                       </tr>
                     </table>
-                    <div class="d-flex justify-content-between">
-                      <button type="button" class="btn btn-danger" data-dismiss="modal">
-                        <i class="fas fa-undo-alt"></i>
-                        Voltar (ESC)
-                      </button>
-                      <button type="submit" id="finalizar" class="btn btn-md btn-primary">
-                        <i class="far fa-credit-card"></i> 
-                        Finalizar (ENTER)
-                      </button>
-                    </div>
                   </div>
-                </div>
+                </div> -->
               </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">
+                <i class="fas fa-undo-alt"></i>
+                Voltar (ESC)
+              </button>
+              <button type="submit" id="finalizar" class="btn btn-md btn-primary">
+                <i class="far fa-credit-card"></i> 
+                Finalizar (ENTER)
+              </button>
             </div>
           </div>
           <!-- /.modal-content -->
@@ -305,6 +455,75 @@
       <!-- /.modal -->
       
     </form>
+    
+    <div class="modal" id="modal-default" tabindex="-1">
+      <!-- <form id="clienteForm" role="form" th:object="${filtro}"> -->
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            
+            <div class="modal-header">
+              <h4 class="modal-title">Selecione um Cliente</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- <div class="overlay d-flex justify-content-center align-items-center">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div> -->
+              <div class="row mb-3">
+                <div class="col-md-8">
+                  <div class="input-group">
+                    <input id="campoBuscaCliente" class="form-control" 
+                      placeholder="Qual cliente você está procurando?" autofocus="autofocus"
+                      /><!-- th:field="*{termo}" -->
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-default js-buscar-cliente2"
+                      th:attr="data-url-selecionar-cliente2=@{/caixa/buscarCliente2}">Pesquisar
+                        <!-- <i class="fas fa-search"></i> -->
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <table id="tabelaCliente" class="table table-bordered table-hover">
+                <thead  style="background-color: #fffed4">
+                  <tr>
+                    <!-- <th class="text-center col-1">Código</th> -->
+                    <th>Cliente</th>
+                    <th class="text-center col-3">Telefone</th>
+                    <th class="text-center col-3">Email</th>
+                    <th class="text-center col-1">Ação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="cliente : ${clientes}">
+                    <!-- <td class="text-center" th:text="${cliente.id}"></td> -->
+                    <td th:text="${cliente.nome}"></td>
+                    <td class="text-center" th:text="${cliente.telefone}"></td>
+                    <td class="text-center" th:text="${cliente.email}"></td>
+                    <td class="text-center">
+                      <button type="button" class="btn btn-success btn-xs js-selecionar-cliente"
+                       th:attr="data-url-selecionar-cliente=@{/caixa/selecionarCliente}, data-id=${cliente.id}">Selecionar</button>
+                    </td>
+                  </tr>
+                  <!-- <tr th:if="${#lists.isEmpty(clientes)}">
+                    <td colspan="5">Nenhum cliente foi encontrado.</td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Voltar</button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      <!-- </form> -->
+      </div>
+      <!-- /.modal -->
         
     <div class="modal" id="modal-balanca" tabindex="-1" data-keyboard="true">
       <form id="itemForm" role="form" method="POST" th:action="@{/caixa/incluir}" th:object="${item}">
@@ -432,6 +651,40 @@
 		setTimeout(function() {
 			$('#selectClient').select2('focus');
       	}, 0);
+    });
+    
+    $('#ancora').on('shown.bs.modal', '#modal-default', function(event){
+    	setTimeout(function() {
+    		$('#campoBuscaCliente').trigger('focus');
+      	}, 0);
+    	$('#tabelaCliente').DataTable( {
+    		paging: true,
+    	      pageLength: 5,
+    	      lengthChange: true,
+    	      lengthMenu: [ 5, 10, 15, 20 ],
+    	      searching: false,
+    	      info: true,
+    	      autoWidth: false,
+    	      responsive: true,
+    	      aaSorting: [],
+    	      columnDefs:[{ "orderable": false, "targets": [-1] }],
+    	      ordering: true,
+    	      language: {
+    	          lengthMenu: "Mostrar _MENU_ registro por página",
+    	          info: "Total de registros: _MAX_",
+    	          infoEmpty: "Nenhum registro encontrado",
+    	          infoFiltered: "teste",
+    	          search: "Pesquisa",
+    	          zeroRecords:    "Nenhum registro encontrado",
+    	          paginate: {
+    	              first:      "Primeiro",
+    	              last:       "Último",
+    	              next:       "Próximo",
+    	              previous:   "Anterior"
+    	          }
+    	      },
+    	      destroy: true
+        } );
     });
     
     $('#ancora').on('hidden.bs.modal', '#modal-cliente', function(event){
@@ -699,26 +952,21 @@
 
     	var data = e.params.data;
     	var seletor = $(e.currentTarget);
-    	
   		var url = seletor.data('url-selecionar-cliente');
-  		var id = data.id;
-  		
   		if(!url.endsWith('/')){
-			url += '/';
-		}
-    	url += data.id;
+    		url += '/';
+    	}
+  		url += data.id;
       	
       	var response = $.ajax({
       		url: url,
-      		type: 'GET'
+      		type: 'PUT'
   		});
       	
       	response.done(function(e){
-      		$('#modal-cliente').modal('hide');
-      		$('#caixaForm').replaceWith(e);
-      		currentTab = 0;
-      		showTab(currentTab);
-  			$('#modal-cliente').modal('show');
+      		$('#clienteSelecionadoNome').html(e.nome);
+      		$('#clienteSelecionado').removeAttr('hidden');
+    		$('#nenhumClienteSelecionado').attr('hidden', 'hidden');
   		});
       	response.fail(function(e){
       		alert('Erro incluindo cliente');
@@ -726,23 +974,86 @@
     	
     });
     
+    $('#ancora').on('click','.js-buscar-cliente2', function(e) {
+
+    	var botao = $(e.currentTarget);
+  		var url = botao.data('url-selecionar-cliente2');
+  		/* if(!url.endsWith('/')){
+    		url += '/';
+    	} */
+    	url += '?termo='+$('#campoBuscaCliente').val();
+      	
+      	var response = $.ajax({
+      		url: url,
+      		type: 'PUT'
+  		});
+      	
+      	response.done(function(e){
+      		var termo = $('#campoBuscaCliente').val()
+      		$('#modal-default').modal('hide');
+      		$('#modal-default').replaceWith(e);
+      		$('#campoBuscaCliente').val(termo);
+      		$('#modal-default').modal('show');
+  		});
+      	response.fail(function(e){
+      		alert('Erro incluindo cliente');
+  		});
+    	
+    });
+    
+    $('#ancora').on('click','.js-selecionar-cliente', function(e) {
+
+    	var botao = $(e.currentTarget);
+  		var url = botao.data('url-selecionar-cliente');
+  		var id = botao.data('id');
+  		if(!url.endsWith('/')){
+    		url += '/';
+    	}
+  		url += id;
+      	
+      	var response = $.ajax({
+      		url: url,
+      		type: 'PUT'
+  		});
+      	
+      	response.done(function(e){
+      		$('#clienteSelecionadoNome').html(e.nome);
+      		$('#clienteSelecionadoEmail').html(e.email);
+      		$('#clienteSelecionadoTelefone').html(e.telefone);
+      		$('#clienteSelecionado').removeAttr('hidden');
+    		$('#nenhumClienteSelecionado').attr('hidden', 'hidden');
+    		$('#modal-default').modal('hide');
+  		});
+      	response.fail(function(e){
+      		alert('Erro incluindo cliente');
+  		}); 
+    	
+    });
+    
+ // Execute a function when the user releases a key on the keyboard
+  	$('#ancora').on('keyup', '#campoBuscaCliente', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  if (event.keyCode === 13) {
+  	    // Cancel the default action, if needed
+  	    //event.preventDefault();
+  	    // Trigger the button element with a click
+  	    $('.js-buscar-cliente2').click();
+  	  }
+  	});
+    
     $('#ancora').on('click','.js-remover-cliente', function(e) {
 
     	var botao = $(e.currentTarget);
-    	
   		var url = botao.data('url-remover-cliente');
       	
       	var response = $.ajax({
       		url: url,
-      		type: 'GET'
+      		type: 'PUT'
   		});
       	
       	response.done(function(e){
-      		$('#modal-cliente').modal('hide');
-      		$('#caixaForm').replaceWith(e);
-      		currentTab = 0;
-      		showTab(currentTab);
-  			$('#modal-cliente').modal('show');
+      		$('#clienteSelecionado').attr('hidden','hidden');
+    		$('#nenhumClienteSelecionado').removeAttr('hidden');
   		});
       	response.fail(function(e){
       		alert('Erro excluindo cliente');
@@ -861,7 +1172,7 @@
 		});
 		
 		response.done(function(e){
-			console.log('pagamento');
+			/* console.log('pagamento'); */
 			$('#modal-pagamento').modal('hide');
 			$('#caixaForm').replaceWith(e);
 			$('#modal-pagamento').modal('show');
@@ -911,6 +1222,8 @@
 	$(document).ajaxComplete(function(event, xhr, settings) {		
 		var url = settings.url;
 		
+		console.log(settings.my_option);
+		
 		console.log('url: '+url)
 		if(!(url.includes('buscarItem'))){
 			startSelect2();
@@ -918,12 +1231,21 @@
 		if(!(url.includes('buscarCliente'))){
 			startSelect2Cliente();
 		}
+		inicializar();
 		
 		if(($("#modal-cliente").data('bs.modal') || {})._isShown) {
 			$('.js-buscar-cliente').select2('focus');
 		} else {
 			$('.js-buscar-produto').select2('focus');
 		}
+	});
+	
+	$('#ancora').on('show.bs.modal', '.modal', function () {
+	    var zIndex = 1040 + (10 * $('.modal:visible').length);
+	    $(this).css('z-index', zIndex);
+	    setTimeout(function() {
+	        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+	    }, 0);
 	});
 
 	/* function validateForm() {

@@ -9,7 +9,7 @@
   <title>AdminLTE 3 | Dashboard</title>
 
   <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> -->
   <!-- Font Awesome -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
   <!-- Ionicons -->
@@ -28,6 +28,18 @@
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}"/>
+  <link rel="stylesheet" th:href="@{/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}"/>
+  <style type="text/css">
+    .select2-selection__rendered {
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-size: 20px !important;
+    }
+    .info-produto {
+      font-size: 20px !important;
+    }
+  </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -64,133 +76,79 @@
         <!-- Main row -->
         <div class="row">
           <!-- Left col -->
-          <section class="col-lg-6 connectedSortable">
-            
-            <div class="card card-primary card-outline">
+          <div class="col-md-12">
+             <div class="card card-success">
               <div class="card-header">
-                Situação do Caixa 
+                
+                <h3 class="card-title"><i class="fas fa-search-dollar"></i> Consulta de Preço</h3>
               </div>
+              <!-- /.card-header -->
               <div class="card-body">
-                <!-- <small>Área para notificações importantes</small> -->
-                <div class="row">
-                  <div class="col-md-6">
-                    <dl>
-                      <dt>Estado</dt>
-                      <dd><span class="description-text">CAIXA FECHADO</span></dd>
-                      <dt>Data da operação</dt>
-                      <dd><span class="description-text">21/09/2020 16:13:25</span></dd>
-                      
-                    </dl>
-                  </div>
-                  <div class="col-md-6">
-                    <dl>
-                      <dt>Operador</dt>
-                      <dd><span class="description-text">Alexsandro Kauê</span></dd>
-                      <dt>Valor em caixa</dt>
-                      <dd><span class="description-text">257,45</span></dd>
-                    </dl>
-                  </div>
-                </div>                
+                <ul class="js-buscar-produto mb-4"   
+                 th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-detalhes-produto=@{/caixa/produto},
+                 data-url-selecionar-balanca=@{/caixa/balanca}"
+                 style="width: 100%;"></ul>
               </div>
-            <br/>
+              <!-- /.card-body -->
+
+              <!-- <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div> -->
             </div>
-            <div class="row">
-              <div class="col-md-4 col-sm-6 col-12">
-                <div class="info-box">
-                  <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
-    
-                  <div class="info-box-content">
-                    <span class="info-box-text">Messages</span>
-                    <span class="info-box-number">1,410</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <div class="col-md-4 col-sm-6 col-12">
-                <div class="info-box">
-                  <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
-    
-                  <div class="info-box-content">
-                    <span class="info-box-text">Bookmarks</span>
-                    <span class="info-box-number">410</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <div class="col-md-4 col-sm-6 col-12">
-                 <div class="info-box">
-                  <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
-    
-                  <div class="info-box-content">
-                    <span class="info-box-text">Uploads</span>
-                    <span class="info-box-number">13,648</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-            </div>
-          </section>
-          
-          <!-- right col (We are only adding the ID to make the widgets sortable)-->
-          <section class="col-lg-6 connectedSortable">
-            <div class="row">
-                <div class="col-md-6">
-                  <div class="position-relative p-3 bg-gray" style="height: 180px">
-                <div class="ribbon-wrapper ribbon-lg">
-                  <div class="ribbon bg-danger">
-                    Frente de loja
-                  </div>
-                </div>
-                <i class="nav-icon fas fa-cash-register"></i>
-                Módulo de Venda <br />
-                <small>Acesse o frente de loja operacional.</small><br/>
-                <a th:href="@{/caixa}" class="small-box-footer">Acessar <i class="fas fa-arrow-circle-right"></i></a>
-               </div>
-               <div class="position-relative p-3 mt-4 bg-gray" style="height: 180px">
-                <div class="ribbon-wrapper ribbon-lg">
-                  <div class="ribbon bg-success">
-                    Documentação
-                  </div>
-                </div>
-                <i class="fas fa-archive"></i>
-                Módulo de Documentos <br />
-                <small>Guarde e salve documentos relacionados a seu negócio.</small><br/>
-                Em construçao
-               </div>
-            </div>
-            <div class="col-md-6">
-              <div class="position-relative p-3 bg-gray" style="height: 180px">
-                <div class="ribbon-wrapper ribbon-lg">
-                  <div class="ribbon bg-primary">
-                    Relatórios
-                  </div>
-                </div>
-                <i class="fas fa-cogs"></i>
-                Módulo Gerencial <br />
-                <small>Acesso as opções de relatórios so sistema (de vendas, de caixa, de estoque, etc).</small><br/>
-                Em construçao
-               </div>
-               
-             <div class="position-relative p-3 bg-gray mt-4" style="height: 180px">
-              <div class="ribbon-wrapper ribbon-lg">
-                <div class="ribbon bg-warning">
-                  Gráficos
-                </div>
-              </div>
-              <i class="far fa-chart-bar"></i>
-              Módulo de Estatísticas <br />
-              <small>Visualize informações do seu negócio em tempo real através de gráficos.</small><br />
-              <a th:href="@{/estatisticas}" class="small-box-footer">Acessar <i class="fas fa-arrow-circle-right"></i></a>
-             </div>
-            
-            </div>
+            <!-- /.card -->
           </div>
-           
-          </section>
-          <!-- right col -->
+          
+          <div class="col-md-12">
+          <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-info-circle"></i> Detalhes do Produto</h3>
+              </div>
+              <!-- /.card-header -->
+              <form role="form">
+                <div class="card-body">
+                  <div id="nenhumProduto" class="row">
+                    <div class="col-md-12">
+                      Nenhum produto selecionado
+                    </div>
+                  </div>
+                  <div id="detalheProduto" class="row" hidden="hidden">
+                    <div class="col-md-5">
+                      <dl>
+                        <dt>Código</dt>
+                        <dd class="info-produto" id="detalheProdutoCodigo">Não informado</dd>
+                        <dt>Nome</dt>
+                        <dd class="info-produto" id="detalheProdutoNome">Não informado</dd>
+                        <dt>Marca</dt>
+                        <dd class="info-produto" id="detalheProdutoMarca">Não informado</dd>
+                      </dl>
+                    </div>
+                    <div class="col-md-4">
+                      <dl>
+                        <dt>Categoria</dt>
+                        <dd class="info-produto" id="detalheProdutoCategoria">Não informado</dd>
+                        <dt>Preço</dt>
+                        <dd class="info-produto" id="detalheProdutoPreco">Não informado</dd>
+                      </dl>
+                    </div>
+                    <div class="col-md-3 text-center">
+                      <img id="detalheProdutoImagem" th:src="@{/custom/img/produto/sem-imagem_2.jpg}" style="height: 200px" class="img-fluid"></img>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+
+                <!-- <div class="card-footer">
+                  <a th:href="@{#}" class="btn btn-link btn-sm" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <button type="button" class="btn btn-lg btn-danger float-right" data-toggle="popover" title="Redireciona" 
+                    data-content="Ao clicar neste botão você será redirecionado para a tela de produtos.">Acessar produto</button>
+                </div> -->
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
@@ -223,7 +181,7 @@
   $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <!-- ChartJS -->
 <script src="plugins/chart.js/Chart.min.js"></script>
 <!-- Sparkline -->
@@ -242,76 +200,152 @@
 <script src="plugins/summernote/summernote-bs4.min.js"></script>
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- Select2 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script th:src="@{/plugins/select2/js/i18n/pt-BR.js}"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script>
-/* jQueryKnob */
-/* $('.knob').knob() */
 
-//Sales graph chart
-var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d');
-//$('#revenue-chart').get(0).getContext('2d');
+var currencyformatter = new Intl.NumberFormat('pt-BR', {
+  style: "currency",
+  currency: "BRL",
+  minimumFractionDigits: 2,
+  currencyDisplay: "symbol",
+});
 
-var salesGraphChartData = {
-  labels  : ['2011 Q1', '2011 Q2', '2011 Q3', '2011 Q4', '2012 Q1', '2012 Q2', '2012 Q3', '2012 Q4', '2013 Q1', '2013 Q2'],
-  datasets: [
-    {
-      label               : 'Digital Goods',
-      fill                : false,
-      borderWidth         : 2,
-      lineTension         : 0,
-      spanGaps : true,
-      borderColor         : '#efefef',
-      pointRadius         : 3,
-      pointHoverRadius    : 7,
-      pointColor          : '#efefef',
-      pointBackgroundColor: '#efefef',
-      data                : [2666, 2778, 4912, 3767, 6810, 5670, 4820, 15073, 10687, 8432]
-    }
-  ]
+var decimalformatter = new Intl.NumberFormat('pt-BR', {
+  minimumFractionDigits: 2
+});
+
+function startSelect2(){
+	var seletor = $('.js-buscar-produto');
+	var url = seletor.data('url-buscar-item');
+	
+	$(seletor).select2({
+      language: "pt-BR",
+  	  ajax: {
+  	    url: url,
+  	    dataType: 'json',
+  	    delay: 250,
+  	    data: function (params) {
+  	      return {
+  	        q: params.term, // search term
+  	        page: params.page || 1 
+  	      };
+  	    },
+  	    processResults: function (data, params) {
+  	      // parse the results into the format expected by Select2
+  	      // since we are using custom formatting functions we do not need to
+  	      // alter the remote JSON data, except to indicate that infinite
+  	      // scrolling can be used
+  	      params.page = params.page || 1;
+
+  	      return {
+  	        results: data.items,
+  	        pagination: {
+  	          more: (params.page * data.page_size) < data.total_count
+  	        }
+  	      };
+  	    },
+  	    cache: true
+  	  },
+  	  placeholder: 'Digite aqui',
+  	  minimumInputLength: 1,
+  	  allowClear: true,
+  	  templateResult: formatRepo,
+  	  templateSelection: formatRepoSelection,
+  	  multiple: true
+  	});
 }
 
-var salesGraphChartOptions = {
-  maintainAspectRatio : false,
-  responsive : true,
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [{
-      ticks : {
-        fontColor: '#efefef',
-      },
-      gridLines : {
-        display : false,
-        color: '#efefef',
-        drawBorder: false,
-      }
-    }],
-    yAxes: [{
-      ticks : {
-        stepSize: 5000,
-        fontColor: '#efefef',
-      },
-      gridLines : {
-        display : true,
-        color: '#efefef',
-        drawBorder: false,
-      }
-    }]
+function formatRepo (repo) {
+  if (repo.loading) {
+    return repo.text;
   }
+  
+  var $container = $(
+  	"<li class='products-list product-list-in-card  py-2' role='li'>"+
+      "<div class='product-img'>"+
+      "</div>"+
+      "<div class='product-info ml-4'>"+
+      	"<p class='product-description mb-0'></p>"+
+        "<h5 id='preco' class='float-right'></h5>"+
+        "<h5 class='product-title mb-0'></h5>"+
+      "</div>"+
+    "</li>"
+  );
+  
+  "<a href='@{#}' class='float-right btn btn-link btn-sm' data-toggle='popover' title='Popover title' data-content='And here\'s some amazing content. It\'s very engaging. Right?'>" +
+  "<i class='fas fa-eye'></i>"+
+"</a>"+
+
+  $container.find("#image").attr('src', 'data:image/png;base64,'+repo.imagemBase64);
+  $container.find(".product-title").text(repo.descricao);
+  $container.find("#preco").text(currencyformatter.format(repo.valorDeVenda)+' '+repo.unitario);
+  $container.find(".product-description").text(repo.codigo);
+
+  return $container;
 }
 
-// This will get the first returned node in the jQuery collection.
-var salesGraphChart = new Chart(salesGraphChartCanvas, { 
-    type: 'line', 
-    data: salesGraphChartData, 
-    options: salesGraphChartOptions
-  }
-)	
+function formatRepoSelection (repo) {
+  return repo.full_name || repo.text;
+}
+
+$('.js-buscar-produto').on('select2:select', function(e) {
+
+	var data = e.params.data;
+	var seletor = $(e.currentTarget);
+	var url = seletor.data('url-detalhes-produto');
+	if(!url.endsWith('/')){
+		url += '/';
+	}
+	url += data.id;
+	
+	var response = $.ajax({
+		url: url,
+		type: 'GET'
+	});
+	
+	response.done(function(e){
+		$('#detalheProdutoCodigo').html(e.codigo);
+		$('#detalheProdutoNome').html(e.descricao);
+		$('#detalheProdutoMarca').html(e.marca.nome);
+		$('#detalheProdutoCategoria').html(e.categoria.nome);
+		$('#detalheProdutoPreco').html(currencyformatter.format(e.valorDeVenda)+' '+e.unitario);
+		$("#detalheProdutoImagem").attr('src', 'data:image/png;base64,'+e.imagemBase64);
+		$('#detalheProduto').removeAttr('hidden');
+		$('#nenhumProduto').attr('hidden', 'hidden');
+		console.log(e);
+	});
+	response.fail(function(e){
+		alert('Erro incluindo item');
+	});  
+});
+
+function search() {
+	console.log('pesquisa realizada');
+}
+
+$(document).ready(function(event){
+	startSelect2();
+});
+
+$(document).on(
+	    {
+	        mouseover: function(){console.log('mouseover')},
+	        mouseout: function(){console.log('mouseout')},
+	        
+	    }, 
+	    '.select2-results__option'
+	);
+
+$(function () {
+	  $('[data-toggle="popover"]').popover({trigger: "hover"})
+	})
 </script>
 </body>
 </html>

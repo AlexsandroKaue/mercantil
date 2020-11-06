@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.el.ELException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Validator;
@@ -43,6 +44,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.dao.filter.ProdutoFilter;
+import com.kaue.dao.filter.TituloFilter;
 import com.kaue.enumeration.OpcoesDesconto;
 import com.kaue.enumeration.StatusCaixa;
 import com.kaue.enumeration.StatusVenda;
@@ -56,6 +58,7 @@ import com.kaue.model.Item;
 import com.kaue.model.MovimentacaoCaixa;
 import com.kaue.model.Produto;
 import com.kaue.model.Registro;
+import com.kaue.model.Titulo;
 import com.kaue.model.Usuario;
 import com.kaue.model.UsuarioWeb;
 import com.kaue.model.Venda;
@@ -123,13 +126,6 @@ public class CaixaController {
 	@ModelAttribute
 	public List<OpcoesDesconto> todasOpcoesDesconto(){
 		return Arrays.asList(OpcoesDesconto.values());
-	}
-	
-	@ModelAttribute
-	public List<Cliente> todosClientes(){
-		List<Cliente> clienteList = new ArrayList<Cliente>();
-		clienteList = clienteService.pesquisar(new ClienteFilter());
-		return clienteList;
 	}
 	
 	@RequestMapping
@@ -372,7 +368,7 @@ public class CaixaController {
 		venda.setDataVenda(new Date());
 		venda.setSaldo(BigDecimal.ZERO);
 		venda = vendaService.salvar(venda);
-		
+				
 		mv.addObject("venda", venda);
 		return mv;
 	}
@@ -464,14 +460,16 @@ public class CaixaController {
 			produtoList = produtoService.pesquisar(filtro);
 			if(produtoList != null && produtoList.size()>0) {
 				for(Produto produto : produtoList) {
-					byte[] bytes = produto.getImagem();
-					if(bytes == null) {
-						File file = ResourceUtils.getFile("classpath:static/custom/img/produto/sem-imagem_2.jpg");
-						Path path = file.toPath();
-						bytes = Files.readAllBytes(path);
-					}
-					String encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
-					produto.setImagemBase64(encodedfile);
+					String imagemBase64 = produtoService.carregarImagem(produto.getImagemPath());
+					produto.setImagemBase64(imagemBase64);
+					/*
+					 * byte[] bytes = produtoService.carregarImagem(produto.getImagemPath());
+					 * if(bytes == null) { File file =
+					 * ResourceUtils.getFile("classpath:static/custom/img/produto/sem-imagem_2.jpg")
+					 * ; Path path = file.toPath(); bytes = Files.readAllBytes(path); } String
+					 * encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+					 * produto.setImagemBase64(encodedfile);
+					 */
 				}
 			}
 			
@@ -484,6 +482,12 @@ public class CaixaController {
 		data.put("page_size", pageSize);
 		
 		return data;
+	}
+	
+	@RequestMapping(value = "/produto/{id}")
+	public @ResponseBody Produto detalhesProduto(@PathVariable("id") Produto produto) {
+		produto.setImagemBase64(produtoService.carregarImagem(produto.getImagemPath()));
+		return produto;
 	}
 	
 	@RequestMapping(value = "/buscarCliente", produces = "application/json")
@@ -526,21 +530,39 @@ public class CaixaController {
 		return data;
 	}
 	
-	@RequestMapping(value = "/selecionarCliente/{id}")
-	public ModelAndView selecionarCliente(@PathVariable("id") Cliente cliente) {
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
-		/* this.cliente = cliente; */
-		venda.setCliente(cliente);
-		mv.addObject("venda", venda);
+	@RequestMapping(value = "/buscarCliente2")
+	public ModelAndView pesquisarCliente(@RequestParam("termo") String termo) {
+		ClienteFilter filtro = new ClienteFilter();
+		if(termo!=null) {
+			filtro.getCliente().setNome(termo);
+			filtro.getCliente().setEmail(termo);
+			try {
+				Long id = Long.parseLong(termo);
+				filtro.getCliente().setId(id);
+			} catch(NumberFormatException nfe) {}
+		}
+		List<Cliente> clienteList = clienteService.pesquisar(filtro);
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+"::#modal-default");
+		mv.addObject("clientes", clienteList);
 		return mv;
 	}
 	
+	@RequestMapping(value = "/selecionarCliente/{id}")
+	public @ResponseBody Cliente detalhesCliente(@PathVariable("id") Cliente cliente) {
+		//ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
+		/* this.cliente = cliente; */
+		//mv.addObject("venda", venda);
+		venda.setCliente(cliente);
+		//cliente.getImagemBase64(clienteService.);
+		return cliente;
+	}
+	
 	@RequestMapping(value = "/removerCliente")
-	public ModelAndView removerCliente() {
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
+	public @ResponseBody Cliente removerCliente() {
+		//ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
 		venda.setCliente(null);
-		mv.addObject("venda", venda);
-		return mv;
+		//mv.addObject("venda", venda);
+		return null;
 	}
 	
 	
@@ -585,18 +607,17 @@ public class CaixaController {
 	public String abrirCaixa(@Validated @ModelAttribute("caixa") Caixa caixa, 
 			Errors errors, RedirectAttributes attributes, Model model) {
 		
-		model.addAttribute("movimentacao", inicializaNovaMovimentacaoCaixa());
-		model.addAttribute("caixaAtual", caixaService.obterCaixaMaisRecente());
-				
-		if(errors.hasErrors()) { 
-			return ADMINISTRADOR_VIEW; 
-		} 
-		
 		try {
+			if(errors.hasErrors()) { 
+				throw new Exception();
+			} 
+			caixa.setValorGaveta(caixa.getValorInicial()); //inicia a gaveta do caixa com o valor inicial
 			caixa = caixaService.salvar(caixa);
 			attributes.addFlashAttribute("mensagem", "Caixa aberto com sucesso!");
 			return "redirect:/caixa/administracao";
 		} catch (Exception e) {
+			model.addAttribute("movimentacao", inicializaNovaMovimentacaoCaixa());
+			model.addAttribute("caixaAtual", caixaService.obterCaixaMaisRecente());
 			return ADMINISTRADOR_VIEW;
 		}
 	}
@@ -610,6 +631,16 @@ public class CaixaController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario usuarioLogado = ((UsuarioWeb)auth.getPrincipal()).getUsuario();
 		caixa.setUsuarioFechamento(usuarioLogado);
+		
+		/*
+		 * BigDecimal valorInicial = caixa.getValorInicial(); BigDecimal entradas =
+		 * caixa.getValorEntradas()!=null?caixa.getValorEntradas():new BigDecimal(0.00);
+		 * BigDecimal saidas = caixa.getValorSaidas()!=null?caixa.getValorSaidas():new
+		 * BigDecimal(0.00);
+		 * 
+		 * BigDecimal valorEmGaveta = valorInicial.add(entradas).subtract(saidas);
+		 */
+		
 		try {
 			caixa = caixaService.salvar(caixa);
 			attributes.addFlashAttribute("mensagem", "Caixa fechado com sucesso!");
@@ -662,12 +693,11 @@ public class CaixaController {
 	}
 	
 	@RequestMapping(value = "/fechar")
-	public ModelAndView showFormFecharCaixa() {
-		ModelAndView mv = new ModelAndView(ADMINISTRADOR_VIEW+" :: #modal-abrir");
-		Caixa caixaAtual = caixaService.obterCaixaMaisRecente();
-		Caixa caixa = inicializaNovoCaixa(caixaAtual);
-		mv.addObject("caixa", caixa);
-		return mv;
+	public @ResponseBody Map<String, Object> calcular() {
+		Map<String, Object> map = new HashMap<>();
+		String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
+		map.put("date", formattedDate);
+		return map;
 	}
 	
 	private Caixa inicializaNovoCaixa(Caixa caixaAtual) {
@@ -678,7 +708,7 @@ public class CaixaController {
 		caixa.setUsuarioAbertura(usuarioLogado);
 		//caixa.setDataAbertura(new Date());
 		caixa.setStatus(StatusCaixa.ABERTO);
-		caixa.setValorInicial(caixaAtual.getValorFinal());
+		caixa.setValorInicial(caixaAtual.getValorGaveta());
 		
 		return caixa;
 	}

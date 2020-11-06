@@ -92,7 +92,7 @@ public class UsuarioController {
 		boolean hasFileUploaded = !multipartFile.isEmpty();
 		if(hasFileUploaded) {
 			try {
-				Long proxId = usuarioService.obterIdAtual()+1;
+				Long proxId = usuarioService.obterMaxId()+1;
 				String filename = usuarioService.salvarImagem(multipartFile, "User_"+proxId);
 				usuario.setFoto(filename);
 				//usuario = usuarioService.salvar(usuario);//atualizar campo da foto

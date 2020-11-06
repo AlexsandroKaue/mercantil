@@ -122,14 +122,14 @@
           </div>
           <div class="col-md-2">
             <div class="form-group">
-              <label for="inputValorVenda" class="col-form-label">Valor de Venda</label>
-              <input type="text" readonly="readonly" class="form-control" id="inputValorVenda" th:field="*{{produto.valorDeVenda}}" th:classappend="${#fields.hasErrors('produto.valorDeVenda')} ? is-invalid">
+              <label for="inputDescricao" class="col-form-label">Categoria</label>
+              <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.categoria.nome}" th:classappend="${#fields.hasErrors('produto.categoria.nome')} ? is-invalid">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
-              <label for="inputDescricao" class="col-form-label">Categoria</label>
-              <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.categoria.descricao}" th:classappend="${#fields.hasErrors('produto.categoria.descricao')} ? is-invalid">
+              <label for="inputValorVenda" class="col-form-label">Preço</label>
+              <input type="text" readonly="readonly" class="form-control" id="inputValorVenda" th:field="*{{produto.valorDeVenda}}" th:classappend="${#fields.hasErrors('produto.valorDeVenda')} ? is-invalid">
             </div>
           </div>
           <div class="col-md-2">

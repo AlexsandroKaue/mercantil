@@ -95,8 +95,6 @@ public class UsuarioServiceImpl implements UsuarioService{
 	    return tranformarEmImagemBase64(absolutePath);
 	}
 	
-	
-	
 	private String tranformarEmImagemBase64(Path path) {
 		String encodedfile = null;
 		
@@ -136,7 +134,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 	}
 
 	@Transactional
-	public Long obterIdAtual() {
+	public Long obterMaxId() {
 		return usuarioDAO.obterMaxId();
 	}
 	

@@ -1,14 +1,20 @@
 package com.kaue.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,6 +43,7 @@ import com.kaue.model.Produto;
 import com.kaue.service.CategoriaService;
 import com.kaue.service.FornecedorService;
 import com.kaue.service.ProdutoService;
+import com.kaue.util.HasValue;
 
 @Controller
 @RequestMapping("/produtos")
@@ -66,7 +73,7 @@ public class ProdutoController {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		Produto produto = new Produto();
 		produto.setQuantidade(0);
-		produto.setImagemBase64(buscarImagemPadrao());
+		produto.setImagemBase64(produtoService.carregarImagem(null));
 		mv.addObject("produto", produto);
 		return mv;
 	}
@@ -74,17 +81,14 @@ public class ProdutoController {
 	@RequestMapping("{id}")
 	public ModelAndView showFormEditar(@PathVariable("id") Produto produto) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
-		byte[] bytes = produto.getImagem();
-		if(bytes != null) {
-			try {
-				String encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
-				produto.setImagemBase64(encodedfile);
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		} else {
-			produto.setImagemBase64(buscarImagemPadrao());
-		}
+		/*
+		 * byte[] bytes = produto.getImagem(); if(bytes != null) { try { String
+		 * encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+		 * produto.setImagemBase64(encodedfile); } catch (UnsupportedEncodingException
+		 * e) { e.printStackTrace(); } } else {
+		 * produto.setImagemBase64(buscarImagemPadrao()); }
+		 */
+		produto.setImagemBase64(produtoService.carregarImagem(produto.getImagemPath()));
 		mv.addObject("produto", produto);
 		return mv;
 	}
@@ -119,13 +123,33 @@ public class ProdutoController {
 			
 			
 			boolean hasFileUploaded = !multipartFile.isEmpty();
+			/*
+			 * if(hasFileUploaded) { byte[] bytes = null; try { bytes =
+			 * multipartFile.getBytes(); if(bytes != null) { BufferedImage croppedImage =
+			 * cropImage(bytes); String extensao = "jpg";
+			 * if(multipartFile.getContentType().equals("image/png")) { extensao = "png"; }
+			 * else if(multipartFile.getContentType().equals("image/gif")) { extensao =
+			 * "gif"; } ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			 * ImageIO.write(croppedImage, extensao, baos); bytes = baos.toByteArray();
+			 * produto.setImagem(bytes); }
+			 * 
+			 * } catch (IOException e) { attributes.addFlashAttribute("aviso",
+			 * "Não foi possível salvar a imagem. " +
+			 * "Verifique se o arquivo não está corrompido."); } }
+			 */
 			if(hasFileUploaded) {
-				byte[] bytes = null;
 				try {
-					bytes = multipartFile.getBytes();
-					produto.setImagem(bytes);
-				} catch (IOException e) {
-					attributes.addFlashAttribute("aviso", "Não foi possível salvar a imagem");
+					Long id;
+					if(HasValue.execute(produto.getId())) {
+						id = produto.getId();
+					} else {
+						id = produtoService.obterMaxId()+1;
+					}
+					
+					String filename = produtoService.salvarImagem(multipartFile, "Produto_"+id);
+					produto.setImagemPath(filename);
+				} catch (Exception e) {
+					attributes.addFlashAttribute("aviso", "Não foi possível salvar a imagem. Motivo: "+e.getMessage());
 				}
 			}
 			
@@ -140,6 +164,42 @@ public class ProdutoController {
 			errors.rejectValue("dataDeVencimento", null, e.getMessage());
 			return CADASTRAR_VIEW;
 		}
+	}
+	
+	private BufferedImage cropImage(byte[] image) throws IOException {
+	  // Get a BufferedImage object from a byte array
+	  InputStream in = new ByteArrayInputStream(image);
+	  BufferedImage originalImage = ImageIO.read(in);
+	  
+	  if(!HasValue.execute(originalImage)) {
+		  throw new IOException();
+	  }
+	  
+	  // Get image dimensions
+	  int height = originalImage.getHeight();
+	  int width = originalImage.getWidth();
+	  
+	  // The image is already a square
+	  if (height == width) {
+	    return originalImage;
+	  }
+	  
+	  // Compute the size of the square
+	  int squareSize = (height > width ? width : height);
+	  
+	  // Coordinates of the image's middle
+	  int xc = width / 2;
+	  int yc = height / 2;
+	  
+	  // Crop
+	  BufferedImage croppedImage = originalImage.getSubimage(
+	      xc - (squareSize / 2), // x coordinate of the upper-left corner
+	      yc - (squareSize / 2), // y coordinate of the upper-left corner
+	      squareSize,            // widht
+	      squareSize             // height
+	  );
+	  
+	  return croppedImage;
 	}
 	
 	@RequestMapping

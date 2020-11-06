@@ -17,5 +17,5 @@ public interface UsuarioService {
 	public Usuario buscarPorLogin(String login);
 	public String salvarImagem(MultipartFile file, String nome) throws Exception;
 	public String carregarImagem(String nome);
-	public Long obterIdAtual();
+	public Long obterMaxId();
 }

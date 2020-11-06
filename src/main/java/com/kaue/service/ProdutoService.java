@@ -2,6 +2,8 @@ package com.kaue.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.model.Produto;
 
@@ -14,4 +16,7 @@ public interface ProdutoService {
 	public Produto buscarPorCodigo(String codigo);
 	public Produto buscarPorId(Long id);
 	public Long obterIdAtual();
+	public String salvarImagem(MultipartFile file, String nome) throws Exception;
+	public Long obterMaxId();
+	public String carregarImagem(String nome);
 }

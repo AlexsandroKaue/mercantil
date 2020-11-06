@@ -439,7 +439,7 @@
                   <div class="card-header">
                     <h3 class="card-title">
                       <small><i class="fas fa-edit"></i></small>
-                      Informações do caixa corrente
+                      Informações do caixa anterior
                     </h3>
                   </div>
                   <div class="card-body">
@@ -492,7 +492,7 @@
                                     <td th:text="${{caixaAtual.valorInicial!=null?caixaAtual.valorInicial:'0,00'}}"></td>
                                     <td th:text="${{caixaAtual.valorEntradas!=null?caixaAtual.valorEntradas:'0,00'}}"></td>
                                     <td th:text="${{caixaAtual.valorSaidas!=null?caixaAtual.valorSaidas:'0,00'}}"></td>
-                                    <td th:text="${{caixaAtual.valorReforco!=null?caixaAtual.valorReforco:'0,00'}}">
+                                    <td th:text="${{caixaAtual.valorGaveta!=null?caixaAtual.valorGaveta:'0,00'}}">
                                   </tr>
                                 </tbody>
                               </table>
@@ -593,7 +593,7 @@
                                     <td th:text="${{caixaAtual.valorInicial!=null?caixaAtual.valorInicial:'0,00'}}"></td>
                                     <td th:text="${{caixaAtual.valorEntradas!=null?caixaAtual.valorEntradas:'0,00'}}"></td>
                                     <td th:text="${{caixaAtual.valorSaidas!=null?caixaAtual.valorSaidas:'0,00'}}"></td>
-                                    <td th:text="${{caixaAtual.valorReforco!=null?caixaAtual.valorReforco:'0,00'}}">
+                                    <td th:text="${{caixaAtual.valorGaveta!=null?caixaAtual.valorGaveta:'0,00'}}">
                                   </tr>
                                 </tbody>
                               </table>
@@ -633,11 +633,11 @@
                 <div id="mensagemGeralModalSangria" layout:insert="~{mensagem_geral}"></div>
                 <div id="mensagemErroModalSangria" layout:insert="~{mensagem_erro}"></div>
                 <input type="hidden" th:field="*{caixa}"></input>
-                <div class="card card-danger card-outline">
+                <div class="card card-danger">
                   <div class="card-header">
                     <h3 class="card-title">
                       <small><i class="fas fa-edit"></i></small>
-                      Movimentação de dinheiro entre CONTAS e CAIXA
+                      Movimentação de dinheiro entre CAIXA e CONTAS
                     </h3>
                   </div>
                   <div class="card-body">
@@ -679,9 +679,9 @@
                       <div class="col-md-6">
                         <div class="form-group row">
                           <label class="col col-form-label">Valor Disponível:</label>
-                          <div class="col-md-7">
-                            <input type="text" class="form-control-plaintext" 
-                             th:value="${{caixaAtual.valorGaveta}}"></input>
+                          <div class="col-md-6">
+                            <input type="text" readonly="readonly" class="form-control-plaintext" 
+                             th:value="${{caixaAtual.valorGaveta!=null?caixaAtual.valorGaveta:'0,00'}}"></input>
                           </div>
                         </div> 
                       </div>
@@ -794,7 +794,8 @@
   	
   	$('#ancora').on('shown.bs.modal', '#modal-abrir', function() {
   		setTimeout(function() {
-  			$('#modalAbrirCaixaValorInicial').val(0);
+  			var temp = Number($('#modalAbrirCaixaValorInicial').val().replace(",","."));
+  			$('#modalAbrirCaixaValorInicial').val(temp);
   			$('#modalAbrirCaixaValorInicial').focus();}, 0);
   	});
   	

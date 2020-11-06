@@ -17,8 +17,7 @@
   </section>
   
   <section layout:fragment="titulo">
-    <h1 th:unless="*{id}" class="m-0 text-dark">Cadastrar Produto</h1>
-    <h1 th:if="*{id}" class="m-0 text-dark">Alterar Produto</h1>
+    <h1 class="m-0 text-dark">Produto</h1>
   </section>
   
   <section layout:fragment="botoes">
@@ -29,13 +28,15 @@
   
   <section layout:fragment="conteudo">
     <div class="card card-secondary">
-      <!-- <div class="card-header">
-        <h3 class="card-title">Novo Título</h3>
-      </div> -->
+      <div class="card-header">
+        <h3 th:if="!*{id}" class="card-title">Cadastrar</h3>
+        <h3 th:if="*{id}" class="card-title">Alterar</h3>
+      </div>
       <div class="card-body">
         <input type="hidden" id="inputId" th:field="*{id}"></input>
         <input type="hidden" id="inputCodigo" th:field="*{codigo}"></input>
         <input type="hidden" id="inputLoteList" th:field="*{loteList}"></input>
+        <input type="hidden" id="inputImagem" th:field="*{imagemPath}"></input>
         <p class="text-muted">Os campos marcados com <b class="text-danger">*</b> são obrigatórios.</p>
         <div class="row">
           <div class="col-md-4">
@@ -83,7 +84,7 @@
             </div>
             
             <div class="form-group">
-              <label for="inputValorVenda" class="col-form-label" th:text="#{cadastro.produto.label.valor.venda}"></label><b class="text-danger">*</b>
+              <label for="inputValorVenda" class="col-form-label" th:text="#{venda}"></label><b class="text-danger">*</b>
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text">R$<!-- <i class="fas fa-phone"> --></i></span>
@@ -94,7 +95,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="col-form-label">Foto</label>
+              <label class="col-form-label">Imagem</label>
               <div class="box-profile">
                 <div class="text-center mb-4">
                   <img id="foto" class="img-fluid" style="height:160px"
@@ -116,7 +117,10 @@
         </div>
         <br/>
     </div>
-    
+      <!-- <div class="card-footer">
+        <button type="submit" class="btn btn-md btn-info float-right" th:if="!*{id}">Salvar</button>
+        <button type="submit" class="btn btn-md btn-info float-right" th:if="*{id}">Alterar</button>
+      </div> -->
   </div>
   </section>
   
@@ -150,7 +154,6 @@
            min: 1,
            messages: { 
                min: "Por favor, digite um valor maior que zero"
-               number: "Por favor, digite um número válido"
            }
          });
        

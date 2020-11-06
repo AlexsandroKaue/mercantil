@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -64,10 +65,13 @@ public class Produto {
 	@Enumerated(EnumType.STRING)
 	private Unitario unitario;
 	
+	/* @Lob */
 	private byte[] imagem;
 	
 	@Transient
 	private String imagemBase64;
+	
+	private String imagemPath;
 	
 	public Long getId() {
 		return id;
@@ -188,6 +192,14 @@ public class Produto {
 
 	public void setQuantidadeMinima(Integer quantidadeMinima) {
 		this.quantidadeMinima = quantidadeMinima;
+	}
+
+	public String getImagemPath() {
+		return imagemPath;
+	}
+
+	public void setImagemPath(String imagemPath) {
+		this.imagemPath = imagemPath;
 	}
 
 }

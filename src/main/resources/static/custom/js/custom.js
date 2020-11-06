@@ -256,7 +256,6 @@ function inicializar() {
       },
       destroy: true
     });
-
 	
 	$('.js-fade').fadeTo(5000, 1, function() {
 		$(this).slideUp( "slow", function() {});
@@ -269,6 +268,22 @@ $(document).ajaxSend(function(e, xhr, options) {
 	var header = $("meta[name='_csrf_header']").attr("content");
 	xhr.setRequestHeader(header, token);
 });
+
+function myFunction() {
+	console.log('Isso eh um teste');
+}
+/*$(document).on(
+	    {
+	        ajaxComplete: function(){console.log('ajaxComplete')}
+	        
+	    }, 
+	    '.js-tabela'
+	);*/
+
+/*$('#ancora').on('ajaxComplete', '.js-titulo', function(){
+	console.log('ajaxComplete in .js-titulo');
+});*/
+
 
 
 /*$(document).ready(function() {*/
