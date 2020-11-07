@@ -21,7 +21,8 @@
   </div>
   
   <div layout:fragment="botoes">
-    <a class="btn btn-block btn-info" th:href="@{/grupos/novo}" th:text="#{novo}"></a>
+    <a class="btn btn-block btn-info" th:href="@{/grupos/novo}" th:text="#{novo}"
+     sec:authorize="hasAuthority('INCLUIR_GRUPO')"></a>
   </div>
   
   <section layout:fragment="conteudo">
@@ -88,12 +89,14 @@
               <td th:text="${grupo.descricao}"></td>
               <td class="text-center">
                 <a th:href="@{/grupos/{id}(id=${grupo.id})}" class="btn btn-link btn-sm"
-                  title="Editar" rel="tooltip" data-placement="top">
+                  title="Editar" rel="tooltip" data-placement="top"
+                  sec:authorize="hasAuthority('ALTERAR_GRUPO')">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
                 <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
                   th:href="@{#}" th:attr="data-id=${grupo.id}, data-descricao=${grupo.descricao}"
-                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                  title="Excluir" rel="tooltip" data-placement="top"
+                  sec:authorize="hasAuthority('EXCLUIR_GRUPO')">
                   <i class="fas fa-trash"></i>
                 </a>
               </td>

@@ -20,14 +20,39 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
     http
         .authorizeRequests()
         	.antMatchers("/dist/**", "/plugins/**").permitAll()
-        	.antMatchers("/caixa/**").hasAnyRole("OPERADOR","ADMIN")
-        	.antMatchers("/categorias/**").hasAnyRole("ADMIN")
-        	.antMatchers("/fornecedores/**").hasAnyRole("ADMIN")
-        	.antMatchers("/grupos/**").hasAnyRole("ADMIN")
-        	.antMatchers("/lotes/**").hasAnyRole("ADMIN")
-        	.antMatchers("/permissoes/**").hasAnyRole("ADMIN")
-        	.antMatchers("/produtos/**").hasAnyRole("ADMIN")
-        	.antMatchers("/usuarios/**").hasAnyRole("ADMIN","OPERADOR")
+        	.antMatchers("/caixa/**").hasAuthority("OPERAR_CAIXA")
+        	
+        	.antMatchers("/categorias").hasAuthority("CONSULTA_CATEGORIA")
+        	.antMatchers("/categorias/novo").hasAuthority("INCLUIR_CATEGORIA")
+        	.antMatchers("/categorias/**").hasAuthority("ALTERAR_CATEGORIA")
+        	
+        	.antMatchers("/fornecedores").hasAuthority("CONSULTA_FORNECEDOR")
+        	.antMatchers("/fornecedores/novo").hasAuthority("INCLUIR_FORNECEDOR")
+        	.antMatchers("/fornecedores/**").hasAuthority("ALTERAR_FORNECEDOR")
+        	
+        	.antMatchers("/grupos").hasAuthority("CONSULTA_GRUPO")
+        	.antMatchers("/grupos/novo").hasAuthority("INCLUIR_GRUPO")
+        	.antMatchers("/grupos/**").hasAuthority("ALTERAR_GRUPO")
+        	
+        	.antMatchers("/lotes").hasAuthority("CONSULTA_LOTE")
+        	.antMatchers("/lotes/novo").hasAuthority("INCLUIR_LOTE")
+        	.antMatchers("/lotes/**").hasAuthority("ALTERAR_LOTE")
+        	
+        	.antMatchers("/permissoes").hasAuthority("CONSULTA_PERMISSAO")
+        	.antMatchers("/permissoes/novo").hasAuthority("INCLUIR_PERMISSAO")
+        	.antMatchers("/permissoes/**").hasAuthority("ALTERAR_PERMISSAO")
+        	
+        	.antMatchers("/produtos").hasAuthority("CONSULTA_PRODUTO")
+        	.antMatchers("/produtos/novo").hasAuthority("INCLUIR_PRODUTO")
+        	.antMatchers("/produtos/**").hasAuthority("ALTERAR_PRODUTO")
+        	
+        	.antMatchers("/usuarios").hasAuthority("CONSULTA_USUARIO")
+        	.antMatchers("/usuarios/novo").hasAuthority("INCLUIR_USUARIO")
+        	.antMatchers("/usuarios/**").hasAuthority("ALTERAR_USUARIO")
+        	
+        	.antMatchers("/clientes").hasAuthority("CONSULTA_CLIENTE")
+        	.antMatchers("/clientes/novo").hasAuthority("INCLUIR_CLIENTE")
+        	.antMatchers("/clientes/**").hasAuthority("ALTERAR_CLIENTE")
             // Para qualquer requisição (anyRequest) é preciso estar 
             // autenticado (authenticated).
             .anyRequest().authenticated()

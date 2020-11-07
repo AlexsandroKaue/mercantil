@@ -30,7 +30,8 @@
   </div>
   
   <div layout:fragment="botoes">
-    <a class="btn btn-block btn-info" th:href="@{/produtos/novo}" th:text="#{novo}"></a>
+    <a class="btn btn-block btn-info" th:href="@{/produtos/novo}" th:text="#{novo}"
+     sec:authorize="hasAuthority('INCLUIR_PRODUTO')"></a>
   </div>
   
   <section layout:fragment="conteudo">
@@ -130,16 +131,19 @@
               <td class="text-center" th:text="${{produto.valorDeVenda}}"></td>                   
               <td class="text-center">
                 <a th:href="@{/lotes?produtoId={id}(id=${produto.id})}" class="btn btn-link btn-sm"
-                  title="Lotes" rel="tooltip" data-placement="top">
+                  title="Lotes" rel="tooltip" data-placement="top"
+                  sec:authorize="hasAuthority('INCLUIR_LOTE')">
                   <i class="fas fa-plus-circle"></i>
                 </a><!-- th:href="@{/produtos/{id}/lote(id=${produto.id})}" --> <!-- th:href="@{/lotes/novo?produtoId={id}(id=${produto.id})}" -->
                 <a th:href="@{/produtos/{id}(id=${produto.id})}" class="btn btn-link btn-sm"
-                  title="Editar" rel="tooltip" data-placement="top">
+                  title="Editar" rel="tooltip" data-placement="top"
+                  sec:authorize="hasAuthority('ALTERAR_PRODUTO')">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
                 <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
                   th:href="@{#}" th:attr="data-id=${produto.id}, data-descricao=${produto.descricao}"
-                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                  title="Excluir" rel="tooltip" data-placement="top"
+                  sec:authorize="hasAuthority('EXCLUIR_PRODUTO')">
                   <i class="fas fa-trash"></i>
                 </a>
               </td>

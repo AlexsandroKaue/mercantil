@@ -103,7 +103,8 @@
   </div>
   
   <div layout:fragment="botoes">
-    <a class="btn btn-block btn-info" th:href="@{/clientes/novo}" th:text="#{novo}"></a>
+    <a class="btn btn-block btn-info" th:href="@{/clientes/novo}" th:text="#{novo}"
+     sec:authorize="hasAuthority('INCLUIR_CLIENTE')"></a>
   </div>
   
   <section layout:fragment="conteudo">
@@ -210,12 +211,14 @@
                   <i class="fas fa-eye"></i>
                 </a>
                 <a th:href="@{/clientes/{id}(id=${cliente.id})}" class="btn btn-link btn-sm"
-                  title="Editar" rel="tooltip" data-placement="top">
+                  title="Editar" rel="tooltip" data-placement="top"
+                  sec:authorize="hasAuthority('ALTERAR_CLIENTE')">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
                 <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
                   th:href="@{#}" th:attr="data-id=${cliente.id}, data-descricao=${cliente.nome}"
-                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                  title="Excluir" rel="tooltip" data-placement="top"
+                  sec:authorize="hasAuthority('EXCLUIR_CLIENTE')">
                   <i class="fas fa-trash"></i>
                 </a>
               </td>

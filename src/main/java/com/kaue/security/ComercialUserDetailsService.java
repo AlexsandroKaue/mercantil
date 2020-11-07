@@ -60,7 +60,7 @@ public class ComercialUserDetailsService implements UserDetailsService {
     //for (Grupo grupo: grupos) {
       for(GrupoPermissao gruPer : grupoPermissaoList) {
     	  Permissao permissao = gruPer.getPermissao();
-    	  auths.add(new SimpleGrantedAuthority("ROLE_" + permissao.getSigla()));
+    	  auths.add(new SimpleGrantedAuthority(permissao.getSigla()));
     	  //List<Permissao> lista = permissaoService.buscarPorGrupo(grupo);
     	     
           //for (Permissao permissao: lista) {

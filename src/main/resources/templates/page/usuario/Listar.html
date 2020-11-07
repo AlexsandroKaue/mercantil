@@ -18,7 +18,8 @@
             </div>
             <div class="col-sm-3">
               <div class="breadcrumb float-right">
-                <a class="btn btn-block btn-info" th:href="@{/usuarios/novo}" th:text="#{novo}"></a>    
+                <a class="btn btn-block btn-info" th:href="@{/usuarios/novo}" th:text="#{novo}"
+                 sec:authorize="hasAuthority('INCLUIR_USUARIO')"></a>    
               </div>
             </div>
           </div>
@@ -133,12 +134,14 @@
                         <i class="fas fa-eye"></i>
                       </a>
                       <a th:href="@{/usuarios/{id}(id=${usuario.id})}" class="btn btn-link btn-sm"
-                        title="Editar" rel="tooltip" data-placement="top">
+                        title="Editar" rel="tooltip" data-placement="top"
+                        sec:authorize="hasAuthority('ALTERAR_USUARIO')">
                         <i class="fas fa-pencil-alt"></i>
                       </a>
                       <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
                         th:href="@{#}" th:attr="data-id=${usuario.id}, data-descricao=${usuario.nome}"
-                        title="Excluir" rel="tooltip" data-placement="top">
+                        title="Excluir" rel="tooltip" data-placement="top"
+                        sec:authorize="hasAuthority('EXCLUIR_USUARIO')">
                         <i class="fas fa-trash"></i>
                       </a>
                     </td>

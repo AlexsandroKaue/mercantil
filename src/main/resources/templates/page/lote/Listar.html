@@ -104,7 +104,7 @@
     <a class="btn btn-danger" th:href="@{/produtos}" th:text="#{voltar}"></a>
     <a class="btn btn-info js-novo-lote" 
       th:href="@{#}" data-toggle="modal" data-target="#modalLote"
-      th:text="#{novo}"></a>
+      th:text="#{novo}" sec:authorize="hasAuthority('INCLUIR_LOTE')"></a>
   </div>
   <div layout:fragment="conteudo">
     <div class="card card-secondary">
@@ -163,12 +163,14 @@
                 <td class="text-center">
                   <a th:href="@{/lotes/{id}/ajax(id=${lote.id})}" class="btn btn-link btn-sm js-alterar-lote"
                     data-toggle="modal" data-target="#modalLote"
-                    title="Editar" rel="tooltip" data-placement="top">
+                    title="Editar" rel="tooltip" data-placement="top"
+                    sec:authorize="hasAuthority('ALTERAR_LOTE')">
                     <i class="fas fa-pencil-alt"></i>
                   </a>
                   <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
                     th:href="@{#}" th:attr="data-id=${lote.id}, data-descricao=|Lote ${lote.id} do produto ${lote.produto.descricao}|"
-                    title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                    title="Excluir" rel="tooltip" data-placement="top"
+                    sec:authorize="hasAuthority('EXCLUIR_LOTE')">
                     <i class="fas fa-trash"></i>
                   </a>
                 </td>

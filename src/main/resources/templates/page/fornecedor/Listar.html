@@ -21,7 +21,8 @@
   </div>
   
   <div layout:fragment="botoes">
-    <a class="btn btn-block btn-info" th:href="@{/fornecedores/novo}" th:text="#{novo}"></a>
+    <a class="btn btn-block btn-info" th:href="@{/fornecedores/novo}" th:text="#{novo}"
+     sec:authorize="hasAuthority('INCLUIR_FORNECEDOR')"></a>
   </div>
   
   <section layout:fragment="conteudo">
@@ -115,12 +116,14 @@
               <td th:text="${fornecedor.cnpj}"></td>
               <td class="text-center nopadding">
                 <a th:href="@{/fornecedores/{id}(id=${fornecedor.id})}" class="btn btn-link btn-sm"
-                  title="Editar" rel="tooltip" data-placement="top">
+                  title="Editar" rel="tooltip" data-placement="top"
+                  sec:authorize="hasAuthority('ALTERAR_FORNECEDOR')">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
                 <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
                   th:href="@{#}" th:attr="data-id=${fornecedor.id}, data-descricao=${fornecedor.nome}"
-                  title="Excluir" rel="tooltip" data-placement="top"><!--  -->
+                  title="Excluir" rel="tooltip" data-placement="top"
+                  sec:authorize="hasAuthority('EXCLUIR_FORNECEDOR')">
                   <i class="fas fa-trash"></i>
                 </a>
               </td>
