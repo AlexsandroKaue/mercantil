@@ -42,10 +42,30 @@
             <input type="text" class="form-control" id="inputDescricao" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
           </div>
         </div> 
+        <div class="row">
+        <div class="col-12">
+          <div class="form-group" >
+            <select class="duallistbox" multiple="multiple" th:field=*{permissaoList} style="height: 200px">
+              <option th:each="permissao : ${permissoes}" th:value="${permissao.id}"
+               th:selected="*{permissaoList}"
+               th:text="${permissao.descricao}"></option>
+            </select>
+          </div>
+          <!-- /.form-group -->
+        </div>
+        <!-- /.col -->
+      </div>
       </div>
       <!-- <div class="card-footer"></div> -->
     </div>
     <!-- /.card -->
+    
+    <!-- <div class="card card-secondary">
+    <div class="card-body" >
+      
+      /.row
+    </div>
+    </div> -->
   </section>
   
   <div layout:fragment="js-validator">
@@ -55,6 +75,15 @@
         messages: { 
             required: "Por favor digite um nome para a grupo"
         }
+      });
+      
+      //Bootstrap Duallistbox
+      $('.duallistbox').bootstrapDualListbox({
+    	  filterPlaceHolder: 'Filtrar',
+    	  infoText: false,
+    	  nonSelectedListLabel: 'Permissões',
+    	  selectedListLabel: 'Permissões do Grupo',
+    	  moveOnSelect: false
       });
     </script>
   </div>

@@ -1,10 +1,11 @@
 package com.kaue.controller;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,10 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.GrupoFilter;
-import com.kaue.enumeration.StatusTitulo;
-import com.kaue.model.Categoria;
+import com.kaue.dao.filter.PermissaoFilter;
 import com.kaue.model.Grupo;
+import com.kaue.model.GrupoPermissao;
+import com.kaue.model.Permissao;
 import com.kaue.service.GrupoService;
+import com.kaue.service.PermissaoService;
+import com.kaue.util.HasValue;
 
 @Controller
 @RequestMapping("/grupos")
@@ -29,6 +33,27 @@ public class GrupoController {
 	
 	@Autowired
 	private GrupoService grupoService;
+	
+	@Autowired
+	private PermissaoService permissaoService;
+	
+	@ModelAttribute
+	public void todasPermissoes(Model model){
+		
+		List<Permissao> permissaoList = permissaoService.pesquisar(new PermissaoFilter());
+		
+		List<GrupoPermissao> grupoPermissaoList = new ArrayList<GrupoPermissao>();
+		if(HasValue.execute(permissaoList) && !permissaoList.isEmpty()) 
+		{ 
+			for(Permissao permissao : permissaoList) {
+				GrupoPermissao gruPer = new GrupoPermissao();
+				gruPer.setPermissao(permissao); 
+				grupoPermissaoList.add(gruPer); 
+			} 
+		}
+ 
+		model.addAttribute("permissoes", permissaoList);
+	}
 	
 	@RequestMapping("/novo")
 	public ModelAndView showFormNovo(Grupo grupo) {
@@ -41,6 +66,14 @@ public class GrupoController {
 	public ModelAndView showFormEditar(@PathVariable("id") Grupo grupo) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		/* Grupo grupo = grupoService.findById(id).orElse(null); */
+		List<GrupoPermissao> gruPerList = grupo.getGrupoPermissaoList();
+		List<Permissao> permissaoList = new ArrayList<Permissao>();
+		if(HasValue.execute(gruPerList)) {
+			for(GrupoPermissao gruPer : gruPerList) {
+				permissaoList.add(gruPer.getPermissao());
+			}
+		}
+		grupo.setPermissaoList(permissaoList);
 		mv.addObject("grupo", grupo);
 		return mv;
 	}
@@ -50,8 +83,22 @@ public class GrupoController {
 		if(errors.hasErrors()) {
 			return CADASTRAR_VIEW;
 		}
+		
+		List<Permissao> permissaoList = grupo.getPermissaoList();
+		List<GrupoPermissao> grupoPermissaoList = new ArrayList<GrupoPermissao>();
+		if(HasValue.execute(permissaoList) && !permissaoList.isEmpty()) 
+		 { 
+			 for(Permissao permissao : permissaoList) {
+				 GrupoPermissao gruPer = new GrupoPermissao();
+				 gruPer.setPermissao(permissao); 
+				 gruPer.setGrupo(grupo);
+				 grupoPermissaoList.add(gruPer); 
+			 } 
+		 }
+		grupo.setGrupoPermissaoList(grupoPermissaoList);
+		String word = HasValue.execute(grupo.getId()) ? "alterado" : "cadastrado";
 		grupoService.salvar(grupo);
-		attributes.addFlashAttribute("mensagem", "Grupo cadastrado com sucesso!");
+		attributes.addFlashAttribute("mensagem", "Grupo "+ word +" com sucesso!");
 		return "redirect:/grupos/novo";
 	}
 	
@@ -77,7 +124,7 @@ public class GrupoController {
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	public String excluir(@PathVariable Long id, RedirectAttributes attributes) {
 		grupoService.excluir(id);
-		attributes.addFlashAttribute("mensagem", "Título excluído com sucesso!");
+		attributes.addFlashAttribute("mensagem", "Grupo excluído com sucesso!");
 		return "redirect:/grupos";
 	}
 

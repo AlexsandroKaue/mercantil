@@ -260,7 +260,31 @@ function inicializar() {
 	$('.js-fade').fadeTo(5000, 1, function() {
 		$(this).slideUp( "slow", function() {});
 	});	
+	
 }
+
+$(window).on('load',function(){
+	var url = window.location.href;
+    // for sidebar menu entirely but not cover treeview
+	console.log($('ul.nav-sidebar a'));
+    $('ul.nav-sidebar a').filter(function() {
+        return url.indexOf(this.href) <= -1;
+    }).removeClass('active');
+
+    // for sidebar menu entirely but not cover treeview
+    $('ul.nav-sidebar a').filter(function() {
+        return url.indexOf(this.href) > -1;
+    }).addClass('active');
+    
+    // for treeview
+    $('ul.nav-treeview a').filter(function() {
+        return url.indexOf(this.href) > -1;
+    }).parents(".has-treeview").addClass('menu-open');
+    
+    $('ul.nav-treeview a').filter(function() {
+        return url.indexOf(this.href) > -1;
+    }).parents(".has-treeview").children('a').addClass('active');
+});
 
 
 $(document).ajaxSend(function(e, xhr, options) {
@@ -269,9 +293,6 @@ $(document).ajaxSend(function(e, xhr, options) {
 	xhr.setRequestHeader(header, token);
 });
 
-function myFunction() {
-	console.log('Isso eh um teste');
-}
 /*$(document).on(
 	    {
 	        ajaxComplete: function(){console.log('ajaxComplete')}

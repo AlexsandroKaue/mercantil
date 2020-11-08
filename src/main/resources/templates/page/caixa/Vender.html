@@ -31,7 +31,7 @@
           <div layout:insert="~{mensagem_geral}"></div>
           <div layout:insert="~{mensagem_erro}"></div>
           <div class="row mb-2" layout:fragment="cabecalho">
-            <div class="col-sm-7 m-0">
+            <div class="col-sm-8 m-0">
               <ul class="js-buscar-produto" 
                th:attr="data-url-buscar-item=@{/caixa/buscarItem}, data-url-selecionar-item=@{/caixa/incluir},
                data-url-selecionar-balanca=@{/caixa/balanca}"
@@ -46,7 +46,7 @@
         
         <div class="container-fluid">            
           <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-8">
               <!-- <div style="border-style: solid solid solid solid; border-width: 2px;border-color: #cbd3da; background-color: #fffed4"> -->
                 <div  style="border-style: solid solid solid solid; border-width: 2px;border-color: #aaaaaa;background-color: #fffed4">
                   
@@ -139,16 +139,17 @@
               <!-- </div> -->
             </div>
           
-          <div class="col-md-5">
+          <div class="col-md-4">
             
             <div class="d-flex flex-column" style="height: 400px;">
               <div class="mb-auto">
                
-                <div class="d-flex justify-content-between">
+                <div class="d-flex ">
                   <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
                    id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat">
                     <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
-                    <i class="fas fa-money-bill-wave"></i>
+                    <!-- <i class="fas fa-money-bill-wave"></i> -->
+                    <i class="fas fa-dollar-sign"></i>
                     Efetuar Pagamento (F2)
                   </button>
                   <!-- <button type="button" data-toggle="modal" data-target="#modal-cliente"

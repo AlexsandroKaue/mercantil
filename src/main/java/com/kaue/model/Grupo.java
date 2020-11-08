@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.envers.Audited;
@@ -29,8 +30,11 @@ public class Grupo {
 	@NotEmpty(message = "O campo <strong>descrição</strong> é obrigatório")
 	private String descricao;
 	
-	@OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<GrupoPermissao> grupoPermissaoList;
+	
+	@Transient
+	private List<Permissao> permissaoList;
 
 	public Long getId() {
 		return id;
@@ -92,6 +96,14 @@ public class Grupo {
 	@Override
 	public String toString() {
 		return "Grupo [id=" + id + ", nome=" + nome + "]";
+	}
+
+	public List<Permissao> getPermissaoList() {
+		return permissaoList;
+	}
+
+	public void setPermissaoList(List<Permissao> permissaoList) {
+		this.permissaoList = permissaoList;
 	}
 
 }
