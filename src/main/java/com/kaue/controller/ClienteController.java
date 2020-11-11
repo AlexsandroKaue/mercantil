@@ -58,7 +58,7 @@ public class ClienteController {
 	public ModelAndView showFormNovo() {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		Cliente cliente = new Cliente();
-		cliente.setImagemBase64(carregarImagem(cliente.getImagem()));
+		cliente.setImagemBase64(clienteService.carregarImagem(null));
 		mv.addObject("cliente", cliente);
 		return mv;
 	}
@@ -66,7 +66,7 @@ public class ClienteController {
 	@RequestMapping("{id}")
 	public ModelAndView showFormEditar(@PathVariable("id") Cliente cliente) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
-		cliente.setImagemBase64(carregarImagem(cliente.getImagem()));
+		cliente.setImagemBase64(clienteService.carregarImagem(null));
 		mv.addObject("cliente", cliente);
 		return mv;
 	}
@@ -159,7 +159,7 @@ public class ClienteController {
 			}
 		}
 		
-		cliente.setImagemBase64(carregarImagem(cliente.getImagem()));
+		cliente.setImagemBase64(clienteService.carregarImagem(null));
 		mv.addObject("cliente", cliente);
 		mv.addObject("enderecoFormatado", enderecoFormatado);
 		

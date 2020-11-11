@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +16,8 @@ import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeType;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +32,9 @@ public class UsuarioServiceImpl implements UsuarioService{
 
 	@Autowired
 	private UsuarioDAO usuarioDAO;
+	
+	@Autowired
+    ResourceLoader resourceLoader;
 
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
@@ -80,9 +86,10 @@ public class UsuarioServiceImpl implements UsuarioService{
 				extensao = "gif";
 			}
 			String filename = nome +"."+extensao;
-			Path resourcePath = Paths.get("./src/main/resources/static/custom/img/users/"+filename);
-			Path absolutePath = resourcePath.toAbsolutePath();
-			Files.write(absolutePath, bytes);
+			Resource resource = resourceLoader.getResource("classpath:static/custom/img/usuario");
+			URI uri = resource.getURI();
+			Path path = Paths.get(uri.getPath()+"/"+filename);
+			Files.write(path, bytes);
 		    return filename;
 		}
 		return null;
@@ -90,9 +97,15 @@ public class UsuarioServiceImpl implements UsuarioService{
 
 	@Override
 	public String carregarImagem(String nome) {
-		Path resourcePath = Paths.get("./src/main/resources/static/custom/img/users/"+nome);
-		Path absolutePath = resourcePath.toAbsolutePath();
-	    return tranformarEmImagemBase64(absolutePath);
+		try {
+			Resource resource = resourceLoader.getResource("classpath:static/custom/img/usuario");
+			URI uri = resource.getURI();
+			Path path = Paths.get(uri.getPath()+"/"+nome);
+		    return tranformarEmImagemBase64(path);
+		} catch(IOException e) {
+	    	e.printStackTrace();
+	    	return null;
+	    }
 	}
 	
 	private String tranformarEmImagemBase64(Path path) {
@@ -118,10 +131,10 @@ public class UsuarioServiceImpl implements UsuarioService{
 		
 		String encodedfile = null;
 		try {
-			Path resourcePath = Paths.get("./src/main/resources/static/custom/img/users/sem-imagem.jpg");
-			Path absolutePath = resourcePath.toAbsolutePath();
-			//File file = ResourceUtils.getFile("classpath:static/custom/img/produto/sem-imagem_2.jpg");
-			byte[] bytes = Files.readAllBytes(absolutePath);
+			Resource resource = resourceLoader.getResource("classpath:static/custom/img/produto/sem-imagem_2.jpg");
+			URI uri = resource.getURI();
+			Path path = Paths.get(uri.getPath());
+			byte[] bytes = Files.readAllBytes(path);
 			
 			encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
 		} catch (FileNotFoundException e) {

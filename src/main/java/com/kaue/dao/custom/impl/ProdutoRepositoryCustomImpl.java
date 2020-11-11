@@ -13,6 +13,9 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.kaue.dao.custom.ProdutoRepositoryCustom;
 import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.enumeration.Unitario;
@@ -132,6 +135,12 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         TypedQuery<Long> typedQuery = entityManager.createQuery(query);
 		
 		return typedQuery.getSingleResult();
+	}
+
+	@Override
+	public Page<Produto> findProdutoByFiltro(ProdutoFilter produtoFiltro, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

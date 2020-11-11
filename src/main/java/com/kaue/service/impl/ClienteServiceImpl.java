@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +18,8 @@ import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +36,9 @@ public class ClienteServiceImpl implements ClienteService{
 
 	@Autowired
 	private ClienteDAO clienteDAO;
+	
+	@Autowired
+    ResourceLoader resourceLoader;
 
 	@Transactional
 	public Cliente salvar(Cliente cliente) {
@@ -85,14 +91,16 @@ public class ClienteServiceImpl implements ClienteService{
 			}
 			
 			String filename = nome +".png";
-			Path resourcePath = Paths.get("./src/main/resources/static/custom/img/cliente/"+filename);
-			Path absolutePath = resourcePath.toAbsolutePath();
+			Resource resource = resourceLoader.getResource("classpath:static/custom/img/cliente");
+			URI uri = resource.getURI();
+			Path path = Paths.get(uri.getPath()+"/"+filename);
+			
 			BufferedImage croppedImage = cropImage(bytes);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(croppedImage, "png", baos); 
 			bytes = baos.toByteArray();
 			
-			Files.write(absolutePath, bytes);
+			Files.write(path, bytes);
 		    return filename;
 		}
 		return null;
@@ -134,6 +142,19 @@ public class ClienteServiceImpl implements ClienteService{
 	  return croppedImage;
 	}
 	
+	@Override
+	public String carregarImagem(String nome) {
+		try {
+			Resource resource = resourceLoader.getResource("classpath:static/custom/img/cliente");
+			URI uri = resource.getURI();
+			Path path = Paths.get(uri.getPath()+"/"+nome);
+			return tranformarEmImagemBase64(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	private String tranformarEmImagemBase64(Path path) {
 		String encodedfile = null;
 		
@@ -157,10 +178,10 @@ public class ClienteServiceImpl implements ClienteService{
 		
 		String encodedfile = null;
 		try {
-			Path resourcePath = Paths.get("./src/main/resources/static/custom/img/users/sem-imagem.jpg");
-			Path absolutePath = resourcePath.toAbsolutePath();
-			//File file = ResourceUtils.getFile("classpath:static/custom/img/produto/sem-imagem_2.jpg");
-			byte[] bytes = Files.readAllBytes(absolutePath);
+			Resource resource = resourceLoader.getResource("classpath:static/custom/img/produto/sem-imagem_2.jpg");
+			URI uri = resource.getURI();
+			Path path = Paths.get(uri.getPath());
+			byte[] bytes = Files.readAllBytes(path);
 			
 			encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
 		} catch (FileNotFoundException e) {
@@ -177,11 +198,6 @@ public class ClienteServiceImpl implements ClienteService{
 		return null;
 	}
 
-	@Override
-	public String carregarImagem(String nome) {
-		Path resourcePath = Paths.get("./src/main/resources/static/custom/img/produto/"+nome);
-		Path absolutePath = resourcePath.toAbsolutePath();
-	    return tranformarEmImagemBase64(absolutePath);
-	}
+	
 	
 }

@@ -12,6 +12,7 @@
       border-width:px;
       border-style:solid;
       border-color:grey;
+      vertical-align: middle;
      }
      
   </style>
@@ -115,7 +116,7 @@
           <thead  style="background-color: #fffed4">
             <tr>
               <th class="text-center col-1" th:text="#{listagem.produto.coluna.id}"></th>
-              <th th:text="#{descricao}" ></th>
+              <th class="col-auto" th:text="#{descricao}" ></th>
               <th class="text-center col-2" th:text="#{marca}" ></th>
               <th class="text-center col-2" th:text="#{listagem.produto.coluna.categoria}"></th>
               <th class="text-center col-2" th:text="#{venda}" ></th>
@@ -125,22 +126,22 @@
           <tbody>
             <tr th:each="produto : ${produtos}">
               <td class="text-center" th:text="${produto.codigo}"></td>
-              <td th:text="${produto.descricao}"></td>
+              <td th:text="${produto.descricao}" style="vertical-align: middle;"></td>
               <td class="text-center" th:text="${produto.marca}"></td>
               <td class="text-center" th:text="${produto.categoria!=null?produto.categoria.nome:null}"> 
               <td class="text-center" th:text="${{produto.valorDeVenda}}"></td>                   
               <td class="text-center">
-                <a th:href="@{/lotes?produtoId={id}(id=${produto.id})}" class="btn btn-link btn-sm"
+                <a th:href="@{/lotes?produtoId={id}(id=${produto.id})}" class="btn btn-link"
                   title="Lotes" rel="tooltip" data-placement="top"
                   sec:authorize="hasAuthority('INCLUIR_LOTE')">
                   <i class="fas fa-plus-circle"></i>
                 </a><!-- th:href="@{/produtos/{id}/lote(id=${produto.id})}" --> <!-- th:href="@{/lotes/novo?produtoId={id}(id=${produto.id})}" -->
-                <a th:href="@{/produtos/{id}(id=${produto.id})}" class="btn btn-link btn-sm"
+                <a th:href="@{/produtos/{id}(id=${produto.id})}" class="btn btn-link"
                   title="Editar" rel="tooltip" data-placement="top"
                   sec:authorize="hasAuthority('ALTERAR_PRODUTO')">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
-                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link" 
                   th:href="@{#}" th:attr="data-id=${produto.id}, data-descricao=${produto.descricao}"
                   title="Excluir" rel="tooltip" data-placement="top"
                   sec:authorize="hasAuthority('EXCLUIR_PRODUTO')">

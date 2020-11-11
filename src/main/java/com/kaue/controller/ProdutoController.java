@@ -18,6 +18,8 @@ import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
@@ -203,7 +205,8 @@ public class ProdutoController {
 	}
 	
 	@RequestMapping
-	public ModelAndView pesquisar(@ModelAttribute("filtro") ProdutoFilter filtro) {
+	public ModelAndView pesquisar(@ModelAttribute("filtro") ProdutoFilter filtro, 
+			@PageableDefault(size = 10) Pageable pageable) {
 		if(!filtro.isAvancada()) {
 			String termo = filtro.getTermo();
 			if(termo!=null) {
@@ -215,6 +218,11 @@ public class ProdutoController {
 					Long id = Long.parseLong(termo);
 					filtro.getProduto().setId(id);
 				} catch(NumberFormatException nfe) {}
+				/*
+				 * filtro.setPaginated(true); filtro.setPage(new
+				 * Long(pageable.getPageNumber())); filtro.setPageSize(new
+				 * Long(pageable.getPageSize()));
+				 */
 			}
 		}
 		List<Produto> produtoList = produtoService.pesquisar(filtro);
