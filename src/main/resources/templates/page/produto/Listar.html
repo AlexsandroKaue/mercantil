@@ -9,12 +9,11 @@
   
   <style layout:fragment="extra-style">
     .table, .table td{
-      border-width:px;
+      /* border-width:px;
       border-style:solid;
-      border-color:grey;
+      border-color:grey; */
       vertical-align: middle;
      }
-     
   </style>
 
   <section layout:fragment="container">
@@ -111,6 +110,38 @@
             
           </div>
         </div>
+        
+        <!-- customers pagination -->
+        <nav aria-label="Pagination" th:if="${customers.totalPages gt 0}">
+            <ul class="pagination justify-content-center font-weight-medium">
+                <li class="page-item" th:classappend="${customers.number eq 0} ? 'disabled'">
+                    <a class="page-link svg-icon"
+                       th:href="@{/produtos/page/{id}(id=${customers.number lt 2 ? 1 : customers.number})}"
+                       aria-label="Anterior"
+                       title="Página anterior" rel="tooltip">
+                        <span aria-hidden="true">Anterior</span><!-- <i class="fas fa-angle-double-left"></i> -->
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${i eq customers.number + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, customers.totalPages > 10 + customers.number ? customers.number + 10 : customers.totalPages, 1)}">
+                    <a class="page-link" th:href="@{/produtos/page/{id}(id=${i})}" th:text="${i}"
+                       th:title="${'Página '+ i}"
+                       rel="tooltip"></a>
+                </li>
+                <li class="page-item disabled" th:if="${customers.number + 10 < customers.totalPages}">
+                    <a class="page-link svg-icon" href="#">
+                        <span data-feather="more-horizontal"></span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${customers.number + 1 eq customers.totalPages} ? 'disabled'">
+                    <a class="page-link svg-icon" th:href="@{/produtos/page/{id}(id=${customers.number + 2})}"
+                       aria-label="Próxima"
+                       title="Próxima página" rel="tooltip">
+                        <span aria-hidden="true">Próximo</span><!-- <i class="fas fa-angle-double-right"></i> -->
+                    </a>
+                </li>
+            </ul>
+        </nav>
       
         <table class="table table-bordered table-hover js-tabela">
           <thead  style="background-color: #fffed4">
@@ -154,6 +185,60 @@
             </tr>
           </tbody>
         </table>
+        <!-- <div th:if="${totalPaginas > 1}">
+          <div class="row">
+            <div class="col-sm-2">
+              Total: [[${totalProdutos}]]
+            </div>
+            <div class="col-sm-1">
+              <span th:each="i : ${#numbers.sequence(1,totalPaginas)}">
+                <a th:if="${paginaCorrente != i}" th:href="@{'/produtos/page/' + ${i}}">[[${i}]]</a>
+                <span th:unless="${paginaCorrente != i}">[[${i}]]</span> &nbsp; &nbsp;
+              </span>
+            </div>
+            <div class="col-sm-1">
+              <a th:if="${paginaCorrente < totalPaginas}" th:href="@{'/produtos/page/' + ${paginaCorrente + 1}}">Próximo</a>
+              <span th:unless="${paginaCorrente < totalPaginas}">Próximo</span> 
+            </div>
+            <div class="col-sm-1">
+              <a th:if="${paginaCorrente < totalPaginas}" th:href="@{'/produtos/page/' + ${totalPaginas}}"> Última</a>
+              <span th:unless="${paginaCorrente < totalPaginas}"> Última</span> 
+            </div>
+          </div>
+        </div> -->
+                
+        <!-- customers pagination -->
+        <nav aria-label="Pagination" th:if="${customers.totalPages gt 0}">
+            <ul class="pagination justify-content-center font-weight-medium">
+                <li class="page-item" th:classappend="${customers.number eq 0} ? 'disabled'">
+                    <a class="page-link svg-icon"
+                       th:href="@{/produtos/page/{id}(id=${customers.number lt 2 ? 1 : customers.number})}"
+                       aria-label="Anterior"
+                       title="Página anterior" rel="tooltip">
+                        <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${i eq customers.number + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, customers.totalPages > 10 + customers.number ? customers.number + 10 : customers.totalPages, 1)}">
+                    <a class="page-link" th:href="@{/produtos/page/{id}(id=${i})}" th:text="${i}"
+                       th:title="${'Página '+ i}"
+                       rel="tooltip"></a>
+                </li>
+                <li class="page-item disabled" th:if="${customers.number + 10 < customers.totalPages}">
+                    <a class="page-link svg-icon" href="#">
+                        <span data-feather="more-horizontal"></span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${customers.number + 1 eq customers.totalPages} ? 'disabled'">
+                    <a class="page-link svg-icon" th:href="@{/produtos/page/{id}(id=${customers.number + 2})}"
+                       aria-label="Próxima"
+                       title="Próxima página" rel="tooltip">
+                        <span aria-hidden="true"><i class="fas fa-angle-double-right"></i></span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
       </div>
     </div>
     <!-- /.card -->

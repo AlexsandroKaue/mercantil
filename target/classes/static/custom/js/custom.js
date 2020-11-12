@@ -84,7 +84,7 @@ function inicializar() {
     $('.duallistbox').bootstrapDualListbox();
     
     /*$( "input[value='0']" ).text( "0" );*/
-	
+	    
 	$('.js-currency').maskMoney({decimal:',', 
 		thousands:'.', 
 		allowZero:'true',
@@ -228,11 +228,11 @@ function inicializar() {
 	});
 	
 	$('.js-tabela').DataTable({
-      paging: true,
+      paging: false,
       pageLength: 15,
       /*"lengthChange": true,*/
       searching: false,
-      info: true,
+      info: false,
       autoWidth: false,
       responsive: true,
       lengthChange: false,
@@ -263,7 +263,7 @@ function inicializar() {
 	
 }
 
-$(window).on('load',function(){
+$(window).on('DOMContentLoaded',function(){
 	var url = window.location.href;
     // for sidebar menu entirely but not cover treeview
 	console.log($('ul.nav-sidebar a'));

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -128,9 +129,8 @@ public class ProdutoController {
 		}
 	}
 	
-	@RequestMapping
-	public ModelAndView pesquisar(@ModelAttribute("filtro") ProdutoFilter filtro, 
-			@PageableDefault(size = 10) Pageable pageable) {
+	/*@RequestMapping
+	public ModelAndView pesquisar(@ModelAttribute("filtro") ProdutoFilter filtro) {
 		if(!filtro.isAvancada()) {
 			String termo = filtro.getTermo();
 			if(termo!=null) {
@@ -142,17 +142,43 @@ public class ProdutoController {
 					Long id = Long.parseLong(termo);
 					filtro.getProduto().setId(id);
 				} catch(NumberFormatException nfe) {}
-				/*
+				
 				 * filtro.setPaginated(true); filtro.setPage(new
 				 * Long(pageable.getPageNumber())); filtro.setPageSize(new
 				 * Long(pageable.getPageSize()));
-				 */
+				 
 			}
 		}
 		List<Produto> produtoList = produtoService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);
 		mv.addObject("produtos", produtoList);
 		return mv;
+	}*/
+	
+	@RequestMapping
+	public String pesquisar(Model model) {
+		return pesquisarPaginado(1, model);
+	}
+	
+	@RequestMapping(value = "/page/{pageNo}")
+	public String pesquisarPaginado(@PathVariable("pageNo") int pageNo, Model model) {
+		int pageSize = 10;
+		Page<Produto> page = produtoService.pesquisarPaginado(pageNo, pageSize);
+		List<Produto> produtoList = page.getContent();
+		int slice = page.getNumber();
+		
+		model.addAttribute("customers", page);
+		model.addAttribute("produtos", produtoList);
+		/*
+		 * model.addAttribute("paginaCorrente", pageNo);
+		 * model.addAttribute("totalPaginas", page.getTotalPages());
+		 * model.addAttribute("totalProdutos", page.getTotalElements());
+		 * 
+		 */
+		model.addAttribute("filtro", new ProdutoFilter());
+		
+		return LISTAR_VIEW;
+		
 	}
 	
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)

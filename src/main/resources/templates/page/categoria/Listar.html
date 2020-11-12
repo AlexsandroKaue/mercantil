@@ -7,6 +7,15 @@
   <title th:text="#{mercadinho}"></title>
 </head>
 
+  <style layout:fragment="extra-style">
+    .table, .table td{
+      border-width:px;
+      border-style:solid;
+      border-color:grey;
+      vertical-align: middle;
+     }
+  </style>
+
   <section layout:fragment="container">
     <form id="filtroCategoriaForm" method="GET" th:action="@{/categorias}" th:object="${filtro}">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
@@ -74,7 +83,7 @@
           </div>
         </div>
       
-        <table class="table table-bordered table-sm table-hover js-tabela">
+        <table class="table table-bordered table-hover js-tabela">
           <thead  style="background-color: #fffed4">
             <tr>
               <th class="text-center">Código</th>
@@ -89,12 +98,12 @@
               <td th:text="${categoria.nome}"></td>
               <td th:text="${categoria.descricao}"></td>
               <td class="text-center">
-                <a th:href="@{/categorias/{id}(id=${categoria.id})}" class="btn btn-link btn-sm"
+                <a th:href="@{/categorias/{id}(id=${categoria.id})}" class="btn btn-link"
                   title="Editar" rel="tooltip" data-placement="top"
                   sec:authorize="hasAuthority('ALTERAR_CATEGORIA')">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
-                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link" 
                   th:href="@{#}" th:attr="data-id=${categoria.id}, data-descricao=${categoria.descricao}"
                   title="Excluir" rel="tooltip" data-placement="top"
                   sec:authorize="hasAuthority('EXCLUIR_CATEGORIA')">

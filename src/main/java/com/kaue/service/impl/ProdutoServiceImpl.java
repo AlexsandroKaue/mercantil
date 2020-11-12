@@ -7,6 +7,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,6 +95,13 @@ public class ProdutoServiceImpl implements ProdutoService{
 	@Override
 	public Long obterMaxId() {
 		return produtoDAO.obterMaxId();
+	}
+
+	@Override
+	public Page<Produto> pesquisarPaginado(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		Page <Produto> page = produtoDAO.findAll(pageable);
+		return page;
 	}
 	
 }
