@@ -31,6 +31,7 @@ import com.kaue.model.Cliente;
 import com.kaue.model.Endereco;
 import com.kaue.service.ClienteService;
 import com.kaue.service.GrupoService;
+import com.kaue.util.HasValue;
 
 @Controller
 @RequestMapping("/clientes")
@@ -90,11 +91,16 @@ public class ClienteController {
 			
 			boolean hasFileUploaded = !multipartFile.isEmpty();
 			if(hasFileUploaded) {
-				byte[] bytes = null;
 				try {
-					bytes = multipartFile.getBytes();
-					cliente.setImagem(bytes);
-				} catch (IOException e) {
+					Long id;
+					if(HasValue.execute(cliente.getId())) {
+						id = cliente.getId();
+					} else {
+						id = clienteService.obterMaxId()+1;
+					}
+					String filename = clienteService.salvarImagem(multipartFile, "Cliente_"+id);
+					cliente.setImagemPath(filename);
+				} catch (Exception e) {
 					attributes.addFlashAttribute("aviso", "Não foi possível salvar a imagem");
 				}
 			}

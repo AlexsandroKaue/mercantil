@@ -9,4 +9,5 @@ public interface ClienteRepositoryCustom {
 
 	public List<Cliente> findClienteByFiltro(ClienteFilter clienteFiltro);
 	public Long countClienteByFiltro(ClienteFilter clienteFiltro);
+	public Long obterMaxId();
 }

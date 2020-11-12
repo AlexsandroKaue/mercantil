@@ -49,6 +49,8 @@ public class Cliente {
 	
 	private byte[] imagem;
 	
+	private String imagemPath;
+	
 	@Transient
 	private String imagemBase64;
 
@@ -147,5 +149,13 @@ public class Cliente {
 
 	public void setImagem(byte[] imagem) {
 		this.imagem = imagem;
+	}
+
+	public String getImagemPath() {
+		return imagemPath;
+	}
+
+	public void setImagemPath(String imagemPath) {
+		this.imagemPath = imagemPath;
 	}
 }

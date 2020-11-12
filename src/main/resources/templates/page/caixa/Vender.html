@@ -51,7 +51,7 @@
                 <div  style="border-style: solid solid solid solid; border-width: 2px;border-color: #aaaaaa;background-color: #fffed4">
                   
                   <div class="bg-white pt-3 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;"><!-- #cbd3da -->
-                    <ul class="items-list" style="height: 2em; margin-bottom: 0px">
+                    <ul class="items-list" style="height: 2em; margin-bottom: 0px; overflow: hidden">
                       <li>
                         <div class="row">
                           <div class="col-md-1 text-left">
@@ -84,7 +84,7 @@
                     </ul>
                   </div>
                   
-                  <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px;overflow: scroll;">
+                  <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 330px;overflow: scroll; overflow-x: hidden">
                     <li th:if="*{#lists.isEmpty(itemList)}">
                        <div class="col-md-12">
                         <p class="mt-2">Nenhum item incluído.</p> 

@@ -134,4 +134,17 @@ public class ClienteRepositoryCustomImpl implements ClienteRepositoryCustom {
         return predicates;
 	}
 
+	@Override
+	public Long obterMaxId() {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<Cliente> cliente = query.from(Cliente.class);
+        
+        query.select(cb.max(cliente.get("id")));
+        
+        TypedQuery<Long> typedQuery = entityManager.createQuery(query);
+		
+		return typedQuery.getSingleResult();
+	}
+
 }

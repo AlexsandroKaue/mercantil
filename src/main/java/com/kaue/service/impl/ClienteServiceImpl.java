@@ -29,6 +29,7 @@ import com.kaue.dao.ProdutoDAO;
 import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.model.Cliente;
 import com.kaue.service.ClienteService;
+import com.kaue.util.FileManager;
 import com.kaue.util.HasValue;
 
 @Service
@@ -38,7 +39,7 @@ public class ClienteServiceImpl implements ClienteService{
 	private ClienteDAO clienteDAO;
 	
 	@Autowired
-    ResourceLoader resourceLoader;
+    FileManager fileManager;
 
 	@Transactional
 	public Cliente salvar(Cliente cliente) {
@@ -79,123 +80,17 @@ public class ClienteServiceImpl implements ClienteService{
 
 	@Override
 	public String salvarImagem(MultipartFile file, String nome) throws Exception {
-		byte[] bytes = file.getBytes();
-		if(bytes!=null) {
-			String contentType = file.getContentType();
-			if(!(contentType.equals("image/jpg")
-					||contentType.equals("image/jpeg")
-					||contentType.equals("image/png")
-					||contentType.equals("image/gif"))) 
-			{
-				throw new IOException("Formato de arquivo incorreto. \n Apenas jpg/jpeg, png ou gif são válidos.");
-			}
-			
-			String filename = nome +".png";
-			Resource resource = resourceLoader.getResource("classpath:static/custom/img/cliente");
-			URI uri = resource.getURI();
-			Path path = Paths.get(uri.getPath()+"/"+filename);
-			
-			BufferedImage croppedImage = cropImage(bytes);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(croppedImage, "png", baos); 
-			bytes = baos.toByteArray();
-			
-			Files.write(path, bytes);
-		    return filename;
-		}
-		return null;
-	}
-	
-	private BufferedImage cropImage(byte[] image) throws IOException {
-	  // Get a BufferedImage object from a byte array
-	  InputStream in = new ByteArrayInputStream(image);
-	  BufferedImage originalImage = ImageIO.read(in);
-	  
-	  if(!HasValue.execute(originalImage)) {
-		  throw new IOException("Arquivo corrompido.");
-	  }
-	  
-	  // Get image dimensions
-	  int height = originalImage.getHeight();
-	  int width = originalImage.getWidth();
-	  
-	  // The image is already a square
-	  if (height == width) {
-	    return originalImage;
-	  }
-	  
-	  // Compute the size of the square
-	  int squareSize = (height > width ? width : height);
-	  
-	  // Coordinates of the image's middle
-	  int xc = width / 2;
-	  int yc = height / 2;
-	  
-	  // Crop
-	  BufferedImage croppedImage = originalImage.getSubimage(
-	      xc - (squareSize / 2), // x coordinate of the upper-left corner
-	      yc - (squareSize / 2), // y coordinate of the upper-left corner
-	      squareSize,            // widht
-	      squareSize             // height
-	  );
-	  
-	  return croppedImage;
+		return fileManager.salvarImagem(file, nome, "classpath:static/custom/img/cliente");
 	}
 	
 	@Override
 	public String carregarImagem(String nome) {
-		try {
-			Resource resource = resourceLoader.getResource("classpath:static/custom/img/cliente");
-			URI uri = resource.getURI();
-			Path path = Paths.get(uri.getPath()+"/"+nome);
-			return tranformarEmImagemBase64(path);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	private String tranformarEmImagemBase64(Path path) {
-		String encodedfile = null;
-		
-		byte[] bytes;
-		try {
-			bytes = Files.readAllBytes(path);
-			if(bytes != null) {
-				encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
-			} else {
-				encodedfile = buscarImagemPadrao();
-			}
-		} catch (Exception e) {
-			encodedfile = buscarImagemPadrao();
-		}
-		
-		return encodedfile;
-	}
-	
-	
-	private String buscarImagemPadrao() {
-		
-		String encodedfile = null;
-		try {
-			Resource resource = resourceLoader.getResource("classpath:static/custom/img/produto/sem-imagem_2.jpg");
-			URI uri = resource.getURI();
-			Path path = Paths.get(uri.getPath());
-			byte[] bytes = Files.readAllBytes(path);
-			
-			encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return encodedfile;
+		return fileManager.carregarImagem(nome, "classpath:static/custom/img/cliente");
 	}
 
 	@Override
 	public Long obterMaxId() {
-		return null;
+		return clienteDAO.obterMaxId();
 	}
 
 	
