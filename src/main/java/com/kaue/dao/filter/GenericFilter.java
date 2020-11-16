@@ -8,6 +8,8 @@ public abstract class GenericFilter {
 	
 	private Long pageSize;
 	
+	private Long start;
+	
 	private boolean paginated;
 	
 	private String termo;
@@ -60,5 +62,13 @@ public abstract class GenericFilter {
 
 	public void setAvancada(boolean avancada) {
 		this.avancada = avancada;
+	}
+
+	public Long getStart() {
+		return start;
+	}
+
+	public void setStart(Long start) {
+		this.start = start;
 	}
 }

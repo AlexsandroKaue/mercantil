@@ -228,21 +228,20 @@ function inicializar() {
 	});
 	
 	$('.js-tabela').DataTable({
-      paging: false,
-      pageLength: 15,
-      /*"lengthChange": true,*/
+      paging: true,
+      pageLength: 10,
+      lengthChange: false,
       searching: false,
-      info: false,
+      info: true,
       autoWidth: false,
       responsive: true,
-      lengthChange: false,
       aaSorting: [],
       /*"lengthMenu": [ 5, 10, 15, 20 ],*/
       columnDefs:[{ "orderable": false, "targets": [-1] }],
       ordering: true,
       language: {
           lengthMenu: "Mostrar _MENU_ registro por página",
-          info: "Total de registros: _MAX_",
+          info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
           infoEmpty: "Nenhum registro encontrado",
           infoFiltered: "teste",
           search: "Pesquisa",

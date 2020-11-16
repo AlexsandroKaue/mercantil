@@ -7,6 +7,12 @@
   <title th:text="#{mercadinho}">Seu título aqui</title>
 </head>
 
+  <style layout:fragment="extra-style">
+    .table, .table td{
+      vertical-align: middle;
+     }
+  </style>
+
   <section layout:fragment="container">
     <form id="filtroClienteForm" method="GET" th:action="@{/clientes}" th:object="${filtro}" role="form">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
@@ -188,7 +194,7 @@
           </div>
         </div>
         
-        <table class="table table-bordered table-hover table-sm js-tabela">
+        <table class="table table-bordered table-hover js-tabela">
           <thead  style="background-color: #fffed4">
             <tr>
               <th class="text-center col-1">Código</th>
@@ -206,16 +212,16 @@
               <td class="text-center" th:text="${cliente.email}"></td>
               <td class="text-center">
                 <a th:attr="data-url-detalhes=@{/clientes/detalhes/{id}(id=${cliente.id})}" th:href="@{#}" 
-                  data-toggle="modal" data-target="#modalDetalhes" class="btn btn-link btn-sm"
+                  data-toggle="modal" data-target="#modalDetalhes" class="btn btn-link"
                   title="Visualizar" rel="tooltip" data-placement="top">
                   <i class="fas fa-eye"></i>
                 </a>
-                <a th:href="@{/clientes/{id}(id=${cliente.id})}" class="btn btn-link btn-sm"
-                  title="Editar" rel="tooltip" data-placement="top"
+                <a th:href="@{/clientes/{id}(id=${cliente.id})}" class="btn btn-link"
+                  title="Alterar" rel="tooltip" data-placement="top"
                   sec:authorize="hasAuthority('ALTERAR_CLIENTE')">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
-                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link" 
                   th:href="@{#}" th:attr="data-id=${cliente.id}, data-descricao=${cliente.nome}"
                   title="Excluir" rel="tooltip" data-placement="top"
                   sec:authorize="hasAuthority('EXCLUIR_CLIENTE')">

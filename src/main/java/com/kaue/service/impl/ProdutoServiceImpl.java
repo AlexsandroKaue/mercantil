@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -99,8 +100,19 @@ public class ProdutoServiceImpl implements ProdutoService{
 
 	@Override
 	public Page<Produto> pesquisarPaginado(int pageNo, int pageSize) {
-		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Page <Produto> page = produtoDAO.findAll(pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Produto> pesquisarPaginado(ProdutoFilter filtro) {
+		List<Produto> produtoList = produtoDAO.findProdutoByFiltro(filtro);
+		Long total = produtoDAO.countProdutoByFiltro(filtro);
+		int pageNo = filtro.getPage().intValue();
+		int pageSize = filtro.getPageSize().intValue();
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		Page<Produto> page = new PageImpl<Produto>(produtoList, pageable, total);
 		return page;
 	}
 	

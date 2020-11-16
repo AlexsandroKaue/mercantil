@@ -14,6 +14,7 @@ public interface ProdutoService {
 	public void excluir(Long codigo) throws Exception;
 	public List<Produto> pesquisar(ProdutoFilter filtro);
 	public Page<Produto> pesquisarPaginado(int pageNo, int pageSize);
+	public Page<Produto> pesquisarPaginado(ProdutoFilter filtro);
 	public Long contar(ProdutoFilter filtro);
 	public Produto buscarPorCodigo(String codigo);
 	public Produto buscarPorId(Long id);

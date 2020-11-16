@@ -7,6 +7,15 @@
   <title th:text="#{mercadinho}">Seu título aqui</title>
 </head>
 
+  <style layout:fragment="extra-style">
+    .table, .table td{
+      /* border-width:px;
+      border-style:solid;
+      border-color:grey; */
+      vertical-align: middle;
+     }
+  </style>
+
   <div layout:fragment="container">
     <form id="filtroUsuarioForm" method="GET" th:action="@{/usuarios}" th:object="${filtro}" role="form">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
@@ -109,7 +118,7 @@
               </div>
               
               
-              <table class="table table-bordered table-sm table-hover js-tabela"><!-- table-striped -->
+              <table class="table table-bordered table-hover js-tabela"><!-- table-striped -->
                 <thead  style="background-color: #fffed4">
                   <tr>
                     <th class="text-center col-1">Código</th>
@@ -129,16 +138,16 @@
                     <td class="text-center" th:text="${usuario.ativo.descricao}"></td>
                     <td class="text-center">
                       <a th:attr="data-url-detalhes=@{/usuarios/detalhes/{id}(id=${usuario.id})}" th:href="@{#}" 
-                        class="js-usuario-detalhes btn btn-link btn-sm"
+                        class="js-usuario-detalhes btn btn-link"
                         title="Visualizar" rel="tooltip" data-placement="top">
                         <i class="fas fa-eye"></i>
                       </a>
-                      <a th:href="@{/usuarios/{id}(id=${usuario.id})}" class="btn btn-link btn-sm"
-                        title="Editar" rel="tooltip" data-placement="top"
+                      <a th:href="@{/usuarios/{id}(id=${usuario.id})}" class="btn btn-link"
+                        title="Alterar" rel="tooltip" data-placement="top"
                         sec:authorize="hasAuthority('ALTERAR_USUARIO')">
                         <i class="fas fa-pencil-alt"></i>
                       </a>
-                      <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                      <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link" 
                         th:href="@{#}" th:attr="data-id=${usuario.id}, data-descricao=${usuario.nome}"
                         title="Excluir" rel="tooltip" data-placement="top"
                         sec:authorize="hasAuthority('EXCLUIR_USUARIO')">

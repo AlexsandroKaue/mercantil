@@ -21,6 +21,7 @@ import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.enumeration.Unitario;
 import com.kaue.model.Produto;
 import com.kaue.model.Usuario;
+import com.kaue.util.HasValue;
 
 public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
 
@@ -50,8 +51,8 @@ public class ProdutoRepositoryCustomImpl implements ProdutoRepositoryCustom{
         Long page = produtoFiltro.getPage();
         Long pageSize = produtoFiltro.getPageSize();
         if(page!=null) {
-        	int start = page.intValue()*pageSize.intValue();
-        	typedQuery = entityManager.createQuery(query).setFirstResult(start).setMaxResults(pageSize.intValue());
+        	Long start = HasValue.execute(produtoFiltro.getStart())?produtoFiltro.getStart():new Long(page.intValue()*pageSize.intValue());
+        	typedQuery = entityManager.createQuery(query).setFirstResult(start.intValue()).setMaxResults(pageSize.intValue());
         } else {
         	typedQuery = entityManager.createQuery(query);
         }
