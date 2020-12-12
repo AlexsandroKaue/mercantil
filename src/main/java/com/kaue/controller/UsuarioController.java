@@ -30,6 +30,7 @@ import com.kaue.model.Grupo;
 import com.kaue.model.Usuario;
 import com.kaue.service.GrupoService;
 import com.kaue.service.UsuarioService;
+import com.kaue.util.FileManager;
 
 @Controller
 @RequestMapping("/usuarios")
@@ -51,7 +52,7 @@ public class UsuarioController {
 	public ModelAndView showFormNovo() {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		Usuario usuario = new Usuario();
-		usuario.setImagemBase64(usuarioService.carregarImagem(usuario.getFoto()));
+		usuario.setImagemBase64(usuarioService.carregarImagem(null));
 		mv.addObject("usuario", usuario);
 		return mv;
 	}

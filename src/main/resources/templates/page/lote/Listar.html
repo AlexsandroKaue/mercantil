@@ -7,6 +7,15 @@
   <title th:text="#{mercadinho}"></title>
 </head>
 
+  <style layout:fragment="extra-style">
+    .table, .table td{
+      border-width:px;
+      border-style:solid;
+      border-color:grey;
+      vertical-align: middle;
+     }
+  </style>
+
   <section layout:fragment="container">
     <form role="form" id="loteForm" method="POST" th:action="@{/lotes}" th:object="${lote}">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
@@ -104,7 +113,7 @@
     <a class="btn btn-danger" th:href="@{/produtos}" th:text="#{voltar}"></a>
     <a class="btn btn-info js-novo-lote" 
       th:href="@{#}" data-toggle="modal" data-target="#modalLote"
-      th:text="#{novo}" sec:authorize="hasAuthority('INCLUIR_LOTE')"></a>
+      sec:authorize="hasAuthority('INCLUIR_LOTE')">Incluir</a>
   </div>
   <div layout:fragment="conteudo">
     <div class="card card-secondary">
@@ -141,16 +150,16 @@
         </div>
         <div class="row">
           <div class="col-md-12" >
-            <table class="table table-bordered table-striped table-sm js-tabela">
+            <table class="table table-bordered table-hover js-tabela">
               <thead  style="background-color: #fffed4">
                 <tr>
-                  <th class="text-center col-1">Lote</th>
+                  <th class="text-center">Lote</th>
                   <!-- <th th:text="#{listagem.lote.coluna.produto}"></th> -->
-                  <th class="text-center col-3" th:text="#{listagem.lote.coluna.dataFabricacao}"></th>
-                  <th class="text-center col-3" th:text="#{listagem.lote.coluna.dataVencimento}"></th>
-                  <th class="text-center col-2" th:text="#{listagem.lote.coluna.valor.custo}"></th>
-                  <th class="text-center col-1" th:text="#{quantidade}"></th>
-                  <th class="text-center col-2" th:text="#{listagem.lote.coluna.acoes}"></th>
+                  <th class="text-center" th:text="#{listagem.lote.coluna.dataFabricacao}"></th>
+                  <th class="text-center" th:text="#{listagem.lote.coluna.dataVencimento}"></th>
+                  <th class="text-center" th:text="#{listagem.lote.coluna.valor.custo}"></th>
+                  <th class="text-center" th:text="#{quantidade}"></th>
+                  <th class="text-center" th:text="#{listagem.lote.coluna.acoes}"></th>
                 </tr>
               </thead>
               <tbody>
@@ -161,13 +170,13 @@
                 <td class="text-center" th:text="|R$ ${{lote.valorCusto}}|">
                 <td class="text-center" th:text="${lote.quantidade}|">
                 <td class="text-center">
-                  <a th:href="@{/lotes/{id}/ajax(id=${lote.id})}" class="btn btn-link btn-sm js-alterar-lote"
+                  <a th:href="@{/lotes/{id}/ajax(id=${lote.id})}" class="btn btn-link js-alterar-lote"
                     data-toggle="modal" data-target="#modalLote"
                     title="Editar" rel="tooltip" data-placement="top"
                     sec:authorize="hasAuthority('ALTERAR_LOTE')">
                     <i class="fas fa-pencil-alt"></i>
                   </a>
-                  <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link btn-sm" 
+                  <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link" 
                     th:href="@{#}" th:attr="data-id=${lote.id}, data-descricao=|Lote ${lote.id} do produto ${lote.produto.descricao}|"
                     title="Excluir" rel="tooltip" data-placement="top"
                     sec:authorize="hasAuthority('EXCLUIR_LOTE')">

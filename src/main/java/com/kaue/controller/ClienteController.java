@@ -67,7 +67,7 @@ public class ClienteController {
 	@RequestMapping("{id}")
 	public ModelAndView showFormEditar(@PathVariable("id") Cliente cliente) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
-		cliente.setImagemBase64(clienteService.carregarImagem(null));
+		cliente.setImagemBase64(clienteService.carregarImagem(cliente.getImagemPath()));
 		mv.addObject("cliente", cliente);
 		return mv;
 	}
@@ -165,7 +165,7 @@ public class ClienteController {
 			}
 		}
 		
-		cliente.setImagemBase64(clienteService.carregarImagem(null));
+		cliente.setImagemBase64(clienteService.carregarImagem(cliente.getImagemPath()));
 		mv.addObject("cliente", cliente);
 		mv.addObject("enderecoFormatado", enderecoFormatado);
 		
@@ -181,38 +181,6 @@ public class ClienteController {
 	public List<Cliente> todosClientes() {
 		List<Cliente> clienteList = clienteService.pesquisar(new ClienteFilter());
 		return clienteList;
-	}
-	
-	private String buscarImagemPadrao() {
-		
-		String encodedfile = null;
-		try {
-			File file = ResourceUtils.getFile("classpath:static/custom/img/produto/sem-imagem_2.jpg");
-			Path path = file.toPath();
-			byte[] bytes = Files.readAllBytes(path);
-			
-			encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return encodedfile;
-	}
-	
-	private String carregarImagem(byte[] bytes) {
-		String encodedfile = null;
-		if(bytes != null) {
-			try {
-				encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				encodedfile = buscarImagemPadrao();
-			}
-		} else {
-			encodedfile = buscarImagemPadrao();
-		}
-		return encodedfile;
 	}
 	
 	

@@ -35,9 +35,9 @@
   </div>
   
   <section layout:fragment="conteudo">
-    <div class="card card-secondary">
+    <!-- <div class="card card-secondary"> -->
       <!-- <div class="card-header"></div> -->
-      <div class="card-body">
+      <!-- <div class="card-body"> -->
         <div class="form-group row">
           <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
           <div class="col-sm-6" th:unless="*{avancada}">
@@ -46,7 +46,7 @@
                 placeholder="Qual categoria você está procurando?" autofocus="autofocus"
                 th:field="*{termo}"/>
               <div class="input-group-append">
-                <button type="submit" class="btn btn-default">Pesquisar
+                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i> Pesquisar
                   <!-- <i class="fas fa-search"></i> -->
                 </button>
               </div>
@@ -76,7 +76,8 @@
             </div>
             <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
             <small>Pesquisa Padrão</small></button>
-            <button type="submit" class="btn btn-default" style="float:right">Pesquisar
+            <button type="submit" class="btn btn-default" style="float:right">
+              <i class="fas fa-search"></i> Pesquisar
               <!-- <i class="fas fa-search"></i> -->
             </button><br/>
             
@@ -116,8 +117,8 @@
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
+      <!-- </div> -->
+    <!-- </div> -->
     <!-- /.card -->
   </section>
   

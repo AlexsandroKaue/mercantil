@@ -9,9 +9,9 @@
   
   <style layout:fragment="extra-style">
     .table, .table td{
-      /* border-width:px;
+      border-width:px;
       border-style:solid;
-      border-color:grey; */
+      border-color:grey;
       vertical-align: middle;
      }
   </style>
@@ -35,26 +35,26 @@
   </div>
   
   <section layout:fragment="conteudo">
-    <div class="card card-secondary">
+    <!-- <div class="card card-secondary"> -->
       <!-- <div class="card-header">
         <h3 class="card-title">Novo Título</h3>
       </div> -->
-      <div class="card-body">
+      <!-- <div class="card-body"> -->
         <div class="form-group row">
           <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
           <div class="col-sm-6" th:unless="*{avancada}">
             <div class="input-group">
-              <input class="form-control form-control-lg"  id="inputSearch"
+              <input class="form-control"  id="inputSearch"
                 placeholder="Qual produto você está procurando?" autofocus="autofocus"
                 th:field="*{termo}" onload="setTimeout(function(){$(this).focus();},0);"/>
               <div class="input-group-append">
-                <button type="submit" class="btn btn-default">Pesquisar
-                  <!-- <i class="fas fa-search"></i> -->
+                <button type="submit" class="btn btn-default" >
+                  <i class="fas fa-search"></i> Pesquisar
                 </button>
               </div>
             </div>
             <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
-              <small>Pesquisa avançada</small>
+              <small>Ir para pesquisa avançada</small>
             </button>
           </div>
           <div class="col-sm-12" th:if="*{avancada}">
@@ -104,7 +104,8 @@
             <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
               <small>Voltar para a pesquisa padrão</small>
             </button>
-            <button type="submit" class="btn btn-default" style="float:right">Pesquisar
+            <button type="submit" class="btn btn-default" style="float:right">
+              <i class="fas fa-search"></i> Pesquisar
               <!-- <i class="fas fa-search"></i> -->
             </button><br/>
             
@@ -154,8 +155,8 @@
           </tbody>
         </table>
         
-      </div>
-    </div>
+      <!-- </div> -->
+    <!-- </div> -->
     <!-- /.card -->
   </section>
   

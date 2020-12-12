@@ -9,9 +9,9 @@
 
   <style layout:fragment="extra-style">
     .table, .table td{
-      /* border-width:px;
+      border-width:px;
       border-style:solid;
-      border-color:grey; */
+      border-color:grey;
       vertical-align: middle;
      }
   </style>
@@ -35,9 +35,9 @@
   </div>
   
   <section layout:fragment="conteudo">
-    <div class="card card-secondary">
+    <!-- <div class="card card-secondary"> -->
       <!-- <div class="card-header"></div> -->
-      <div class="card-body">
+      <!-- <div class="card-body"> -->
         <div class="form-group row">
           <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
           <div class="col-sm-6" th:unless="*{avancada}">
@@ -46,7 +46,8 @@
                 placeholder="Qual grupo você está procurando?" autofocus="autofocus"
                 th:field="*{termo}"/>
               <div class="input-group-append">
-                <button type="submit" class="btn btn-default">Pesquisa
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i> Pesquisa
                   <!-- <i class="fas fa-search"></i> -->
                 </button>
               </div>
@@ -76,7 +77,8 @@
             <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
               <small>Pesquisa Padrão</small>
             </button>
-            <button type="submit" class="btn btn-default" style="float:right">Pesquisar
+            <button type="submit" class="btn btn-default" style="float:right">
+              <i class="fas fa-search"></i> Pesquisar
               <!-- <i class="fas fa-search"></i> -->
             </button>
           </div>
@@ -85,10 +87,10 @@
         <table class="table table-bordered table-hover js-tabela">
           <thead  style="background-color: #fffed4">
             <tr>
-              <th class="text-center col-1">Código</th>
+              <th class="text-center">Código</th>
               <th th:text="#{nome}"></th>
               <th th:text="#{descricao}"></th>
-              <th class="text-center col-2">Ações</th>
+              <th class="text-center">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -115,8 +117,8 @@
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
+      <!-- </div> -->
+    <!-- </div> -->
     <!-- /.card -->
   </section>
   

@@ -1,7 +1,8 @@
 <!-- <!DOCTYPE html> -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
       
   <head></head>
   <body>
@@ -22,7 +23,11 @@
           <img th:src="@{/custom/img/usuario/user_default.png}" class="img-circle elevation-2" alt="User Image"></img>
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexsandro Kauê</a>
+          <a href="#" class="d-block">
+            <div sec:authorize="isAuthenticated()">
+           <span sec:authentication="principal.nome"></span></div>
+          </a>
+          
         </div>
       </div>
     

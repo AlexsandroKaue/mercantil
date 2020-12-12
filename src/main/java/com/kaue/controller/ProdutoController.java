@@ -32,7 +32,6 @@ import com.kaue.model.Lote;
 import com.kaue.model.Produto;
 import com.kaue.service.CategoriaService;
 import com.kaue.service.FornecedorService;
-import com.kaue.service.ProdutoDTService;
 import com.kaue.service.ProdutoService;
 import com.kaue.util.HasValue;
 
@@ -48,8 +47,8 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoService produtoService;
 	
-	@Autowired
-	private ProdutoDTService produtoDTService;
+	//@Autowired
+	//private ProdutoDTService produtoDTService;
 	
 	@Autowired
 	private CategoriaService categoriaService;
@@ -209,7 +208,8 @@ public class ProdutoController {
 		pagingRequest.getFiltro().setStart(new Long(pagingRequest.getStart()));
 		pagingRequest.getFiltro().setPageSize(new Long(pagingRequest.getLength()));
 		pagingRequest.getFiltro().setPaginated(true);
-        return produtoDTService.getProdutos(pagingRequest);
+        //return produtoDTService.getProdutos(pagingRequest);
+		return null;
     }
 	
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)

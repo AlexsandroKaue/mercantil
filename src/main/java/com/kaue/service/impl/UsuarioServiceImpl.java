@@ -26,6 +26,7 @@ import com.kaue.dao.UsuarioDAO;
 import com.kaue.dao.filter.UsuarioFilter;
 import com.kaue.model.Usuario;
 import com.kaue.service.UsuarioService;
+import com.kaue.util.FileManager;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService{
@@ -35,6 +36,9 @@ public class UsuarioServiceImpl implements UsuarioService{
 	
 	@Autowired
     ResourceLoader resourceLoader;
+	
+	@Autowired
+    FileManager fileManager;
 
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
@@ -75,75 +79,13 @@ public class UsuarioServiceImpl implements UsuarioService{
 	}
 
 	@Override
-	public String salvarImagem(MultipartFile imagem, String nome) throws Exception {
-		InputStream is = imagem.getInputStream();
-		byte[] bytes = imagem.getBytes();
-		if(bytes!=null) {
-			String extensao = "jpg";
-			if(imagem.getContentType().equals("image/png")) {
-				extensao = "png";
-			} else if(imagem.getContentType().equals("image/gif")) {
-				extensao = "gif";
-			}
-			String filename = nome +"."+extensao;
-			Resource resource = resourceLoader.getResource("classpath:static/custom/img/usuario");
-			URI uri = resource.getURI();
-			Path path = Paths.get(uri.getPath()+"/"+filename);
-			Files.write(path, bytes);
-		    return filename;
-		}
-		return null;
+	public String salvarImagem(MultipartFile file, String nome) throws Exception {
+		return fileManager.salvarImagem(file, nome, "classpath:static/custom/img/usuario");
 	}
 
 	@Override
 	public String carregarImagem(String nome) {
-		try {
-			Resource resource = resourceLoader.getResource("classpath:static/custom/img/usuario");
-			URI uri = resource.getURI();
-			Path path = Paths.get(uri.getPath()+"/"+nome);
-		    return tranformarEmImagemBase64(path);
-		} catch(IOException e) {
-	    	e.printStackTrace();
-	    	return null;
-	    }
-	}
-	
-	private String tranformarEmImagemBase64(Path path) {
-		String encodedfile = null;
-		
-		byte[] bytes;
-		try {
-			bytes = Files.readAllBytes(path);
-			if(bytes != null) {
-				encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
-			} else {
-				encodedfile = buscarImagemPadrao();
-			}
-		} catch (Exception e) {
-			encodedfile = buscarImagemPadrao();
-		}
-		
-		return encodedfile;
-	}
-	
-	
-	private String buscarImagemPadrao() {
-		
-		String encodedfile = null;
-		try {
-			Resource resource = resourceLoader.getResource("classpath:static/custom/img/produto/sem-imagem_2.jpg");
-			URI uri = resource.getURI();
-			Path path = Paths.get(uri.getPath());
-			byte[] bytes = Files.readAllBytes(path);
-			
-			encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return encodedfile;
+		return fileManager.carregarImagem(nome, "classpath:static/custom/img/usuario");
 	}
 
 	@Transactional
