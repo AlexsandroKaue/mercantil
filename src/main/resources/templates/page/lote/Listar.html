@@ -123,10 +123,16 @@
       <div class="card-body">
         <input type="hidden" id="inputProduto" th:field="*{produto}"></input>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="form-group">
               <label for="inputDescricao" class="col-form-label">Produto</label>
               <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.descricao}" th:classappend="${#fields.hasErrors('produto.descricao')} ? is-invalid">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="inputMarca" class="col-form-label">Marca</label>
+              <input type="text" readonly="readonly" class="form-control" id="inputMarca" th:field="*{produto.marca}" th:classappend="${#fields.hasErrors('produto.marca')} ? is-invalid">
             </div>
           </div>
           <div class="col-md-2">
@@ -135,7 +141,7 @@
               <input type="text" readonly="readonly" class="form-control" id="inputDescricao" th:field="*{produto.categoria.nome}" th:classappend="${#fields.hasErrors('produto.categoria.nome')} ? is-invalid">
             </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             <div class="form-group">
               <label for="inputValorVenda" class="col-form-label">Preço</label>
               <input type="text" readonly="readonly" class="form-control" id="inputValorVenda" th:field="*{{produto.valorDeVenda}}" th:classappend="${#fields.hasErrors('produto.valorDeVenda')} ? is-invalid">

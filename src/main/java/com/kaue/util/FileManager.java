@@ -58,10 +58,15 @@ public class FileManager {
 	public String carregarImagem(String nome, String repository) {
 		try {
 			Resource resource = resourceLoader.getResource(repository);
-			FileSystemResource fsResource = new FileSystemResource(resource.getURI().getPath()+"/"+nome);
-			String absolutePath = fsResource.getFile().getAbsolutePath();
-			Path path = Paths.get(absolutePath);
-		    return tranformarEmImagemBase64(path);
+			if(HasValue.execute(nome)) {
+				FileSystemResource fsResource = new FileSystemResource(resource.getURI().getPath()+"/"+nome);
+				String absolutePath = fsResource.getFile().getAbsolutePath();
+				Path path = Paths.get(absolutePath);
+			    return tranformarEmImagemBase64(path);
+			} else {
+				return buscarImagemPadrao();
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -154,7 +154,17 @@ public class ProdutoController {
 		}
 		List<Produto> produtoList = produtoService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW);
+		mv.addObject("produto", new Produto());
 		mv.addObject("produtos", produtoList);
+		return mv;
+	}
+	
+	@RequestMapping(value = "/detalhes/{id}")
+	public ModelAndView detalhes(@PathVariable("id") Produto produto) {
+		ModelAndView mv = new ModelAndView(LISTAR_VIEW + " :: #modalDetalhesProduto");
+		produto.setImagemBase64(produtoService.carregarImagem(produto.getImagemPath()));
+		mv.addObject("produto", produto);
+		
 		return mv;
 	}
 	
