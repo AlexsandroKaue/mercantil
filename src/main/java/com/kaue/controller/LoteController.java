@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.FornecedorFilter;
 import com.kaue.dao.filter.LoteFilter;
+import com.kaue.model.Cliente;
 import com.kaue.model.Fornecedor;
 import com.kaue.model.Lote;
 import com.kaue.model.Produto;

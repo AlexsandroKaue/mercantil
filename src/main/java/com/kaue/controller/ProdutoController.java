@@ -164,7 +164,13 @@ public class ProdutoController {
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW + " :: #modalDetalhesProduto");
 		produto.setImagemBase64(produtoService.carregarImagem(produto.getImagemPath()));
 		mv.addObject("produto", produto);
-		
+		return mv;
+	}
+	
+	@RequestMapping(value = "/lote/detalhes/{id}")
+	public ModelAndView detalhesLote(@PathVariable("id") Lote lote) {
+		ModelAndView mv = new ModelAndView(LISTAR_VIEW + " :: #modalLote");
+		mv.addObject("lote", lote);
 		return mv;
 	}
 	

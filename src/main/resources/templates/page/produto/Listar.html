@@ -24,8 +24,8 @@
     </form>
     <div layout:insert="~{confirmar_exclusao_produto}"></div>
     
-    <div class="modal fade" id="modalDetalhesProduto">
-      <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="modalDetalhesProduto" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Detalhes do Produto</h4>
@@ -33,67 +33,114 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <div class="row mb-3">
-              <div class="col-sm-12">
-                <div class="float-right">
-                  <a th:href="@{/lotes?produtoId={id}(id=${produto.id})}" class="btn btn-success"
-                    title="Lotes" rel="tooltip" data-placement="top"
-                    sec:authorize="hasAuthority('INCLUIR_LOTE')">
-                    <i class="fas fa-plus-circle"></i> Incluir lote
-                  </a> 
+          <div class="modal-body" >
+            <div class="row" th:if="${produto}">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-md-4">
+                    <dl>
+                      <dt>Código</dt>
+                      <dd class="info-produto" th:if="${#strings.isEmpty(produto.codigo)}" th:text="#{nao.informado}" ></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.codigo)}" th:text="${produto.codigo}" ></dd>
+                      <dt>Nome</dt>
+                      <dd class="info-produto" th:if="${#strings.isEmpty(produto.descricao)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.descricao)}" th:text="${produto.descricao}"></dd>
+                      <dt>Marca</dt>
+                      <dd class="info-produto" th:if="${#strings.isEmpty(produto.marca)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.marca)}" th:text="${produto.marca}"></dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-3">
+                    <dl>
+                      <dt>Categoria</dt>
+                      <dd class="info-produto" th:if="${#strings.isEmpty(produto.categoria)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.categoria)}" th:text="${produto.categoria.nome}"></dd>
+                      <dt>Preço</dt>
+                      <dd class="info-produto" th:if="${#strings.isEmpty(produto.valorDeVenda)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.valorDeVenda)}" th:text="|R$ ${{produto.valorDeVenda}}|"></dd>
+                      <dt>Unitário</dt>
+                      <dd class="info-produto" th:if="${#strings.isEmpty(produto.unitario)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.unitario)}" th:text="${produto.unitario.descricao}"></dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-2">
+                    <dl>
+                      <dt>Qtd. mínima</dt>
+                      <dd class="info-produto" th:if="${#strings.isEmpty(produto.quantidadeMinima)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.quantidadeMinima)}" th:text="${produto.quantidadeMinima}"></dd>
+                      <dt>Qtd. total</dt>
+                      <dd class="info-produto" th:if="${#strings.isEmpty(produto.quantidade)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.quantidade)}" th:text="${produto.quantidade}"></dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-3">
+                    <dl>
+                    <dd><img class="img-fluid" style="height:160px"
+                         th:src="|data:image/png;base64,${produto.imagemBase64}|"
+                         alt="Cliente profile picture"></img></dd>
+                    </dl>
+                  </div>
+                  <!-- <div class="col-md-4">
+                    <dl>
+                      <dt>Código de barras</dt>
+                      <dd class="info-produto" th:text="#{nao.informado}" ></dd>
+                    </dl>
+                  </div> -->
                 </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-                <dl>
-                  <dt>Código</dt>
-                  <dd class="info-produto" th:if="${#strings.isEmpty(produto.codigo)}" th:text="#{nao.informado}" ></dd>
-                  <dd class="info-produto" th:if="${!#strings.isEmpty(produto.codigo)}" th:text="${produto.codigo}" ></dd>
-                  <dt>Nome</dt>
-                  <dd class="info-produto" th:if="${#strings.isEmpty(produto.descricao)}" th:text="#{nao.informado}"></dd>
-                  <dd class="info-produto" th:if="${!#strings.isEmpty(produto.descricao)}" th:text="${produto.descricao}"></dd>
-                  <dt>Marca</dt>
-                  <dd class="info-produto" th:if="${#strings.isEmpty(produto.marca)}" th:text="#{nao.informado}"></dd>
-                  <dd class="info-produto" th:if="${!#strings.isEmpty(produto.marca)}" th:text="${produto.marca}"></dd>
-                </dl>
-              </div>
-              <div class="col-md-3">
-                <dl>
-                  <dt>Categoria</dt>
-                  <dd class="info-produto" th:if="${#strings.isEmpty(produto.categoria)}" th:text="#{nao.informado}"></dd>
-                  <dd class="info-produto" th:if="${!#strings.isEmpty(produto.categoria)}" th:text="${produto.categoria.nome}"></dd>
-                  <dt>Preço</dt>
-                  <dd class="info-produto" th:if="${#strings.isEmpty(produto.valorDeVenda)}" th:text="#{nao.informado}"></dd>
-                  <dd class="info-produto" th:if="${!#strings.isEmpty(produto.valorDeVenda)}" th:text="|R$ ${{produto.valorDeVenda}}|"></dd>
-                  <dt>Unitário</dt>
-                  <dd class="info-produto" th:if="${#strings.isEmpty(produto.unitario)}" th:text="#{nao.informado}"></dd>
-                  <dd class="info-produto" th:if="${!#strings.isEmpty(produto.unitario)}" th:text="${produto.unitario.descricao}"></dd>
-                </dl>
-              </div>
-              <div class="col-md-2">
-                <dl>
-                  <dt>Qtd. mínima</dt>
-                  <dd class="info-produto" th:if="${#strings.isEmpty(produto.quantidadeMinima)}" th:text="#{nao.informado}"></dd>
-                  <dd class="info-produto" th:if="${!#strings.isEmpty(produto.quantidadeMinima)}" th:text="${produto.quantidadeMinima}"></dd>
-                  <dt>Qtd. total</dt>
-                  <dd class="info-produto" th:if="${#strings.isEmpty(produto.quantidade)}" th:text="#{nao.informado}"></dd>
-                  <dd class="info-produto" th:if="${!#strings.isEmpty(produto.quantidade)}" th:text="${produto.quantidade}"></dd>
-                </dl>
-              </div>
-              <div class="col-md-3">
-                <dl>
-                <dd><img class="img-fluid" style="height:160px"
-                     th:src="|data:image/png;base64,${produto.imagemBase64}|"
-                     alt="Cliente profile picture"></img></dd>
-                </dl>
-              </div>
-              <div class="col-md-4">
-                <dl>
-                  <dt>Código de barras</dt>
-                  <dd class="info-produto" th:text="#{nao.informado}" ></dd>
-                </dl>
+                <div class="row">
+                  <div class="col-md-12" >
+                    <div class="row mb-2">
+                      <div class="col-sm-12">
+                        <div class="float-right">
+                          <a th:href="@{/lotes?produtoId={id}(id=${produto.id})}" class="btn btn-success"
+                            title="Lotes" rel="tooltip" data-placement="top"
+                            sec:authorize="hasAuthority('INCLUIR_LOTE')">
+                            <i class="fas fa-plus-circle"></i> Incluir lote
+                          </a> 
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <table class="table table-bordered table-hover table-sm js-tabela">
+                      <thead class="bg-secondary">
+                        <tr>
+                          <th class="text-center">Lote</th>
+                          <th th:text="#{listagem.lote.coluna.produto}"></th>
+                          <th class="text-center" th:text="#{listagem.lote.coluna.dataFabricacao}"></th>
+                          <th class="text-center" th:text="#{listagem.lote.coluna.dataVencimento}"></th>
+                          <th class="text-center" th:text="#{listagem.lote.coluna.valor.custo}"></th>
+                          <th class="text-center" th:text="#{quantidade}"></th>
+                          <th class="text-center" th:text="#{listagem.lote.coluna.acoes}"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr th:each="lote : ${produto.loteList}">
+                        <td class="text-center" th:text="${lote.id}"></td>                  
+                        <td class="text-center" th:text="${{lote.dataFabricacao}}">                    
+                        <td class="text-center" th:text="${{lote.dataVencimento}}">
+                        <td class="text-center" th:text="|R$ ${{lote.valorCusto}}|">
+                        <td class="text-center" th:text="${lote.quantidade}|">
+                        <td class="text-center">
+                          <a th:attr="data-url-lote=@{/produtos/lote/detalhes/{id}(id=${lote.id})}" th:href="@{#}"
+                            class="btn btn-link" data-toggle="modal" data-target="#modalLote"
+                            title="Editar" rel="tooltip" data-placement="top"
+                            sec:authorize="hasAuthority('ALTERAR_LOTE')">
+                            <i class="fas fa-pencil-alt"></i>
+                          </a>
+                          <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link" 
+                            th:href="@{#}" th:attr="data-id=${lote.id}, data-descricao=|Lote ${lote.id} do produto ${lote.produto.descricao}|"
+                            title="Excluir" rel="tooltip" data-placement="top"
+                            sec:authorize="hasAuthority('EXCLUIR_LOTE')">
+                            <i class="fas fa-trash"></i>
+                          </a>
+                        </td>
+                      </tr>
+                      <tr th:if="${#lists.isEmpty(produto.loteList)}">
+                        <td colspan="6">Nenhum lote encontrado.</td>
+                      </tr>
+                    </tbody>
+                    </table> -->
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -108,6 +155,87 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+    
+    <!-- <form role="form" id="loteForm" method="POST" th:action="@{/lotes}">
+    <div class="modal fade" id="modalLote" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Alterar lote</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body">
+            <div class="row" th:if="${lote}">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="inputDescricao" class="col-form-label">Produto</label>
+                  <input type="text" disabled="disabled" class="form-control" th:value="${lote.produto.descricao}">
+                </div>
+              </div>
+            </div>
+            <div id="camposEditaveis" th:if="${lote}">
+            <div class="row">
+              <input id="inputCodigo" type="hidden" th:field="${lote.id}"></input>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="inputDataFabricacao" class="col-form-label">Data de Fabricacao</label>
+                  <input type="text" autofocus="autofocus" class="form-control js-date" id="inputDataFabricacao" th:value="${{lote.dataFabricacao}}">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="inputDataVencimento" class="col-form-label">Data de Vencimento</label>
+                  <input type="text"  autocomplete="off" class="form-control js-date" name="datefilter" id="inputDataVencimento" th:value="${{lote.dataVencimento}}">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="inputValorCusto" class="col-form-label">Valor de Custo</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">R$</span>
+                    </div>
+                    <input type="text" class="form-control js-currency" id="inputValorCusto" th:value="${{lote.valorCusto}}">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="inputQuantidade" class="col-form-label">Quantidade</label>
+                  <input type="text" class="form-control" id="inputQuantidade" th:value="${lote.quantidade}">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="inputCategoria" class="col-form-label" th:text="#{fornecedor}"></label>
+                  <select id="selectFornecedor" class="form-control" th:value="${lote.fornecedor}">
+                    <option value="" selected th:text="#{selecione.fornecedor}"></option>
+                    <option th:each="fornecedor : ${fornecedorList}" th:value="${fornecedor.id}" th:text="${fornecedor.nome}"></option>
+                  </select>
+                  <a th:href="@{#}" data-toggle="modal" data-target="#modalFornecedor">Incluir novo</a>
+                </div>
+              </div>
+            </div>
+            </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-md btn-success" th:text="#{salvar}"></button>
+            </div>
+          </div>
+          /.modal-content
+        </div>
+        /.modal-dialog
+      </div>
+      /.modal 
+      </form> -->
   </section>
   
   <div layout:fragment="titulo">
@@ -263,6 +391,7 @@
   	  
 		response.done(function(e){
     		var modalDialog = $(e).find('.modal-dialog');
+    		//$('#modalDetalhesProduto').replaceWith(e);
     		$('#modalDetalhesProduto').html(modalDialog);
     	});
     	 
@@ -270,6 +399,32 @@
     		alert('Erro ao carregar detalhes do produto.');  
     	});
 		
+	});
+  
+  $('#ancora').on('show.bs.modal', '#modalLote', function(event){
+		var botaoAlterar = $(event.relatedTarget);
+		var urlAlterarLote = botaoAlterar.data('url-lote');
+		var response = $.ajax({
+			url: urlAlterarLote,
+			type: 'GET'
+		})
+		
+		response.done(function(e){
+			var modalDialog = $(e).find('.modal-dialog');
+    		$('#modalLote').html(modalDialog);
+    		
+			/* $('#modalLote').find('.modal-header h4').html('Alterar Lote '+lote.id);
+			$('#modalLote').find('input#inputCodigo').val(lote.id);
+			$('#modalLote').find('input#inputDataFabricacao').val(lote.dataFabricacao);
+			$('#modalLote').find('input#inputDataVencimento').val(lote.dataVencimento);
+			$('#modalLote').find('input#inputValorCusto').val(lote.valorCusto);
+			$('#modalLote').find('input#inputQuantidade').val(lote.quantidade);
+			$('#modalLote').find('select#selectFornecedor').val(lote.fornecedor); */
+		});
+		
+		response.fail(function(e){
+			alert('Erro recebendo lote');
+		});
 	});
   	
     $('#ancora').on('click', '.pesquisa-padrao', function(event){
@@ -283,6 +438,52 @@
       	$('#inputAvancada').val(true);
     	document.getElementById("filtroProdutoForm").submit(); 
   	});
+    
+    $('#ancora').on('show.bs.modal', '.modal', function () {
+	    var zIndex = 1040 + (10 * $('.modal:visible').length);
+	    $(this).css('z-index', zIndex);
+	    setTimeout(function() {
+	        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+	    }, 0);
+	});
+    
+    $('#ancora').on('hidden.bs.modal', '#modalLote', function() {
+  		$('#loteForm').validate().resetForm();
+  		$('#loteForm').find('.is-invalid').removeClass('is-invalid');
+  	});
+  	
+  	$('#inputDataFabricacao').rules('add', {
+      required: true,
+      customDate: true,
+      messages: { 
+          required: "Por favor digite a data de fabricação",
+          customDate: "Por favor forneça uma data válida"
+      }
+    });
+  	$('#inputDataVencimento').rules('add', {
+      required: true,
+      customDate: true,
+      messages: { 
+          required: "Por favor digite a data de vencimento",
+          customDate: "Por favor forneça uma data válida"
+      }
+    });
+  	$('#inputValorCusto').rules('add', {
+      required: true,
+      //min: 0.01,
+      messages: { 
+          required: "Por favor digite o valor de custo",
+          //min: "Por favor digite um valor maior que 0.01"
+      }
+    });
+  	$('#inputQuantidade').rules('add', {
+      required: true,
+      min: 1,
+      messages: { 
+          required: "Por favor digite a quantidade",
+          min: "Por favor digite uma quantidade maior que 0"
+      }
+    });
   </script>
   
 </html>
