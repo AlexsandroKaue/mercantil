@@ -55,12 +55,16 @@
                       <dt>Categoria</dt>
                       <dd class="info-produto" th:if="${#strings.isEmpty(produto.categoria)}" th:text="#{nao.informado}"></dd>
                       <dd class="info-produto" th:if="${!#strings.isEmpty(produto.categoria)}" th:text="${produto.categoria.nome}"></dd>
+                      <dt>Peso líquido</dt>
+                      <dd class="info-produto" th:if="${#strings.isEmpty(produto.pesoLiquido)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.pesoLiquido)}" th:text="${produto.pesoLiquido}"></dd>
                       <dt>Preço</dt>
                       <dd class="info-produto" th:if="${#strings.isEmpty(produto.valorDeVenda)}" th:text="#{nao.informado}"></dd>
-                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.valorDeVenda)}" th:text="|R$ ${{produto.valorDeVenda}}|"></dd>
-                      <dt>Unitário</dt>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.valorDeVenda)}" th:text="|R$ ${{produto.valorDeVenda}} (${produto.unitario.descricao})|"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.valorDeVendaOpcional)}" th:text="|R$ ${{produto.valorDeVendaOpcional}} (${produto.unitarioOpcional.descricao})|"></dd>
+                      <!-- <dt>Unitário</dt>
                       <dd class="info-produto" th:if="${#strings.isEmpty(produto.unitario)}" th:text="#{nao.informado}"></dd>
-                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.unitario)}" th:text="${produto.unitario.descricao}"></dd>
+                      <dd class="info-produto" th:if="${!#strings.isEmpty(produto.unitario)}" th:text="${produto.unitario.descricao}"></dd> -->
                     </dl>
                   </div>
                   <div class="col-md-2">
@@ -243,8 +247,8 @@
   </div>
   
   <div layout:fragment="botoes">
-    <a class="btn btn-block btn-info" th:href="@{/produtos/novo}" th:text="#{novo}"
-     sec:authorize="hasAuthority('INCLUIR_PRODUTO')"></a>
+    <a class="btn btn-block btn-info" th:href="@{/produtos/novo}"
+     sec:authorize="hasAuthority('INCLUIR_PRODUTO')"><i class="fas fa-plus-circle"></i> [[#{novo}]]</a>
   </div>
   
   <section layout:fragment="conteudo">
@@ -326,7 +330,7 @@
         </div>    
         
         <table class="table table-bordered table-hover js-tabela">
-          <thead  style="background-color: #fffed4">
+          <thead class="table-primary">
             <tr>
               <th class="text-center" th:text="#{codigo}"></th>
               <th class="col-auto" th:text="#{descricao}" ></th>

@@ -21,9 +21,9 @@
   </section>
   
   <section layout:fragment="botoes">
-    <a class="btn btn-danger" th:href="@{/produtos}">Voltar</a>
-    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
-    <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
+    <a class="btn btn-danger" th:href="@{/produtos}"><i class="fas fa-arrow-circle-left"></i> [[#{voltar}]]</a>
+    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}"><i class="fas fa-save"></i> [[#{salvar}]]</button>
+    <button type="submit" class="btn btn-md btn-info" th:if="*{id}"><i class="fas fa-save"></i> [[#{alterar}]]</button>
   </section>
   
   <section layout:fragment="conteudo">
@@ -40,111 +40,118 @@
         <input type="hidden" id="inputImagem64" th:field="*{imagemBase64}"></input>
         <p class="text-muted">Os campos marcados com <b class="text-danger">*</b> são obrigatórios.</p>
         <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="inputDescricao" class="col-form-label" th:text="#{nome}"></label><b class="text-danger">*</b>
-              <input type="text" autofocus="autofocus" class="form-control" id="inputDescricao" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
-            </div>
-            <div class="form-group">
-              <label for="inputMarca" class="col-form-label" th:text="#{marca}"></label>
-              <input type="text" class="form-control" id="inputMarca" th:field="*{marca}" th:classappend="${#fields.hasErrors('marca')} ? 'is-invalid'">
-            </div>
-            <div class="form-group">
-              <label for="inputCategoria" class="col-form-label" th:text="#{categoria}"></label><b class="text-danger">*</b>
-              <select id="selectCategoria" class="form-control" th:field="*{categoria}" th:classappend="${#fields.hasErrors('categoria')} ? 'is-invalid'">
-                <option value="" selected th:text="#{selecione.categoria}"></option>
-                <option th:each="categoria : ${categoriaList}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-4">
-            
+          <div class="col-md-8">
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-8">
                 <div class="form-group">
-                  <label for="inputUnitario" class="col-form-label" th:text="#{unitario}"></label><b class="text-danger">*</b>
+                  <label for="inputDescricao" class="col-form-label" th:text="#{nome}"></label><b class="text-danger">*</b>
+                  <input type="text" autofocus="autofocus" class="form-control" id="inputDescricao" th:field="*{descricao}" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid'">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="inputMarca" class="col-form-label" th:text="#{marca}"></label>
+                  <input type="text" class="form-control" id="inputMarca" th:field="*{marca}" th:classappend="${#fields.hasErrors('marca')} ? 'is-invalid'">
+                </div> 
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="inputCategoria" class="col-form-label" th:text="#{categoria}"></label><b class="text-danger">*</b>
+                  <select id="selectCategoria" class="form-control" th:field="*{categoria}" th:classappend="${#fields.hasErrors('categoria')} ? 'is-invalid'">
+                    <option value="" selected th:text="#{selecione.opcao}"></option>
+                    <option th:each="categoria : ${categoriaList}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="inputPesoLiquido" class="col-form-label">Peso líquido</label>
+                  <input type="text" class="form-control" id="inputPesoLiquido" 
+                   th:field="*{pesoLiquido}" th:classappend="${#fields.hasErrors('pesoLiquido')} ? 'is-invalid'">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="inputUnitario" class="col-form-label" th:text="#{unitario}"></label><small> (obrigatório)</small><b class="text-danger">*</b>
                   <select id="selectUnitario" class="form-control" th:field="*{unitario}" th:classappend="${#fields.hasErrors('unitario')} ? 'is-invalid'">
                     <option value="" selected th:text="#{selecione.opcao}"></option>
                     <option th:each="unitario : ${unitarioList}" th:value="${unitario}" th:text="${unitario.descricao}"></option>
                   </select>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-2">
                 <div class="form-group">
                   <label for="inputQuantidadeMinima" class="col-form-label">Qtd. Mínima</label>
                   <input type="number" class="form-control" id="inputQuantidadeMinima" th:field="*{quantidadeMinima}" 
                    th:classappend="${#fields.hasErrors('quantidadeMinima')} ? 'is-invalid'">
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-2">
                 <div class="form-group">
                   <label for="inputQuantidade" class="col-form-label">Qtd. Total</label>
                   <input type="text" readonly="readonly" class="form-control" id="inputQuantidade" th:field="*{quantidade}" th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid'">
                 </div>
               </div>
-              
-            </div>
-            
-            <!-- <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-4">
                 <div class="form-group">
-                  <label for="inputUnitario" class="col-form-label" th:text="#{unitario}"></label><b class="text-danger">*</b>
-                  <select id="selectUnitario" class="form-control" th:field="*{unitario}" th:classappend="${#fields.hasErrors('unitario')} ? 'is-invalid'">
-                    <option value="" selected th:text="#{selecione.opcao}"></option>
-                    <option th:each="unitario : ${unitarioList}" th:value="${unitario}" th:text="${unitario.descricao}"></option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <div class="form-group">
-                    <label for="inputQuantidadeMinima" class="col-form-label">Qtd. no Pacote</label>
-                    <input type="number" class="form-control" id="inputQuantidadeMinima" th:field="*{quantidadeMinima}" 
-                     th:classappend="${#fields.hasErrors('quantidadeMinima')} ? 'is-invalid'">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="inputValorVenda" class="col-form-label">Preço un.</label><b class="text-danger">*</b>
+                  <label for="inputValorVenda" class="col-form-label" th:text="#{venda}"></label><small> (obrigatório)</small><b class="text-danger">*</b>
                   <div class="input-group">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">R$<i class="fas fa-phone"></i></span>
+                      <span class="input-group-text">R$</span>
                     </div>
                     <input type="text" class="form-control js-currency" id="inputValorVenda" th:field="*{valorDeVenda}" th:classappend="${#fields.hasErrors('valorDeVenda')} ? is-invalid">
                   </div>
                 </div>
               </div>
-            </div> -->
-            
-            
-            <div class="form-group">
-              <label for="inputValorVenda" class="col-form-label" th:text="#{venda}"></label><b class="text-danger">*</b>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">R$<!-- <i class="fas fa-phone"> --></i></span>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="inputUnitarioOpcional" class="col-form-label" th:text="#{unitario}"></label><small> (opcional)</small>
+                  <select id="selectUnitarioOpcional" class="form-control" th:field="*{unitarioOpcional}" th:classappend="${#fields.hasErrors('unitarioOpcional')} ? 'is-invalid'">
+                    <option value="" selected th:text="#{selecione.opcao}"></option>
+                    <option th:each="unitario : ${unitarioList}" th:value="${unitario}" th:text="${unitario.descricao}"></option>
+                  </select>
                 </div>
-                <input type="text" class="form-control js-currency" id="inputValorVenda" th:field="*{valorDeVenda}" th:classappend="${#fields.hasErrors('valorDeVenda')} ? is-invalid">
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="inputValorVendaOpcional" class="col-form-label" th:text="#{venda}"></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">R$</span>
+                    </div>
+                    <input type="text" class="form-control js-currency" id="inputValorVendaOpcional" 
+                     th:field="*{valorDeVendaOpcional}" th:classappend="${#fields.hasErrors('valorDeVendaOpcional')} ? is-invalid">
+                     <div class="input-group-pospend">
+                      <a class="btn btn-link" id="botaoLimpar" th:href="@{#}" title="Limpar" rel="tooltip" data-placement="top"><i class="fas fa-sync-alt"></i></a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            
-            
-          </div>
+          </div>  
           <div class="col-md-4">
-            <div class="form-group">
-              <label class="col-form-label">Imagem</label>
-              <div class="box-profile">
-                <div class="text-center mb-4">
-                  <img id="foto" class="img-fluid" style="height:160px"
-                       th:src="|data:image/png;base64,*{imagemBase64}|"
-                       alt="User profile picture"></img><!-- class="profile-user-img img-fluid img-circle" -->
-                </div>
-    
-                <div class="form-group">
-                  <div class="input-group">
-                    <div class="custom-file">
-                      <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
-                      <label class="custom-file-label" for="exampleInputFile">Clique para alterar a imagem...</label>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="col-form-label">Imagem</label>
+                <div class="box-profile">
+                  <div class="text-center mb-4">
+                    <img id="foto" class="img-fluid" style="height:160px"
+                         th:src="|data:image/png;base64,*{imagemBase64}|"
+                         alt="User profile picture"></img>
+                  </div>
+      
+                  <div class="form-group">
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Clique para alterar a imagem...</label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -152,6 +159,7 @@
             </div>
           </div>
         </div>
+        
         <br/>
     </div>
       <!-- <div class="card-footer">
@@ -166,25 +174,25 @@
         $('#inputDescricao').rules('add', {
           required: true,
           messages: { 
-              required: "Por favor, digite uma descrição para o produto"
+              required: "Campo obrigatório."//"Por favor, digite uma descrição para o produto"
           }
         });
         $('#selectCategoria').rules('add', {
           required: true,
           messages: { 
-              required: "Por favor, escolha uma categoria"
+              required: "Campo obrigatório."//"Por favor, escolha uma categoria"
           }
         });
        $('#selectUnitario').rules('add', {
           required: true,
           messages: { 
-              required: "Por favor, escolha um unitário"
+              required: "Campo obrigatório."//"Por favor, escolha um unitário"
           }
         });
        $('#inputValorVenda').rules('add', {
            required: true,
            messages: { 
-               required: "Por favor, digite uma valor de venda"
+               required: "Campo obrigatório."//"Por favor, digite uma valor de venda"
            }
          });
        $('#inputQuantidadeMinima').rules('add', {
@@ -208,6 +216,10 @@
 
     	$("#exampleInputFile").change(function() {
     	  readURL(this);
+    	});
+    	
+    	$("#ancora").on('click', '#botaoLimpar', function(event){
+    		$('#inputValorVendaOpcional').val(null);
     	});
   	</script>
   </div>

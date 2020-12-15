@@ -45,13 +45,19 @@ public class Produto {
 	private String marca;
 	
 	//@NotNull(message = "Valor de Venda é obrigatório")
-	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
+	@DecimalMin(value = "0.01", message = "Preço não pode ser menor que 0,01")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorDeVenda;
+	
+	@DecimalMin(value = "0.01", message = "Preço não pode ser menor que 0,01")
+	@NumberFormat(pattern = "#,##0.00")
+	private BigDecimal valorDeVendaOpcional;
 	
 	private Integer quantidade;
 	
 	private Integer quantidadeMinima;
+	
+	private String pesoLiquido;
 	
 	@NotNull(message = "A Categoria é obrigatória")
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -64,6 +70,9 @@ public class Produto {
 	@NotNull(message = "O campo unitário é obrigatório")
 	@Enumerated(EnumType.STRING)
 	private Unitario unitario;
+	
+	@Enumerated(EnumType.STRING)
+	private Unitario unitarioOpcional;
 	
 	/* @Lob */
 	private byte[] imagem;
@@ -200,6 +209,30 @@ public class Produto {
 
 	public void setImagemPath(String imagemPath) {
 		this.imagemPath = imagemPath;
+	}
+
+	public String getPesoLiquido() {
+		return pesoLiquido;
+	}
+
+	public void setPesoLiquido(String pesoLiquido) {
+		this.pesoLiquido = pesoLiquido;
+	}
+
+	public BigDecimal getValorDeVendaOpcional() {
+		return valorDeVendaOpcional;
+	}
+
+	public void setValorDeVendaOpcional(BigDecimal valorDeVendaOpcional) {
+		this.valorDeVendaOpcional = valorDeVendaOpcional;
+	}
+
+	public Unitario getUnitarioOpcional() {
+		return unitarioOpcional;
+	}
+
+	public void setUnitarioOpcional(Unitario unitarioOpcional) {
+		this.unitarioOpcional = unitarioOpcional;
 	}
 
 }

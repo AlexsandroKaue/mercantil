@@ -93,6 +93,7 @@
                         <dd class="info-produto" id="detalheProdutoCategoria">Não informado</dd>
                         <dt>Preço</dt>
                         <dd class="info-produto" id="detalheProdutoPreco">Não informado</dd>
+                        <dd class="info-produto" id="detalheProdutoPrecoOpcional">Não informado</dd>
                       </dl>
                     </div>
                     <div class="col-md-3 text-center">
@@ -228,6 +229,7 @@ $('.js-buscar-produto').on('select2:select', function(e) {
 		$('#detalheProdutoMarca').html(e.marca);
 		$('#detalheProdutoCategoria').html(e.categoria.nome);
 		$('#detalheProdutoPreco').html(currencyformatter.format(e.valorDeVenda)+' '+e.unitario);
+		$('#detalheProdutoPrecoOpcional').html(currencyformatter.format(e.valorDeVendaOpcional)+' '+e.unitarioOpcional);
 		$("#detalheProdutoImagem").attr('src', 'data:image/png;base64,'+e.imagemBase64);
 		$('#detalheProduto').removeAttr('hidden');
 		$('#nenhumProduto').attr('hidden', 'hidden');

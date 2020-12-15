@@ -87,7 +87,7 @@ function inicializar() {
 	    
 	$('.js-currency').maskMoney({decimal:',', 
 		thousands:'.', 
-		allowZero:'true',
+		allowZero:'false',
 		formatOnBlur:false});
 	
 	$('[data-mask]').inputmask();

@@ -231,6 +231,7 @@ public class ProdutoController {
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	public String excluir(@PathVariable Long id, RedirectAttributes attributes) {
 		try {
+			
 			produtoService.excluir(id);
 			attributes.addFlashAttribute("mensagem", "Produto excluído com sucesso!");
 		} catch (Exception e) {

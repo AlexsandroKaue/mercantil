@@ -61,9 +61,6 @@ public class UsuarioController {
 	public ModelAndView showFormEditar(@PathVariable("id") Usuario usuario) {
 		ModelAndView mv = new ModelAndView(ALTERAR_VIEW);
 		usuario.setImagemBase64(usuarioService.carregarImagem(usuario.getFoto()));
-		mv.addObject("senhaAtual");
-		mv.addObject("novaSenha");
-		mv.addObject("novaSenhaConfirmacao");
 		mv.addObject("usuario", usuario);
 		return mv;
 	}

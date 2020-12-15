@@ -11,13 +11,114 @@
     <form role="form" id="usuarioForm" enctype="multipart/form-data" method="POST" 
       th:action="@{/usuarios}" th:object="${usuario}">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-      <header layout:insert="~{cabecalho}"></header>
-      <header layout:insert="~{corpo}"></header>
+      
+      <div class="content-header" style="padding-left:0px; padding-right:0px">
+        <div class="container-fluid" layout:fragment="cabecalho">
+          <div class="row mb-2">
+            <div class="col-sm-9" layout:fragment="titulo">
+               <h1 class="text-dark">Usuário</h1>
+            </div>
+            <div class="col-sm-3">
+              <div class="breadcrumb float-right">
+                <div>
+                <a class="btn btn-danger" th:href="@{/usuarios}">Voltar</a>
+                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
+                <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>  
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      
+      <section class="content" th:fragment="content">
+        <div class="container-fluid">
+        
+          <div layout:insert="~{mensagem_geral}"></div>
+          <div layout:insert="~{mensagem_erro}"></div>
+          
+          <div class="card card-secondary">
+            <!-- <div class="card-header">
+              <h3 class="card-title">Novo Título</h3>
+            </div> -->
+            <div class="card-body">
+              <p class="text-muted">Os campos marcados com <b class="text-danger">*</b> são obrigatórios.</p>
+              <div class="row">
+                <div class="col-md-4">
+                  <input type="hidden" id="inputId" th:field="*{id}"></input>
+                  <input type="hidden" id="inputSenha" th:field="*{senha}"></input>
+                  <input type="hidden" id="inputLogin" th:field="*{login}"></input>
+                  <div class="form-group">
+                    <label for="inputNome" class="col-form-label">Nome</label><b class="text-danger">*</b>
+                    <input type="text" autofocus="autofocus" class="form-control" id="inputNome" th:field="*{nome}" th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail" class="col-form-label">Email</label>
+                    <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
+                  </div>
+                  <div class="form-group">
+                    <label for="inputTelefone" class="col-form-label">Telefone</label>
+                    <input type="text" class="form-control" id="inputTelefone" th:field="*{telefone}" th:classappend="${#fields.hasErrors('telefone')} ? 'is-invalid'"
+                     data-inputmask='"mask": "(99) 99999-9999"' data-mask>   
+                  </div>            
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="inputSenha" class="col-form-label">Senha</label><br/>
+                    <a class="btn btn-link" href="" data-toggle="modal" data-target="#modalAlterarSenha">
+                      Clique aqui para alterar a senha
+                    </a>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputStatus" class="col-form-label">Ativo?</label>
+                    <select id="inputStatus" class="form-control" th:field="*{ativo}">
+                      <!-- <option value="" selected th:text="#{selecione.estado}"></option> -->
+                      <option th:each="status : ${statusUsuarioList}" th:value="${status}" th:text="${status.descricao}"></option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputGrupo" class="col-form-label">Grupo</label><b class="text-danger">*</b>
+                    <select id="inputGrupo" class="form-control" th:field="*{grupo}">
+                      <option value="" selected th:text="#{selecione.grupo}"></option>
+                      <option th:each="grupo : ${grupoList}" th:value="${grupo.id}" th:text="${grupo.nome}"></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="col-form-label">Foto</label>
+                    <div class="box-profile">
+                      <div class="text-center mb-4">
+                       <input type="hidden" th:field="*{foto}"></input>
+                       <img id="imagem" class="img-fluid" style="height:160px"
+                        th:src="|data:image/png;base64,*{imagemBase64}|"
+                        alt="User profile picture"></img>
+                      </div>
+                        <div class="input-group">
+                          <div class="custom-file">
+                            <input type="file" name="file" class="custom-file-input" id="inputImagem">
+                            <label class="custom-file-label" for="inputImagem">Clique para alterar a imagem...</label>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card -->
+          
+        </div>
+        <!-- container-fluid -->
+      </section>
+      <!-- /.content -->
     </form>
     
-    <div class="modal fade" id="modalAlterarSenha">
-      <div class="modal-dialog modal-sm">
-        <form id="senhaForm" method="POST" th:action="@{/usuarios/alterarSenha}"> 
+    <form role="form" id="senhaForm" method="POST" th:action="@{/usuarios/alterarSenha}">
+      <div class="modal fade" id="modalAlterarSenha">
+        <div class="modal-dialog modal-sm">
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
           <div class="modal-content">
             <div class="modal-header">
@@ -71,98 +172,14 @@
             </div>
           </div>
         <!-- /.modal-content -->
-        </form>
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-  </section>
-  
-  <section layout:fragment="titulo">
-    <h1 class="m-0 text-dark">Cadastro de Usuarios</h1>
-  </section>
-  
-  <section layout:fragment="botoes">
-    <a class="btn btn-danger" th:href="@{/usuarios}">Voltar</a>
-    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
-    <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
-  </section>
-  
-  <section layout:fragment="conteudo">
-    <div class="card card-secondary">
-      <!-- <div class="card-header">
-        <h3 class="card-title">Novo Título</h3>
-      </div> -->
-      <div class="card-body">
-        <p class="text-muted">Os campos marcados com <b class="text-danger">*</b> são obrigatórios.</p>
-        <div class="row">
-          <div class="col-md-4">
-            <input type="hidden" id="inputId" th:field="*{id}"></input>
-            <input type="hidden" id="inputSenha" th:field="*{senha}"></input>
-            <input type="hidden" id="inputLogin" th:field="*{login}"></input>
-            <div class="form-group">
-              <label for="inputNome" class="col-form-label">Nome</label><b class="text-danger">*</b>
-              <input type="text" autofocus="autofocus" class="form-control" id="inputNome" th:field="*{nome}" th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'">
-            </div>
-            <div class="form-group">
-              <label for="inputEmail" class="col-form-label">Email</label>
-              <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
-            </div>
-            <div class="form-group">
-              <label for="inputTelefone" class="col-form-label">Telefone</label>
-              <input type="text" class="form-control" id="inputTelefone" th:field="*{telefone}" th:classappend="${#fields.hasErrors('telefone')} ? 'is-invalid'"
-               data-inputmask='"mask": "(99) 99999-9999"' data-mask>   
-            </div>            
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="inputSenha" class="col-form-label">Senha</label><br/>
-              <a class="btn btn-link" href="" data-toggle="modal" data-target="#modalAlterarSenha">
-                Clique aqui para alterar a senha
-              </a>
-            </div>
-            <div class="form-group">
-              <label for="inputStatus" class="col-form-label">Ativo?</label>
-              <select id="inputStatus" class="form-control" th:field="*{ativo}">
-                <!-- <option value="" selected th:text="#{selecione.estado}"></option> -->
-                <option th:each="status : ${statusUsuarioList}" th:value="${status}" th:text="${status.descricao}"></option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="inputGrupo" class="col-form-label">Grupo</label><b class="text-danger">*</b>
-              <select id="inputGrupo" class="form-control" th:field="*{grupo}">
-                <option value="" selected th:text="#{selecione.grupo}"></option>
-                <option th:each="grupo : ${grupoList}" th:value="${grupo.id}" th:text="${grupo.nome}"></option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="col-form-label">Foto</label>
-              <div class="box-profile">
-                <div class="text-center mb-4">
-                 <input type="hidden" th:field="*{foto}"></input>
-                 <img id="imagem" class="img-fluid" style="height:160px"
-                  th:src="|data:image/png;base64,*{imagemBase64}|"
-                  alt="User profile picture"></img>
-                </div>
-                  <div class="input-group">
-                    <div class="custom-file">
-                      <input type="file" name="file" class="custom-file-input" id="inputImagem">
-                      <label class="custom-file-label" for="inputImagem">Clique para alterar a imagem...</label>
-                    </div>
-                  </div>
-              </div>
-            </div>
-          </div>
         </div>
+      <!-- /.modal-dialog -->
       </div>
-    </div>
-    <!-- /.card -->
+    <!-- /.modal -->
+    </form>
   </section>
   
-  <div layout:fragment="js-validator">
-    <script id="validador">
+  <script layout:fragment="js-validator">
       $('#inputNome').rules('add', {
         required: true,
         maxlength: 100,
@@ -206,27 +223,8 @@
         	  extension: "Formato inválido, apenas: jpg, jpeg ou png.",
           }
       });
-      
-      function readURL(input) {
-    	  if (input.files && input.files[0]) {
-    	    var reader = new FileReader();
-    	    
-    	    reader.onload = function(e) {
-    	      $('#imagem').attr('src', e.target.result);
-    	    }
-    	    
-    	    reader.readAsDataURL(input.files[0]); // convert to base64 string
-    	    $('#inputImagem').valid();
-    	  }
-    	}
-
-  	$("#inputImagem").change(function() {
-  	  readURL(this);
-  	});
   	
-  	$('document').ready(function() {
-
-  		$(this).on('click', '.js-alterar-senha', function(event) {
+  	$('#ancora').on('click', '.js-alterar-senha', function(event){
   		event.preventDefault();
   		$('#senhaForm').validate({
   			rules: {
@@ -262,14 +260,13 @@
 		    unhighlight: function (element, errorClass, validClass) {
 		      	$(element).removeClass('is-invalid');
 		    }
-		});
-  		  
+			});
   		var isValidated = $('#senhaForm').valid();
   		if(isValidated) {  			
-  			var id = $('#usuarioForm').find('input#inputId').val();
-  			var senhaAtual = $('#modalAlterarSenha').find('input#inputSenhaAtual').val();
-  	  		var novaSenha = $('#modalAlterarSenha').find('input#inputNovaSenha').val();
-  	  		var novaSenhaConfirmacao = $('#modalAlterarSenha').find('input#inputConfirmarSenha').val();  
+  			var id = $('#usuarioForm').find('#inputId').val();
+  			var senhaAtual = $('#modalAlterarSenha').find('#inputSenhaAtual').val();
+  	  		var novaSenha = $('#modalAlterarSenha').find('#inputNovaSenha').val();
+  	  		var novaSenhaConfirmacao = $('#modalAlterarSenha').find('#inputConfirmarSenha').val();  
   	  		var dados = {
   	  			id: id,
 	  			senhaAtual: senhaAtual,
@@ -283,49 +280,61 @@
     			contentType:'application/json' 
     		}); 
       		
-      		response.done(function(e){
-      			var ok = e.ok;
-      			var mensagem = e.mensagem;
-      			bootstrap_alert = function() {};
-      			if(ok) {
-      				bootstrap_alert.warning = function(message) {
-          	  	    	$('#mensagemAlteracaoSenha').html('<div class="alert alert-success js-fade"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-check"></i>'+message+'</span></div>')
-          	  	    };
-      			} else {
-      				bootstrap_alert.warning = function(message) {
-      					$('#mensagemAlteracaoSenha').html('<div class="alert alert-danger js-fade"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-ban"></i>'+message+'</span></div>')
-          	  	    };
-      			}
-      			bootstrap_alert.warning(mensagem);
-      			$('#modalAlterarSenha').find('input#inputSenhaAtual').val(null);
-      			$('#modalAlterarSenha').find('input#inputNovaSenha').val(null);
-      			$('#modalAlterarSenha').find('input#inputConfirmarSenha').val(null);
+      	response.done(function(e) {
+    			var ok = e.ok;
+    			var mensagem = e.mensagem;
+    			bootstrap_alert = function() {};
+    			if(ok) {
+    				bootstrap_alert.warning = function(message) {
+        	  	    	$('#mensagemAlteracaoSenha').html('<div class="alert alert-success js-fade"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-check"></i>'+message+'</span></div>')
+        	  	    };
+    			} else {
+    				bootstrap_alert.warning = function(message) {
+    					$('#mensagemAlteracaoSenha').html('<div class="alert alert-danger js-fade"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span><i class="icon fas fa-ban"></i>'+message+'</span></div>')
+        	  	    };
+    			}
+    			bootstrap_alert.warning(mensagem);
+    			$('#modalAlterarSenha').find('#inputSenhaAtual').val(null);
+    			$('#modalAlterarSenha').find('#inputNovaSenha').val(null);
+    			$('#modalAlterarSenha').find('#inputConfirmarSenha').val(null);
     		});
       		
-      		response.fail(function(e){
-      			alert('Erro atualizando senha');
+      	response.fail(function(e){
+      		alert('Erro atualizando senha');
     		}); 
   		}
-    
-  		});
-
   	});
   	
-  	$('#container').on('hide.bs.modal', '#modalAlterarSenha', function(event){
+  	/* $('#ancora').on('hide.bs.modal', '#modalAlterarSenha', function(event){
   		$('#mensagemAlteracaoSenha').html('');
   		$('#senhaForm').validate().resetForm();
   		$('#senhaForm').find('.is-invalid').removeClass('is-invalid');
   		$('#modalAlterarSenha').find('input#inputSenhaAtual').val(null);
 		$('#modalAlterarSenha').find('input#inputNovaSenha').val(null);
 		$('#modalAlterarSenha').find('input#inputConfirmarSenha').val(null);
+  	}); */
+  	
+  	$('#ancora').on('shown.bs.modal', '#modalAlterarSenha', function(event){
+  		$(this).find('#inputSenhaAtual').focus();
   	});
   	
-  	$('#container').on('shown.bs.modal', '#modalAlterarSenha', function(event){
-  		$(this).find('input#inputSenhaAtual').focus();
-  	});
-    
+  	function readURL(input){
+ 			if(input.files && input.files[0]){
+  			var reader = new FileReader();
+    	    
+    	  reader.onload = function(e) {
+    	  	$('#imagem').attr('src', e.target.result);
+    	  }
+    	    
+    	  reader.readAsDataURL(input.files[0]); // convert to base64 string
+    	  $('#inputImagem').valid();
+  	  }
+  	}	
+
+	  $("#inputImagem").change(function() {
+	    readURL(this);
+	  });
   </script>
-  </div>
   
     
 </html>
