@@ -1,8 +1,11 @@
 package com.kaue.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -174,7 +177,17 @@ public class ProdutoController {
 		return mv;
 	}
 	
-	
+	@RequestMapping(value = "/restauraImagem")
+	@ResponseBody
+    public Map<String, String> restauraImagem(@RequestParam(value="id", required=false) Produto produto) {
+		Map<String, String> map = new HashMap<String, String>();
+		if(HasValue.execute(produto)) {
+			map.put("imagem", produtoService.carregarImagem(produto.getImagemPath()));
+		} else {
+			map.put("imagem", produtoService.carregarImagem(null));
+		}
+		return map;
+    }
 	 /*@RequestMapping public String pesquisar(@ModelAttribute("filtro") ProdutoFilter filtro, Model model) {
 		 //Start searching.
 		 this.filtro = filtro;

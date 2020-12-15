@@ -152,6 +152,12 @@
                         <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
                         <label class="custom-file-label" for="exampleInputFile">Clique para alterar a imagem...</label>
                       </div>
+                      <a th:if="*{id}" class="btn btn-link" id="botaoRestaurarImagem" th:href="@{#}" 
+                        th:attr="data-url-restaura-imagem=@{/produtos/restauraImagem(id=*{id})}"
+                        title="Limpar" rel="tooltip" data-placement="top"><i class="fas fa-sync-alt"></i></a>
+                      <a th:if="!*{id}" class="btn btn-link" id="botaoRestaurarImagem" th:href="@{#}" 
+                        th:attr="data-url-restaura-imagem=@{/produtos/restauraImagem}"
+                        title="Limpar" rel="tooltip" data-placement="top"><i class="fas fa-sync-alt"></i></a>
                     </div>
                   </div>
                 </div>
@@ -220,6 +226,22 @@
     	
     	$("#ancora").on('click', '#botaoLimpar', function(event){
     		$('#inputValorVendaOpcional').val(null);
+    	});
+    	
+    	$("#ancora").on('click', '#botaoRestaurarImagem', function(event){
+    		var botao = $(event.currentTarget);
+    		var url = botao.data('url-restaura-imagem');
+    		console.log(url);
+    		var response = $.ajax({
+    			url: url,
+    			type: 'GET'
+    		});
+    		response.done(function(e){
+    			$('#foto').attr('src', 'data:image/png;base64,'+e.imagem);
+    		});
+    		response.fail(function(e){
+    			alert('Erro ao restaurar imagem.');
+    		});
     	});
   	</script>
   </div>
