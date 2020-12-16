@@ -106,6 +106,7 @@ public class ProdutoController {
 			if(produto.getId()==null) {
 				attributes.addFlashAttribute("mensagem", "Produto cadastrado com sucesso!");
 				Long idAtual = produtoService.obterIdAtual();
+				idAtual = idAtual != null ? idAtual : 0;
 				produto.setCodigo(String.format("%010d" , idAtual+1));
 				url = "redirect:/produtos/novo";
 			} else {

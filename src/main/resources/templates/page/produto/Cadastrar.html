@@ -127,9 +127,9 @@
                     </div>
                     <input type="text" class="form-control js-currency" id="inputValorVendaOpcional" 
                      th:field="*{valorDeVendaOpcional}" th:classappend="${#fields.hasErrors('valorDeVendaOpcional')} ? is-invalid">
-                     <div class="input-group-pospend">
+                     <!-- <div class="input-group-pospend">
                       <a class="btn btn-link" id="botaoLimpar" th:href="@{#}" title="Limpar" rel="tooltip" data-placement="top"><i class="fas fa-sync-alt"></i></a>
-                    </div>
+                     </div> -->
                   </div>
                 </div>
               </div>
@@ -152,12 +152,12 @@
                         <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
                         <label class="custom-file-label" for="exampleInputFile">Clique para alterar a imagem...</label>
                       </div>
-                      <a th:if="*{id}" class="btn btn-link" id="botaoRestaurarImagem" th:href="@{#}" 
+                      <!-- <a th:if="*{id}" class="btn btn-link" id="botaoRestaurarImagem" th:href="@{#}" 
                         th:attr="data-url-restaura-imagem=@{/produtos/restauraImagem(id=*{id})}"
                         title="Limpar" rel="tooltip" data-placement="top"><i class="fas fa-sync-alt"></i></a>
                       <a th:if="!*{id}" class="btn btn-link" id="botaoRestaurarImagem" th:href="@{#}" 
                         th:attr="data-url-restaura-imagem=@{/produtos/restauraImagem}"
-                        title="Limpar" rel="tooltip" data-placement="top"><i class="fas fa-sync-alt"></i></a>
+                        title="Limpar" rel="tooltip" data-placement="top"><i class="fas fa-sync-alt"></i></a> -->
                     </div>
                   </div>
                 </div>

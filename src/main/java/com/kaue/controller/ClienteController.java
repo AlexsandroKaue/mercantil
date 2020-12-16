@@ -96,7 +96,9 @@ public class ClienteController {
 					if(HasValue.execute(cliente.getId())) {
 						id = cliente.getId();
 					} else {
-						id = clienteService.obterMaxId()+1;
+						id = clienteService.obterMaxId();
+						id = id != null ? id : 0;
+						id = id + 1;
 					}
 					String filename = clienteService.salvarImagem(multipartFile, "Cliente_"+id);
 					cliente.setImagemPath(filename);
