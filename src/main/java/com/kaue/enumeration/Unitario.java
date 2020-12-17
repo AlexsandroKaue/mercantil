@@ -3,7 +3,7 @@ package com.kaue.enumeration;
 public enum Unitario {
 	
 	Un("Unidade - Un", "Un"),
-	Pc("Pacote - Pc", "Pc"),
+	Pc("Pacote Fechado- Pc", "Pc"),
 	Kg("Quilo - Kg", "Kg");
 	
 	private String descricao;
