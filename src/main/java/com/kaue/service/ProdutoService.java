@@ -22,4 +22,6 @@ public interface ProdutoService {
 	public String salvarImagem(MultipartFile file, String nome) throws Exception;
 	public Long obterMaxId();
 	public String carregarImagem(String nome);
+	public byte[] prepararImagem(MultipartFile multipartFile) throws Exception;
+	public String tranformarEmImagemBase64(byte[] bytes);
 }

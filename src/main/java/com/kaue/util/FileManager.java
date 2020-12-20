@@ -26,6 +26,27 @@ public class FileManager {
 	@Autowired
     ResourceLoader resourceLoader;
 	
+	public byte[] prepararImagem(MultipartFile multipartFile) throws Exception {
+		byte[] raw = multipartFile.getBytes();
+		byte[] processed = null;
+		if(raw!=null) {
+			String contentType = multipartFile.getContentType();
+			if(!(contentType.equals("image/jpg")
+					||contentType.equals("image/jpeg")
+					||contentType.equals("image/png")
+					||contentType.equals("image/gif"))) 
+			{
+				throw new IOException("Formato de arquivo incorreto. \n Apenas jpg/jpeg, png ou gif são válidos.");
+			}
+			
+			BufferedImage croppedImage = cropImage(raw);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(croppedImage, "png", baos); 
+			processed = baos.toByteArray();
+		}
+		return processed;
+	}
+	
 	public String salvarImagem(MultipartFile file, String nome, String repository) throws Exception {
 		byte[] bytes = file.getBytes();
 		if(bytes!=null) {
@@ -56,44 +77,41 @@ public class FileManager {
 	}
 	
 	public String carregarImagem(String nome, String repository) {
+		String encoded = null;
 		try {
 			Resource resource = resourceLoader.getResource(repository);
+			
+			byte[] bytes = null;
 			if(HasValue.execute(nome)) {
 				FileSystemResource fsResource = new FileSystemResource(resource.getURI().getPath()+"/"+nome);
 				String absolutePath = fsResource.getFile().getAbsolutePath();
 				Path path = Paths.get(absolutePath);
-			    return tranformarEmImagemBase64(path);
-			} else {
-				return buscarImagemPadrao();
+				bytes = Files.readAllBytes(path);
 			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+			encoded = tranformarEmImagemBase64(bytes);
+		} catch (IOException e) {}
+		return encoded;
 	}
 	
-	private String tranformarEmImagemBase64(Path path) {
-		String encodedfile = null;
+	public String tranformarEmImagemBase64(byte[] bytes) {
+		String encoded = null;
 		
-		byte[] bytes;
 		try {
-			bytes = Files.readAllBytes(path);
 			if(bytes != null) {
-				encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
-			} else {
-				encodedfile = buscarImagemPadrao();
-			}
-		} catch (Exception e) {
-			encodedfile = buscarImagemPadrao();
+				encoded = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+			} 
+		} catch (Exception e) {}
+		
+		if(!HasValue.execute(encoded)) {
+			encoded = buscarImagemPadrao();
 		}
 		
-		return encodedfile;
+		return encoded;
 	}
 	
 	private String buscarImagemPadrao() {
 		
-		String encodedfile = null;
+		String encoded = null;
 		try {
 			Resource resource = resourceLoader.getResource("classpath:static/custom/img/sem-imagem_2.jpg");
 			FileSystemResource fsResource = new FileSystemResource(resource.getURI().getPath());
@@ -101,14 +119,14 @@ public class FileManager {
 			Path path = Paths.get(absolutePath);
 			byte[] bytes = Files.readAllBytes(path);
 			
-			encodedfile = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+			encoded = new String(Base64.getEncoder().encode(bytes), "UTF-8");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		return encodedfile;
+		return encoded;
 	}
 	
 	private BufferedImage cropImage(byte[] image) throws IOException {

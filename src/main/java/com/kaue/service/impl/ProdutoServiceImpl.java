@@ -115,5 +115,15 @@ public class ProdutoServiceImpl implements ProdutoService{
 		Page<Produto> page = new PageImpl<Produto>(produtoList, pageable, total);
 		return page;
 	}
+
+	@Override
+	public byte[] prepararImagem(MultipartFile multipartFile) throws Exception {
+		return fileManager.prepararImagem(multipartFile);
+	}
+
+	@Override
+	public String tranformarEmImagemBase64(byte[] bytes) {
+		return fileManager.tranformarEmImagemBase64(bytes);
+	}
 	
 }

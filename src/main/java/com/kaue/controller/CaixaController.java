@@ -377,7 +377,7 @@ public class CaixaController {
 	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
 		
 		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
-			errors.rejectValue("subtotal", null, "Erro: A lista não pode estar vazia!");
+			errors.rejectValue("subtotal", null, "Erro: A lista de compras está vazia!");
 		}
 		
 		if(venda.getSaldo()!=null) {

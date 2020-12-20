@@ -53,6 +53,8 @@ $(function(){
 
 
 function inicializar() {
+	$('[data-toggle="popover"]').popover();
+	
 	$('#modalConfirmacao').on('show.bs.modal', function(event){
 		
 		var button = $(event.relatedTarget); // Button that triggered the modal
@@ -265,7 +267,7 @@ function inicializar() {
 $(window).on('DOMContentLoaded',function(){
 	var url = window.location.href;
     // for sidebar menu entirely but not cover treeview
-	console.log($('ul.nav-sidebar a'));
+	//console.log($('ul.nav-sidebar a'));
     $('ul.nav-sidebar a').filter(function() {
         return url.indexOf(this.href) <= -1;
     }).removeClass('active');

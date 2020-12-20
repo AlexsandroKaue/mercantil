@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -72,7 +71,8 @@ public class ProdutoController {
 		Produto produto = new Produto();
 		produto.setQuantidade(0);
 		produto.setQuantidadeMinima(1);
-		produto.setImagemBase64(produtoService.carregarImagem(null));
+		//produto.setImagemBase64(produtoService.carregarImagem(null));
+		produto.setImagemBase64(produtoService.tranformarEmImagemBase64(null));
 		mv.addObject("produto", produto);
 		return mv;
 	}
@@ -80,7 +80,8 @@ public class ProdutoController {
 	@RequestMapping("{id}")
 	public ModelAndView showFormEditar(@PathVariable("id") Produto produto) {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
-		produto.setImagemBase64(produtoService.carregarImagem(produto.getImagemPath()));
+		//produto.setImagemBase64(produtoService.carregarImagem(produto.getImagemPath()));
+		produto.setImagemBase64(produtoService.tranformarEmImagemBase64(produto.getImagem()));
 		mv.addObject("produto", produto);
 		return mv;
 	}
@@ -118,7 +119,11 @@ public class ProdutoController {
 			boolean hasFileUploaded = !multipartFile.isEmpty();
 			if(hasFileUploaded) {
 				try {
-					Long id;
+					byte[] imagem = produtoService.prepararImagem(multipartFile);
+					if(HasValue.execute(imagem)) {
+						produto.setImagem(imagem);
+					}
+					/*Long id;
 					if(HasValue.execute(produto.getId())) {
 						id = produto.getId();
 					} else {
@@ -126,9 +131,9 @@ public class ProdutoController {
 					}
 					
 					String filename = produtoService.salvarImagem(multipartFile, "Produto_"+id);
-					produto.setImagemPath(filename);
+					produto.setImagemPath(filename);*/
 				} catch (Exception e) {
-					attributes.addFlashAttribute("aviso", "Não foi possível salvar a imagem. Motivo: "+e.getMessage());
+					attributes.addFlashAttribute("aviso", "Não foi possível salvar a imagem.");
 				}
 			}
 			
@@ -166,7 +171,8 @@ public class ProdutoController {
 	@RequestMapping(value = "/detalhes/{id}")
 	public ModelAndView detalhes(@PathVariable("id") Produto produto) {
 		ModelAndView mv = new ModelAndView(LISTAR_VIEW + " :: #modalDetalhesProduto");
-		produto.setImagemBase64(produtoService.carregarImagem(produto.getImagemPath()));
+		//produto.setImagemBase64(produtoService.carregarImagem(produto.getImagemPath()));
+		produto.setImagemBase64(produtoService.tranformarEmImagemBase64(produto.getImagem()));
 		mv.addObject("produto", produto);
 		return mv;
 	}
@@ -183,9 +189,11 @@ public class ProdutoController {
     public Map<String, String> restauraImagem(@RequestParam(value="id", required=false) Produto produto) {
 		Map<String, String> map = new HashMap<String, String>();
 		if(HasValue.execute(produto)) {
-			map.put("imagem", produtoService.carregarImagem(produto.getImagemPath()));
+			//map.put("imagem", produtoService.carregarImagem(produto.getImagemPath()));
+			map.put("imagem", produtoService.tranformarEmImagemBase64(produto.getImagem()));
 		} else {
-			map.put("imagem", produtoService.carregarImagem(null));
+			//map.put("imagem", produtoService.carregarImagem(null));
+			map.put("imagem", produtoService.tranformarEmImagemBase64(null));
 		}
 		return map;
     }
