@@ -28,8 +28,8 @@
       
       <div class="content-header" style="padding-left:0px; padding-right:0px; padding-bottom:5px">
         <div class="container-fluid">
-          <div layout:insert="~{mensagem_geral}"></div>
-          <div layout:insert="~{mensagem_erro}"></div>
+          <!-- <div layout:insert="~{mensagem_geral}"></div>
+          <div layout:insert="~{mensagem_erro}"></div> -->
           <div class="row mb-2" layout:fragment="cabecalho">
             <div class="col-sm-8 m-0">
               <ul class="js-buscar-produto" 
@@ -138,12 +138,6 @@
                      </ul> -->
                 </div>
                 <div id="loadingDiv"></div>
-                <!-- <div class="bg-white py-2 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;">
-                  <div class="col-md-12">
-                    <h5>Nenhum item incluído</h5> 
-                  </div>
-                </div> -->
-              <!-- </div> -->
             </div>
           
           <div class="col-md-4">
@@ -153,17 +147,10 @@
                
                 <div class="d-flex ">
                   <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                   id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat">
-                    <!-- <i class="fas fa-cart-plus fa-lg mr-2"></i> -->
-                    <!-- <i class="fas fa-money-bill-wave"></i> -->
+                   id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat" th:disabled="*{subtotal==0}" >
                     <i class="fas fa-dollar-sign"></i>
-                    Efetuar Pagamento (F2)
+                    Efetuar Pagamento
                   </button>
-                  <!-- <button type="button" data-toggle="modal" data-target="#modal-cliente"
-                   class="btn btn-warning btn-lg btn-flat">
-                    <i class="fas fa-book-open"></i>
-                    Venda na Conta (F3)
-                  </button> -->
                 </div>
               </div>
               <div class="bg-gray py-2 px-3">
@@ -183,6 +170,7 @@
       <div class="modal" id="modal-pagamento" 
        tabindex="-1" data-keyboard="true"
        role="document" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
+       <div layout:insert="~{mensagem_erro}"></div>
         <div class="modal-dialog modal-lg ">
           <div class="modal-content">
             <div class="modal-header">
@@ -200,7 +188,7 @@
                             clique aqui
                            </a></small>
                     </h4>
-                    <div id="clienteSelecionado" class="card bg-light mt-3" hidden="hidden">
+                    <!-- <div id="clienteSelecionado" class="card bg-light mt-3" hidden="hidden">
                       <div class="card-header text-muted border-bottom-0"><span class="text-success">Cliente selecionado</span></div>
                       <div class="card-body pt-0 mt-0">
                         <div class="row">
@@ -219,11 +207,36 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                     <input id="nenhumClienteSelecionado" placeholder="Nenhum cliente selecionado." 
-                     class="form-control form-control-lg required" 
+                     class="form-control" 
                      oninput="this.className = ''" name="fname"
                      readonly="readonly"></input>
+                     <div class="row" id="clienteSelecionado" hidden="hidden">
+                      <div class="col-11">
+                       <span class="text-success">Cliente selecionado</span>
+                       <ul class="products-list product-list-in-card pl-2 pr-2 mt-2">
+                        <li class="item">
+                          <div class="product-img">
+                            <img src="dist/img/default-150x150.png" alt="Product Image" class="img-size-50">
+                          </div>
+                          <div class="product-info">
+                            <a href="javascript:void(0)" class="product-title" id="clienteSelecionadoNome">Alexsandro Kauê
+                              <span class="badge badge-success float-right">selecionado</span></a>
+                            <span class="product-description">
+                              carvalho.3331@gmail.com, (85) 98630-7460
+                            </span>
+                          </div>
+                        </li>
+                      </ul>
+                      </div>
+                      <div class="col-1" style="vertical-align: middle;">
+                      <a data-toggle="modal" class="js-remover-cliente float-right text-muted btn-sm"
+                                  th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
+                                  title="Remover" rel="tooltip" data-placement="top">
+                                  <i class="fas fa-times-circle"></i></a>
+                      </div>
+                    </div>
                   </div>
                   <div class="bg-default py-2 px-3 mt-4">
                     <a href="#" data-toggle="modal" data-target="#modalDesconto"><i class="fas fa-tag"></i> desconto</a>
@@ -303,7 +316,8 @@
                         <h4 class="mb-0">
                         <small>Saldo</small>
                       </h4>
-                      <input type="text" id="inputSaldo" class="form-control form-control-lg js-currency input_saldo" th:field="*{saldo}"></input>
+                      <input type="text" id="inputSaldo" class="form-control form-control-lg js-currency input_saldo" 
+                      th:field="*{saldo}" th:classappend="${#fields.hasErrors('saldo')} ? is-invalid"></input>
                     </div>
                     
                     </div>
@@ -312,13 +326,13 @@
               </div>
             </div>
             <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 <i class="fas fa-undo-alt"></i>
-                Voltar (ESC)
+                Voltar
               </button>
               <button type="submit" id="finalizar" class="btn btn-md btn-primary">
                 <i class="fas fa-money-check-alt"></i> 
-                Finalizar (ENTER)
+                Finalizar
               </button>
             </div>
           </div>
@@ -346,9 +360,9 @@
                 <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
               </select>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
-              <button type="button" class="btn btn-primary js-desconto">Aplicar</button>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-undo-alt"></i> Voltar</button>
+              <button type="button" class="btn btn-primary js-desconto"><i class="fas fa-check-circle"></i> Aplicar</button>
             </div>
           </div>
         </div>
@@ -552,6 +566,8 @@
       </form>
     </div>
     <!-- /.modal -->
+    
+    
   
     <div class="modal fade" id="modalConfirmarRemocaoItem" tabindex="-1" data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog">
@@ -1147,7 +1163,22 @@
     	}
     	
     	a.attr('href',url + codigo);
-    	modal.find('.modal-body p').html('Deseja realmente excluir o item <strong>'+descricao+'</strong> da lista?');    	
+    	modal.find('.modal-body p').html();
+    	/* $container = $(
+    	  	  	"Deseja realmente excluir o item <strong>"+descricao+"</strong> da lista?'" +
+    	  	  	"<li class='products-list product-list-in-card  py-2 item'>"+
+    	          "<div class='product-img'>"+
+    	            "<img id='image' src='' alt='Product Image'>"+
+    	          "</div>"+
+    	          "<span id='preco' class='badge badge-warning float-right'></span>"+
+    	          "<div class='product-info'>"+
+    	          	"<span class='product-description'></span>"+
+    	            "<span class='product-title mb-0'></span>"+
+    	          "</div>"+
+    	        "</li>"
+    	  	  ); */
+    	
+    	
     });
 	
 	$('#ancora').on('click', '.js-remover', function(event) {
@@ -1258,8 +1289,16 @@
   	        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
   	    }, 0);
   	});
+  	
+  	
 
   });
+  window.onload = function(){
+	  var res = $('#inputSaldo').hasClass('is-invalid') || $('#inputSaldo').hasClass('is-invalid');
+	  if(res) {
+		  $('#modal-pagamento').modal('show');
+	  }
+}
   
   /* function validateForm() {
     // This function deals with validation of the form fields

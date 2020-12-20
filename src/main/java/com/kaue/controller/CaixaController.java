@@ -382,7 +382,7 @@ public class CaixaController {
 		
 		if(venda.getSaldo()!=null) {
 			if(venda.getSaldo().compareTo(venda.getTotal())==-1 && venda.getCliente() == null) {
-				errors.rejectValue("saldo", null, "Erro: Saldo insuficiente!");
+				errors.rejectValue("saldo", null, "Saldo insuficiente!");
 			}
 		}
 		venda.setDataVenda(new Date());
