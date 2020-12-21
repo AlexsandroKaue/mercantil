@@ -92,6 +92,12 @@ function inicializar() {
 		allowZero:'false',
 		formatOnBlur:false});
 	
+	$('.js-currency').maskMoney({decimal:',', 
+		thousands:'.', 
+		allowZero:'false',
+		decimals: 3,
+		formatOnBlur:false});
+	
 	$('[data-mask]').inputmask();
 		
 	$('.js-atualizar-status').on('click', function(event) {

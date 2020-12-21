@@ -294,7 +294,7 @@ public class CaixaController {
 	@RequestMapping(value = "/balanca/{codigo}")
 	public ModelAndView mostrarBalanca(@PathVariable("codigo") String codigo, Model model) {
 		
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #modal-balanca");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #modalBalanca");
 		if(!codigo.isEmpty()) {
 			Produto produto = produtoService.buscarPorCodigo(codigo);
 			if(produto != null) {
@@ -460,7 +460,8 @@ public class CaixaController {
 			produtoList = produtoService.pesquisar(filtro);
 			if(produtoList != null && produtoList.size()>0) {
 				for(Produto produto : produtoList) {
-					String imagemBase64 = produtoService.carregarImagem(produto.getImagemPath());
+					//String imagemBase64 = produtoService.carregarImagem(produto.getImagemPath());
+					String imagemBase64 = produtoService.tranformarEmImagemBase64(produto.getImagem());
 					produto.setImagemBase64(imagemBase64);
 					/*
 					 * byte[] bytes = produtoService.carregarImagem(produto.getImagemPath());
@@ -542,7 +543,7 @@ public class CaixaController {
 			} catch(NumberFormatException nfe) {}
 		}
 		List<Cliente> clienteList = clienteService.pesquisar(filtro);
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+"::#modal-default");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+"::#modalCliente");
 		mv.addObject("clientes", clienteList);
 		return mv;
 	}

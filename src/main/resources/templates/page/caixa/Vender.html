@@ -167,7 +167,7 @@
         </div>
       </section>
               
-      <div class="modal" id="modal-pagamento" 
+      <div class="modal" id="modalPagamento" 
        tabindex="-1" data-keyboard="true"
        role="document" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
        <div layout:insert="~{mensagem_erro}"></div>
@@ -184,7 +184,7 @@
                 <div class="col-6">
                   <div class="bg-default py-2 px-3 mt-4">
                     <h4 class="mb-0">
-                      <small>Para selecionar um cliente <a data-toggle="modal" data-target="#modal-default" href="#">
+                      <small>Para selecionar um cliente <a data-toggle="modal" data-target="#modalCliente" href="#">
                             clique aqui
                            </a></small>
                     </h4>
@@ -317,7 +317,8 @@
                         <small>Saldo</small>
                       </h4>
                       <input type="text" id="inputSaldo" class="form-control form-control-lg js-currency input_saldo" 
-                      th:field="*{saldo}" th:classappend="${#fields.hasErrors('saldo')} ? is-invalid"></input>
+                      th:field="*{saldo}" th:classappend="${#fields.hasErrors('saldo')} ? is-invalid"
+                      autocomplete="off"></input>
                     </div>
                     
                     </div>
@@ -342,8 +343,6 @@
       </div>
       <!-- /.modal -->
       
-      
-      <!-- Modal -->
       <div class="modal" id="modalDesconto" tabindex="-1" role="dialog" aria-labelledby="modalDescontoLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -356,7 +355,7 @@
             <div class="modal-body">
               Desconto
               <select id="desconto" class="custom-select ml-1 mr-sm-2 text-right" th:field="*{desconto}" 
-                th:attr="data-url-base-desconto=@{/caixa/desconto}">
+                th:attr="data-url-aplicar-desconto=@{/caixa/desconto}">
                 <option th:each="desconto : ${opcoesDescontoList}" th:value="${desconto}" th:text="${desconto.descricao}"></option>
               </select>
             </div>
@@ -367,87 +366,10 @@
           </div>
         </div>
       </div>
-      
-      <!-- <div class="modal" id="modal-cliente" 
-       tabindex="-1" data-keyboard="true"
-       role="dialog" aria-labelledby="..." aria-hidden="true">data-keyboard="true" data-backdrop="static"
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Venda na Conta</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="row" >
-                
-                One "tab" for each step in the form:
-                <div class="tab">
-                  <p class="mb-1">Selecione um cliente:</p>
-                  <select id="selectClient" class="js-buscar-cliente input_saldo" 
-                   th:attr="data-url-buscar-cliente=@{/caixa/buscarCliente}, data-url-selecionar-cliente=@{/caixa/selecionarCliente}"
-                   style="width: 100%;" oninput="this.className"></select>
-                   
-                   <div class="card bg-light mt-3" th:if="*{cliente}">
-                    <div class="card-header text-muted border-bottom-0"><span class="text-success">Cliente selecionado</span></div>
-                    <div class="card-body pt-2">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="d-flex justify-content-between">
-                            <h2 class="lead"><b th:text="*{cliente.nome}"></b></h2>
-                            <h6>
-                             <a data-toggle="modal" class="js-remover-cliente text-muted btn-sm"
-                              th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
-                              title="Excluir" rel="tooltip" data-placement="top">
-                              <i class="fas fa-trash"></i>
-                             </a>
-                            </h6>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <input placeholder="Nenhum cliente selecionado." class="form-control mt-3 required" oninput="this.className = ''" name="fname"
-                   th:unless="*{cliente}" readonly="readonly"></input>
-                </div>
-                <div class="tab">
-                  <p class="mb-1">Confirme a compra:</p>
-                    <div class="card bg-light" th:if="*{cliente}">
-                    <div class="card-body pt-2">
-                      <div class="row">
-                        <div class="col-12">
-                            Cliente:
-                            <p th:if="*{cliente}" class="lead"><b th:text="*{cliente.nome}"></b></p>
-                            Total(R$):
-                            <p class="lead"><b th:text="|*{{total}}|"></b></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                    
-                </div>
-                Circles which indicates the steps of the form:
-                <div style="text-align:center;margin-top:40px;">
-                  <span class="step"></span>
-                  <span class="step"></span>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-md btn-default" id="prevBtn" onclick="nextPrev(-1)">Anterior</button>
-              <button type="button" class="btn btn-md btn-primary" id="nextBtn" onclick="nextPrev(1)">Próximo</button>
-            </div>
-          </div>
-          /.modal-content
-        </div>
-        /.modal-dialog
-      </div>
-      /.modal -->
-      
+      <!-- /.modal -->
     </form>
     
-    <div class="modal" id="modal-default" tabindex="-1">
+    <div class="modal" id="modalCliente" tabindex="-1">
       <!-- <form id="clienteForm" role="form" th:object="${filtro}"> -->
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -469,7 +391,7 @@
                       placeholder="Qual cliente você está procurando?" autofocus="autofocus"
                       /><!-- th:field="*{termo}" -->
                     <div class="input-group-append">
-                      <button type="button" class="btn btn-default js-buscar-cliente2"
+                      <button type="button" class="btn btn-default js-buscar-cliente"
                       th:attr="data-url-selecionar-cliente2=@{/caixa/buscarCliente2}">Pesquisar
                         <!-- <i class="fas fa-search"></i> -->
                       </button>
@@ -516,7 +438,7 @@
       </div>
       <!-- /.modal -->
         
-    <div class="modal" id="modal-balanca" tabindex="-1" data-keyboard="true">
+    <div class="modal" id="modalBalanca" tabindex="-1" data-keyboard="true">
       <form id="itemForm" role="form" method="POST" th:action="@{/caixa/incluir}" th:object="${item}">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
         <div class="modal-dialog">
@@ -542,7 +464,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="inputQuantidade" class="col-form-label">Peso</label>
-                    <input type="text" id="inputQuantidade" th:field="*{quantidade}" class="form-control js-currency"></input>
+                    <input type="text" id="inputQuantidade" th:field="*{quantidade}" class="form-control js-peso"></input>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -555,9 +477,9 @@
              </div>
             </div>
             <div class="modal-footer justify-content-between">
-             <button type="button" class="btn btn-md btn-danger" data-dismiss="modal">Cancelar</button>
-             <button type="button" class="btn btn-md btn-success js-selecionar-item-balanca" 
-             th:attr="data-url-base=@{/caixa/incluir/}" th:text="#{incluir}">Incluir</button><!-- js-selecionar-item-balanca -->
+             <button type="button" class="btn btn-md btn-secondary" data-dismiss="modal"><i class="fas fa-arrow-circle-left"></i> Cancelar</button>
+             <button type="button" class="btn btn-md btn-primary js-selecionar-item-balanca" 
+             th:attr="data-url-base=@{/caixa/incluir/}"><i class="fas fa-check-circle"></i> [[#{incluir}]]</button>
             </div>
           </div>
           <!-- /.modal-content -->
@@ -567,25 +489,23 @@
     </div>
     <!-- /.modal -->
     
-    
-  
     <div class="modal fade" id="modalConfirmarRemocaoItem" tabindex="-1" data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog">
         <!-- <form th:attr="data-url-base=@{/titulos}" method="POST"> -->
           <input type="hidden" name="_method" value="DELETE"></input>
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Remover Item</h4>
+              <h4 class="modal-title">Retirar Item</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <p>Deseja realmente excluir o item?</p>
+              <p>Deseja realmente retirar o item da lista?</p>
             </div>
             <div class="modal-footer justify-content-between">
-             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-             <a th:attr="data-url-base=@{/caixa/excluir/}" class="js-remover btn btn-md btn-success" th:text="#{excluir}"></a>
+             <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-arrow-circle-left"></i> Cancelar</button>
+             <a th:attr="data-url-base=@{/caixa/excluir/}" class="js-remover btn btn-md btn-primary"><i class="fas fa-check-circle"></i> Retirar</a>
             </div>
           </div>
           <!-- /.modal-content -->
@@ -598,26 +518,22 @@
   </section>
   
   <script layout:fragment="js-validator" th:inline="javascript">
-  var currentTab; // Current tab is set to be the first tab (0)
   $(function(){
 	  
 	  configuraBarraPesquisa();
-	  $('.js-buscar-produto').select2('focus');
-	  
-  	
     	
   	var currencyformatter = new Intl.NumberFormat('pt-BR', {
-	  style: "currency",
-	  currency: "BRL",
-	  minimumFractionDigits: 2,
-	  currencyDisplay: "symbol",
-	});
+  	  style: "currency",
+  	  currency: "BRL",
+  	  minimumFractionDigits: 2,
+  	  currencyDisplay: "symbol",
+  	});
   	
   	var decimalformatter = new Intl.NumberFormat('pt-BR', {
-	  minimumFractionDigits: 2
-	});
+  	  minimumFractionDigits: 2
+  	});
   	
-  	$('#ancora').on('shown.bs.modal', '#modal-balanca', function(event){
+  	$('#ancora').on('shown.bs.modal', '#modalBalanca', function(event){
     	$('#inputQuantidade').maskMoney({
     		precision: 3,
     		decimal:',', 
@@ -630,14 +546,12 @@
       	}, 0);
     });
     
-    $('#ancora').on('shown.bs.modal', '#modal-pagamento', function(event){
-    	/* currentTab = 0;
-    	showTab(currentTab); */
+    $('#ancora').on('shown.bs.modal', '#modalPagamento', function(event){
     	$('#inputSaldo').maskMoney({
     		decimal:',',
     		thousands:'.', 
-			allowZero:'true',
-			formatOnBlur:false});
+  			allowZero:'true',
+  			formatOnBlur:false});
     	
     	setTimeout(function() {
     		$('#inputSaldo').val('0.00');
@@ -645,54 +559,135 @@
       	}, 0);
     });
     
-    $('#ancora').on('shown.bs.modal', '#modal-cliente', function(event){
-    	startSelect2Cliente();
-		setTimeout(function() {
-			$('#selectClient').select2('focus');
-      	}, 0);
-    });
-    
-    $('#ancora').on('shown.bs.modal', '#modal-default', function(event){
+    $('#ancora').on('shown.bs.modal', '#modalCliente', function(event){
     	setTimeout(function() {
     		$('#campoBuscaCliente').trigger('focus');
-      	}, 0);
+      }, 0);
     	$('#tabelaCliente').DataTable( {
     		paging: true,
-    	      pageLength: 5,
-    	      lengthChange: true,
-    	      lengthMenu: [ 5, 10, 15, 20 ],
-    	      searching: false,
-    	      info: true,
-    	      autoWidth: false,
-    	      responsive: true,
-    	      aaSorting: [],
-    	      columnDefs:[{ "orderable": false, "targets": [-1] }],
-    	      ordering: true,
-    	      language: {
-    	          lengthMenu: "Mostrar _MENU_ registro por página",
-    	          info: "Total de registros: _MAX_",
-    	          infoEmpty: "Nenhum registro encontrado",
-    	          infoFiltered: "teste",
-    	          search: "Pesquisa",
-    	          zeroRecords:    "Nenhum registro encontrado",
-    	          paginate: {
-    	              first:      "Primeiro",
-    	              last:       "Último",
-    	              next:       "Próximo",
-    	              previous:   "Anterior"
-    	          }
-    	      },
-    	      destroy: true
-        } );
+	      pageLength: 5,
+	      lengthChange: true,
+	      lengthMenu: [ 5, 10, 15, 20 ],
+	      searching: false,
+	      info: true,
+	      autoWidth: false,
+	      responsive: true,
+	      aaSorting: [],
+	      columnDefs:[{ "orderable": false, "targets": [-1] }],
+	      ordering: true,
+	      language: {
+	          lengthMenu: "Mostrar _MENU_ registro por página",
+	          info: "Total de registros: _MAX_",
+	          infoEmpty: "Nenhum registro encontrado",
+	          infoFiltered: "teste",
+	          search: "Pesquisa",
+	          zeroRecords:    "Nenhum cliente encontrado",
+	          paginate: {
+	              first:      "Primeiro",
+	              last:       "Último",
+	              next:       "Próximo",
+	              previous:   "Anterior"
+	          }
+	      },
+	      destroy: true
+    	});
     });
     
-    $('#ancora').on('hidden.bs.modal', '#modal-cliente', function(event){
+    function configuraBarraPesquisa() {
+  		var seletor = $('.js-buscar-produto');
+  		var url = seletor.data('url-buscar-item');
+  		
+  		$(seletor).select2({
+        language: "pt-BR",
+    	  ajax: {
+    	    url: url,
+    	    dataType: 'json',
+    	    delay: 250,
+    	    data: function (params) {
+    	      return {
+    	        q: params.term, // search term
+    	        page: params.page || 1 
+    	      };
+    	    },
+    	    processResults: function (data, params) {
+    	      // parse the results into the format expected by Select2
+    	      // since we are using custom formatting functions we do not need to
+    	      // alter the remote JSON data, except to indicate that infinite
+    	      // scrolling can be used
+    	      params.page = params.page || 1;
+  
+    	      return {
+    	        results: data.items,
+    	        pagination: {
+    	          more: (params.page * data.page_size) < data.total_count
+    	        }
+    	      };
+    	    },
+    	    cache: true
+    	  },
+    	  placeholder: 'Digite aqui',
+    	  minimumInputLength: 1,
+    	  allowClear: true,
+    	  templateResult: formatRepo,
+    	  templateSelection: formatRepoSelection,
+    	  multiple: true
+    	});
+  		
+  		$(seletor).select2('focus');
+  	}
+
+  	function formatRepo (repo) {
+  	  if (repo.loading) {
+  	    return repo.text;
+  	  }
+
+  	/*var $container = $(
+  	    "<div class='select2-result-repository clearfix'>" +
+  	      "<div class='select2-result-repository__avatar'><img id='image' style='height:60px' src='' /></div>" +
+  	      "<div class='select2-result-repository__meta'>" +
+  	      	"<div class='select2-result-repository__description' id='codigo'></div>" +
+  	        "<div class='select2-result-repository__title'></div>" +
+  	      	"<div class='select2-result-repository__forks'></div>" +
+  	      	/* "<div class='select2-result-repository__description' id='categoria'><i class='fa fa-flash'></i> </div>" + */
+  	        /* "<div class='select2-result-repository__statistics'>" +
+  	      		"<div class='select2-result-repository__forks'></div>" +
+  	    		/*"<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
+  	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +	
+  	        "</div>" + 
+  	      "</div>" +
+  	    "</div>"
+  	  ); */
+  	  
+  		var $container = $(
+  	  	"<li class='products-list product-list-in-card  py-2 item'>"+
+          "<div class='product-img'>"+
+            "<img id='image' src='' alt='Product Image'>"+
+          "</div>"+
+          "<span id='preco' class='badge badge-warning float-right'></span>"+
+          "<div class='product-info'>"+
+          	"<span class='product-description'></span>"+
+            "<span class='product-title mb-0'></span>"+
+          "</div>"+
+        "</li>"
+  	  );
+
+  	  $container.find("#image").attr('src', 'data:image/png;base64,'+repo.imagemBase64);
+  	  $container.find(".product-title").text(repo.descricao);
+  	  $container.find("#preco").text(currencyformatter.format(repo.valorDeVenda)+' '+repo.unitario);
+  	  $container.find(".product-description").text('Cod.: '+repo.codigo);
+
+  	  return $container;
+  	}
+
+  	function formatRepoSelection (repo) {
+  	  return repo.full_name || repo.text;
+  	}
+    
+    $('#ancora').on('hidden.bs.modal', '#modalPagamento', function(event){
     	$('.js-buscar-produto').select2('focus');
     });
-    $('#ancora').on('hidden.bs.modal', '#modal-pagamento', function(event){
-    	$('.js-buscar-produto').select2('focus');
-    });
-    $('#ancora').on('hidden.bs.modal', '#modal-balanca', function(event){
+    
+    $('#ancora').on('hidden.bs.modal', '#modalBalanca', function(event){
     	$('.js-buscar-produto').select2('focus');
     });
     
@@ -724,7 +719,7 @@
   	});
  
  	// Execute a function when the user releases a key on the keyboard
-  	$('#modal-pagamento').on('keyup', function(event) {
+  	$('#modalPagamento').on('keyup', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
   	  console.log(event.keyCode);
   	  if (event.keyCode === 27) { //Esc
@@ -736,174 +731,7 @@
   	  }
   	});
   	
-  	function configuraBarraPesquisa(){
-  		var seletor = $('.js-buscar-produto');
-  		var url = seletor.data('url-buscar-item');
-  		
-  		$(seletor).select2({
-  	      language: "pt-BR",
-  	  	  ajax: {
-  	  	    url: url,
-  	  	    dataType: 'json',
-  	  	    delay: 250,
-  	  	    data: function (params) {
-  	  	      return {
-  	  	        q: params.term, // search term
-  	  	        page: params.page || 1 
-  	  	      };
-  	  	    },
-  	  	    processResults: function (data, params) {
-  	  	      // parse the results into the format expected by Select2
-  	  	      // since we are using custom formatting functions we do not need to
-  	  	      // alter the remote JSON data, except to indicate that infinite
-  	  	      // scrolling can be used
-  	  	      params.page = params.page || 1;
-
-  	  	      return {
-  	  	        results: data.items,
-  	  	        pagination: {
-  	  	          more: (params.page * data.page_size) < data.total_count
-  	  	        }
-  	  	      };
-  	  	    },
-  	  	    cache: true
-  	  	  },
-  	  	  placeholder: 'Digite aqui',
-  	  	  minimumInputLength: 1,
-  	  	  allowClear: true,
-  	  	  templateResult: formatRepo,
-  	  	  templateSelection: formatRepoSelection,
-  	  	  multiple: true
-  	  	});
-  	}
   	
-  	function startSelect2Cliente(){
-  		
-  		var seletorCliente = $('.js-buscar-cliente');
-  		var url = seletorCliente.data('url-buscar-cliente');
-  		
-  		$(seletorCliente).select2({
-  	      language: "pt-BR",
-		  //dropdownParent: $('.modal-body', '#modal-cliente'),
-  	  	  ajax: {
-  	  	    url: url,
-  	  	    dataType: 'json',
-  	  	    delay: 250,
-  	  	    data: function (params) {
-  	  	      return {
-  	  	        q: params.term, // search term
-  	  	        page: params.page || 1 
-  	  	      };
-  	  	    },
-  	  	    processResults: function (data, params) {
-  	  	      // parse the results into the format expected by Select2
-  	  	      // since we are using custom formatting functions we do not need to
-  	  	      // alter the remote JSON data, except to indicate that infinite
-  	  	      // scrolling can be used
-  	  	      params.page = params.page || 1;
-
-  	  	      return {
-  	  	        results: data.clientes,
-  	  	        pagination: {
-  	  	          more: (params.page * data.page_size) < data.total_count
-  	  	        }
-  	  	      };
-  	  	    },
-  	  	    cache: true
-  	  	  },
-  	  	  placeholder: 'Digite aqui',
-  	  	  minimumInputLength: 1,
-  	  	  templateResult: formatRepoCliente,
-  	  	  templateSelection: formatRepoSelection,
-  	  	  multiple: true
-  	  	});
-  	}
-
-  	function formatRepo (repo) {
-  	  if (repo.loading) {
-  	    return repo.text;
-  	  }
-
-  	  var $container = $(
-  	    "<div class='select2-result-repository clearfix'>" +
-  	      "<div class='select2-result-repository__avatar'><img id='image' style='height:60px' src='' /></div>" +
-  	      "<div class='select2-result-repository__meta'>" +
-  	      	"<div class='select2-result-repository__description' id='codigo'></div>" +
-  	        "<div class='select2-result-repository__title'></div>" +
-  	      	"<div class='select2-result-repository__forks'></div>" +
-  	      	/* "<div class='select2-result-repository__description' id='categoria'><i class='fa fa-flash'></i> </div>" + */
-  	        /* "<div class='select2-result-repository__statistics'>" +
-  	      		"<div class='select2-result-repository__forks'></div>" +
-  	    		/*"<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
-  	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +	
-  	        "</div>" +  */
-  	      "</div>" +
-  	    "</div>"
-  	  );
-  	  
-  	  $container = $(
-  	  	"<li class='products-list product-list-in-card  py-2 item'>"+
-          "<div class='product-img'>"+
-            "<img id='image' src='' alt='Product Image'>"+
-          "</div>"+
-          "<span id='preco' class='badge badge-warning float-right'></span>"+
-          "<div class='product-info'>"+
-          	"<span class='product-description'></span>"+
-            "<span class='product-title mb-0'></span>"+
-          "</div>"+
-        "</li>"
-  	  );
-
-  	  $container.find("#image").attr('src', 'data:image/png;base64,'+repo.imagemBase64);
-  	  $container.find(".product-title").text(repo.descricao);
-  	  $container.find("#preco").text(currencyformatter.format(repo.valorDeVenda)+' '+repo.unitario);
-  	  $container.find(".product-description").text('Cod.: '+repo.codigo);
-  	  /*$container.find(".select2-result-repository__description#codigo").text(repo.codigo);
-  	  $container.find(".select2-result-repository__title").text(repo.descricao); */
-  	  /* $container.find(".select2-result-repository__description#categoria").text(repo.categoria.descricao); */
-  	  /* $container.find(".select2-result-repository__forks").text(repo.categoria.descricao); */
-  	  /* $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
-  	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers"); */
-
-  	  return $container;
-  	}
-  	
-  	function formatRepoCliente (repo) {
-  	  if (repo.loading) {
-  	    return repo.text;
-  	  }
-
-  	  var $container = $(
-  	    "<div class='select2-result-repository clearfix'>" +
-  	      "<div class='select2-result-repository__avatar'><img id='image' style='height:available' src='' /></div>" +
-  	      "<div class='select2-result-repository__meta'>" +
-  	      	"<div class='select2-result-repository__description'></div>" +
-  	        "<div class='select2-result-repository__title'></div>" +
-  	      	"<div class='select2-result-repository__forks'></div>" +
-  	      	/* "<div class='select2-result-repository__description' id='categoria'><i class='fa fa-flash'></i> </div>" + */
-  	        /* "<div class='select2-result-repository__statistics'>" +
-  	      		"<div class='select2-result-repository__forks'></div>" +
-  	    		/*"<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
-  	          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +	
-  	        "</div>" +  */
-  	      "</div>" +
-  	    "</div>"
-  	  );
-
-  	  $container.find("#image").attr('src', 'data:image/png;base64,'+repo.imagemBase64);
-  	  $container.find(".select2-result-repository__description").text(repo.nome);
-  	  $container.find(".select2-result-repository__title").text(repo.nome);
-  	  /* $container.find(".select2-result-repository__description#categoria").text(repo.categoria.descricao); */
-  	  /* $container.find(".select2-result-repository__forks").text(repo.categoria.descricao); */
-  	  /* $container.find(".select2-result-repository__stargazers").append(123 + " Stars");
-  	  $container.find(".select2-result-repository__watchers").append(123 + " Watchers"); */
-
-  	  return $container;
-  	}
-
-  	function formatRepoSelection (repo) {
-  	  return repo.full_name || repo.text;
-  	}
   	
     $('#ancora').on('select2:select','.js-buscar-produto', function(e) {
 
@@ -945,13 +773,6 @@
             },
         		error: function(){
         			alert('Erro incluindo item');
-        		},
-        		complete: function(){
-        			configuraBarraPesquisa();
-        			inicializar();
-          		setTimeout(function() {
-          		  $('#loadingDiv').html('');
-        			}, 250);
         		}
     			});
         	
@@ -969,34 +790,40 @@
     	
     });
     
-    
-    $('#ancora').on('select2:select','.js-buscar-cliente', function(e) {
-
-    	var data = e.params.data;
-    	var seletor = $(e.currentTarget);
-  		var url = seletor.data('url-selecionar-cliente');
-  		if(!url.endsWith('/')){
-    		url += '/';
-    	}
-  		url += data.id;
+    $('#ancora').on('click', '.js-selecionar-item-balanca', function(event){
+    	var botao = $(event.currentTarget);
+    	var url = botao.data('url-base');
+    	
+    	var codigo = $('#modalBalanca').find('input#inputCodigoProduto').val();
+    	var quantidade = $('#modalBalanca').find('input#inputQuantidade').val().replace(',','.');
+    	var unitario = $('#modalBalanca').find('input#inputUnitario').val();
+    	
+    	var item = {
+    	  	      "produto" : {
+    	  	    	  "codigo" : codigo,
+    	  	    	  "unitario" : unitario
+    	  	      },
+    	  	      "quantidade" : quantidade
+    	  	   };
       	
       	var response = $.ajax({
       		url: url,
-      		type: 'PUT'
-  		});
-      	
-      	response.done(function(e){
-      		$('#clienteSelecionadoNome').html(e.nome);
-      		$('#clienteSelecionado').removeAttr('hidden');
-    		$('#nenhumClienteSelecionado').attr('hidden', 'hidden');
-  		});
-      	response.fail(function(e){
-      		alert('Erro incluindo cliente');
-  		}); 
-    	
+      		type: 'POST',
+      		contentType : 'application/json; charset=utf-8',
+      		data: JSON.stringify(item),
+      		success: function(e) {
+      			$('#modalBalanca').modal('hide');
+      			$('#caixaForm').replaceWith(e);
+      			$('#listaDeItens').scrollTop(330);
+      			$('#loadingDiv').html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+      		},
+      		error: function() {
+      			alert('Erro incluindo item');
+      		}
+  		});		
     });
     
-    $('#ancora').on('click','.js-buscar-cliente2', function(e) {
+    $('#ancora').on('click','.js-buscar-cliente', function(e) {
 
     	var botao = $(e.currentTarget);
   		var url = botao.data('url-selecionar-cliente2');
@@ -1011,11 +838,11 @@
   		});
       	
       	response.done(function(e){
-      		var termo = $('#campoBuscaCliente').val()
-      		$('#modal-default').modal('hide');
-      		$('#modal-default').replaceWith(e);
+      		var termo = $('#campoBuscaCliente').val();
+      		$('#modalCliente').modal('hide');
+      		$('#modalCliente').replaceWith(e);
       		$('#campoBuscaCliente').val(termo);
-      		$('#modal-default').modal('show');
+      		$('#modalCliente').modal('show');
   		});
       	response.fail(function(e){
       		alert('Erro incluindo cliente');
@@ -1044,7 +871,7 @@
       		$('#clienteSelecionadoTelefone').html(e.telefone);
       		$('#clienteSelecionado').removeAttr('hidden');
       		$('#nenhumClienteSelecionado').attr('hidden', 'hidden');
-      		$('#modal-default').modal('hide');
+      		$('#modalCliente').modal('hide');
     		});
       	response.fail(function(e){
       		alert('Erro incluindo cliente');
@@ -1059,7 +886,7 @@
   	    // Cancel the default action, if needed
   	    //event.preventDefault();
   	    // Trigger the button element with a click
-  	    $('.js-buscar-cliente2').click();
+  	    $('.js-buscar-cliente').click();
   	  }
   	});
     
@@ -1068,17 +895,18 @@
     	var botao = $(e.currentTarget);
   		var url = botao.data('url-remover-cliente');
       	
-      	var response = $.ajax({
-      		url: url,
-      		type: 'PUT'
+    	var response = $.ajax({
+    		url: url,
+    		type: 'PUT'
   		});
       	
-      	response.done(function(e){
-      		$('#clienteSelecionado').attr('hidden','hidden');
+    	response.done(function(e){
+    		$('#clienteSelecionado').attr('hidden','hidden');
     		$('#nenhumClienteSelecionado').removeAttr('hidden');
   		});
-      	response.fail(function(e){
-      		alert('Erro excluindo cliente');
+    	
+    	response.fail(function(e){
+    		alert('Erro excluindo cliente');
   		}); 
     	
     });
@@ -1099,56 +927,15 @@
 		});
     	
     	response.done(function(e){
-			$('#modal-balanca').replaceWith(e);
-			$('#modal-balanca').modal('show');
+			$('#modalBalanca').replaceWith(e);
+			$('#modalBalanca').modal('show');
 		});
     	response.fail(function(e){
 			alert('Erro pesando item');
 		});
     }
     
-    $('#ancora').on('click', '.js-selecionar-item-balanca', function(event){
-    	var botao = $(event.currentTarget);
-    	var url = botao.data('url-base');
-    	
-    	var codigo = $('#modal-balanca').find('input#inputCodigoProduto').val();
-    	var quantidade = $('#modal-balanca').find('input#inputQuantidade').val().replace(',','.');
-    	var unitario = $('#modal-balanca').find('input#inputUnitario').val();
-    	
-    	var item = {
-    	  	      "produto" : {
-    	  	    	  "codigo" : codigo,
-    	  	    	  "unitario" : unitario
-    	  	      },
-    	  	      "quantidade" : quantidade
-    	  	   };
-    	
-      	//console.log(JSON.stringify(item));
-      	
-      	var response = $.ajax({
-      		url: url,
-      		type: 'POST',
-      		contentType : 'application/json; charset=utf-8',
-      		data: JSON.stringify(item),
-      		complete: function() {
-      			configuraBarraPesquisa();
-      			inicializar();
-        		setTimeout(function() {
-        		  $('#loadingDiv').html('');
-      			}, 250);
-      		}
-  		});
-    	
-    	response.done(function(e){
-    		$('#modal-balanca').modal('hide');
-  			$('#caixaForm').replaceWith(e);
-  			$('#listaDeItens').scrollTop(330);
-  		});
-      	
-      	response.fail(function(e){
-  			alert('Erro incluindo item');
-  		});  		
-    }); 
+     
     
 	$('#ancora').on('show.bs.modal', '#modalConfirmarRemocaoItem', function(event){
     	var button = $(event.relatedTarget); // Button that triggered the modal
@@ -1220,10 +1007,9 @@
   		});
   		
   		response.done(function(e){
-  			/* console.log('pagamento'); */
-  			$('#modal-pagamento').modal('hide');
+  			$('#modalPagamento').modal('hide');
   			$('#caixaForm').replaceWith(e);
-  			$('#modal-pagamento').modal('show');
+  			$('#modalPagamento').modal('show');
   		});
   		
   		response.fail(function(e){
@@ -1235,7 +1021,7 @@
   		event.preventDefault();
   		
   		var seletor = $('#desconto');
-  		var url = seletor.data('url-base-desconto');
+  		var url = seletor.data('url-aplicar-desconto');
   		var opcao = seletor.find('option:selected');
   		var desconto = opcao[0].value;
   		
@@ -1252,9 +1038,9 @@
   		
   		response.done(function(e){
   			$('#modalDesconto').modal('hide');
-  			$('#modal-pagamento').modal('hide');
+  			$('#modalPagamento').modal('hide');
   			$('#caixaForm').replaceWith(e);
-  			$('#modal-pagamento').modal('show');
+  			$('#modalPagamento').modal('show');
 			});
 		
   		response.fail(function(e){
@@ -1265,21 +1051,22 @@
   	$(document).ajaxComplete(function(event, xhr, settings) {		
   		var url = settings.url;
   		
-  		//console.log(settings.my_option);
-  		
   		if(!(url.includes('buscarItem'))){
   			configuraBarraPesquisa();
   		}
-  		if(!(url.includes('buscarCliente'))){
-  			startSelect2Cliente();
+  		
+  		if(url.includes('incluir')) {
+  			setTimeout(function() {
+    		  $('#loadingDiv').html('');
+  			}, 250);
   		}
   		inicializar();
   		
-  		if(($("#modal-cliente").data('bs.modal') || {})._isShown) {
+  		/* if(($("#modal-cliente").data('bs.modal') || {})._isShown) {
   			$('.js-buscar-cliente').select2('focus');
   		} else {
   			$('.js-buscar-produto').select2('focus');
-  		}
+  		} */
   	});
 	
   	$('#ancora').on('show.bs.modal', '.modal', function () {
@@ -1296,117 +1083,33 @@
   window.onload = function(){
 	  var res = $('#inputSaldo').hasClass('is-invalid') || $('#inputSaldo').hasClass('is-invalid');
 	  if(res) {
-		  $('#modal-pagamento').modal('show');
+		  $('#modalPagamento').modal('show');
+		  setTimeout(function(){
+			  posicionarAoFim('inputSaldo');
+		  },0)
 	  }
-}
+	}
   
-  /* function validateForm() {
-    // This function deals with validation of the form fields
-    var x, y, i, valid = true;
-    x = document.getElementsByClassName("painelCliente");
-    y = x[0].getElementsByClassName("required");
-    // A loop that checks every input field in the current tab:
-    for (i = 0; i < y.length; i++) {
-      // If a field is empty...
-      if (y[i].value == "") {
-        // add an "invalid" class to the field:
-        y[i].className += " invalid";
-        // and set the current valid status to false
-        valid = false;
-      }
-    }
-    // If the valid status is true, mark the step as finished and valid:
-    if (valid) {
-  	document.getElementById("caixaForm").submit();
-  	return false;
-    }
-    return valid; // return the valid status
-  }	 */
-
-	function showTab(n) {
-	  // This function will display the specified tab of the form...
-	  var x = document.getElementsByClassName("tab");
-	  x[n].style.display = "block";
-	  //... and fix the Previous/Next buttons:
-	  if (n == 0) {
-	    document.getElementById("prevBtn").style.display = "none";
-	  } else {
-	    document.getElementById("prevBtn").style.display = "inline";
-	  }
-	  if (n == (x.length - 1)) {
-	    document.getElementById("nextBtn").innerHTML = "Finalizar";
-	  } else {
-	    document.getElementById("nextBtn").innerHTML = "Próximo";
-	  }
-	  //... and run a function that will display the correct step indicator:
-	  fixStepIndicator(n)
-	}
-
-	function nextPrev(n) {
-	  // This function will figure out which tab to display
-	  var x = document.getElementsByClassName("tab");
-	  // Exit the function if any field in the current tab is invalid:
-	  //if (n == 1 && !validateForm()) return false;
-	  // Hide the current tab:
-	  x[currentTab].style.display = "none";
-	  // Increase or decrease the current tab by 1:
-	  currentTab = currentTab + n;
-	  // if you have reached the end of the form...
-	  if (currentTab >= x.length) {
-	    // ... the form gets submitted:
-	    document.getElementById("caixaForm").submit();
-	    return false;
-	  }
-	  // Otherwise, display the correct tab:
-	  showTab(currentTab);
-	}
-
-	function validateForm() {
-	  // This function deals with validation of the form fields
-	  var x, y, i, valid = true;
-	  x = document.getElementsByClassName("tab");
-	  y = x[currentTab].getElementsByClassName("required");
-	  // A loop that checks every input field in the current tab:
-	  for (i = 0; i < y.length; i++) {
-	    // If a field is empty...
-	    if (y[i].value == "") {
-	      // add an "invalid" class to the field:
-	      y[i].className += " invalid";
-	      // and set the current valid status to false
-	      valid = false;
-	    }
-	  }
-	  // If the valid status is true, mark the step as finished and valid:
-	  if (valid) {
-	    document.getElementsByClassName("step")[currentTab].className += " finish";
-	  }
-	  return valid; // return the valid status
-	}
-
-	function fixStepIndicator(n) {
-	  // This function removes the "active" class of all steps...
-	  var i, x = document.getElementsByClassName("step");
-	  for (i = 0; i < x.length; i++) {
-	    x[i].className = x[i].className.replace(" active", "");
-	  }
-	  //... and adds the "active" class on the current step:
-	  x[n].className += " active";
-	}
-	
-	
+  function posicionarAoFim(elementId) {
+	  var myElement = document.getElementById(elementId);
+	  myElement.focus();
+	  var length = myElement.value.length;
+	  myElement.selectionStart = length;
+  }
+  
 
   </script>
   
   <style layout:fragment="extra-style">
-    #modal-pagamento * {
+    #modalPagamento * {
       box-sizing: border-box;
     }
     
-    #modal-pagamento body {
+    #modalPagamento body {
       background-color: #f1f1f1;
     }
     
-    #modal-pagamento #regForm {
+    #modalPagamento #regForm {
       background-color: #ffffff;
       margin: 100px auto;
       font-family: Raleway;
@@ -1415,7 +1118,7 @@
       min-width: 300px;
     }
     
-    #modal-pagamento h1 {
+    #modalPagamento h1 {
       text-align: center;  
     }
     
@@ -1428,12 +1131,12 @@
     }
     
     /* Mark input boxes that gets an error on validation: */
-    #modal-pagamento input.invalid {
+    #modalPagamento input.invalid {
       background-color: #ffdddd;
     }
     
     /* Hide all steps by pagamento: */
-    #modal-pagamento .tab {
+    #modalPagamento .tab {
       display: none;
     }
     
@@ -1456,7 +1159,7 @@
     } */
     
     /* Make circles that indicate the steps of the form: */
-    #modal-pagamento .step {
+    #modalPagamento .step {
       height: 15px;
       width: 15px;
       margin: 0 2px;
@@ -1467,12 +1170,12 @@
       opacity: 0.5;
     }
     
-    #modal-pagamento .step.active {
+    #modalPagamento .step.active {
       opacity: 1;
     }
     
     /* Mark the steps that are finished and valid: */
-    #modal-pagamento .step.finish {
+    #modalPagamento .step.finish {
       background-color: #4CAF50;
     }
   
