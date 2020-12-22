@@ -17,19 +17,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.el.ELException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,12 +42,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.dao.filter.ProdutoFilter;
-import com.kaue.dao.filter.TituloFilter;
 import com.kaue.enumeration.OpcoesDesconto;
 import com.kaue.enumeration.StatusCaixa;
 import com.kaue.enumeration.StatusVenda;
 import com.kaue.enumeration.TipoConta;
 import com.kaue.enumeration.TipoMovimentacaoCaixa;
+import com.kaue.enumeration.TipoVenda;
 import com.kaue.enumeration.Unitario;
 import com.kaue.model.Caixa;
 import com.kaue.model.Categoria;
@@ -58,7 +56,6 @@ import com.kaue.model.Item;
 import com.kaue.model.MovimentacaoCaixa;
 import com.kaue.model.Produto;
 import com.kaue.model.Registro;
-import com.kaue.model.Titulo;
 import com.kaue.model.Usuario;
 import com.kaue.model.UsuarioWeb;
 import com.kaue.model.Venda;
@@ -68,6 +65,7 @@ import com.kaue.service.MovimentacaoCaixaService;
 import com.kaue.service.ProdutoService;
 import com.kaue.service.RelatorioService;
 import com.kaue.service.VendaService;
+import com.kaue.util.HasValue;
 
 @Controller
 @RequestMapping("/caixa")
@@ -128,6 +126,11 @@ public class CaixaController {
 		return Arrays.asList(OpcoesDesconto.values());
 	}
 	
+	@ModelAttribute
+	public List<TipoVenda> todosTipo(){
+		return Arrays.asList(TipoVenda.values());
+	}
+	
 	@RequestMapping
 	public ModelAndView showRegistradora() {
 		venda = new Venda();
@@ -155,6 +158,7 @@ public class CaixaController {
 		venda.setSubtotal(new BigDecimal(0.0));
 		venda.setValorDesconto(new BigDecimal(0.0));
 		venda.setTotal(venda.getSubtotal());
+		venda.setTipoVenda(TipoVenda.ESPECIE);
 		//venda.setCliente(new Cliente());
 	}
 	
@@ -367,7 +371,7 @@ public class CaixaController {
 		venda.setTotal(venda.getSubtotal());
 		venda.setDataVenda(new Date());
 		venda.setSaldo(BigDecimal.ZERO);
-		venda = vendaService.salvar(venda);
+		//venda = vendaService.salvar(venda);
 				
 		mv.addObject("venda", venda);
 		return mv;
@@ -377,14 +381,22 @@ public class CaixaController {
 	public String finalizarPagamento(@Validated Venda venda, Errors errors, RedirectAttributes attributes) {
 		
 		if(venda.getSubtotal().compareTo(BigDecimal.ZERO)==0) {
-			errors.rejectValue("subtotal", null, "Erro: A lista de compras está vazia!");
+			errors.rejectValue("subtotal", null, "A lista de compras está vazia!");
 		}
 		
-		if(venda.getSaldo()!=null) {
-			if(venda.getSaldo().compareTo(venda.getTotal())==-1 && venda.getCliente() == null) {
+		if(venda.getTipoVenda()==TipoVenda.ESPECIE) {
+			if(venda.getSaldo()==null || venda.getSaldo().compareTo(venda.getTotal())==-1) {
 				errors.rejectValue("saldo", null, "Saldo insuficiente!");
 			}
+		} else {
+			if(!HasValue.execute(venda.getCliente())) {
+				errors.rejectValue("cliente", null, "Selecione um cliente!");
+			} else {
+				venda.setSaldo(new BigDecimal(0.0));
+			}
 		}
+		UsuarioWeb usuarioWeb = (UsuarioWeb)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		venda.setUsuario(usuarioWeb.getUsuario());
 		venda.setDataVenda(new Date());
 		
 		if(errors.hasErrors()) {
@@ -393,7 +405,13 @@ public class CaixaController {
 			for(Item item : venda.getItemList()) { 
 				item.setVenda(venda);
 			}
-			venda.setStatus(StatusVenda.FINALIZADA);
+			
+			if(venda.getTipoVenda()==TipoVenda.CONTA) {
+				venda.setStatus(StatusVenda.ABERTA);
+			} else if(venda.getTipoVenda()==TipoVenda.ESPECIE) {
+				venda.setStatus(StatusVenda.FINALIZADA);
+			}
+			
 			BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
 			venda.setTroco(troco);
 			
@@ -548,23 +566,48 @@ public class CaixaController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/selecionarCliente/{id}")
+	/*@RequestMapping(value = "/selecionarCliente/{id}")
 	public @ResponseBody Cliente detalhesCliente(@PathVariable("id") Cliente cliente) {
-		//ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
-		/* this.cliente = cliente; */
-		//mv.addObject("venda", venda);
 		venda.setCliente(cliente);
-		//cliente.getImagemBase64(clienteService.);
 		return cliente;
+	}*/
+	
+	@RequestMapping(value = "/selecionarCliente/{id}")
+	public ModelAndView detalhesCliente(@PathVariable("id") Cliente cliente) {
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #caixaForm");
+		venda.setCliente(cliente);
+		mv.addObject("venda", venda);
+		return mv;
 	}
 	
 	@RequestMapping(value = "/removerCliente")
-	public @ResponseBody Cliente removerCliente() {
-		//ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #caixaForm");
+	public ModelAndView removerCliente() {
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #caixaForm");
 		venda.setCliente(null);
-		//mv.addObject("venda", venda);
-		return null;
+		mv.addObject("venda", venda);
+		return mv;
 	}
+	
+	@RequestMapping(value = "/formaPagamento/{opcao}")
+	public ModelAndView aplicarFormaPAgamento(@PathVariable("opcao") TipoVenda tipoVenda) {
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW + " :: #caixaForm");
+		venda.setTipoVenda(tipoVenda);
+		if(tipoVenda==TipoVenda.CONTA) {
+			venda.setDesconto(OpcoesDesconto.ZERO);
+			BigDecimal valorDesconto = venda.getSubtotal().multiply(new BigDecimal(venda.getDesconto().getNumero())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			BigDecimal total = venda.getSubtotal().subtract(valorDesconto);
+			venda.setValorDesconto(valorDesconto);
+			venda.setTotal(total);
+		}
+		mv.addObject("venda", venda);
+		return mv;
+	}
+	
+	/*@RequestMapping(value = "/removerCliente")
+	public @ResponseBody Cliente removerCliente() {
+		venda.setCliente(null);
+		return null;
+	}*/
 	
 	
 	

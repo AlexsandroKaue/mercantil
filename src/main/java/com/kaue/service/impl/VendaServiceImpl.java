@@ -33,12 +33,7 @@ public class VendaServiceImpl implements VendaService{
 
 	@Override
 	public List<Venda> pesquisar(VendaFilter filtro) {
-		/*
-		 * String descricao = (filtro.getDescricao() == null ? "" :
-		 * filtro.getDescricao()); return
-		 * vendaDAO.findByDescricaoContainingIgnoreCaseOrderByIdDesc(descricao);
-		 */
-		return null;
+		return vendaDAO.findVendaByFiltro(filtro);
 	}
 
 	@Override

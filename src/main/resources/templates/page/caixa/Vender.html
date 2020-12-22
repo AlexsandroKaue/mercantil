@@ -171,7 +171,7 @@
        tabindex="-1" data-keyboard="true"
        role="document" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
        <div layout:insert="~{mensagem_erro}"></div>
-        <div class="modal-dialog modal-lg ">
+        <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title"><i class="fas fa-dollar-sign"></i> Pagamento</h4>
@@ -181,96 +181,79 @@
             </div>
             <div class="modal-body pb-0">
               <div class="row" >
-                <div class="col-6">
+                <!-- <div class="col-6">
                   <div class="bg-default py-2 px-3 mt-4">
                     <h4 class="mb-0">
                       <small>Para selecionar um cliente <a data-toggle="modal" data-target="#modalCliente" href="#">
                             clique aqui
                            </a></small>
                     </h4>
-                    <!-- <div id="clienteSelecionado" class="card bg-light mt-3" hidden="hidden">
-                      <div class="card-header text-muted border-bottom-0"><span class="text-success">Cliente selecionado</span></div>
-                      <div class="card-body pt-0 mt-0">
-                        <div class="row">
-                          <div class="col-12">
-                            <div class="row">
-                            <div class="col-11">
-                            <p class="mb-0" id="clienteSelecionadoNome"></p>
-                            </div>
-                            <div class="col-1">
-                              <a data-toggle="modal" class="js-remover-cliente float-right text-muted btn-sm"
-                                th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
-                                title="Remover" rel="tooltip" data-placement="top">
-                                <i class="fas fa-times-circle"></i></a>
-                            </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div> -->
-                    <input id="nenhumClienteSelecionado" placeholder="Nenhum cliente selecionado." 
+                    <input id="nenhumClienteSelecionado" th:unless="*{cliente}"
+                     placeholder="Nenhum cliente selecionado." 
                      class="form-control" 
                      oninput="this.className = ''" name="fname"
-                     readonly="readonly"></input>
-                     <div class="row" id="clienteSelecionado" hidden="hidden">
-                      <div class="col-11">
-                       <span class="text-success">Cliente selecionado</span>
-                       <ul class="products-list product-list-in-card pl-2 pr-2 mt-2">
-                        <li class="item">
-                          <div class="product-img">
-                            <img src="dist/img/default-150x150.png" alt="Product Image" class="img-size-50">
-                          </div>
-                          <div class="product-info">
-                            <a href="javascript:void(0)" class="product-title" id="clienteSelecionadoNome">Alexsandro Kauê
-                              <span class="badge badge-success float-right">selecionado</span></a>
-                            <span class="product-description">
-                              carvalho.3331@gmail.com, (85) 98630-7460
-                            </span>
-                          </div>
-                        </li>
-                      </ul>
-                      </div>
-                      <div class="col-1" style="vertical-align: middle;">
-                      <a data-toggle="modal" class="js-remover-cliente float-right text-muted btn-sm"
-                                  th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
-                                  title="Remover" rel="tooltip" data-placement="top">
-                                  <i class="fas fa-times-circle"></i></a>
+                     readonly="readonly" th:classappend="${#fields.hasErrors('cliente')} ? is-invalid"></input>
+                     
+                    <div class="row" id="clienteSelecionado" th:if="*{cliente}">hidden="hidden"
+                      <div class="col-12">
+                       <label class="text-success">Cliente selecionado</label><br/>
+                       <a href="javascript:void(0)" class="product-title" id="clienteSelecionadoNome"></a>
+                       
+                       <a data-toggle="modal" class="js-remover-cliente float-right text-muted btn-sm"
+                        th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
+                        title="Remover" rel="tooltip" data-placement="top">
+                        <i class="fas fa-times-circle"></i></a>
                       </div>
                     </div>
                   </div>
                   <div class="bg-default py-2 px-3 mt-4">
                     <a href="#" data-toggle="modal" data-target="#modalDesconto"><i class="fas fa-tag"></i> desconto</a>
                   </div>
-                </div>
-                <div class="col-6">
+                </div> -->
+                <div class="col-12">
                   
-                  <div class="bg-default py-2 px-3 mt-4">
+                  <div class="bg-default py-2 px-3">
                     <h4 class="mb-0">
                       <small>Forma de pagamento</small>
                     </h4>
-                    <!-- <h4 class="mt-0"> -->
-                      <div class="form-group clearfix mt-1" style="vertical-align: bottom;">
-                        <div class="icheck-primary d-inline">
-                          <input type="radio" id="radioPrimary1" name="r1" checked>
-                          <label for="radioPrimary1">
-                            Em espécie
+                    
+                    <div class="form-group clearfix mt-1" style="vertical-align: bottom;">
+                      <th:block th:each="tipoVenda, rowStat : ${tipoVendaList}">
+                        <div class="icheck-primary d-inline" th:attr="data-url-forma-pagamento=@{/caixa/formaPagamento}">
+                          <input type="radio" th:id="|radioPrimary__${rowStat.index+1}__|" name="r1" th:value="${tipoVenda}" th:field="*{tipoVenda}">
+                          <label th:for="|radioPrimary__${rowStat.index+1}__|">
+                            [[${tipoVenda.descricao}]]
                           </label>
                         </div>
-                        <div class="icheck-primary d-inline">
-                          <input type="radio" id="radioPrimary3" name="r1">
-                          <label for="radioPrimary3">
-                            Em conta
-                          </label>
-                        </div>
-                        <div class="icheck-primary d-inline">
-                          <input type="radio" id="radioPrimary2" name="r1">
-                          <label for="radioPrimary2">
-                            Cartão
-                          </label>
-                        </div>
-                      </div>
-                    <!-- </h4> -->
+                      </th:block>
+                    </div>
                   </div>
+                  
+                  <div class="bg-default py-2 px-3">
+                    <h4 class="mb-0">
+                      <small>Para selecionar um cliente <a data-toggle="modal" data-target="#modalCliente" href="#">
+                            clique aqui
+                           </a></small>
+                    </h4>
+                    <input id="nenhumClienteSelecionado" th:unless="*{cliente}"
+                     placeholder="Nenhum cliente selecionado." 
+                     class="form-control" 
+                     oninput="this.className = ''" name="fname"
+                     readonly="readonly" th:classappend="${#fields.hasErrors('cliente')} ? is-invalid"></input>
+                     
+                    <div class="row" id="clienteSelecionado" th:if="*{cliente}"><!-- hidden="hidden" -->
+                      <div class="col-12">
+                       <label class="text-success">Cliente selecionado</label><br/>
+                       <a href="javascript:void(0)" class="product-title" id="clienteSelecionadoNome">[[*{cliente.nome}]]</a>
+                       
+                       <a data-toggle="modal" class="js-remover-cliente float-right text-muted btn-sm"
+                        th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
+                        title="Remover" rel="tooltip" data-placement="top">
+                        <i class="fas fa-times-circle"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                  
                   <div class="bg-default py-2 px-3">
                     <div class="row" th:if="*{valorDesconto}>0">
                       <div class="col-4">
@@ -308,19 +291,18 @@
                         </h2>
                       </div>
                     </div>
-                    
+                    <small th:if="*{tipoVenda==T(com.kaue.enumeration.TipoVenda).ESPECIE}"><a href="#" data-toggle="modal" data-target="#modalDesconto"><i class="fas fa-tag"></i> desconto</a></small>
                   </div>
-                  <div class="bg-default py-2 px-3">
+                  <div class="bg-default py-2 px-3 bg-saldo" th:if="*{tipoVenda==T(com.kaue.enumeration.TipoVenda).ESPECIE}">
                     <div class="row">
                       <div class="col-12">
                         <h4 class="mb-0">
-                        <small>Saldo</small>
-                      </h4>
-                      <input type="text" id="inputSaldo" class="form-control form-control-lg js-currency input_saldo" 
-                      th:field="*{saldo}" th:classappend="${#fields.hasErrors('saldo')} ? is-invalid"
-                      autocomplete="off"></input>
-                    </div>
-                    
+                          <small>Saldo</small>
+                        </h4>
+                        <input type="text" id="inputSaldo" class="form-control form-control-lg js-currency input_saldo" 
+                        th:field="*{saldo}" th:classappend="${#fields.hasErrors('saldo')} ? is-invalid"
+                        autocomplete="off"></input>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -547,6 +529,7 @@
     });
     
     $('#ancora').on('shown.bs.modal', '#modalPagamento', function(event){
+    	//$('#radioPrimary1').prop("checked", true);
     	$('#inputSaldo').maskMoney({
     		decimal:',',
     		thousands:'.', 
@@ -866,12 +849,14 @@
   		});
       	
       	response.done(function(e){
-      		$('#clienteSelecionadoNome').html(e.nome);
-      		$('#clienteSelecionadoEmail').html(e.email);
-      		$('#clienteSelecionadoTelefone').html(e.telefone);
-      		$('#clienteSelecionado').removeAttr('hidden');
-      		$('#nenhumClienteSelecionado').attr('hidden', 'hidden');
       		$('#modalCliente').modal('hide');
+      		$('#modalPagamento').modal('hide');
+      		$('#caixaForm').replaceWith(e);
+      		//$('#clienteSelecionadoNome').html(e.nome);
+      		//$('#clienteSelecionado').removeAttr('hidden');
+      		//$('#nenhumClienteSelecionado').attr('hidden', 'hidden');
+      		$('#modalPagamento').modal('show');
+      		
     		});
       	response.fail(function(e){
       		alert('Erro incluindo cliente');
@@ -901,8 +886,12 @@
   		});
       	
     	response.done(function(e){
-    		$('#clienteSelecionado').attr('hidden','hidden');
-    		$('#nenhumClienteSelecionado').removeAttr('hidden');
+    		/* $('#clienteSelecionado').attr('hidden','hidden');
+    		$('#nenhumClienteSelecionado').removeAttr('hidden'); */
+    		
+    		$('#modalPagamento').modal('hide');
+    		$('#caixaForm').replaceWith(e);
+    		$('#modalPagamento').modal('show');
   		});
     	
     	response.fail(function(e){
@@ -1047,6 +1036,36 @@
   			alert('Erro aplicando desconto');
   		});
   	});
+		
+		$('#ancora').on('change','.icheck-primary', function(e) {
+			var opcao = $(this).find(':checked').val();
+			var url = $(this).data('url-forma-pagamento');
+			if(!url.endsWith('/')){
+  			url += '/';
+  		}
+			url += opcao
+			
+			var response = $.ajax({
+  			url: url,
+  			type: 'GET'
+  		});
+  		
+  		response.done(function(e){
+  			$('#modalPagamento').modal('hide');
+  			$('#caixaForm').replaceWith(e);
+  			$('#modalPagamento').modal('show');
+			});
+		
+  		response.fail(function(e){
+  			alert('Erro atualizando forma de pagamento');
+  		});
+			
+			/* if(opcao === 'CONTA'){
+				$('.bg-saldo').attr('hidden','hidden');
+			} else {
+				$('.bg-saldo').removeAttr('hidden');
+			} */
+		});
 	
   	$(document).ajaxComplete(function(event, xhr, settings) {		
   		var url = settings.url;
@@ -1081,7 +1100,7 @@
 
   });
   window.onload = function(){
-	  var res = $('#inputSaldo').hasClass('is-invalid') || $('#inputSaldo').hasClass('is-invalid');
+	  var res = $('#inputSaldo').hasClass('is-invalid') || $('#nenhumClienteSelecionado').hasClass('is-invalid');
 	  if(res) {
 		  $('#modalPagamento').modal('show');
 		  setTimeout(function(){

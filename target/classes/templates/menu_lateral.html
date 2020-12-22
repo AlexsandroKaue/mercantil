@@ -109,9 +109,8 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item has-treeview">
+          <!-- <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <!-- <i class="nav-icon fas fa-chart-pie"></i> -->
               <i class="nav-icon fas fa-cash-register"></i>
               <p>
                 Caixa
@@ -127,32 +126,40 @@
                   </p>
                 </a>
               </li>
-              <!-- <li class="nav-item">
+              <li class="nav-item">
                 <a th:href="@{/caixa/administracao}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>
                     Administrador
                   </p>
                 </a>
-              </li> -->
+              </li>
             </ul>
-          </li>
+          </li> -->
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
+            <a th:href="@{/caixa}" class="nav-link">
+              <i class="nav-icon fas fa-cash-register"></i>
               <p>
-                Vendas<small> (em construção)</small>
+                Frente de loja
               </p>
             </a>
           </li>
           <li class="nav-item">
+            <a th:href="@{/vendas}" class="nav-link">
+              <i class="nav-icon fas fa-cart-plus"></i>
+              <p>
+                Vendas
+              </p>
+            </a>
+          </li>
+          <!-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
               <p>
                 Compras<small> (em construção)</small>
               </p>
             </a>
-          </li>
+          </li> -->
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
@@ -161,22 +168,22 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
               <p>
                 Financeiro<small> (em construção)</small>
               </p>
             </a>
-          </li>
-          <li class="nav-item">
+          </li> -->
+          <!-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
               <p>
                 Relatórios<small> (em construção)</small>
               </p>
             </a>
-          </li>
+          </li> -->
           <!-- <li class="nav-item">
             <a th:href="@{/lotes}" class="nav-link">
               <i class="nav-icon fas fa-layer-group"></i>

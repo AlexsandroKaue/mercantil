@@ -1,15 +1,18 @@
 package com.kaue.dao.filter;
 
-public class VendaFilter {
+import com.kaue.model.Venda;
+
+public class VendaFilter extends GenericFilter {
 	
-	private String descricao;
+	private Venda venda = new Venda();
 
-	public String getDescricao() {
-		return descricao;
+	public Venda getVenda() {
+		return venda;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setVenda(Venda venda) {
+		this.venda = venda;
 	}
+
 
 }

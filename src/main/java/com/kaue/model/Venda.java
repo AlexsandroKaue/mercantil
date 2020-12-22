@@ -17,16 +17,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kaue.enumeration.OpcoesDesconto;
 import com.kaue.enumeration.StatusVenda;
+import com.kaue.enumeration.TipoVenda;
 
 @Entity
 @Audited
@@ -56,7 +55,7 @@ public class Venda {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorDesconto;
 	
-	@NotNull(message = "O campo saldo é obrigatório")
+	//@NotNull(message = "O campo saldo é obrigatório")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal saldo;
 	
@@ -73,7 +72,13 @@ public class Venda {
 	private Cliente cliente;
 	
 	@ManyToOne
+	private Usuario usuario;
+	
+	@ManyToOne
 	private Caixa caixa;
+	
+	@Enumerated(EnumType.STRING)
+	private TipoVenda tipoVenda;
 
 	public Long getId() {
 		return id;
@@ -186,6 +191,22 @@ public class Venda {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+
+	public TipoVenda getTipoVenda() {
+		return tipoVenda;
+	}
+
+	public void setTipoVenda(TipoVenda tipoVenda) {
+		this.tipoVenda = tipoVenda;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 }

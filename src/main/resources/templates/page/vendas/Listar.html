@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{principal}">
+<head>
+  <title th:text="#{mercadinho}"></title>
+</head>
+
+  <style layout:fragment="extra-style">
+    .table, .table td{
+      border-width:px;
+      border-style:solid;
+      border-color:grey;
+      vertical-align: middle;
+     }
+  </style>
+
+  <section layout:fragment="container">
+    <form id="filtroVendaForm" method="GET" th:action="@{/vendas}" th:object="${filtro}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+      <header layout:insert="~{cabecalho}"></header>
+      <header layout:insert="~{corpo}"></header>
+    </form>
+    
+    <div class="modal fade" id="modalDetalhesVenda" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"><small><i class="fas fa-info-circle"></i></small> Detalhes da Venda</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" >
+            <div class="row" th:if="${venda}">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-md-4">
+                    <dl>
+                      <dt>#</dt>
+                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.id)}" th:text="#{nao.informado}" ></dd>
+                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.id)}" th:text="${venda.id}" ></dd>
+                      <dt>Operador</dt>
+                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.usuario)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.usuario)}" th:text="${venda.usuario.nome}"></dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-4">
+                    <dl>
+                      <dt>Data da venda</dt>
+                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.dataVenda)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.dataVenda)}" th:text="${{venda.dataVenda}}"></dd>
+                      
+                      <dt>Cliente</dt>
+                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.cliente)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.cliente)}" th:text="${venda.cliente.nome}"></dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-4">
+                    <dl><dt>Status</dt>
+                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.status)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.status)}">
+                        <small class="badge badge-danger" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).ABERTA}" 
+                         th:text="${venda.status.descricao}"></small>
+                        <small class="badge badge-success" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).FINALIZADA}" 
+                         th:text="${venda.status.descricao}"></small>
+                      </dd>
+                      <dt>Total</dt>
+                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.total)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.total)}" th:text="|R$ ${{venda.total}}|"></dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-12">
+                    <label>Itens</label>
+                    <div  style="border-style: solid solid solid solid; border-width: 2px;border-color: #aaaaaa;background-color: #fffed4">
+                      <div class="bg-white pt-3 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;"><!-- #cbd3da -->
+                        <ul class="items-list" style="height: 2em; margin-bottom: 0px; overflow: hidden">
+                          <li>
+                            <div class="row">
+                              <div class="col-md-1 text-left">
+                                <!-- <h4 class="mb-0">
+                                  Produto
+                                </h4> -->
+                                <label class="text-center">#</label>
+                              </div>
+                              <div class="col-md-5 text-left">
+                                <!-- <h4 class="mb-0">
+                                  Produto
+                                </h4> -->
+                                <p>Produto</p>
+                              </div>
+                              <div class="col-md-3 text-center">
+                                <!-- <h4 class="mb-0">
+                                  Quantidade x Preço Unitário
+                                </h4> -->
+                                <p>Qtd. x Preço Un.</p>
+                              </div>
+                              <div class="col-md-3 text-right">
+                                <p>Total Item</p>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      
+                      <div class="overlay-wrapper">
+                        
+                        <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 200px;overflow: scroll; overflow-x: hidden">
+                          <li th:if="*{#lists.isEmpty(venda.itemList)}">
+                             <div class="col-md-12">
+                              <p class="mt-2">Nenhum item incluído.</p> 
+                             </div>
+                          </li>
+                          <th:block th:each="item, rowStat : ${venda.itemList}">
+                              <li class="item">
+                                <div class="row align-items-end">
+                                  <div class="col-md-1 text-left">
+                                    <h6 th:text="${rowStat.index + 1}"></h6>  
+                                  </div>
+                                  <div class="col-md-5 text-left">
+                                    <!-- <h6 id="codigo" th:text="${item.produto.codigo}"></h6> -->
+                                    <h6 id="descricao" th:text="${item.produto.descricao}"></h6> 
+                                  </div>
+                                  <div class="col-md-3 text-center">
+                                     <h6 id="quantidade" th:text="|${{item.quantidade}} ${item.produto.unitario} x ${{item.valor}}|"></h6>
+                                  </div>
+                                  <div class="col-md-3 text-right">
+                                     <h6 th:text="|R$ ${{item.valorTotal}}|"></h6>
+                                  </div>
+                                </div>
+                              </li>
+                            <li class="linha border-bottom"></li>
+                          </th:block>
+                        </ul>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer float-right">
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-arrow-circle-left"></i>
+            Fechar</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+  </section>
+  
+  <div layout:fragment="titulo">
+    <h1 class="m-0 text-dark">Vendas</h1>
+  </div>
+  
+  <!-- <div layout:fragment="botoes">
+    <a class="btn btn-block btn-info" th:href="@{/categorias/novo}" 
+     th:text="#{novo}" sec:authorize="hasAuthority('INCLUIR_CATEGORIA')"></a>
+  </div> -->
+  
+  <section layout:fragment="conteudo">
+    <!-- <div class="card card-secondary"> -->
+      <!-- <div class="card-header"></div> -->
+      <!-- <div class="card-body"> -->
+        <div class="form-group row">
+          <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
+          <div class="col-sm-6" th:unless="*{avancada}">
+            <div class="input-group">
+              <input class="form-control" 
+                placeholder="Qual venda você está procurando?" autofocus="autofocus"
+                th:field="*{termo}"/>
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i> Pesquisar
+                  <!-- <i class="fas fa-search"></i> -->
+                </button>
+              </div>
+            </div>
+            <button type="button" 
+             class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
+              <small>Pesquisa Avançada</small>
+            </button>
+          </div>
+          <div class="col-sm-12" th:if="*{avancada}">
+            <div class="row">
+              <div class="col-sm-4">
+                <label class="col-form-label">Data</label>
+                <div class="input-group">
+                  <input class="form-control" 
+                    placeholder="Data da venda" autofocus="autofocus"
+                    th:field="*{venda.dataVenda}"></input>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
+            <small>Pesquisa Padrão</small></button>
+            <button type="submit" class="btn btn-default" style="float:right">
+              <i class="fas fa-search"></i> Pesquisar
+              <!-- <i class="fas fa-search"></i> -->
+            </button><br/>
+            
+          </div>
+        </div>
+      
+        <table class="table table-bordered table-hover js-tabela">
+          <thead  class="table-primary">
+            <tr>
+              <th class="text-center">#</th>
+              <th>Operador</th>
+              <th class="text-center">Data</th>
+              <th class="text-center">Total(R$)</th>
+              <th class="text-center">Status</th>
+              <th class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="venda : ${vendas}">
+              <td class="text-center" th:text="${venda.id}"></td>
+              <td th:text="${{venda.usuario.nome}}" th:if="${venda.usuario}"></td><td th:unless="${venda.usuario}"></td>
+              <td class="text-center" th:text="${{venda.dataVenda}}"></td>
+              <td class="text-center" th:text="${{venda.total}}"></td>
+              <td class="text-center">
+                <small class="badge badge-danger" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).ABERTA}" 
+                 th:text="${venda.status.descricao}"></small>
+                <small class="badge badge-success" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).FINALIZADA}" 
+                 th:text="${venda.status.descricao}"></small>
+              </td>
+              <td class="text-center">
+                <a th:attr="data-url-detalhes=@{/vendas/detalhes/{id}(id=${venda.id})}" th:href="@{#}"
+                  class="btn btn-link" title="Detalhes" rel="tooltip" data-placement="top"
+                  data-toggle="modal" data-target="#modalDetalhesVenda">
+                  <i class="fas fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(vendas)}">
+              <td colspan="6">Nenhuma venda encontrada.</td>
+            </tr>
+          </tbody>
+        </table>
+      <!-- </div> -->
+    <!-- </div> -->
+    <!-- /.card -->
+  </section>
+  
+  <script layout:fragment="js-validator">
+   $('#ancora').on('click', '.pesquisa-padrao', function(event){
+  	$('#filtroVendaForm').trigger("reset");
+		$('#inputAvancada').val(false);
+		document.getElementById("filtroVendaForm").submit(); 
+	});
+  
+   $('#ancora').on('click', '.pesquisa-avancada', function(event){
+  	$('#filtroVendaForm').trigger("reset");
+  	$('#inputAvancada').val(true);
+		document.getElementById("filtroVendaForm").submit(); 
+	});
+   
+   $('#ancora').on('show.bs.modal', '#modalDetalhesVenda', function(event){
+		var botao = $(event.relatedTarget); // Button that triggered the modal
+		var url = botao.data('url-detalhes');
+		console.log(url);
+		var response = $.ajax({
+		  type: 'GET',
+		  url: url
+ 	    });
+ 	  
+		response.done(function(e){
+   		var modalDialog = $(e).find('.modal-dialog');
+   		$('#modalDetalhesVenda').html(modalDialog);
+   	});
+   	 
+   	response.fail(function(e){
+   		alert('Erro ao carregar detalhes da venda.');  
+   	});
+		
+	});
+  </script>
+</html>
