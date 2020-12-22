@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +22,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -358,6 +364,25 @@ public class CaixaController {
         }
 	}
 	
+	@RequestMapping(path = "/download/{id}", method = RequestMethod.GET)
+	public ResponseEntity<Resource> download(@PathVariable("id") Venda venda) throws IOException {
+
+		gerarRelatorio(venda);
+		File file = ResourceUtils.getFile("classpath:jrxml/cupom.pdf");
+	    Path path = Paths.get(file.getAbsolutePath());
+	    ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+	    
+	    String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"", "comprovante_venda.pdf");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(headerKey, headerValue);
+
+	    return ResponseEntity.ok()
+	        .headers(httpHeaders)
+	        .contentLength(file.length())
+	        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+	        .body(resource);
+	}
 		
 	
 	@RequestMapping(value = "/pagamento", method = RequestMethod.PUT)
@@ -634,6 +659,7 @@ public class CaixaController {
 			param.put("valorTotalItem", venda.getSubtotal().toString());
 			param.put("valorDesconto", venda.getValorDesconto().toString());
 			param.put("valorTotal", venda.getTotal().toString());
+			param.put("data", venda.getDataVenda());
 			
 			String path = ResourceUtils.getFile("classpath:jrxml").getAbsolutePath();
 			String origem = path + "/cupom.jrxml";

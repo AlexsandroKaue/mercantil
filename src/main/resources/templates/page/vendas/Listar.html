@@ -25,7 +25,7 @@
     
     <div class="modal fade" id="modalDetalhesVenda" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-light">
           <div class="modal-header">
             <h4 class="modal-title"><small><i class="fas fa-info-circle"></i></small> Detalhes da Venda</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -36,7 +36,7 @@
             <div class="row" th:if="${venda}">
               <div class="col-12">
                 <div class="row">
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     <dl>
                       <dt>#</dt>
                       <dd class="info-venda" th:if="${#strings.isEmpty(venda.id)}" th:text="#{nao.informado}" ></dd>
@@ -57,90 +57,103 @@
                       <dd class="info-venda" th:if="${!#strings.isEmpty(venda.cliente)}" th:text="${venda.cliente.nome}"></dd>
                     </dl>
                   </div>
-                  <div class="col-md-4">
-                    <dl><dt>Status</dt>
-                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.status)}" th:text="#{nao.informado}"></dd>
-                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.status)}">
-                        <small class="badge badge-danger" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).ABERTA}" 
-                         th:text="${venda.status.descricao}"></small>
-                        <small class="badge badge-success" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).FINALIZADA}" 
-                         th:text="${venda.status.descricao}"></small>
-                      </dd>
-                      <dt>Total</dt>
-                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.total)}" th:text="#{nao.informado}"></dd>
-                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.total)}" th:text="|R$ ${{venda.total}}|"></dd>
-                    </dl>
+                  <div class="col-md-5">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <dl>
+                          <dt>Tipo de venda</dt>
+                          <dd class="info-venda" th:if="${#strings.isEmpty(venda.tipoVenda)}" th:text="#{nao.informado}"></dd>
+                          <dd class="info-venda" th:if="${!#strings.isEmpty(venda.tipoVenda)}" th:text="${venda.tipoVenda.descricao}"></dd>
+                        </dl>
+                      </div>
+                      <div class="col-md-6">
+                        <dl>
+                          <dt>Status</dt>
+                          <dd class="info-venda" th:if="${#strings.isEmpty(venda.status)}" th:text="#{nao.informado}"></dd>
+                          <dd class="info-venda" th:if="${!#strings.isEmpty(venda.status)}">
+                            <small class="badge badge-danger" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).ABERTA}" 
+                             th:text="${venda.status.descricao}"></small>
+                            <small class="badge badge-success" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).FINALIZADA}" 
+                             th:text="${venda.status.descricao}"></small>
+                          </dd>
+                        </dl>
+                      </div>
+                    </div>
+                      
+                    <div class="row" th:if="${venda.valorDesconto > 0}">
+                      <div class="col-md-4">
+                        <dl>
+                        <dt>Subtotal</dt>
+                          <dd class="info-venda" th:if="${#strings.isEmpty(venda.subtotal)}" th:text="#{nao.informado}"></dd>
+                          <dd class="info-venda" th:if="${!#strings.isEmpty(venda.subtotal)}" th:text="|${{venda.subtotal}}|"></dd>
+                        </dl>
+                      </div>
+                      <div class="col-md-4">
+                        <dl>
+                        <dt>Desconto</dt>
+                          <dd class="info-venda" th:if="${#strings.isEmpty(venda.valorDesconto)}" th:text="#{nao.informado}"></dd>
+                          <dd class="info-venda text-danger" th:if="${!#strings.isEmpty(venda.valorDesconto)}" th:text="|-${{venda.valorDesconto}}|"></dd>
+                        </dl>
+                      </div>
+                      <div class="col-md-4">
+                        <dl>
+                          <dt>Total</dt>
+                          <dd class="info-venda" th:if="${#strings.isEmpty(venda.total)}" th:text="#{nao.informado}"></dd>
+                          <dd class="info-venda" th:if="${!#strings.isEmpty(venda.total)}" th:text="|${{venda.total}}|"></dd>
+                        </dl>
+                      </div>
+                    </div>
+                    <div class="row" th:unless="${venda.valorDesconto > 0}">
+                      <div class="col-md-12">
+                        <dl>
+                          <dt>Total</dt>
+                          <dd class="info-venda" th:if="${#strings.isEmpty(venda.total)}" th:text="#{nao.informado}"></dd>
+                          <dd class="info-venda" th:if="${!#strings.isEmpty(venda.total)}" th:text="|${{venda.total}}|"></dd>
+                        </dl>
+                      </div>
+                    </div>
                   </div>
                   <div class="col-md-12">
-                    <label>Itens</label>
-                    <div  style="border-style: solid solid solid solid; border-width: 2px;border-color: #aaaaaa;background-color: #fffed4">
-                      <div class="bg-white pt-3 px-2" style="border-style: none none solid none; border-width: 2px; border-color: #cbd3da;"><!-- #cbd3da -->
-                        <ul class="items-list" style="height: 2em; margin-bottom: 0px; overflow: hidden">
-                          <li>
-                            <div class="row">
-                              <div class="col-md-1 text-left">
-                                <!-- <h4 class="mb-0">
-                                  Produto
-                                </h4> -->
-                                <label class="text-center">#</label>
-                              </div>
-                              <div class="col-md-5 text-left">
-                                <!-- <h4 class="mb-0">
-                                  Produto
-                                </h4> -->
-                                <p>Produto</p>
-                              </div>
-                              <div class="col-md-3 text-center">
-                                <!-- <h4 class="mb-0">
-                                  Quantidade x Preço Unitário
-                                </h4> -->
-                                <p>Qtd. x Preço Un.</p>
-                              </div>
-                              <div class="col-md-3 text-right">
-                                <p>Total Item</p>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      
-                      <div class="overlay-wrapper">
-                        
-                        <ul id="listaDeItens" data-widget="todo-list" class="items-list" style="height: 200px;overflow: scroll; overflow-x: hidden">
-                          <li th:if="*{#lists.isEmpty(venda.itemList)}">
-                             <div class="col-md-12">
-                              <p class="mt-2">Nenhum item incluído.</p> 
-                             </div>
-                          </li>
-                          <th:block th:each="item, rowStat : ${venda.itemList}">
-                              <li class="item">
-                                <div class="row align-items-end">
-                                  <div class="col-md-1 text-left">
-                                    <h6 th:text="${rowStat.index + 1}"></h6>  
-                                  </div>
-                                  <div class="col-md-5 text-left">
-                                    <!-- <h6 id="codigo" th:text="${item.produto.codigo}"></h6> -->
-                                    <h6 id="descricao" th:text="${item.produto.descricao}"></h6> 
-                                  </div>
-                                  <div class="col-md-3 text-center">
-                                     <h6 id="quantidade" th:text="|${{item.quantidade}} ${item.produto.unitario} x ${{item.valor}}|"></h6>
-                                  </div>
-                                  <div class="col-md-3 text-right">
-                                     <h6 th:text="|R$ ${{item.valorTotal}}|"></h6>
-                                  </div>
-                                </div>
-                              </li>
-                            <li class="linha border-bottom"></li>
-                          </th:block>
-                        </ul>
-                        
-                      </div>
+                    <label>Lista de itens</label>
+                    <a id="linkComprovante" class="btn btn-warning btn-flat float-right"
+                     th:href="@{/caixa/download/{id}(id=${venda.id})}">
+                      <i class="fas fa-receipt mr-2"></i>
+                      Imprimir comprovante
+                    </a>
+                    <div class="card-body table-responsive p-0">
+                      <table class="table table-striped table-valign-middle">
+                        <thead class="bg-secondary">
+                        <tr>
+                          <th>#</th>
+                          <th>Produto</th>
+                          <th class="text-center">Qtd. X Preço Un.</th>
+                          <th class="text-right">Total Item R$</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                          <tr th:each="item, rowStat : ${venda.itemList}">
+                            <td>
+                              [[${rowStat.index+1}]]
+                            </td>
+                            <td>
+                              <!-- <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2"> -->
+                              [[${item.produto.descricao}]]
+                            </td>
+                            <td class="text-center">
+                              [[|${{item.quantidade}} ${item.produto.unitario} x ${{item.valor}}|]]
+                            </td>
+                            <td class="text-right">
+                              [[${{item.valorTotal}}]]
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            
           </div>
           
           <div class="modal-footer float-right">
@@ -191,7 +204,7 @@
               <div class="col-sm-4">
                 <label class="col-form-label">Data</label>
                 <div class="input-group">
-                  <input class="form-control" 
+                  <input class="form-control js-date" 
                     placeholder="Data da venda" autofocus="autofocus"
                     th:field="*{venda.dataVenda}"></input>
                 </div>

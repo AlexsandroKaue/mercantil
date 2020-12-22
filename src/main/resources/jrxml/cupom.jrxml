@@ -5,6 +5,7 @@
 	<parameter name="valorDesconto" class="java.lang.String"/>
 	<parameter name="valorTotalItem" class="java.lang.String"/>
 	<parameter name="valorTotal" class="java.lang.String"/>
+	<parameter name="data" class="java.util.Date"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -310,7 +311,7 @@ VENDEDOR(A): ALBERTO]]></text>
 				<textElement>
 					<font size="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Data: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Data: " + new SimpleDateFormat("dd/MM/yyyy").format($P{data})]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="36" width="42" height="9" uuid="63463741-985d-4cd1-a5a7-afde817dba52">
@@ -367,7 +368,7 @@ NÃO COMPROVA PAGAMENTO]]></text>
 				<textElement>
 					<font size="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Hora: " + new SimpleDateFormat("HH:mm:ss").format(new Date())]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hora: " + new SimpleDateFormat("HH:mm:ss").format($P{data})]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>

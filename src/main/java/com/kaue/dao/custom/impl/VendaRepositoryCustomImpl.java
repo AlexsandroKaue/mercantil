@@ -86,7 +86,7 @@ public class VendaRepositoryCustomImpl implements VendaRepositoryCustom{
 		Venda vendaConsulta = vendaFiltro.getVenda();
         
         Path<Long> idPath = null;
-        Path<String> nomePath = null;
+        Path<String> dataPath = null;
         Path<String> descricaoPath = null;
         
         
