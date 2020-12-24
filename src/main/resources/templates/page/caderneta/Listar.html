@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{principal}">
+<head>
+  <title th:text="#{mercadinho}"></title>
+</head>
+
+  <style layout:fragment="extra-style">
+    .table, .table td{
+      border-width:px;
+      border-style:solid;
+      border-color:grey;
+      vertical-align: middle;
+     }
+  </style>
+
+  <section layout:fragment="container">
+    <form id="filtroCategoriaForm" method="GET" th:action="@{/vendas}" th:object="${filtro}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+      <header layout:insert="~{cabecalho}"></header>
+      <header layout:insert="~{corpo}"></header>
+    </form>
+  </section>
+  
+  <div layout:fragment="titulo">
+    <h1 class="m-0 text-dark">Cadernetas</h1>
+  </div>
+  
+  <div layout:fragment="botoes">
+    <a class="btn btn-block btn-info" th:href="@{#}" 
+     th:text="#{novo}" sec:authorize="hasAuthority('INCLUIR_CATEGORIA')"></a>
+  </div>
+  
+  <section layout:fragment="conteudo">
+    <!-- Default box -->
+    <div class="card card-solid">
+      <div class="card-body pb-0">
+        <div class="row d-flex align-items-stretch">
+          <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+            <div class="card bg-light">
+              <div class="card-header border-bottom-0">
+                <h2 class="lead"><b>Francisca da Silva</b></h2>
+              </div>
+              <div class="card-body pt-0">
+                <div class="row">
+                  <div class="col-12">
+                    <!-- <h2 class="lead"><b>Nicole Pearson</b></h2>
+                    <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                      <li><span class="fa-li small"><i class="fas fa-lg fa-building"></i></span> <p class="text-muted text-sm">Endereço: Demo Street 123, Demo City 04312, NJ</p></li>
+                      <li><span class="fa-li small"><i class="fas fa-lg fa-phone"></i></span><p class="text-muted text-sm">Telefone #: + 800 - 12 12 23 52</p></li>
+                    </ul>
+                  </div>
+                  <!-- <div class="col-5 text-center">
+                    <img th:src="@{/custom/img/usuario/user_default.png}" alt="" class="img-circle img-fluid">
+                  </div> -->
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="text-right">
+                  <a href="#" class="btn btn-sm bg-teal">
+                    <i class="fas fa-comments"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary">
+                    <i class="fas fa-user"></i> Visualizar
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+            <div class="card bg-light">
+              <div class="card-header border-bottom-0">
+                <h2 class="lead"><b>José Ferreira</b></h2>
+              </div>
+              <div class="card-body pt-0">
+                <div class="row">
+                  <div class="col-12">
+                    <!-- <h2 class="lead"><b>Nicole Pearson</b></h2>
+                    <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                      <li><span class="fa-li small"><i class="fas fa-lg fa-building"></i></span> <p class="text-muted text-sm">Endereço: Demo Street 123, Demo City 04312, NJ</p></li>
+                      <li><span class="fa-li small"><i class="fas fa-lg fa-phone"></i></span><p class="text-muted text-sm">Telefone #: + 800 - 12 12 23 52</p></li>
+                    </ul>
+                  </div>
+                  <!-- <div class="col-5 text-center">
+                    <img th:src="@{/custom/img/usuario/user_default.png}" alt="" class="img-circle img-fluid">
+                  </div> -->
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="text-right">
+                  <a href="#" class="btn btn-sm bg-teal">
+                    <i class="fas fa-comments"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary">
+                    <i class="fas fa-user"></i> View Profile
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+            <div class="card bg-light">
+              <div class="card-header border-bottom-0">
+                <h2 class="lead"><b>Jaqueline Alves</b></h2>
+              </div>
+              <div class="card-body pt-0">
+                <div class="row">
+                  <div class="col-12">
+                    <!-- <h2 class="lead"><b>Nicole Pearson</b></h2>
+                    <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                      <li><span class="fa-li small"><i class="fas fa-lg fa-building"></i></span> <p class="text-muted text-sm">Endereço: Demo Street 123, Demo City 04312, NJ</p></li>
+                      <li><span class="fa-li small"><i class="fas fa-lg fa-phone"></i></span><p class="text-muted text-sm">Telefone #: + 800 - 12 12 23 52</p></li>
+                    </ul>
+                  </div>
+                  <!-- <div class="col-5 text-center">
+                    <img th:src="@{/custom/img/usuario/user_default.png}" alt="" class="img-circle img-fluid">
+                  </div> -->
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="text-right">
+                  <a href="#" class="btn btn-sm bg-teal">
+                    <i class="fas fa-comments"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary">
+                    <i class="fas fa-user"></i> View Profile
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.card-body -->
+      <div class="card-footer">
+        <nav aria-label="Contacts Page Navigation">
+          <ul class="pagination justify-content-center m-0">
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">6</a></li>
+            <li class="page-item"><a class="page-link" href="#">7</a></li>
+            <li class="page-item"><a class="page-link" href="#">8</a></li>
+          </ul>
+        </nav>
+      </div>
+      <!-- /.card-footer -->
+    </div>
+    <!-- /.card -->        
+  </section>
+  
+  <script layout:fragment="js-validator">
+   $('#ancora').on('click', '.pesquisa-padrao', function(event){
+  	$('#filtroCategoriaForm').trigger("reset");
+		$('#inputAvancada').val(false);
+		document.getElementById("filtroCategoriaForm").submit(); 
+	});
+  
+   $('#ancora').on('click', '.pesquisa-avancada', function(event){
+  	$('#filtroCategoriaForm').trigger("reset");
+  	$('#inputAvancada').val(true);
+		document.getElementById("filtroCategoriaForm").submit(); 
+	});
+  </script>
+</html>

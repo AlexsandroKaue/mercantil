@@ -301,10 +301,10 @@ public class CaixaController {
 		
 	}
 	
-	@RequestMapping(value = "/balanca/{codigo}")
+	@RequestMapping(value = "/detalhes/{codigo}")
 	public ModelAndView mostrarBalanca(@PathVariable("codigo") String codigo, Model model) {
 		
-		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #modalBalanca");
+		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+" :: #modalQuantidade");
 		if(!codigo.isEmpty()) {
 			Produto produto = produtoService.buscarPorCodigo(codigo);
 			if(produto != null) {

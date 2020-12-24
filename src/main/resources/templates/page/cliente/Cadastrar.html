@@ -51,6 +51,12 @@
               <label for="inputEmail" class="col-form-label">Email</label>
               <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
             </div>
+            <div class="form-group">
+              <label class="col-form-label">Abrir caderneta para cliente?</label><br/>
+              <input type="checkbox" name="my-checkbox" data-bootstrap-switch 
+               data-on-text="SIM"
+               data-off-text="NÃO">
+            </div>
          </div>
          <div class="col-md-4">
             <div class="form-group">
@@ -195,6 +201,10 @@
   	$("#exampleInputFile").change(function() {
   	  readURL(this);
   	});
+  	
+  	$("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch('state', $(this).prop('checked'));
+    });
     
       
   	</script>
