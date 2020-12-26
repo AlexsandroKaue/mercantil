@@ -21,17 +21,22 @@
         <div class="bg-white py-2 px-3">
           <div class="table-responsive">
             <table class="table">
+              <tr th:if="*{cliente}">
+                <th class="lead mt-2" style="width:50%">Cliente:</th>
+                <td id="subtotal" class="text-right"><h3 class="mb-0" th:text="*{cliente.nome}"></h3></td>
+              </tr>
               <tr>
                 <th class="lead">Total:</th>
-                <td><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
+                <td class="text-right"><h3 class="mb-0" th:text="|R$ *{{total}}|"></h3></td>
               </tr>
               <tr>
                 <th class="lead">Pagamento:</th>
-                <td id="subtotal"><h3 class="mb-0" th:text="|R$ *{{saldo}}|"></h3></td>
+                <td id="subtotal" class="text-right" th:if="*{tipoVenda==T(com.kaue.enumeration.TipoVenda).ESPECIE}"><h3 class="mb-0" th:text="|R$ *{{saldo}}|"></h3></td>
+                <td id="subtotal" class="text-right" th:unless="*{tipoVenda==T(com.kaue.enumeration.TipoVenda).ESPECIE}"><h3 class="mb-0">Compra em conta</h3></td>
               </tr>
-              <tr>
+              <tr th:if="*{tipoVenda==T(com.kaue.enumeration.TipoVenda).ESPECIE}">
                 <th class="lead mt-2" style="width:50%">Troco:</th>
-                <td id="subtotal"><h3 class="mb-0" th:text="|R$ *{{troco}}|"></h3></td>
+                <td id="subtotal" class="text-right"><h3 class="mb-0" th:text="|R$ *{{troco}}|"></h3></td>
               </tr>
               
             </table>
@@ -39,12 +44,12 @@
           
         </div>
         <div class="d-flex justify-content-between">
-          <a id="linkComprovante" class="btn btn-warning btn-lg btn-flat mt-4"
+          <a id="linkComprovante" class="btn btn-warning btn-flat mt-4"
            th:href="@{/caixa/venda/{id}/comprovante(id=${venda.id})}">
             <i class="fas fa-receipt mr-2"></i>
             Imprimir comprovante (F1)
           </a>
-          <a id="linkRetornar" class="btn btn-danger btn-lg btn-flat mt-4"
+          <a id="linkRetornar" class="btn btn-danger btn-flat mt-4"
            th:href="@{/caixa}">
             <i class="fas fa-undo-alt mr-2"></i>
             Retornar para o Caixa (F2)

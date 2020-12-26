@@ -38,7 +38,10 @@ $.validator.addMethod('filesize', function (value, element, param) {
 
 
 $.validator.addMethod("customDate", function(value, element) {
-	return moment(value, 'DD/MM/YYYY', true).isValid();
+	if(value){
+		return moment(value, 'DD/MM/YYYY', true).isValid();
+	} 
+	return true;
 }, "Por favor forneça uma data válida");
 
 $.validator.addMethod("customTime", function(value, element) {

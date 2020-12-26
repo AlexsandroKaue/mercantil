@@ -1,19 +1,11 @@
 package com.kaue.controller;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ResourceUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,8 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.enumeration.Estado;
+import com.kaue.model.Caderneta;
 import com.kaue.model.Cliente;
 import com.kaue.model.Endereco;
+import com.kaue.service.CadernetaService;
 import com.kaue.service.ClienteService;
 import com.kaue.service.GrupoService;
 import com.kaue.util.HasValue;
@@ -42,6 +36,9 @@ public class ClienteController {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private CadernetaService cadernetaService;
 	
 	@Autowired
 	private GrupoService grupoService;
@@ -60,6 +57,7 @@ public class ClienteController {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		Cliente cliente = new Cliente();
 		cliente.setImagemBase64(clienteService.carregarImagem(null));
+		cliente.setAbrirCaderneta(false);
 		mv.addObject("cliente", cliente);
 		return mv;
 	}
@@ -108,6 +106,25 @@ public class ClienteController {
 			}
 			
 			cliente = clienteService.salvar(cliente);
+			
+			//Parte do método para salvar/atualizar caderneta
+			Boolean desejaAbrirCaderneta = HasValue.execute(cliente.getAbrirCaderneta());
+			Caderneta caderneta = cadernetaService.buscarPorCliente(cliente.getId()); 
+			
+			if(desejaAbrirCaderneta) {
+				if(!HasValue.execute(caderneta)) {
+					caderneta = new Caderneta();
+					caderneta.setCliente(cliente);
+				}
+				caderneta.setAberta(true);
+				caderneta = cadernetaService.salvar(caderneta);
+			} else {
+				if(HasValue.execute(caderneta)) {
+					caderneta.setAberta(false);
+					caderneta = cadernetaService.salvar(caderneta);
+				}
+			}
+			
 			return url;
 		} catch(IllegalArgumentException e) {
 			errors.rejectValue("dataNascimento", null, e.getMessage());
@@ -136,8 +153,12 @@ public class ClienteController {
 	
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	public String excluir(@PathVariable Long id, RedirectAttributes attributes) {
-		clienteService.excluir(id);
-		attributes.addFlashAttribute("mensagem", "Cliente excluído com sucesso!");
+		try {
+			clienteService.excluir(id);
+			attributes.addFlashAttribute("mensagem", "Cliente excluído com sucesso!");
+		} catch(Exception e) {
+			attributes.addFlashAttribute("mensagem_erro", e.getMessage());
+		}
 		return "redirect:/clientes";
 	}
 	

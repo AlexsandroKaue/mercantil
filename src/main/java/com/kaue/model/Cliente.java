@@ -51,6 +51,11 @@ public class Cliente {
 	
 	private String imagemPath;
 	
+	private Boolean abrirCaderneta;
+	
+	@OneToOne(mappedBy = "cliente")
+	private Caderneta caderneta;
+	
 	@Transient
 	private String imagemBase64;
 
@@ -157,5 +162,21 @@ public class Cliente {
 
 	public void setImagemPath(String imagemPath) {
 		this.imagemPath = imagemPath;
+	}
+
+	public Boolean getAbrirCaderneta() {
+		return abrirCaderneta;
+	}
+
+	public void setAbrirCaderneta(Boolean abrirCaderneta) {
+		this.abrirCaderneta = abrirCaderneta;
+	}
+
+	public Caderneta getCaderneta() {
+		return caderneta;
+	}
+
+	public void setCaderneta(Caderneta caderneta) {
+		this.caderneta = caderneta;
 	}
 }

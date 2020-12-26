@@ -16,7 +16,8 @@
     </div>
     <div class="alert alert-danger js-fade" role="alert" th:if="${!#strings.isEmpty(mensagem_erro)}">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-      <i class="icon fas fa-ban"></i>
+      <!-- <i class="icon fas fa-ban"></i> -->
+      <h5><i class="icon fas fa-ban"></i>Ocorreu um erro</h5>
       <span th:text="${mensagem_erro}"></span>
     </div>
   </div>

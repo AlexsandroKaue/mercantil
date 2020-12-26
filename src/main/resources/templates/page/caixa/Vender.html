@@ -7,12 +7,16 @@
   <title th:text="#{mercadinho}"></title>
 </head>
 
-  <!-- <style layout:fragment="extra-style">
-    .select2-selection__rendered {
+  <style layout:fragment="extra-style">
+    /* .select2-selection__rendered {
       font-family: Arial, Helvetica, sans-serif !important;
       font-size: 20px !important;
+    }  */
+    
+    .input_saldo {
+      font-size: 28px;
     }
-  </style> -->
+  </style>
 
   <section layout:fragment="container">
     
@@ -106,7 +110,7 @@
                               <h6 th:text="${rowStat.index + 1}"></h6>  
                              </div>
                              <div class="col-md-4 text-left">
-                              <h6 id="codigo" th:text="${item.produto.codigo}"></h6>
+                              <small><p id="codigo" th:text="${item.produto.codigo}" style="margin-bottom: 2px"></p></small>
                               <h6><b id="descricao" th:text="${item.produto.descricao}"></b></h6>  
                              </div>
                             <div class="col-md-3 text-center">
@@ -118,8 +122,9 @@
                             <div class="col-md-1 text-center">
                               <h6>
                                <a data-toggle="modal" data-target="#modalConfirmarRemocaoItem" class="text-muted btn-sm"
-                                th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao}"
-                                title="Retirar item" rel="tooltip" data-placement="top"><!--  -->
+                                th:attr="data-codigo=${item.produto.codigo}, data-descricao=${item.produto.descricao},
+                                data-marca=${item.produto.marca}"
+                                title="Remover item" rel="tooltip" data-placement="top"><!--  -->
                                 <i class="fas fa-times-circle"></i>
                                </a>
                               </h6>
@@ -137,23 +142,36 @@
                       </li>
                      </ul> -->
                 </div>
-                <div id="loadingDiv"></div>
+                
             </div>
           
           <div class="col-md-4">
             
             <div class="d-flex flex-column" style="height: 400px;">
               <div class="mb-auto">
-               
-                <div class="d-flex ">
-                  <button type="button" th:attr="data-url-base=@{/caixa/pagamento}"
-                   id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat" th:disabled="*{subtotal==0}" >
-                    <i class="fas fa-dollar-sign"></i>
-                    Efetuar Pagamento
-                  </button>
+                
+                <div class="d-flex" style="width:100%">
+                  <div class="row">
+                    <div class="col-12"> 
+                      <button type="button" th:attr="data-url-base=@{/caixa/pagamento}" 
+                       id="botaoPagamento" class="js-pagamento btn btn-success btn-lg btn-flat" th:disabled="*{subtotal==0}" >
+                        <i class="fas fa-dollar-sign"></i>
+                        Efetuar Pagamento (F2)
+                      </button>
+                    </div>
+                  </div>
+                  
+                  
+                  <!-- <button type="button" th:attr="data-url-base=@{/caixa/removerItem}"
+                   id="botaoPagamento" class="js-pagamento btn btn-danger btn-lg btn-flat ml-2" th:disabled="*{subtotal==0}" >
+                    <i class="fas fa-times-circle"></i>
+                    Remover item (F3)
+                  </button> -->
                 </div>
               </div>
-              <div class="bg-gray py-2 px-3">
+              <div id="loadingDiv"></div>
+              <div class="bg-dark py-2 px-3">
+                
                 <h4 class="mb-0">
                   <!-- <small> -->Subtotal<!-- </small> -->
                 </h4>
@@ -167,9 +185,7 @@
         </div>
       </section>
               
-      <div class="modal" id="modalPagamento" 
-       tabindex="-1" data-keyboard="true"
-       role="document" aria-labelledby="..." aria-hidden="true"><!-- data-keyboard="true" data-backdrop="static" -->
+      <div class="modal" id="modalPagamento" tabindex="-1" role="dialog" aria-labelledby="modalPagamentoLabel" aria-hidden="true">
        <div layout:insert="~{mensagem_erro}"></div>
         <div class="modal-dialog">
           <div class="modal-content">
@@ -181,35 +197,6 @@
             </div>
             <div class="modal-body pb-0">
               <div class="row" >
-                <!-- <div class="col-6">
-                  <div class="bg-default py-2 px-3 mt-4">
-                    <h4 class="mb-0">
-                      <small>Para selecionar um cliente <a data-toggle="modal" data-target="#modalCliente" href="#">
-                            clique aqui
-                           </a></small>
-                    </h4>
-                    <input id="nenhumClienteSelecionado" th:unless="*{cliente}"
-                     placeholder="Nenhum cliente selecionado." 
-                     class="form-control" 
-                     oninput="this.className = ''" name="fname"
-                     readonly="readonly" th:classappend="${#fields.hasErrors('cliente')} ? is-invalid"></input>
-                     
-                    <div class="row" id="clienteSelecionado" th:if="*{cliente}">hidden="hidden"
-                      <div class="col-12">
-                       <label class="text-success">Cliente selecionado</label><br/>
-                       <a href="javascript:void(0)" class="product-title" id="clienteSelecionadoNome"></a>
-                       
-                       <a data-toggle="modal" class="js-remover-cliente float-right text-muted btn-sm"
-                        th:attr="data-url-remover-cliente=@{/caixa/removerCliente}"
-                        title="Remover" rel="tooltip" data-placement="top">
-                        <i class="fas fa-times-circle"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="bg-default py-2 px-3 mt-4">
-                    <a href="#" data-toggle="modal" data-target="#modalDesconto"><i class="fas fa-tag"></i> desconto</a>
-                  </div>
-                </div> -->
                 <div class="col-12">
                   
                   <div class="bg-default py-2 px-3">
@@ -311,11 +298,11 @@
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 <i class="fas fa-undo-alt"></i>
-                Voltar
+                Voltar (ESC)
               </button>
               <button type="submit" id="finalizar" class="btn btn-md btn-primary">
                 <i class="fas fa-money-check-alt"></i> 
-                Finalizar
+                Finalizar (ENTER)
               </button>
             </div>
           </div>
@@ -351,7 +338,7 @@
       <!-- /.modal -->
     </form>
     
-    <div class="modal" id="modalCliente" tabindex="-1">
+    <div class="modal" id="modalCliente" tabindex="-1" role="dialog" aria-labelledby="modalClienteLabel" aria-hidden="true">
       <!-- <form id="clienteForm" role="form" th:object="${filtro}"> -->
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -420,7 +407,7 @@
       </div>
       <!-- /.modal -->
     
-    <div class="modal" id="modalQuantidade" tabindex="-1" data-keyboard="true">
+    <div class="modal fade" id="modalQuantidade" tabindex="-1" role="dialog" aria-labelledby="modalQuuantidadeLabel" aria-hidden="true">
       <form id="itemForm" role="form" method="POST" th:action="@{/caixa/incluir}" th:object="${item}">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
         <div class="modal-dialog">
@@ -438,7 +425,7 @@
                 <div class="col-md-12">
                   <div class="form-group">
                     <label class="col-form-label">Produto</label>
-                    <p id="descricaoProduto" th:text="*{produto.descricao}">Descrição do Produto</p>
+                    <p id="descricaoProduto" th:text="|*{produto.descricao}|">Descrição do Produto</p>
                   </div>
                 </div>
               </div>
@@ -446,7 +433,9 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="inputQuantidade" class="col-form-label">Quantidade</label>
-                    <input type="text" id="inputQuantidade" th:field="*{quantidade}" autocomplete="off" class="form-control js-peso"></input>
+                    <input type="text" id="inputQuantidade" th:field="*{quantidade}" autocomplete="off" 
+                    class="form-control"
+                    th:classappend="*{produto.unitario == T(com.kaue.enumeration.Unitario).Kg} ? 'js-peso' : 'js-quantidade'"></input>
                    </div>
                 </div>
                 <div class="col-md-6">
@@ -459,9 +448,9 @@
              </div>
             </div>
             <div class="modal-footer justify-content-between">
-             <button type="button" class="btn btn-md btn-secondary" data-dismiss="modal"><i class="fas fa-arrow-circle-left"></i> Cancelar</button>
+             <button type="button" class="btn btn-md btn-secondary" data-dismiss="modal"><i class="fas fa-arrow-circle-left"></i> Cancelar (ESC)</button>
              <button type="button" class="btn btn-md btn-primary js-incluir-item" 
-             th:attr="data-url-base=@{/caixa/incluir/}"><i class="fas fa-check-circle"></i> [[#{incluir}]]</button>
+             th:attr="data-url-base=@{/caixa/incluir/}"><i class="fas fa-check-circle"></i> [[#{incluir}]] (ENTER)</button>
             </div>
           </div>
           <!-- /.modal-content -->
@@ -471,13 +460,13 @@
     </div>
     <!-- /.modal -->
     
-    <div class="modal fade" id="modalConfirmarRemocaoItem" tabindex="-1" data-keyboard="false" data-backdrop="static">
+    <div class="modal fade" id="modalConfirmarRemocaoItem" tabindex="-1" role="dialog" aria-labelledby="modalConfirmarRemocaoItemLabel" aria-hidden="true">
       <div class="modal-dialog">
         <!-- <form th:attr="data-url-base=@{/titulos}" method="POST"> -->
           <input type="hidden" name="_method" value="DELETE"></input>
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Retirar Item</h4>
+              <h4 class="modal-title">Remover Item</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -486,8 +475,8 @@
               <p>Deseja realmente retirar o item da lista?</p>
             </div>
             <div class="modal-footer justify-content-between">
-             <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-arrow-circle-left"></i> Cancelar</button>
-             <a th:attr="data-url-base=@{/caixa/excluir/}" class="js-remover btn btn-md btn-primary"><i class="fas fa-check-circle"></i> Retirar</a>
+             <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-arrow-circle-left"></i> Cancelar (ESC)</button>
+             <a th:attr="data-url-base=@{/caixa/excluir/}" class="js-remover btn btn-md btn-primary"><i class="fas fa-check-circle"></i> Confirmar (ENTER)</a>
             </div>
           </div>
           <!-- /.modal-content -->
@@ -515,7 +504,56 @@
   	  minimumFractionDigits: 2
   	});
   	
-  	$('#ancora').on('shown.bs.modal', '#modalQuantidade', function(event){  		
+  	$('#ancora').on('show.bs.modal', '#modalPagamento', function(event){
+    	$('#inputSaldo').maskMoney({
+    		decimal:',',
+    		thousands:'.', 
+  			allowZero:'true',
+  			formatOnBlur:false
+  		});
+    });
+    
+    $('#ancora').on('shown.bs.modal', '#modalPagamento', function(event){
+			setTimeout(function(){
+				posicionarAoFim('inputSaldo');
+			},0);
+    });
+    
+    $('#ancora').on('hidden.bs.modal', '#modalPagamento', function(event){
+    	$('.js-buscar-produto').select2('focus');
+    });
+    
+    $(document).on('keyup', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  if (event.keyCode === 13) {
+    		if(($("#modalPagamento").data('bs.modal') || {})._isShown) {
+    			$('#finalizar').click();
+    		}
+  	  }
+  	});
+    
+ 		$(document).on('keyup', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  if (event.keyCode === 113) {
+    		if(!(($("#modalPagamento").data('bs.modal') || {})._isShown)) {
+    			$('#botaoPagamento').click();
+    		}
+  	  }
+  	});
+ 		
+ 		/* $(document).on('keyup', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  if (event.keyCode === 112) {
+  		  console.log(($(".modal").data('bs.modal') || {})._isShown);
+    		if(!(($(".modal").data('bs.modal') || {})._isShown)) {
+    			$('.js-buscar-produto').select2('focus');
+    		}
+  	  }
+  	}); */
+    
+    
+  	
+  	$('#ancora').on('show.bs.modal', '#modalQuantidade', function(event){  		
   		if($('#inputUnitario').val()=='Kg'){
   			$('#inputQuantidade').maskMoney({
 	    		precision: 3,
@@ -524,30 +562,34 @@
 	    		allowZero:'true',
 	    		formatOnBlur:false
 	    	});
+  		} else {
+  			$("#inputQuantidade").val(1);
+  			$("#inputQuantidade").inputmask({ 
+		  		regex: "^[0-9]*$" 
+		  	});
   		}
-  		setTimeout(function() {
-  			$('#inputQuantidade').focus();
-    	}, 0);
+    });
+  	
+  	$('#ancora').on('shown.bs.modal', '#modalQuantidade', function(event){ 
+  		setTimeout(function(){
+  			posicionarAoFim('inputQuantidade');
+  		},0);
+  	});
+    
+    $('#ancora').on('hidden.bs.modal', '#modalQuantidade', function(event){
+    	$('.js-buscar-produto').select2('focus');
     });
     
-    $('#ancora').on('shown.bs.modal', '#modalPagamento', function(event){
-    	//$('#radioPrimary1').prop("checked", true);
-    	$('#inputSaldo').maskMoney({
-    		decimal:',',
-    		thousands:'.', 
-  			allowZero:'true',
-  			formatOnBlur:false});
-    	
-    	setTimeout(function() {
-    		$('#inputSaldo').val('0.00');
-    		$('#inputSaldo').trigger('focus');
-      	}, 0);
-    });
     
-    $('#ancora').on('shown.bs.modal', '#modalCliente', function(event){
-    	setTimeout(function() {
-    		$('#campoBuscaCliente').trigger('focus');
-      }, 0);
+    $('#ancora').on('keyup', '#modalQuantidade', function(event) {
+    	  if (event.keyCode === 13) { //Enter
+    	    event.preventDefault();
+    	  	$('.js-incluir-item').click();
+    	  }
+    	});
+    
+    
+    $('#ancora').on('show.bs.modal', '#modalCliente', function(event){
     	$('#tabelaCliente').DataTable( {
     		paging: true,
 	      pageLength: 5,
@@ -576,6 +618,86 @@
 	      },
 	      destroy: true
     	});
+    });
+    
+    $('#ancora').on('shown.bs.modal', '#modalCliente', function(event){
+    	setTimeout(function(){
+  			posicionarAoFim('campoBuscaCliente');
+  		},0);
+    });
+    
+    
+    
+    $('#ancora').on('show.bs.modal', '#modalConfirmarRemocaoItem', function(event){
+    	var button = $(event.relatedTarget); // Button that triggered the modal
+    	var codigo = button.data('codigo'); // Extract info from data-* attributes
+    	var descricao = button.data('descricao');
+    	var marca = button.data('marca');
+    	var modal = $(this);
+    	var a = modal.find('a.js-remover');
+    	var url = a.data('url-base');
+    	
+    	if(!url.endsWith('/')){
+    		url += '/';
+    	}
+    	
+    	a.attr('href',url + codigo);
+    	
+    	var message = 'Deseja remover o item '+
+    	'<p><strong>'+descricao+(marca ? ' - '+marca : '')+'</strong></p>'+
+    	'da lista de compras?';
+    	
+    	modal.find('.modal-body p').html(message);
+    });
+    
+    $('#ancora').on('hidden.bs.modal', '#modalConfirmarRemocaoItem', function(event){
+    	$('.js-buscar-produto').select2('focus');
+    });
+    
+  	$('#ancora').on('keyup', '#modalConfirmarRemocaoItem', function(event) {
+  	  // Number 13 is the "Enter" key on the keyboard
+  	  if (event.keyCode === 13) {
+  	    $('.js-remover').click();
+  	  }
+  	});
+    
+		$('#ancora').on('click', '.js-incluir-item', function(event){
+    	
+    	var botao = $(event.currentTarget);
+    	var url = botao.data('url-base');
+    	
+    	var quantidade = $('#modalQuantidade').find('#inputQuantidade').val();
+    	var codigo = $('#modalQuantidade').find('#inputCodigoProduto').val();
+    	var unitario = $('#modalQuantidade').find('#inputUnitario').val();
+    	
+    	if($('#inputUnitario').val()=='Kg'){
+    		quantidade = quantidade.replace(',','.');
+    	}
+    	
+    	var item = 
+    	{
+	      "produto" : {
+	    	  "codigo" : codigo,
+	    	  "unitario" : unitario
+	      },
+	      "quantidade" : quantidade
+	   	};
+      	
+    	var response = $.ajax({
+    		url: url,
+    		type: 'POST',
+    		contentType : 'application/json; charset=utf-8',
+    		data: JSON.stringify(item),
+    		success: function(e) {
+    			$('#modalQuantidade').modal('hide');
+    			$('#caixaForm').replaceWith(e);
+    			$('#listaDeItens').scrollTop(330);
+    			$('#loadingDiv').html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+    		},
+    		error: function() {
+    			alert('Erro incluindo item');
+    		}
+  		});		
     });
     
     function configuraBarraPesquisa() {
@@ -610,7 +732,7 @@
     	    },
     	    cache: true
     	  },
-    	  placeholder: 'Digite aqui',
+    	  placeholder: 'Digite aqui (F1)',
     	  minimumInputLength: 1,
     	  allowClear: true,
     	  templateResult: formatRepo,
@@ -667,56 +789,6 @@
   	function formatRepoSelection (repo) {
   	  return repo.full_name || repo.text;
   	}
-    
-    $('#ancora').on('hidden.bs.modal', '#modalPagamento', function(event){
-    	$('.js-buscar-produto').select2('focus');
-    });
-    
-    $('#ancora').on('hidden.bs.modal', '#modalBalanca', function(event){
-    	$('.js-buscar-produto').select2('focus');
-    });
-    
-    $('#ancora').on('click', '.js-buscar-produto', function(event){
-    	console.log('clicou na barra de pesquisa de produtos');
-    });
-  	
- 	// Execute a function when the user releases a key on the keyboard
-  	$(document).on('keyup', function(event) {
-  	  // Number 13 is the "Enter" key on the keyboard
-  	  if (event.keyCode === 113) {
-  	    // Cancel the default action, if needed
-  	    //event.preventDefault();
-  	    // Trigger the button element with a click
-  	    $('#botaoPagamento').click();
-  	    
-  	  }
-  	});
- 	
- 	// Execute a function when the user releases a key on the keyboard
-  	$(document).on('keyup', function(event) {
-  	  // Number 13 is the "Enter" key on the keyboard
-  	  if (event.keyCode === 112) {
-  	    // Cancel the default action, if needed
-  	    event.preventDefault();
-  	    // Trigger the button element with a click
-  	  	$('.js-buscar-produto').select2('focus');
-  	  }
-  	});
- 
- 	// Execute a function when the user releases a key on the keyboard
-  	$('#modalPagamento').on('keyup', function(event) {
-  	  // Number 13 is the "Enter" key on the keyboard
-  	  console.log(event.keyCode);
-  	  if (event.keyCode === 27) { //Esc
-  	    // Cancel the default action, if needed
-  	    console.log('Esc:'+event.keyCode);
-  	    event.preventDefault();
-  	    // Trigger the button element with a click
-  	  	$(this).modal('hide');
-  	  }
-  	});
-  	
-  	
   	
     $('#ancora').on('select2:select','.js-buscar-produto', function(e) {
     	var data = e.params.data;
@@ -736,49 +808,13 @@
     	response.done(function(e){
   			$('#modalQuantidade').replaceWith(e);
   			$('#modalQuantidade').modal('show');
+  			
   		});
     	response.fail(function(e){
   			alert('Erro incluindo item');
   		});
     });
     
-    $('#ancora').on('click', '.js-incluir-item', function(event){
-    	
-    	var botao = $(event.currentTarget);
-    	var url = botao.data('url-base');
-    	
-    	var codigo = $('#modalQuantidade').find('#inputCodigoProduto').val();
-    	var quantidade = $('#modalQuantidade').find('#inputQuantidade').val();
-    	var unitario = $('#modalQuantidade').find('#inputUnitario').val();
-    	if($('#inputUnitario').val()=='Kg'){
-    		quantidade = quantidade.replace(',','.');
-    	}
-    	
-    	var item = 
-    	{
-	      "produto" : {
-	    	  "codigo" : codigo,
-	    	  "unitario" : unitario
-	      },
-	      "quantidade" : quantidade
-	   	};
-      	
-    	var response = $.ajax({
-    		url: url,
-    		type: 'POST',
-    		contentType : 'application/json; charset=utf-8',
-    		data: JSON.stringify(item),
-    		success: function(e) {
-    			$('#modalQuantidade').modal('hide');
-    			$('#caixaForm').replaceWith(e);
-    			$('#listaDeItens').scrollTop(330);
-    			$('#loadingDiv').html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
-    		},
-    		error: function() {
-    			alert('Erro incluindo item');
-    		}
-  		});		
-    });
     
     $('#ancora').on('click','.js-buscar-cliente', function(e) {
 
@@ -874,37 +910,6 @@
     	
     });
      
-    
-	$('#ancora').on('show.bs.modal', '#modalConfirmarRemocaoItem', function(event){
-    	var button = $(event.relatedTarget); // Button that triggered the modal
-    	var codigo = button.data('codigo'); // Extract info from data-* attributes
-    	var descricao = button.data('descricao');
-    	var modal = $(this);
-    	var a = modal.find('a.js-remover');
-    	var url = a.data('url-base');
-    	
-    	if(!url.endsWith('/')){
-    		url += '/';
-    	}
-    	
-    	a.attr('href',url + codigo);
-    	modal.find('.modal-body p').html();
-    	/* $container = $(
-    	  	  	"Deseja realmente excluir o item <strong>"+descricao+"</strong> da lista?'" +
-    	  	  	"<li class='products-list product-list-in-card  py-2 item'>"+
-    	          "<div class='product-img'>"+
-    	            "<img id='image' src='' alt='Product Image'>"+
-    	          "</div>"+
-    	          "<span id='preco' class='badge badge-warning float-right'></span>"+
-    	          "<div class='product-info'>"+
-    	          	"<span class='product-description'></span>"+
-    	            "<span class='product-title mb-0'></span>"+
-    	          "</div>"+
-    	        "</li>"
-    	  	  ); */
-    	
-    	
-    });
 	
 	$('#ancora').on('click', '.js-remover', function(event) {
   		event.preventDefault();
@@ -1045,7 +1050,6 @@
   	    }, 0);
   	});
   	
-  	
 
   });
   window.onload = function(){
@@ -1065,88 +1069,9 @@
 	  myElement.selectionStart = length;
   }
   
+  
+  
 
   </script>
-  
-  <style layout:fragment="extra-style">
-    #modalPagamento * {
-      box-sizing: border-box;
-    }
-    
-    #modalPagamento body {
-      background-color: #f1f1f1;
-    }
-    
-    #modalPagamento #regForm {
-      background-color: #ffffff;
-      margin: 100px auto;
-      font-family: Raleway;
-      padding: 40px;
-      width: 70%;
-      min-width: 300px;
-    }
-    
-    #modalPagamento h1 {
-      text-align: center;  
-    }
-    
-    .input_saldo {
-      /* padding: 10px;
-      width: 100%; */
-      font-size: 28px;
-      /* font-family: Raleway;
-      border: 1px solid #aaaaaa; */
-    }
-    
-    /* Mark input boxes that gets an error on validation: */
-    #modalPagamento input.invalid {
-      background-color: #ffdddd;
-    }
-    
-    /* Hide all steps by pagamento: */
-    #modalPagamento .tab {
-      display: none;
-    }
-    
-    /* #modal-cliente button {
-      background-color: #4CAF50;
-      color: #ffffff;
-      border: none;
-      padding: 10px 20px;
-      font-size: 17px;
-      font-family: Raleway;
-      cursor: pointer;
-    } */
-    
-    /* #modal-cliente button:hover {
-      opacity: 0.8;
-    } */
-    
-    /* #modal-cliente #prevBtn {
-      background-color: #bbbbbb;
-    } */
-    
-    /* Make circles that indicate the steps of the form: */
-    #modalPagamento .step {
-      height: 15px;
-      width: 15px;
-      margin: 0 2px;
-      background-color: #bbbbbb;
-      border: none;  
-      border-radius: 50%;
-      display: inline-block;
-      opacity: 0.5;
-    }
-    
-    #modalPagamento .step.active {
-      opacity: 1;
-    }
-    
-    /* Mark the steps that are finished and valid: */
-    #modalPagamento .step.finish {
-      background-color: #4CAF50;
-    }
-  
-  </style>
     
 </html>

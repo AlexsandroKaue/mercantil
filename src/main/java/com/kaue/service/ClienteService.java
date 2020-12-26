@@ -1,6 +1,5 @@
 package com.kaue.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -11,7 +10,7 @@ import com.kaue.model.Cliente;
 public interface ClienteService {
 	
 	public Cliente salvar(Cliente cliente);
-	public void excluir(Long id);
+	public void excluir(Long id) throws Exception;
 	public List<Cliente> pesquisar(ClienteFilter filtro);
 	public Long contar(ClienteFilter filtro);
 	public Cliente buscarPorId(Long id);

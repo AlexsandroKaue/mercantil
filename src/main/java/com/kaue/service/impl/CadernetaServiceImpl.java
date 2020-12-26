@@ -18,8 +18,13 @@ public class CadernetaServiceImpl implements CadernetaService{
 	private CadernetaDAO cadernetaDAO;
 
 	@Override
-	public void salvar(Caderneta caderneta) {
-		cadernetaDAO.save(caderneta);
+	public Caderneta buscarPorId(Long id) {
+		return cadernetaDAO.findById(id).orElse(null);
+	}
+	
+	@Override
+	public Caderneta salvar(Caderneta caderneta) {
+		return cadernetaDAO.save(caderneta);
 	}
 
 	@Override
@@ -36,6 +41,9 @@ public class CadernetaServiceImpl implements CadernetaService{
 		return cadernetaList;
 	}
 
-	
+	@Override
+	public Caderneta buscarPorCliente(Long clienteId) {
+		return cadernetaDAO.findByClienteId(clienteId);
+	}
 	
 }

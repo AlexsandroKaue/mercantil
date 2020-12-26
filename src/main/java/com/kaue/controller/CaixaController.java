@@ -310,6 +310,12 @@ public class CaixaController {
 			if(produto != null) {
 				Item item = new Item();
 				item.setProduto(produto);
+				if(item.getProduto().getUnitario()==Unitario.Kg) {
+					item.setQuantidade(new BigDecimal(0));
+				} else {
+					item.setQuantidade(new BigDecimal(1));
+				}
+				
 				model.addAttribute("item", item);
 			}
 		}

@@ -25,12 +25,12 @@ public class Caderneta extends PersistentEntityImpl {
 	private Long id;
 	
 	@OneToOne
-	@NotEmpty(message = "O campo cliente é obrigatório")
+	//@NotEmpty(message = "O campo cliente é obrigatório")
 	private Cliente cliente;
 	
 	private Boolean aberta;
 	
-	@OneToMany
+	@OneToMany(mappedBy = "caderneta")
 	private List<Venda> vendaList;
 	
 	public Long getId() {

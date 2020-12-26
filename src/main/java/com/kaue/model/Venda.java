@@ -77,6 +77,9 @@ public class Venda {
 	@ManyToOne
 	private Caixa caixa;
 	
+	@ManyToOne
+	private Caderneta caderneta;
+	
 	@Enumerated(EnumType.STRING)
 	private TipoVenda tipoVenda;
 
@@ -207,6 +210,14 @@ public class Venda {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public Caderneta getCaderneta() {
+		return caderneta;
+	}
+
+	public void setCaderneta(Caderneta caderneta) {
+		this.caderneta = caderneta;
 	}
 
 }

@@ -97,4 +97,24 @@ public class HasValue
 
 		return false;
 	}
+	
+	/**
+	 * Verifica se o Boolean e nao nulo.
+	 * @param val
+	 * <ul><li>Objeto do tipo Boolean</li></ul>
+	 * @return
+	 * <ul>
+	 *   <li><code>true</code> se a condicao for verdadeira</li>
+	 *   <li><code>false</code> se a condicao for falsa</li>
+	 * </ul>
+	 */
+	public static boolean execute(Boolean val)
+	{
+		if (val != null) {
+			if(val==true) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

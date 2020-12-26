@@ -27,7 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kaue.dao.ClienteDAO;
 import com.kaue.dao.ProdutoDAO;
 import com.kaue.dao.filter.ClienteFilter;
+import com.kaue.model.Caderneta;
 import com.kaue.model.Cliente;
+import com.kaue.service.CadernetaService;
 import com.kaue.service.ClienteService;
 import com.kaue.util.FileManager;
 import com.kaue.util.HasValue;
@@ -37,6 +39,9 @@ public class ClienteServiceImpl implements ClienteService{
 
 	@Autowired
 	private ClienteDAO clienteDAO;
+	
+	@Autowired
+	private CadernetaService cadernetaService;
 	
 	@Autowired
     FileManager fileManager;
@@ -50,9 +55,21 @@ public class ClienteServiceImpl implements ClienteService{
 		}
 	}
 
-	@Transactional
-	public void excluir(Long id) {
-		clienteDAO.deleteById(id);
+	@Override
+	public void excluir(Long id) throws Exception {		
+		try {
+			Caderneta caderneta = cadernetaService.buscarPorCliente(id);
+			if(HasValue.execute(caderneta)) {
+				if(!HasValue.execute(caderneta.getAberta())) {
+					cadernetaService.excluir(caderneta.getId());
+				}
+			}
+			clienteDAO.deleteById(id);
+		} catch(DataIntegrityViolationException e) {
+			throw new Exception("Verifique se o cliente possui caderneta aberta.");
+		} catch(Exception e) {
+			throw new Exception("Ocorreu um erro ao tentar excluir o cliente.");
+		}
 	}
 
 	@Transactional

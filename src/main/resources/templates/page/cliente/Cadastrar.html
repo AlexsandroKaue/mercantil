@@ -53,9 +53,9 @@
             </div>
             <div class="form-group">
               <label class="col-form-label">Abrir caderneta para cliente?</label><br/>
-              <input type="checkbox" name="my-checkbox" data-bootstrap-switch 
+              <input type="checkbox" th:field="*{abrirCaderneta}" data-bootstrap-switch 
                data-on-text="SIM"
-               data-off-text="NÃO">
+               data-off-text="NÃO"></input>
             </div>
          </div>
          <div class="col-md-4">
@@ -180,6 +180,7 @@
       });
       $('#inputDataNascimento').rules('add', {
         customDate: true,
+        required:false,
         messages: { 
           customDate: "Por favor digite uma data válida"
         }
