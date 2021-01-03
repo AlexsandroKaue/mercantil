@@ -1,6 +1,7 @@
 package com.kaue.controller;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kaue.dao.filter.CategoriaFilter;
+import com.kaue.dao.filter.UsuarioFilter;
 import com.kaue.dao.filter.VendaFilter;
 import com.kaue.enumeration.StatusVenda;
+import com.kaue.enumeration.TipoVenda;
+import com.kaue.enumeration.Unitario;
+import com.kaue.model.Categoria;
+import com.kaue.model.Cliente;
 import com.kaue.model.Produto;
+import com.kaue.model.Usuario;
 import com.kaue.model.Venda;
+import com.kaue.service.UsuarioService;
 import com.kaue.service.VendaService;
+import com.kaue.util.HasValue;
 
 @Controller
 @RequestMapping("/vendas")
@@ -26,12 +36,18 @@ public class VendaController {
 	@Autowired
 	private VendaService vendaService;
 	
+	@Autowired
+	private UsuarioService usuarioService;
+	
 	@RequestMapping
 	public ModelAndView pesquisar(@ModelAttribute("filtro") VendaFilter filtro) {
 		if(!filtro.isAvancada()) {
 			String termo = filtro.getTermo();
-			if(termo!=null) {
-				//filtro.getVenda().setDataVenda(termo);
+			if(HasValue.execute(termo)) {
+				filtro.getVenda().setUsuario(new Usuario());
+				filtro.getVenda().getUsuario().setNome(termo);
+				filtro.getVenda().setCliente(new Cliente());
+				filtro.getVenda().getCliente().setNome(termo);
 				try {
 					Long id = Long.parseLong(termo);
 					filtro.getVenda().setId(id);
@@ -76,5 +92,20 @@ public class VendaController {
 		return mv;
 	}
 	
+	@ModelAttribute
+	public List<Usuario> todosUsuarios(){
+		List<Usuario> usuarioList = usuarioService.pesquisar(new UsuarioFilter());
+		return usuarioList;
+	}
+	
+	@ModelAttribute
+	public List<StatusVenda> todosStatus(){
+		return Arrays.asList(StatusVenda.values());
+	}
+	
+	@ModelAttribute
+	public List<TipoVenda> todosTiposDeVenda(){
+		return Arrays.asList(TipoVenda.values());
+	}
 	
 }

@@ -51,11 +51,11 @@
               <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
               <div class="col-sm-6" th:unless="*{avancada}">
                 <div class="input-group">
-                  <input class="form-control" 
+                  <input class="form-control form-control-lg" 
                     placeholder="Qual venda você está procurando?" autofocus="autofocus"
                     th:field="*{termo}"/>
                   <div class="input-group-append">
-                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i> Pesquisar
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i> Buscar
                       <!-- <i class="fas fa-search"></i> -->
                     </button>
                   </div>
@@ -67,19 +67,57 @@
               </div>
               <div class="col-sm-12" th:if="*{avancada}">
                 <div class="row">
-                  <div class="col-sm-4">
-                    <label class="col-form-label">Data</label>
+                  <div class="col-sm-2">
+                    <label class="col-form-label">Data inicial</label>
                     <div class="input-group">
                       <input class="form-control js-date" 
-                        placeholder="Data da venda" autofocus="autofocus"
-                        th:field="*{venda.dataVenda}"></input>
+                        placeholder="Data inicial"
+                        th:field="*{dataInicio}"></input>
                     </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <label class="col-form-label">Data final</label>
+                    <div class="input-group">
+                      <input class="form-control js-date" 
+                        placeholder="Data final"
+                        th:field="*{dataFim}"></input>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <label class="col-form-label">Cliente</label>
+                    <input class="form-control" 
+                      placeholder="Nome do cliente"
+                      th:field="*{venda.cliente.nome}"/>
+                  </div>
+                  
+                </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label class="col-form-label">Operador</label>
+                    <select class="form-control" th:field="*{venda.usuario}">
+                      <option value="" selected>-- Todos --</option>
+                      <option th:each="usuario : ${usuarioList}" th:value="${usuario.id}" th:text="${usuario.nome}"></option>
+                    </select>
+                  </div>
+                  <div class="col-sm-2">
+                    <label class="col-form-label">Status</label>
+                    <select class="form-control" th:field="*{venda.status}">
+                      <option value="" selected> -- Todos --</option>
+                      <option th:each="status : ${statusVendaList}" th:value="${status}" th:text="${status.descricao}"></option>
+                    </select>
+                  </div>
+                  <div class="col-sm-2">
+                    <label class="col-form-label">Tipo de Venda</label>
+                    <select class="form-control" th:field="*{venda.tipoVenda}">
+                      <option value="" selected> -- Todos --</option>
+                      <option th:each="tipo : ${tipoVendaList}" th:value="${tipo}" th:text="${tipo.descricao}"></option>
+                    </select>
                   </div>
                 </div>
                 <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
                 <small>Pesquisa Padrão</small></button>
                 <button type="submit" class="btn btn-default" style="float:right">
-                  <i class="fas fa-search"></i> Pesquisar
+                  <i class="fas fa-search"></i> Buscar
                   <!-- <i class="fas fa-search"></i> -->
                 </button><br/>
                 
@@ -227,6 +265,7 @@
                     <div class="col-md-12">
                       <label>Lista de itens</label>
                       <a id="linkComprovante" class="btn btn-warning btn-flat float-right"
+                       th:if="${venda.status == T(com.kaue.enumeration.StatusVenda).FINALIZADA}"
                        th:href="@{/caixa/download/{id}(id=${venda.id})}">
                         <i class="fas fa-receipt mr-2"></i>
                         Imprimir comprovante
@@ -235,7 +274,7 @@
                        class="btn btn-success btn-flat float-right js-pagamento"
                        th:if="${venda.status == T(com.kaue.enumeration.StatusVenda).ABERTA}"
                        th:href="@{#}"><!-- th:attr="data-url-iniciar-pagamento=@{/vendas/iniciar/pagamento/}, data-id=${venda.id}" -->
-                        <i class="fas fa-receipt mr-2"></i>
+                        <i class="fas fa-money-bill-wave"></i>
                         Realizar pagamento
                       </a>
                       <div class="card-body table-responsive p-0">
@@ -429,8 +468,8 @@
     $(document).on('keydown', function(event) {
   	  // Number 13 is the "Enter" key on the keyboard
   	  if (event.keyCode === 13) {
-  			event.preventDefault();
     		if($("#inputSaldo").is(":focus")) {
+    			event.preventDefault();
     			$('.js-realizar-pagamento').click();
     		}
   	  }
@@ -516,8 +555,18 @@
       	$('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
       }, 0);
     });
-   
+    
+     
   });
+	    
+  window.onload = function(){
+		var myElement = $('[autofocus="autofocus"]');
+		if($(myElement).is('input')){
+			$(myElement).prop('selectionStart', $(myElement).val().length);
+		}
+	}
+	  
+  
    
   </script>
 </html>
