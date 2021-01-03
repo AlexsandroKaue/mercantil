@@ -99,6 +99,10 @@
                     <div class="col-md-3 text-center">
                       <img id="detalheProdutoImagem" th:src="@{/custom/img/produto/sem-imagem_2.jpg}" style="height: 200px" class="img-fluid"></img>
                     </div>
+                    <button type="button" class="btn btn-lg btn-danger float-right" data-toggle="popover" title="Redireciona" 
+                    data-content="Ao clicar neste botão você será redirecionado para a tela de produtos.">Acessar produto</button>
+                    <a th:href="@{#}" class="btn btn-link btn-sm" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">
+                    <i class="fas fa-eye"></i></a>
                   </div>
                 </div>
                 <!-- /.card-body -->

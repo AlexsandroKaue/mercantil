@@ -1,34 +1,21 @@
 package com.kaue.service.impl;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kaue.dao.ClienteDAO;
-import com.kaue.dao.ProdutoDAO;
 import com.kaue.dao.filter.ClienteFilter;
+import com.kaue.enumeration.StatusVenda;
 import com.kaue.model.Caderneta;
 import com.kaue.model.Cliente;
+import com.kaue.model.Venda;
 import com.kaue.service.CadernetaService;
 import com.kaue.service.ClienteService;
 import com.kaue.util.FileManager;
@@ -58,15 +45,9 @@ public class ClienteServiceImpl implements ClienteService{
 	@Override
 	public void excluir(Long id) throws Exception {		
 		try {
-			Caderneta caderneta = cadernetaService.buscarPorCliente(id);
-			if(HasValue.execute(caderneta)) {
-				if(!HasValue.execute(caderneta.getAberta())) {
-					cadernetaService.excluir(caderneta.getId());
-				}
-			}
 			clienteDAO.deleteById(id);
 		} catch(DataIntegrityViolationException e) {
-			throw new Exception("Verifique se o cliente possui caderneta aberta.");
+			throw new Exception("Verifique se o cliente não possui caderneta aberta.");
 		} catch(Exception e) {
 			throw new Exception("Ocorreu um erro ao tentar excluir o cliente.");
 		}
@@ -112,4 +93,8 @@ public class ClienteServiceImpl implements ClienteService{
 
 	
 	
+}
+
+class CadernetaComDividaException extends Exception { 
+	private static final long serialVersionUID = 1L;
 }

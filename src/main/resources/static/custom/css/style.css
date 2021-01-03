@@ -143,6 +143,10 @@
     height: 34px !important;
 }
 
+.select2-results__option.select2-results__message:empty {
+    display: none !important;
+}
+
 
 
 

@@ -1,6 +1,7 @@
 package com.kaue.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
@@ -51,10 +53,13 @@ public class Cliente {
 	
 	private String imagemPath;
 	
-	private Boolean abrirCaderneta;
+	private Boolean cadernetaAberta;
 	
-	@OneToOne(mappedBy = "cliente")
-	private Caderneta caderneta;
+	/*@OneToOne(mappedBy = "cliente")
+	private Caderneta caderneta;*/
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<Venda> vendaList;
 	
 	@Transient
 	private String imagemBase64;
@@ -164,19 +169,27 @@ public class Cliente {
 		this.imagemPath = imagemPath;
 	}
 
-	public Boolean getAbrirCaderneta() {
-		return abrirCaderneta;
+	public Boolean getCadernetaAberta() {
+		return cadernetaAberta;
 	}
 
-	public void setAbrirCaderneta(Boolean abrirCaderneta) {
-		this.abrirCaderneta = abrirCaderneta;
+	public void setCadernetaAberta(Boolean cadernetaAberta) {
+		this.cadernetaAberta = cadernetaAberta;
 	}
 
-	public Caderneta getCaderneta() {
+	public List<Venda> getVendaList() {
+		return vendaList;
+	}
+
+	public void setVendaList(List<Venda> vendaList) {
+		this.vendaList = vendaList;
+	}
+
+	/*public Caderneta getCaderneta() {
 		return caderneta;
 	}
 
 	public void setCaderneta(Caderneta caderneta) {
 		this.caderneta = caderneta;
-	}
+	}*/
 }

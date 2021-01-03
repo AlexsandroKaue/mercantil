@@ -48,6 +48,15 @@ $.validator.addMethod("customTime", function(value, element) {
 	return moment(value, 'DD/MM/YYYY HH:mm', true).isValid();
 }, "Por favor forneça uma data válida");
 
+$.validator.addMethod("greaterThan", function(value, element, param) {
+	value = Number(value.toString().replace(',','.'));
+	param = Number(param.toString().replace(',','.'));
+	if(value >= param){
+		return true;
+	}
+	return false;
+}, "Saldo insuficiente.");
+
 $(function(){
 	inicializar();
 	//$('#ancora').on('ajaxComplete', inicializar());

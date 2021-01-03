@@ -24,9 +24,9 @@ public class Caderneta extends PersistentEntityImpl {
 	@GeneratedValue(generator = "seq_caderneta" , strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@OneToOne
-	//@NotEmpty(message = "O campo cliente é obrigatório")
-	private Cliente cliente;
+	/*@OneToOne
+	@NotEmpty(message = "O campo cliente é obrigatório")
+	private Cliente cliente;*/
 	
 	private Boolean aberta;
 	
@@ -41,13 +41,13 @@ public class Caderneta extends PersistentEntityImpl {
 		this.id = id;
 	}
 
-	public Cliente getCliente() {
+	/*public Cliente getCliente() {
 		return cliente;
 	}
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
-	}
+	}*/
 
 	public Boolean getAberta() {
 		return aberta;

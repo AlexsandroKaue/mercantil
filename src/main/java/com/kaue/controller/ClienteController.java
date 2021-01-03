@@ -19,9 +19,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.enumeration.Estado;
+import com.kaue.enumeration.StatusVenda;
 import com.kaue.model.Caderneta;
 import com.kaue.model.Cliente;
 import com.kaue.model.Endereco;
+import com.kaue.model.Venda;
 import com.kaue.service.CadernetaService;
 import com.kaue.service.ClienteService;
 import com.kaue.service.GrupoService;
@@ -57,7 +59,7 @@ public class ClienteController {
 		ModelAndView mv = new ModelAndView(CADASTRAR_VIEW);
 		Cliente cliente = new Cliente();
 		cliente.setImagemBase64(clienteService.carregarImagem(null));
-		cliente.setAbrirCaderneta(false);
+		cliente.setCadernetaAberta(false);
 		mv.addObject("cliente", cliente);
 		return mv;
 	}
@@ -108,7 +110,7 @@ public class ClienteController {
 			cliente = clienteService.salvar(cliente);
 			
 			//Parte do método para salvar/atualizar caderneta
-			Boolean desejaAbrirCaderneta = HasValue.execute(cliente.getAbrirCaderneta());
+			/*Boolean desejaAbrirCaderneta = HasValue.execute(cliente.isCadernetaAberta());
 			Caderneta caderneta = cadernetaService.buscarPorCliente(cliente.getId()); 
 			
 			if(desejaAbrirCaderneta) {
@@ -123,7 +125,7 @@ public class ClienteController {
 					caderneta.setAberta(false);
 					caderneta = cadernetaService.salvar(caderneta);
 				}
-			}
+			}*/
 			
 			return url;
 		} catch(IllegalArgumentException e) {
@@ -152,10 +154,26 @@ public class ClienteController {
 	}
 	
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-	public String excluir(@PathVariable Long id, RedirectAttributes attributes) {
+	public String excluir(@PathVariable("id") Cliente cliente, RedirectAttributes attributes) {
 		try {
-			clienteService.excluir(id);
-			attributes.addFlashAttribute("mensagem", "Cliente excluído com sucesso!");
+			
+			if(HasValue.execute(cliente)) {
+				if(HasValue.execute(cliente.getCadernetaAberta())) {
+					throw new Exception("O cliente possui caderneta aberta.");
+				} else {
+					List<Venda> vendaList = cliente.getVendaList();
+					if(HasValue.execute(vendaList)) {
+						for(Venda venda : vendaList) {
+							if(venda.getStatus()==StatusVenda.ABERTA) {
+								throw new Exception("O cliente possui débitos.");
+							}
+						}
+					}
+				}
+				clienteService.excluir(cliente.getId());
+				attributes.addFlashAttribute("mensagem", "Cliente excluído com sucesso!");
+			}
+			
 		} catch(Exception e) {
 			attributes.addFlashAttribute("mensagem_erro", e.getMessage());
 		}

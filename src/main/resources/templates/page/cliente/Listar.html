@@ -215,6 +215,7 @@
               <th>Nome</th>
               <th class="text-center">Telefone</th>
               <th class="text-center">Email</th>
+              <th class="text-center">Cad. aberta</th>
               <th class="text-center">Ações</th>
             </tr>
           </thead>
@@ -224,6 +225,10 @@
               <td th:text="${cliente.nome}"></td>
               <td class="text-center" th:text="${cliente.telefone}"></td>
               <td class="text-center" th:text="${cliente.email}"></td>
+              <td class="text-center">
+                <small class="badge" th:text="${cliente.cadernetaAberta?'Sim':'Não'}"
+                 th:classappend="${cliente.cadernetaAberta?'badge-primary':''}"></small>
+              </td>
               <td class="text-center">
                 <a th:attr="data-url-detalhes=@{/clientes/detalhes/{id}(id=${cliente.id})}" th:href="@{#}" 
                   data-toggle="modal" data-target="#modalDetalhes" class="btn btn-link"

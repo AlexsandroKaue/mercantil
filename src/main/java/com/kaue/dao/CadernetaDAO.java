@@ -8,5 +8,5 @@ import com.kaue.model.Caderneta;
 public interface CadernetaDAO extends JpaRepository<Caderneta, Long>, CadernetaRepositoryCustom{
 	//public List<Caderneta> findByDescricaoContainingIgnoreCaseOrderByIdDesc(String descricao);
 	
-	public Caderneta findByClienteId(Long clienteId);
+	//public Caderneta findByClienteId(Long clienteId);
 }

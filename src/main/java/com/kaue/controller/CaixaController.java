@@ -419,12 +419,25 @@ public class CaixaController {
 			if(venda.getSaldo()==null || venda.getSaldo().compareTo(venda.getTotal())==-1) {
 				errors.rejectValue("saldo", null, "Saldo insuficiente!");
 			}
-		} else {
-			if(!HasValue.execute(venda.getCliente())) {
+		} else if(venda.getTipoVenda()==TipoVenda.CONTA){
+			if(HasValue.execute(venda.getCliente())) {
+				if(HasValue.execute(venda.getCliente().getCadernetaAberta())) {
+					venda.setSaldo(new BigDecimal(0.0));
+				} else {
+					errors.rejectValue("cliente", null, "O cliente selecionado não possui caderneta aberta!");
+				}
+			} else {
+				errors.rejectValue("cliente", null, "Selecione um cliente!");
+			}
+			
+			/*if(!HasValue.execute(venda.getCliente())) {
 				errors.rejectValue("cliente", null, "Selecione um cliente!");
 			} else {
+				if(HasValue.execute(venda.getCliente().getCadernetaAberta())) {
+					errors.rejectValue("cliente", null, "O cliente selecionado não possui caderneta aberta!");
+				}
 				venda.setSaldo(new BigDecimal(0.0));
-			}
+			}*/
 		}
 		UsuarioWeb usuarioWeb = (UsuarioWeb)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		venda.setUsuario(usuarioWeb.getUsuario());
@@ -594,6 +607,7 @@ public class CaixaController {
 		List<Cliente> clienteList = clienteService.pesquisar(filtro);
 		ModelAndView mv = new ModelAndView(REGISTRADORA_VIEW+"::#modalCliente");
 		mv.addObject("clientes", clienteList);
+		mv.addObject("tipoVenda", venda.getTipoVenda());
 		return mv;
 	}
 	

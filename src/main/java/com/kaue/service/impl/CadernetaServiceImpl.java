@@ -40,10 +40,5 @@ public class CadernetaServiceImpl implements CadernetaService{
 		}
 		return cadernetaList;
 	}
-
-	@Override
-	public Caderneta buscarPorCliente(Long clienteId) {
-		return cadernetaDAO.findByClienteId(clienteId);
-	}
 	
 }
