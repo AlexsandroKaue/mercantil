@@ -9,11 +9,33 @@
 
   <style layout:fragment="extra-style">
     .table, .table td{
-      border-width:px;
+      /* border-width:px;
       border-style:solid;
-      border-color:grey;
+      border-color:grey; */
       vertical-align: middle;
      }
+     
+     tr.collapse.in {
+      display:table-row;
+    }
+    
+    tr:hover{
+      cursor: pointer;
+    }
+    
+    tr.info-row :hover{
+      cursor: default;
+    }
+
+    td.details-control {
+      /* background: url('../resources/details_open.png') no-repeat center center; */
+      cursor: pointer;
+      text-align:center;
+      color:forestgreen;
+    }
+    tr.shown td.details-control {
+      background: url('../resources/details_close.png') no-repeat center center;
+    }
   </style>
 
   <section layout:fragment="container">
@@ -36,105 +58,65 @@
   <section layout:fragment="conteudo">
     <!-- Default box -->
     <div class="card card-solid">
-      <div class="card-body pb-0">
-        <div class="row d-flex align-items-stretch">
-          <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-            <div class="card bg-light">
-              <div class="card-header border-bottom-0">
-                <h2 class="lead"><b>Francisca da Silva</b></h2>
-              </div>
-              <div class="card-body pt-0">
-                <div class="row">
-                  <div class="col-12">
-                    <!-- <h2 class="lead"><b>Nicole Pearson</b></h2>
-                    <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                    <ul class="ml-4 mb-0 fa-ul text-muted">
-                      <li><span class="fa-li small"><i class="fas fa-lg fa-building"></i></span> <p class="text-muted text-sm">Endereço: Demo Street 123, Demo City 04312, NJ</p></li>
-                      <li><span class="fa-li small"><i class="fas fa-lg fa-phone"></i></span><p class="text-muted text-sm">Telefone #: + 800 - 12 12 23 52</p></li>
-                    </ul>
-                  </div>
-                  <!-- <div class="col-5 text-center">
-                    <img th:src="@{/custom/img/usuario/user_default.png}" alt="" class="img-circle img-fluid">
-                  </div> -->
+      <div class="card-body pb-0">        
+        <nav aria-label="Contacts Page Navigation">
+          <ul class="pagination justify-content-center m-0">
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">6</a></li>
+            <li class="page-item"><a class="page-link" href="#">7</a></li>
+            <li class="page-item"><a class="page-link" href="#">8</a></li>
+          </ul>
+        </nav>
+        <div class="row d-flex align-items-stretch mt-4">
+          <th:block th:each="cliente : ${clientes}">
+            <div class="col-12 col-sm-6 col-md-4 d-flex " 
+              th:if="${cliente.cadernetaAberta}">
+              <div class="card bg-light">
+                <div class="card-header border-bottom-0">
+                  <h2 class="lead"><b>[[${cliente.nome}]]</b></h2>
                 </div>
-              </div>
-              <div class="card-footer">
-                <div class="text-right">
-                  <a href="#" class="btn btn-sm bg-teal">
-                    <i class="fas fa-comments"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-primary">
-                    <i class="fas fa-user"></i> Visualizar
-                  </a>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-12">
+                      <!-- <h2 class="lead"><b>Nicole Pearson</b></h2>
+                      <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li><span class="fa-li small"><i class="fas fa-lg fa-building"></i></span>
+                          <p class="text-muted text-sm" th:if="${#strings.isEmpty(cliente.enderecoFormatado)}">Endereço: [[#{nao.informado}]]</p>
+                          <p class="text-muted text-sm" th:unless="${#strings.isEmpty(cliente.enderecoFormatado)}">Endereço: [[${cliente.enderecoFormatado}]]</p></li>
+                        <li><span class="fa-li small"><i class="fas fa-lg fa-phone"></i></span>
+                          <p class="text-muted text-sm" th:if="${#strings.isEmpty(cliente.telefone)}">Telefone #: [[#{nao.informado}]]</p>
+                          <p class="text-muted text-sm" th:unless="${#strings.isEmpty(cliente.telefone)}">Telefone #: [[${cliente.telefone}]]</p>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- <div class="col-5 text-center">
+                      <img th:src="@{/custom/img/usuario/user_default.png}" alt="" class="img-circle img-fluid">
+                    </div> -->
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a href="#" class="btn btn-sm bg-teal">
+                      <i class="fas fa-comments"></i>
+                    </a>
+                    <a th:attr="data-url-detalhes=@{/caderneta/detalhes/{id}(id=${cliente.id})}" th:href="@{#}" 
+                      data-toggle="modal" data-target="#modalDetalhes" class="btn btn-sm btn-primary">
+                      <i class="fas fa-user"></i> Vizualizar
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-            <div class="card bg-light">
-              <div class="card-header border-bottom-0">
-                <h2 class="lead"><b>José Ferreira</b></h2>
-              </div>
-              <div class="card-body pt-0">
-                <div class="row">
-                  <div class="col-12">
-                    <!-- <h2 class="lead"><b>Nicole Pearson</b></h2>
-                    <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                    <ul class="ml-4 mb-0 fa-ul text-muted">
-                      <li><span class="fa-li small"><i class="fas fa-lg fa-building"></i></span> <p class="text-muted text-sm">Endereço: Demo Street 123, Demo City 04312, NJ</p></li>
-                      <li><span class="fa-li small"><i class="fas fa-lg fa-phone"></i></span><p class="text-muted text-sm">Telefone #: + 800 - 12 12 23 52</p></li>
-                    </ul>
-                  </div>
-                  <!-- <div class="col-5 text-center">
-                    <img th:src="@{/custom/img/usuario/user_default.png}" alt="" class="img-circle img-fluid">
-                  </div> -->
-                </div>
-              </div>
-              <div class="card-footer">
-                <div class="text-right">
-                  <a href="#" class="btn btn-sm bg-teal">
-                    <i class="fas fa-comments"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-primary">
-                    <i class="fas fa-user"></i> View Profile
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-            <div class="card bg-light">
-              <div class="card-header border-bottom-0">
-                <h2 class="lead"><b>Jaqueline Alves</b></h2>
-              </div>
-              <div class="card-body pt-0">
-                <div class="row">
-                  <div class="col-12">
-                    <!-- <h2 class="lead"><b>Nicole Pearson</b></h2>
-                    <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
-                    <ul class="ml-4 mb-0 fa-ul text-muted">
-                      <li><span class="fa-li small"><i class="fas fa-lg fa-building"></i></span> <p class="text-muted text-sm">Endereço: Demo Street 123, Demo City 04312, NJ</p></li>
-                      <li><span class="fa-li small"><i class="fas fa-lg fa-phone"></i></span><p class="text-muted text-sm">Telefone #: + 800 - 12 12 23 52</p></li>
-                    </ul>
-                  </div>
-                  <!-- <div class="col-5 text-center">
-                    <img th:src="@{/custom/img/usuario/user_default.png}" alt="" class="img-circle img-fluid">
-                  </div> -->
-                </div>
-              </div>
-              <div class="card-footer">
-                <div class="text-right">
-                  <a href="#" class="btn btn-sm bg-teal">
-                    <i class="fas fa-comments"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-primary">
-                    <i class="fas fa-user"></i> View Profile
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+          </th:block>
         </div>
+        
+        
+        
       </div>
       <!-- /.card-body -->
       <div class="card-footer">
@@ -153,20 +135,254 @@
       </div>
       <!-- /.card-footer -->
     </div>
-    <!-- /.card -->        
+    <!-- /.card -->  
+    
+    <div class="modal fade" id="modalDetalhes">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Caderneta</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row" th:if="${cliente}">
+            
+            <div class="col-12">
+              <!-- <h2 class="lead"><b th:text="${cliente.nome}"></b></h2> -->
+              <!-- <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+            </div>
+             <div class="col-4">
+                <ul class="ml-4 mb-0 fa-ul">
+                  <li >
+                    <span class="fa-li">
+                    <i class="fas fa-user"></i></span> 
+                    <span class="mb-0">Cliente:</span> 
+                    <span th:text="#{nao.informado}" th:if="${#strings.isEmpty(cliente.email)}"></span>
+                    <p th:text="${cliente.nome}" th:if="${!#strings.isEmpty(cliente.nome)}"></p>
+                  </li>
+                  <li>
+                    <span class="fa-li">
+                    <i class="fas fa-lg fa-phone"></i></span> 
+                    <span class="mb-0">Telefone:</span> 
+                    <p th:text="#{nao.informado}" th:if="${#strings.isEmpty(cliente.telefone)}"></p>
+                    <p th:text="${cliente.telefone}" th:if="${!#strings.isEmpty(cliente.telefone)}"></p>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-4">                  
+                <ul class="ml-4 mb-0 fa-ul">
+                  <li>
+                    <span class="fa-li">
+                    <i class="fas fa-lg fa-at"></i></span> 
+                    <span class="mb-0">Email:</span> 
+                    <p th:text="#{nao.informado}" th:if="${#strings.isEmpty(cliente.email)}"></p>
+                    <p th:text="${cliente.email}" th:if="${!#strings.isEmpty(cliente.email)}"></p>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-4">                  
+                <ul class="ml-4 mb-0 fa-ul">
+                  <li>
+                    <span class="fa-li"><i class="fas fa-lg fa-building"></i></span>
+                    <span class="mb-0">Endereço:</span> 
+                    <p th:text="#{nao.informado}" th:if="${#strings.isEmpty(enderecoFormatado)}"></p>
+                    <p th:text="${enderecoFormatado}" th:if="${!#strings.isEmpty(enderecoFormatado)}"></p>
+                  </li>
+                </ul>
+              </div>
+              <!-- <div class="col-5 text-center">
+                <img class="img-fluid" style="height:160px"
+                     th:src="|data:image/png;base64,${cliente.imagemBase64}|"
+                     alt="Cliente profile picture"></img>
+              </div>
+              <!-- <div class="row"> -->
+              <div class="col-12">                  
+                <ul class="ml-4 mb-0 fa-ul">
+                  <li>
+                    <span class="fa-li"><i class="fas fa-shopping-cart"></i></span>
+                    <span class="mb-0">Vendas:</span> 
+                    <!-- <div class="card-body table-responsive p-0" style="height: 300px;"> -->
+                      <table class="table table-bordered table-sm table-hover js-tabela">
+                        <thead>
+                          <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Data</th>
+                            <th class="text-center">Total(R$)</th>
+                            <th class="text-center">Operador</th>
+                            <th class="text-center">Status</th>
+                            <!-- <th class="text-center">Ações</th> -->
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <th:block th:each="venda : ${cliente.vendaList}">
+                          <tr class="content-row" 
+                          data-toggle="collapse" th:href="|#venda${venda.id}|" aria-expanded="false" aria-controls="collapseExample">
+                            <td class="text-center" th:text="${venda.id}"></td>
+                            <td class="text-center" th:text="${{venda.dataVenda}}"></td>
+                            <td class="text-center" th:text="${{venda.total}}"></td>
+                            <td class="text-center" th:text="${{venda.usuario.nome}}" th:if="${venda.usuario}"></td><td th:unless="${venda.usuario}"></td>
+                            <td class="text-center" th:attr="data-role=${venda.id}">
+                              <small class="badge" 
+                               th:text="${venda.status.descricao}" 
+                               th:classappend="${venda.status==T(com.kaue.enumeration.StatusVenda).ABERTA ? 'bg-danger' : 'bg-success'}"></small>
+                            </td>
+                            <!-- <td class="text-center">
+                              <a th:attr="data-url-detalhes=@{/vendas/detalhes/{id}(id=${venda.id})}" th:href="@{#}"
+                                class="btn btn-link" title="Detalhes" rel="tooltip" data-placement="top"
+                                data-toggle="modal" data-target="#modalDetalhesVenda">
+                                <i class="fas fa-eye"></i>
+                              </a>
+                            </td> -->
+                          </tr>
+                          <tr class="d-none info-row" >
+                            <td class="w-100 additional-row-td py-0" colspan="5">
+                              <div class="collapse additional-row" th:id="|venda${venda.id}|">
+                                <div class="row pt-2 pb-4 " th:if="${venda}">
+                                  <div class="col-12">
+                                  <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Lista de itens</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form">
+                <div class="card-body">
+                  <div class="row">
+                                      
+                                      <div class="col-md-12">
+                                        
+                                        <div class="card-body table-responsive p-0">
+                                          <table class="table table-striped" id="tbItensVenda">
+                                            <thead>
+                                            <tr>
+                                              <th>#</th>
+                                              <th>Código</th>
+                                              <th>Produto</th>
+                                              <th class="text-center">Qtd. X Preço Un.</th>
+                                              <th class="text-right">Total Item R$</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr th:each="item, rowStat : ${venda.itemList}">
+                                                <td>
+                                                  [[${rowStat.index+1}]]
+                                                </td>
+                                                <td>
+                                                  [[${item.produto.codigo}]]
+                                                </td>
+                                                <td>
+                                                  [[${item.produto.descricao}]]
+                                                </td>
+                                                <td class="text-center">
+                                                  [[|${{item.quantidade}} ${item.produto.unitario} x ${{item.valor}}|]]
+                                                </td>
+                                                <td class="text-right">
+                                                  [[${{item.valorTotal}}]]
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <a id="linkComprovante" class="btn btn-warning btn-flat float-right"
+                                         th:if="${venda.status == T(com.kaue.enumeration.StatusVenda).FINALIZADA}"
+                                         th:href="@{/caixa/download/{id}(id=${venda.id})}">
+                                          <i class="fas fa-receipt mr-2"></i>
+                                          Imprimir comprovante
+                                        </a>
+                                        <a id="linkPagamento" tabindex="-1" role="button"
+                                         class="btn btn-success btn-flat float-right js-pagamento"
+                                         th:if="${venda.status == T(com.kaue.enumeration.StatusVenda).ABERTA}"
+                                         th:href="@{#}"><!-- th:attr="data-url-iniciar-pagamento=@{/vendas/iniciar/pagamento/}, data-id=${venda.id}" -->
+                                          <i class="fas fa-money-bill-wave"></i>
+                                          Realizar pagamento
+                                        </a>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+                                    
+                                  </div>
+                                </div>
+                              
+                              </div>
+                             <!-- -->
+                            </td>
+                          </tr>
+                          </th:block>
+                        </tbody>
+                        <tfoot>
+                          <tr></tr>
+                        </tfoot>
+                      </table>
+                      <!-- </div> -->
+                  </li>
+                </ul>
+              </div>
+              <!-- </div> -->
+            </div>
+          </div>
+          
+          <div class="modal-footer float-right">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->  
+        
   </section>
   
-  <script layout:fragment="js-validator">
-   $('#ancora').on('click', '.pesquisa-padrao', function(event){
-  	$('#filtroCategoriaForm').trigger("reset");
-		$('#inputAvancada').val(false);
-		document.getElementById("filtroCategoriaForm").submit(); 
-	});
-  
-   $('#ancora').on('click', '.pesquisa-avancada', function(event){
-  	$('#filtroCategoriaForm').trigger("reset");
-  	$('#inputAvancada').val(true);
-		document.getElementById("filtroCategoriaForm").submit(); 
-	});
+  <script layout:fragment="js-validator" th:inline="javascript">
+  $(function(){
+    $('#ancora').on('show.bs.modal', '#modalDetalhes', function(event){
+    	var botao = $(event.relatedTarget); // Button that triggered the modal
+    	var url = botao.data('url-detalhes');
+    	
+    	var response = $.ajax({
+    	  type: 'GET',
+    	  url: url
+    	});
+    
+    	response.done(function(e){
+    		var modalDialog = $(e).find('.modal-dialog');
+    		$('#modalDetalhes').html(modalDialog);
+    	});
+      
+    	response.fail(function(e){
+    		alert('Erro ao carregar detalhes do cliente.');  
+    	});
+    
+    });
+    
+    $('#ancora').on('show.bs.collapse', '.info-row', function(event){
+    	$(this).removeClass("hover");
+    	$(this).removeClass('d-none');
+    	$(this).css('hover')
+    });
+    
+    $('#ancora').on('hidden.bs.collapse', '.info-row', function(event){
+    	$(this).addClass('d-none');
+    });
+    
+    /* $('#ancora').on( "mouseenter mouseleave", '.info-row', function(event){
+    	console.log('hovered');
+    	$('#tbItensVenda').removeClass('table-hover');
+    } ); */
+    
+    
+  });
+  	  
   </script>
 </html>

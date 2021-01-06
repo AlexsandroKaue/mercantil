@@ -117,12 +117,12 @@
   </section>
   
   <div layout:fragment="titulo">
-    <h1 class="m-0 text-dark">Clientes</h1>
+    <h1 class="m-0 lead">Clientes</h1>
   </div>
   
   <div layout:fragment="botoes">
-    <a class="btn btn-block btn-info" th:href="@{/clientes/novo}" th:text="#{novo}"
-     sec:authorize="hasAuthority('INCLUIR_CLIENTE')"></a>
+    <a class="btn btn-block btn-info" th:href="@{/clientes/novo}"
+     sec:authorize="hasAuthority('INCLUIR_CLIENTE')"><i class="fas fa-plus-circle"></i> [[#{novo}]]</a>
   </div>
   
   <section layout:fragment="conteudo">
@@ -135,19 +135,34 @@
           <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
           <div class="col-sm-6" th:unless="*{avancada}">
             <div class="input-group">
-              <input class="form-control" 
+              <input class="form-control" id="inputSearch"
                 placeholder="Qual cliente você está procurando?" autofocus="autofocus"
-                th:field="*{termo}"/>
-              <div class="input-group-append">
+                th:field="*{termo}" autocomplete="off"/>
+              <!-- <div class="input-group-append">
                 <button type="submit" class="btn btn-default">
                   <i class="fas fa-search"></i> Pesquisar
-                  <!-- <i class="fas fa-search"></i> -->
+                  <i class="fas fa-search"></i>
+                </button>
+              </div> -->
+            </div>
+            <div class="row mt-1">
+              <div class="col-md-6">
+              <button type="button" class="btn btn-default js-limpar-pesquisa">
+                  <i class="fas fa-broom"></i> Limpar
+                </button>
+                <button type="submit" class="btn btn-default" >
+                  <i class="fas fa-search"></i> Buscar
+                </button>
+                
+              </div>
+              <div class="col-md-6">
+              <div class="float-right">
+                <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
+                  Ir para pesquisa avançada
                 </button>
               </div>
+              </div>
             </div>
-            <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
-              <small>Pesquisa avançada</small>
-            </button>
           </div>
           <div class="col-sm-12" th:if="*{avancada}">
             <div class="row">
@@ -198,10 +213,10 @@
               </div>
             </div>
             <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
-              <small>Voltar para a pesquisa padrão</small>
+              Voltar para a pesquisa padrão
             </button>
             <button type="submit" class="btn btn-default" style="float:right">
-              <i class="fas fa-search"></i> Pesquisar
+              <i class="fas fa-search"></i> Buscar
               <!-- <i class="fas fa-search"></i> -->
             </button><br/>
             
@@ -209,7 +224,7 @@
         </div>
         
         <table class="table table-bordered table-hover js-tabela">
-          <thead class="table-primary">
+          <thead class="bg-secondary">
             <tr>
               <th class="text-center">Código</th>
               <th>Nome</th>
@@ -260,37 +275,45 @@
   
   <script layout:fragment="js-validator">
     
+  $(function(){
     $('#ancora').on('show.bs.modal', '#modalDetalhes', function(event){
-		var botao = $(event.relatedTarget); // Button that triggered the modal
-		var url = botao.data('url-detalhes');
-		console.log(url);
-		var response = $.ajax({
-		  type: 'GET',
-		  url: url
-	  });
+  		var botao = $(event.relatedTarget); // Button that triggered the modal
+  		var url = botao.data('url-detalhes');
+  		console.log(url);
+  		var response = $.ajax({
+  		  type: 'GET',
+  		  url: url
+	  	});
 	  
-  	response.done(function(e){
-  		var modalDialog = $(e).find('.modal-dialog');
-  		$('#modalDetalhes').html(modalDialog);
-  	});
+    	response.done(function(e){
+    		var modalDialog = $(e).find('.modal-dialog');
+    		$('#modalDetalhes').html(modalDialog);
+    	});
   	  
-  	response.fail(function(e){
-  		alert('Erro ao carregar detalhes do cliente.');  
-  	});
+    	response.fail(function(e){
+    		alert('Erro ao carregar detalhes do cliente.');  
+    	});
 		
-	});
+		});
     
   	$('#ancora').on('click', '.pesquisa-padrao', function(event){
     	$('#filtroClienteForm').trigger("reset");
   		$('#inputAvancada').val(false);
   		document.getElementById("filtroClienteForm").submit(); 
-	});
+		});
   
   	$('#ancora').on('click', '.pesquisa-avancada', function(event){
     	$('#filtroClienteForm').trigger("reset");
     	$('#inputAvancada').val(true);
-		document.getElementById("filtroClienteForm").submit(); 
-	});
+			document.getElementById("filtroClienteForm").submit(); 
+		});
+  	
+  	$('#ancora').on('click', '.js-limpar-pesquisa', function(event) {
+			$('#inputSearch').val(null);
+			$('#filtroClienteForm').submit();
+		});
+  	
+  });
   </script>
   
 </html>

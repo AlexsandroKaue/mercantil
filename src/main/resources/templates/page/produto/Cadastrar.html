@@ -21,8 +21,8 @@
   
   <section layout:fragment="botoes">
     <a class="btn btn-danger" th:href="@{/produtos}"><i class="fas fa-arrow-circle-left"></i> [[#{voltar}]]</a>
-    <button type="submit" class="btn btn-md btn-info ml-2" th:if="!*{id}"><i class="fas fa-save"></i> [[#{salvar}]]</button>
-    <button type="submit" class="btn btn-md btn-info" th:if="*{id}"><i class="fas fa-save"></i> [[#{alterar}]]</button>
+    <button type="submit" class="btn btn-success ml-2" th:if="!*{id}"><i class="fas fa-save"></i> [[#{salvar}]]</button>
+    <button type="submit" class="btn btn-success" th:if="*{id}"><i class="fas fa-save"></i> [[#{alterar}]]</button>
   </section>
   
   <section layout:fragment="conteudo">

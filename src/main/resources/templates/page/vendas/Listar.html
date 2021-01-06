@@ -24,7 +24,7 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-9">
-               <h1 class="text-dark">Vendas</h1>
+               <h1 class="lead">Vendas</h1>
             </div>
             <!-- <div class="col-sm-3">
               <div class="breadcrumb float-right">
@@ -51,19 +51,33 @@
               <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
               <div class="col-sm-6" th:unless="*{avancada}">
                 <div class="input-group">
-                  <input class="form-control form-control-lg" 
+                  <input class="form-control form-control-lg" id="inputSearch"
                     placeholder="Qual venda você está procurando?" autofocus="autofocus"
-                    th:field="*{termo}"/>
-                  <div class="input-group-append">
-                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i> Buscar
-                      <!-- <i class="fas fa-search"></i> -->
+                    th:field="*{termo}" autocomplete="off"/>
+                  <!-- <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary float-right"><i class="fas fa-search"></i> Buscar
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div> -->
+                </div>
+                <div class="row mt-1">
+                  <div class="col-md-6">
+                  <button type="button" class="btn btn-default js-limpar-pesquisa">
+                      <i class="fas fa-broom"></i> Limpar
+                    </button>
+                    <button type="submit" class="btn btn-default" >
+                      <i class="fas fa-search"></i> Buscar
+                    </button>
+                    
+                  </div>
+                  <div class="col-md-6">
+                  <div class="float-right">
+                    <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
+                      Ir para pesquisa avançada
                     </button>
                   </div>
+                  </div>
                 </div>
-                <button type="button" 
-                 class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
-                  <small>Pesquisa Avançada</small>
-                </button>
               </div>
               <div class="col-sm-12" th:if="*{avancada}">
                 <div class="row">
@@ -115,7 +129,7 @@
                   </div>
                 </div>
                 <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
-                <small>Pesquisa Padrão</small></button>
+                  Voltar para a pesquisa padrão</button>
                 <button type="submit" class="btn btn-default" style="float:right">
                   <i class="fas fa-search"></i> Buscar
                   <!-- <i class="fas fa-search"></i> -->
@@ -184,7 +198,7 @@
               <div class="row" th:if="${venda}">
                 <div class="col-12">
                   <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                       <dl>
                         <dt>#</dt>
                         <dd class="info-venda" th:if="${#strings.isEmpty(venda.id)}" th:text="#{nao.informado}" ></dd>
@@ -192,29 +206,58 @@
                         <dt>Operador</dt>
                         <dd class="info-venda" th:if="${#strings.isEmpty(venda.usuario)}" th:text="#{nao.informado}"></dd>
                         <dd class="info-venda" th:if="${!#strings.isEmpty(venda.usuario)}" th:text="${venda.usuario.nome}"></dd>
-                      </dl>
-                    </div>
-                    <div class="col-md-4">
-                      <dl>
                         <dt>Data da venda</dt>
                         <dd class="info-venda" th:if="${#strings.isEmpty(venda.dataVenda)}" th:text="#{nao.informado}"></dd>
                         <dd class="info-venda" th:if="${!#strings.isEmpty(venda.dataVenda)}" th:text="${{venda.dataVenda}}"></dd>
-                        
-                        <dt>Cliente</dt>
-                        <dd class="info-venda" th:if="${#strings.isEmpty(venda.cliente)}" th:text="#{nao.informado}"></dd>
-                        <dd class="info-venda" th:if="${!#strings.isEmpty(venda.cliente)}" th:text="${venda.cliente.nome}"></dd>
                       </dl>
                     </div>
-                    <div class="col-md-5">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <dl>
-                            <dt>Tipo de venda</dt>
-                            <dd class="info-venda" th:if="${#strings.isEmpty(venda.tipoVenda)}" th:text="#{nao.informado}"></dd>
-                            <dd class="info-venda" th:if="${!#strings.isEmpty(venda.tipoVenda)}" th:text="${venda.tipoVenda.descricao}"></dd>
-                          </dl>
-                        </div>
-                        <div class="col-md-6">
+                    <div class="col-md-4">
+                    <dl>
+                      <dt>Tipo de venda</dt>
+                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.tipoVenda)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.tipoVenda)}" th:text="${venda.tipoVenda.descricao}"></dd>
+                      <dt>Cliente</dt>
+                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.cliente)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.cliente)}" th:text="${venda.cliente.nome}"></dd>
+                      <dt>Status</dt>
+                      <dd class="info-venda" th:if="${#strings.isEmpty(venda.status)}" th:text="#{nao.informado}"></dd>
+                      <dd class="info-venda" th:if="${!#strings.isEmpty(venda.status)}">
+                        <small class="badge" id="infoStatus"
+                         th:text="${venda.status.descricao}" 
+                         th:classappend="${venda.status==T(com.kaue.enumeration.StatusVenda).ABERTA} ? 'bg-danger' : 'bg-success'"></small>
+                        <!-- <small class="badge badge-success" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).FINALIZADA}" 
+                        th:text="${venda.status.descricao}"></small> -->
+                        </dd>
+                    </dl>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="table-responsive float-right">
+                            <table class="table table-borderless">
+                              <tr th:if="${venda.valorDesconto > 0}">
+                                <th>Subtotal:</th>
+                                <td class="text-right">[[${{venda.subtotal}}]]</td>
+                              </tr>
+                              <tr th:if="${venda.valorDesconto > 0}">
+                                <th>Desconto ([[${venda.desconto.descricao}]]):</th>
+                                <td class="text-right text-danger">[[|- ${{venda.valorDesconto}}|]]</td>
+                              </tr>
+                              <tr>
+                                <th>Total:</th>
+                                <td class="text-right">[[${{venda.total}}]]</td>
+                              </tr>
+                              <tr>
+                                <th>Pagamento:</th>
+                                <td class="text-right">[[${{venda.saldo}}]]</td>
+                              </tr>
+                              <tr>
+                                <th>Troco:</th>
+                                <td class="text-right">[[${{venda.troco}}]]</td>
+                              </tr>
+                            </table>
+                          </div>
+                        
+                      <!-- <div class="row" th:if="${venda.valorDesconto > 0}">
+                        <div class="col-md-4">
                           <dl>
                             <dt>Status</dt>
                             <dd class="info-venda" th:if="${#strings.isEmpty(venda.status)}" th:text="#{nao.informado}"></dd>
@@ -222,15 +265,10 @@
                               <small class="badge" id="infoStatus"
                                th:text="${venda.status.descricao}" 
                                th:classappend="${venda.status==T(com.kaue.enumeration.StatusVenda).ABERTA} ? 'bg-danger' : 'bg-success'"></small>
-                              <!-- <small class="badge badge-success" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).FINALIZADA}" 
-                               th:text="${venda.status.descricao}"></small> -->
+                              <small class="badge badge-success" th:if="${venda.status==T(com.kaue.enumeration.StatusVenda).FINALIZADA}" 
+                               th:text="${venda.status.descricao}"></small>
                             </dd>
                           </dl>
-                        </div>
-                      </div>
-                        
-                      <div class="row" th:if="${venda.valorDesconto > 0}">
-                        <div class="col-md-4">
                           <dl>
                           <dt>Subtotal</dt>
                             <dd class="info-venda" th:if="${#strings.isEmpty(venda.subtotal)}" th:text="#{nao.informado}"></dd>
@@ -251,16 +289,7 @@
                             <dd class="info-venda" th:if="${!#strings.isEmpty(venda.total)}" th:text="|${{venda.total}}|"></dd>
                           </dl>
                         </div>
-                      </div>
-                      <div class="row" th:unless="${venda.valorDesconto > 0}">
-                        <div class="col-md-12">
-                          <dl>
-                            <dt>Total</dt>
-                            <dd class="info-venda" th:if="${#strings.isEmpty(venda.total)}" th:text="#{nao.informado}"></dd>
-                            <dd class="info-venda" th:if="${!#strings.isEmpty(venda.total)}" th:text="|${{venda.total}}|"></dd>
-                          </dl>
-                        </div>
-                      </div>
+                      </div> -->
                     </div>
                     <div class="col-md-12">
                       <label>Lista de itens</label>
@@ -556,8 +585,14 @@
       }, 0);
     });
     
+    $('#ancora').on('click', '.js-limpar-pesquisa', function(event) {
+    	$('#inputSearch').val(null);
+    	$('#filtroVendaForm').submit();
+    });
      
   });
+	
+	
 	    
   window.onload = function(){
 		var myElement = $('[autofocus="autofocus"]');

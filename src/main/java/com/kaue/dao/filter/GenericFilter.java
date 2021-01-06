@@ -1,5 +1,7 @@
 package com.kaue.dao.filter;
 
+import org.hibernate.criterion.Order;
+
 public abstract class GenericFilter {
 			
 	private String q;
@@ -15,6 +17,8 @@ public abstract class GenericFilter {
 	private String termo;
 	
 	private boolean avancada = false;
+	
+	private Order order;
 
 	public String getQ() {
 		return q;
@@ -70,5 +74,13 @@ public abstract class GenericFilter {
 
 	public void setStart(Long start) {
 		this.start = start;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 }

@@ -63,6 +63,9 @@ public class Cliente {
 	
 	@Transient
 	private String imagemBase64;
+	
+	@Transient
+	private String enderecoFormatado;
 
 	public Long getId() {
 		return id;
@@ -183,6 +186,14 @@ public class Cliente {
 
 	public void setVendaList(List<Venda> vendaList) {
 		this.vendaList = vendaList;
+	}
+
+	public String getEnderecoFormatado() {
+		return enderecoFormatado;
+	}
+
+	public void setEnderecoFormatado(String enderecoFormatado) {
+		this.enderecoFormatado = enderecoFormatado;
 	}
 
 	/*public Caderneta getCaderneta() {

@@ -22,9 +22,9 @@
   </section>
   
   <section layout:fragment="botoes">
-    <a class="btn btn-danger" th:href="@{/clientes}">Voltar</a>
-    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
-    <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>
+    <a class="btn btn-danger" th:href="@{/clientes}"><i class="fas fa-arrow-circle-left"></i> Voltar</a>
+    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}"><i class="fas fa-save"></i> Salvar</button>
+    <button type="submit" class="btn btn-md btn-info" th:if="*{id}"><i class="fas fa-save"></i> Alterar</button>
   </section>
   <!-- ---------------------------------------- -->
   
@@ -36,7 +36,7 @@
       </div> -->
       <div class="card-body">
         <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
-        <p class="text-muted">Campo marcados com <b class="text-danger">*</b> são obrigatórios.</p>
+        <!-- <p class="text-muted">Campo marcados com <b class="text-danger">*</b> são obrigatórios.</p> -->
         
         <div class="tab-custom-content">
           <p class="lead mb-0">Dados Pessoais</p>
@@ -44,12 +44,13 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="inputNome" class="col-form-label">Nome<b class="text-danger">*</b></label>
+              <label for="inputNome" class="col-form-label">Nome <small>(obrigatório)</small><b class="text-danger">*</b></label>
               <input type="text" autofocus="autofocus" class="form-control" id="inputNome" th:field="*{nome}" th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'">
             </div>
             <div class="form-group">
-              <label for="inputEmail" class="col-form-label">Email</label>
-              <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
+              <label for="inputTelefone" class="col-form-label">Telefone <small>(obrigatório)</small><b class="text-danger">*</b></label>
+              <input type="text" autofocus="autofocus" class="form-control" id="inputTelefone" th:field="*{telefone}" th:classappend="${#fields.hasErrors('telefone')} ? 'is-invalid'" 
+              data-inputmask='"mask": "(99) 99999-9999"' data-mask>
             </div>
             <div class="form-group">
               <label class="col-form-label">Abrir caderneta para cliente?</label><br/>
@@ -60,9 +61,8 @@
          </div>
          <div class="col-md-4">
             <div class="form-group">
-              <label for="inputTelefone" class="col-form-label">Telefone<b class="text-danger">*</b></label>
-              <input type="text" autofocus="autofocus" class="form-control" id="inputTelefone" th:field="*{telefone}" th:classappend="${#fields.hasErrors('telefone')} ? 'is-invalid'" 
-              data-inputmask='"mask": "(99) 99999-9999"' data-mask>
+              <label for="inputEmail" class="col-form-label">Email</label>
+              <input type="email" class="form-control" id="inputEmail" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">   
             </div>
             <div class="form-group">
               <label for="inputCpf" class="col-form-label">CPF</label>

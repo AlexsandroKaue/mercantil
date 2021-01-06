@@ -14,10 +14,13 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.criterion.Order;
+
 import com.kaue.dao.custom.ClienteRepositoryCustom;
 import com.kaue.dao.filter.ProdutoFilter;
 import com.kaue.dao.filter.ClienteFilter;
 import com.kaue.model.Produto;
+import com.kaue.util.HasValue;
 import com.kaue.model.Cliente;
 
 public class ClienteRepositoryCustomImpl implements ClienteRepositoryCustom {
@@ -42,7 +45,15 @@ public class ClienteRepositoryCustomImpl implements ClienteRepositoryCustom {
         } else {
         	query.select(cliente);
         }
-        query.orderBy(cb.desc(cliente.get("id")));
+        if(HasValue.execute(clienteFiltro.getOrder())) {
+        	if(clienteFiltro.getOrder().isAscending()) {
+        		query.orderBy(cb.asc(cliente.get(clienteFiltro.getOrder().getPropertyName())));
+        	} else {
+        		query.orderBy(cb.desc(cliente.get(clienteFiltro.getOrder().getPropertyName())));
+        	}
+        } else {
+        	query.orderBy(cb.desc(cliente.get("id")));
+        }
         
         TypedQuery<Cliente> typedQuery = null;
         boolean isPaginated = clienteFiltro.isPaginated();

@@ -452,12 +452,12 @@ public class CaixaController {
 			
 			if(venda.getTipoVenda()==TipoVenda.CONTA) {
 				venda.setStatus(StatusVenda.ABERTA);
+				venda.setTroco(new BigDecimal(0.0));
 			} else if(venda.getTipoVenda()==TipoVenda.ESPECIE) {
 				venda.setStatus(StatusVenda.FINALIZADA);
+				BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
+				venda.setTroco(troco);
 			}
-			
-			BigDecimal troco = venda.getSaldo().subtract(venda.getTotal());
-			venda.setTroco(troco);
 			
 			venda = vendaService.salvar(venda);
 			List<Item> itemList = venda.getItemList();

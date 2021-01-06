@@ -273,6 +273,9 @@ function inicializar() {
               previous:   "Anterior"
           }
       },
+      dom: "<'row'<'col-sm-5'i><'col-sm-7'p>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
       destroy: true
     });
 	
@@ -311,6 +314,16 @@ $(document).ajaxSend(function(e, xhr, options) {
 	var header = $("meta[name='_csrf_header']").attr("content");
 	xhr.setRequestHeader(header, token);
 });
+
+window.onload = function(){
+	carretToEnd($('[autofocus="autofocus"]'));
+}
+
+function carretToEnd(myElement){
+	if($(myElement).is('input')){
+		$(myElement).prop('selectionStart', $(myElement).val().length);
+	}
+}
 
 /*$(document).on(
 	    {

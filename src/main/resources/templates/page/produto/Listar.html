@@ -244,7 +244,7 @@
   </section>
   
   <div layout:fragment="titulo">
-    <h1 class="m-0 text-dark">Produtos</h1>
+    <h1 class="lead">Produtos</h1>
   </div>
   
   <!-- <div layout:fragment="botoes">
@@ -262,19 +262,41 @@
           <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
           <div class="col-sm-6" th:unless="*{avancada}">
             <div class="input-group">
-              <input class="form-control form-control-lg"  id="inputSearch"
-                placeholder="Qual produto você está procurando?" autofocus="autofocus"
+              <input class="form-control"  id="inputSearch"
+                placeholder="Digite aqui o produto que você está procurando" autofocus="autofocus" autocomplete="off"
                 th:field="*{termo}" onload="setTimeout(function(){$(this).focus();},0);"/>
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-default" >
-                  <i class="fas fa-search"></i> Pesquisar
-                </button>
+              <!-- <div class="input-group-append">
+                
               </div>
+               -->
               
             </div>
-            <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
-              <small>Ir para pesquisa avançada</small>
-            </button>
+            
+            <div class="row mt-1">
+              <div class="col-md-6">
+              <button type="button" class="btn btn-default js-limpar-pesquisa">
+                  <i class="fas fa-broom"></i> Limpar
+                </button>
+                <button type="submit" class="btn btn-default" >
+                  <i class="fas fa-search"></i> Buscar
+                </button>
+                
+              </div>
+              <div class="col-md-6">
+              <div class="float-right">
+                <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
+                  Ir para pesquisa avançada
+                </button>
+              </div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="col-md-6">
+            <div class="float-right">
+              <a class="btn btn-block btn-md btn-primary" th:href="@{/produtos/novo}"
+                  sec:authorize="hasAuthority('INCLUIR_PRODUTO')"><i class="fas fa-plus-circle"></i> [[#{novo}]]</a> 
+            </div>
           </div>
           <div class="col-sm-12" th:if="*{avancada}">
             <div class="row">
@@ -320,26 +342,30 @@
                 </select>
               </div>
             </div>
-            <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
-              <small>Voltar para a pesquisa padrão</small>
-            </button>
-            <button type="submit" class="btn btn-default" style="float:right">
-              <i class="fas fa-search"></i> Pesquisar
-              <!-- <i class="fas fa-search"></i> -->
-            </button><br/>
-            
-          </div>
-          
-          <div class="col-sm-6">
-            <div class="float-right">
-              <a class="btn btn-block btn-info" th:href="@{/produtos/novo}"
-                sec:authorize="hasAuthority('INCLUIR_PRODUTO')"><i class="fas fa-plus-circle"></i> [[#{novo}]]</a>  
+            <div class="row mt-1">
+              <div class="col-md-6">
+              <button type="button" class="btn btn-default js-limpar-pesquisa">
+                  <i class="fas fa-broom"></i> Limpar
+                </button>
+                <button type="submit" class="btn btn-default" >
+                  <i class="fas fa-search"></i> Buscar
+                </button>
+                
+              </div>
+              <div class="col-md-6">
+              <div class="float-right">
+                <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
+                  Voltar para a pesquisa padrão
+                </button>
+              </div>
+              </div>
             </div>
+            
           </div>
         </div>    
         
         <table class="table table-bordered table-hover js-tabela">
-          <thead class="table-primary">
+          <thead class="bg-secondary">
             <tr>
               <th class="text-center" th:text="#{codigo}"></th>
               <th class="col-auto" th:text="#{descricao}" ></th>
@@ -350,7 +376,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr th:each="produto : ${produtos}">
+            <tr th:each="produto : ${produtos}" class="table-light">
               <td class="text-center" th:text="${produto.codigo}"></td>
               <td th:text="${produto.descricao}" style="vertical-align: middle;"></td>
               <td class="text-center" th:text="${produto.marca}"></td>
@@ -358,7 +384,7 @@
               <td class="text-center" th:text="${{produto.valorDeVenda}}"></td>                   
               <td class="text-center">
                 <a th:attr="data-url-detalhes=@{/produtos/detalhes/{id}(id=${produto.id})}" th:href="@{#}"
-                  class="btn btn-link" title="Detalhes" rel="tooltip" data-placement="top"
+                  class="btn btn-link" title="Visualizar" rel="tooltip" data-placement="top"
                   data-toggle="modal" data-target="#modalDetalhesProduto">
                   <i class="fas fa-eye"></i>
                 </a>
@@ -367,16 +393,17 @@
                   sec:authorize="hasAuthority('INCLUIR_LOTE')">
                   <i class="fas fa-plus-circle"></i>
                 </a> --><!-- th:href="@{/produtos/{id}/lote(id=${produto.id})}" --> <!-- th:href="@{/lotes/novo?produtoId={id}(id=${produto.id})}" -->
-                <a th:href="@{/produtos/{id}(id=${produto.id})}" class="btn btn-link"
-                  title="Editar" rel="tooltip" data-placement="top"
+                <a th:href="@{/produtos/{id}(id=${produto.id})}" class="btn btn-link ml-1"
+                  title="Alterar" rel="tooltip" data-placement="top"
                   sec:authorize="hasAuthority('ALTERAR_PRODUTO')">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
-                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link" 
+                <a data-toggle="modal" data-target="#modalConfirmacao" class="btn btn-link ml-1" 
                   th:href="@{#}" th:attr="data-id=${produto.id}, data-descricao=${produto.descricao}"
                   title="Excluir" rel="tooltip" data-placement="top"
                   sec:authorize="hasAuthority('EXCLUIR_PRODUTO')">
-                  <i class="fas fa-trash"></i>
+                  <i class="fas fa-trash-alt"></i>
+                  <!-- <i class="fas fa-trash"></i> -->
                 </a>
               </td>
             </tr>
@@ -497,6 +524,15 @@
           min: "Por favor digite uma quantidade maior que 0"
       }
     });
+  	
+  	$('#ancora').on('click', '.js-limpar-pesquisa', function(event) {
+  			$('#inputSearch').val(null);
+  			$('#filtroProdutoForm').submit();
+  	});
+  	
+  	window.onload = function(){
+  		carretToEnd($('[autofocus="autofocus"]'));
+  	}
   </script>
   
 </html>
