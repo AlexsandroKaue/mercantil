@@ -18,22 +18,22 @@
   
   <!-- Seções presentes no fragmento cabecalho -->
   <section layout:fragment="titulo">
-    <h1 class="m-0 text-dark">Cadastro de Clientes</h1>
+    <h1 class="m-0 lead">Cliente</h1>
   </section>
   
   <section layout:fragment="botoes">
-    <a class="btn btn-danger" th:href="@{/clientes}"><i class="fas fa-arrow-circle-left"></i> Voltar</a>
-    <button type="submit" class="btn btn-md btn-info" th:if="!*{id}"><i class="fas fa-save"></i> Salvar</button>
-    <button type="submit" class="btn btn-md btn-info" th:if="*{id}"><i class="fas fa-save"></i> Alterar</button>
+    <a class="btn btn-danger" th:href="@{/clientes}"><i class="fas fa-arrow-circle-left"></i> [[#{voltar}]]</a>
+    <button type="submit" class="btn btn-success ml-2" th:if="!*{id}"><i class="fas fa-save"></i> [[#{salvar}]]</button>
+    <button type="submit" class="btn btn-success ml-2" th:if="*{id}"><i class="fas fa-save"></i> [[#{alterar}]]</button>
   </section>
   <!-- ---------------------------------------- -->
   
   <!-- Seção presente no fragmento corpo -->
   <section layout:fragment="conteudo">
     <div class="card card-secondary">
-      <!-- <div class="card-header">
-        <h3 class="card-title">Novo Título</h3>
-      </div> -->
+      <div class="card-header">
+        <h3 class="card-title"><i class="nav-icon fas fa-edit"></i> Cadastrar/alterar cliente</h3>
+      </div>
       <div class="card-body">
         <input type="hidden" id="inputCodigo" th:field="*{id}"></input>
         <!-- <p class="text-muted">Campo marcados com <b class="text-danger">*</b> são obrigatórios.</p> -->

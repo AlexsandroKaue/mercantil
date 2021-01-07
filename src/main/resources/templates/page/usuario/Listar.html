@@ -23,12 +23,12 @@
         <div class="container-fluid" layout:fragment="cabecalho">
           <div class="row mb-2">
             <div class="col-sm-9" layout:fragment="titulo">
-               <h1 class="m-0 text-dark">Usuários</h1>
+               <h1 class="m-0 lead">Usuários</h1>
             </div>
             <div class="col-sm-3">
               <div class="breadcrumb float-right">
-                <a class="btn btn-block btn-info" th:href="@{/usuarios/novo}" th:text="#{novo}"
-                 sec:authorize="hasAuthority('INCLUIR_USUARIO')"></a>    
+                <a class="btn btn-block btn-primary" th:href="@{/usuarios/novo}"
+                 sec:authorize="hasAuthority('INCLUIR_USUARIO')"><i class="fas fa-plus-circle"></i> [[#{novo}]]</a>    
               </div>
             </div>
           </div>
@@ -52,19 +52,28 @@
                   <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
                   <div class="col-sm-6" th:unless="*{avancada}">
                     <div class="input-group">
-                      <input class="form-control" 
+                      <input class="form-control" id="inputSearch"
                         placeholder="Qual usuário você está procurando?" autofocus="autofocus"
-                        th:field="*{termo}"/>
-                      <div class="input-group-append">
-                        <button type="submit" class="btn btn-default">
-                          <i class="fas fa-search"></i> Pesquisar
-                          <!-- <i class="fas fa-search"></i> -->
+                        th:field="*{termo}" autocomplete="off"/>
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-md-6">
+                      <button type="button" class="btn btn-default js-limpar-pesquisa">
+                          <i class="fas fa-broom"></i> Limpar
+                        </button>
+                        <button type="submit" class="btn btn-default" >
+                          <i class="fas fa-search"></i> Buscar
+                        </button>
+                        
+                      </div>
+                      <div class="col-md-6">
+                      <div class="float-right">
+                        <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
+                          Ir para pesquisa avançada
                         </button>
                       </div>
+                      </div>
                     </div>
-                    <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
-                      <small>Pesquisa avançada</small>
-                    </button>
                   </div>
                   <div class="col-sm-12" th:if="*{avancada}">
                     <div class="row">
@@ -107,13 +116,24 @@
                         </div>
                       </div>
                     </div>
-                    <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
-                      <small>Voltar para pesquisa padrão</small>
-                    </button>
-                    <button type="submit" class="btn btn-default" style="float:right">
-                      <i class="fas fa-search"></i> Pesquisar
-                      <!-- <i class="fas fa-search"></i> -->
-                    </button><br/>
+                    <div class="row mt-1">
+                      <div class="col-md-6">
+                      <button type="button" class="btn btn-default js-limpar-pesquisa">
+                          <i class="fas fa-broom"></i> Limpar
+                        </button>
+                        <button type="submit" class="btn btn-default" >
+                          <i class="fas fa-search"></i> Buscar
+                        </button>
+                        
+                      </div>
+                      <div class="col-md-6">
+                      <div class="float-right">
+                        <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
+                          Voltar para a pesquisa padrão
+                        </button>
+                      </div>
+                      </div>
+                    </div>
                     
                   </div>
                 </div>
@@ -121,7 +141,7 @@
               
               
               <table class="table table-bordered table-hover js-tabela"><!-- table-striped -->
-                <thead class="table-primary"><!--  style="background-color: #fffc88" -->
+                <thead class="bg-secondary"><!--  style="background-color: #fffc88" -->
                   <tr>
                     <th class="text-center">Código</th>
                     <th>Nome</th>
@@ -310,6 +330,11 @@
     	$('#inputAvancada').val(true);
   		document.getElementById("filtroUsuarioForm").submit(); 
   	});
+    
+    $('#ancora').on('click', '.js-limpar-pesquisa', function(event) {
+  		$('#inputSearch').val(null);
+  		$('#filtroUsuarioForm').submit();
+    });
   </script>
   
 </html>

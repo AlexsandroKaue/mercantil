@@ -16,14 +16,14 @@
         <div class="container-fluid" layout:fragment="cabecalho">
           <div class="row mb-2">
             <div class="col-sm-9" layout:fragment="titulo">
-               <h1 class="text-dark">Usuário</h1>
+               <h1 class="m-0 lead">Usuário</h1>
             </div>
             <div class="col-sm-3">
               <div class="breadcrumb float-right">
                 <div>
-                <a class="btn btn-danger" th:href="@{/usuarios}">Voltar</a>
-                <button type="submit" class="btn btn-md btn-info" th:if="!*{id}">Salvar</button>
-                <button type="submit" class="btn btn-md btn-info" th:if="*{id}">Alterar</button>  
+                  <a class="btn btn-danger" th:href="@{/usuarios}"><i class="fas fa-arrow-circle-left"></i> [[#{voltar}]]</a>
+                  <button type="submit" class="btn btn-success ml-2" th:if="!*{id}"><i class="fas fa-save"></i> [[#{salvar}]]</button>
+                  <button type="submit" class="btn btn-success ml-2" th:if="*{id}"><i class="fas fa-save"></i> [[#{alterar}]]</button>
                 </div>
               </div>
             </div>
@@ -40,9 +40,9 @@
           <div layout:insert="~{mensagem_erro}"></div>
           
           <div class="card card-secondary">
-            <!-- <div class="card-header">
-              <h3 class="card-title">Novo Título</h3>
-            </div> -->
+            <div class="card-header">
+              <h3 class="card-title"><i class="nav-icon fas fa-edit"></i> Cadastrar/alterar usuário</h3>
+            </div>
             <div class="card-body">
               <p class="text-muted">Os campos marcados com <b class="text-danger">*</b> são obrigatórios.</p>
               <div class="row">

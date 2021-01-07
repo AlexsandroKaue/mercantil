@@ -128,15 +128,15 @@
 <script layout:fragment="js-validator">
 
 var currencyformatter = new Intl.NumberFormat('pt-BR', {
-  style: "currency",
-  currency: "BRL",
-  minimumFractionDigits: 2,
-  currencyDisplay: "symbol",
-});
+	  style: "currency",
+	  currency: "BRL",
+	  minimumFractionDigits: 2,
+	  currencyDisplay: "symbol",
+	});
 
-var decimalformatter = new Intl.NumberFormat('pt-BR', {
-  minimumFractionDigits: 2
-});
+	var decimalformatter = new Intl.NumberFormat('pt-BR', {
+	  minimumFractionDigits: 2
+	});
 
 function startSelect2(){
 	var seletor = $('.js-buscar-produto');

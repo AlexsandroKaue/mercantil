@@ -147,6 +147,14 @@
     display: none !important;
 }
 
+.bigdrop {
+    width: 600px !important;
+}
+
+#consultaPreco {
+  font-family: 'FontAwesome'
+}
+
 
 
 

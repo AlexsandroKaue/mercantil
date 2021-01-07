@@ -59,12 +59,105 @@ $.validator.addMethod("greaterThan", function(value, element, param) {
 
 $(function(){
 	inicializar();
-	//$('#ancora').on('ajaxComplete', inicializar());
+	var currencyformatter = new Intl.NumberFormat('pt-BR', {
+	  style: "currency",
+	  currency: "BRL",
+	  minimumFractionDigits: 2,
+	  currencyDisplay: "symbol",
+	});
+
+	var decimalformatter = new Intl.NumberFormat('pt-BR', {
+	  minimumFractionDigits: 2
+	});
+	var seletor = $('#consultaPreco');
+	var url = seletor.data('url-buscar-item');
+	var placeholder = '&#xf51a Consulte produto aqui';
+	$('#consultaPreco').select2({
+		language: "pt-BR",
+		ajax: {
+		    url: url,
+		    dataType: 'json',
+		    delay: 250,
+		    data: function (params) {
+		      return {
+		        q: params.term, // search term
+		        page: params.page || 1 
+		      };
+		    },
+		    processResults: function (data, params) {
+		      // parse the results into the format expected by Select2
+		      // since we are using custom formatting functions we do not need to
+		      // alter the remote JSON data, except to indicate that infinite
+		      // scrolling can be used
+	    	  params.page = params.page || 1;
+	  
+		      return {
+		        results: data.items,
+		        pagination: {
+		          more: (params.page * data.page_size) < data.total_count
+		        }
+		      };
+		    },
+    		cache: true
+    	},
+      allowClear: true,
+	  placeholder: '<i class="fas fa-search"></i> Clique aqui para consultar preços',
+	  escapeMarkup: function(m) {
+		  return m; 
+	  },
+	  minimumInputLength: 1,
+	  allowClear: true,
+	  templateResult: formatRepo,
+	  templateSelection: formatRepoSelection,
+	  multiple: false,
+		dropdownCssClass : 'bigdrop'
+	});
+	
+	function formatRepo (repo) {
+  	  if (repo.loading) {
+  	    return repo.text;
+  	  }
+  	  
+  	  var $container = $(
+  	    "<div class='products-list product-list-in-card  py-2' style='min-height: 30px'> "+
+  	      "<div class='product-img'>"+
+  	      	"<img id='imagem' class='img-size-50' src='' />"+
+	      "</div>"+
+	      "<div class='product-info pl-1'>"+
+	      	"<p class='product-description mb-0'></p>"+
+	        "<h5 id='preco' class='float-right'></h5>"+
+	        "<h5 class='product-title mb-0'></h5>"+
+	      "</div>"+
+  	    "</div>"
+  	    	
+  	    	/*"<li class='products-list product-list-in-card  py-2' role='li'>"+
+  	      "<div class='product-img'>"+
+  	      "</div>"+
+  	      "<div class='product-info ml-4'>"+
+  	      	"<p class='product-description mb-0'></p>"+
+  	        "<h5 id='preco' class='float-right'></h5>"+
+  	        "<h5 class='product-title mb-0'></h5>"+
+  	      "</div>"+
+  	    "</li>"*/
+  	  );
+
+	  $container.find("#imagem").attr('src', 'data:image/png;base64,'+repo.imagemBase64);
+	  $container.find(".product-title").text(repo.descricao);
+	  $container.find("#preco").text(currencyformatter.format(repo.valorDeVenda)+' '+repo.unitario);
+	  $container.find(".product-description").text(repo.codigo);
+	
+	  return $container;
+  	}
+
+  	function formatRepoSelection (repo) {
+  	  return repo.full_name || repo.text;
+  	}
 });
 
 
 
 function inicializar() {
+	
 	$('[data-toggle="popover"]').popover();
 	
 	$('#modalConfirmacao').on('show.bs.modal', function(event){
@@ -325,29 +418,6 @@ function carretToEnd(myElement){
 		$(myElement).prop('selectionStart', $(myElement).val().length);
 	}
 }
-
-/*$(document).on(
-	    {
-	        ajaxComplete: function(){console.log('ajaxComplete')}
-	        
-	    }, 
-	    '.js-tabela'
-	);*/
-
-/*$('#ancora').on('ajaxComplete', '.js-titulo', function(){
-	console.log('ajaxComplete in .js-titulo');
-});*/
-
-
-
-/*$(document).ready(function() {*/
-	//inicializar();
-	
-/*});*/
-
-/*$(document).ajaxComplete(function() {
-	inicializar();
-});*/
 
 
 	

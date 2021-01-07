@@ -26,12 +26,12 @@
   </section>
   
   <div layout:fragment="titulo">
-    <h1 class="m-0 text-dark">Fornecedores</h1>
+    <h1 class="m-0 lead">Fornecedores</h1>
   </div>
   
   <div layout:fragment="botoes">
-    <a class="btn btn-block btn-info" th:href="@{/fornecedores/novo}" th:text="#{novo}"
-     sec:authorize="hasAuthority('INCLUIR_FORNECEDOR')"></a>
+    <a class="btn btn-block btn-primary" th:href="@{/fornecedores/novo}"
+     sec:authorize="hasAuthority('INCLUIR_FORNECEDOR')"><i class="fas fa-plus-circle"></i> [[#{novo}]]</a>
   </div>
   
   <section layout:fragment="conteudo">
@@ -44,19 +44,28 @@
           <input type="hidden" th:field="*{avancada}" id="inputAvancada"></input>
           <div class="col-sm-6" th:unless="*{avancada}">
             <div class="input-group">
-              <input class="form-control" 
+              <input class="form-control" id="inputSearch"
                 placeholder="Qual fornecedor você está procurando?" autofocus="autofocus"
-                th:field="*{termo}"/>
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-default">
-                  <i class="fas fa-search"></i> Pesquisar
-                  <!-- <i class="fas fa-search"></i> -->
+                th:field="*{termo}" autocomplete="off"/>
+            </div>
+            <div class="row mt-1">
+              <div class="col-md-6">
+              <button type="button" class="btn btn-default js-limpar-pesquisa">
+                  <i class="fas fa-broom"></i> Limpar
+                </button>
+                <button type="submit" class="btn btn-default" >
+                  <i class="fas fa-search"></i> Buscar
+                </button>
+                
+              </div>
+              <div class="col-md-6">
+              <div class="float-right">
+                <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
+                  Ir para pesquisa avançada
                 </button>
               </div>
+              </div>
             </div>
-            <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-avancada">
-              <small>Pesquisa avançada</small>
-            </button>
           </div>
           <div class="col-sm-12" th:if="*{avancada}">
             <div class="row">
@@ -97,18 +106,29 @@
                 </div>
               </div>
             </div>
-            <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
-              <small>Voltar para a pesquisa padrão</small>
-            </button>
-            <button type="submit" class="btn btn-default" style="float:right">
-              <i class="fas fa-search"></i> Pesquisar
-              <!-- <i class="fas fa-search"></i> -->
-            </button><br/>
+            <div class="row mt-1">
+              <div class="col-md-6">
+              <button type="button" class="btn btn-default js-limpar-pesquisa">
+                  <i class="fas fa-broom"></i> Limpar
+                </button>
+                <button type="submit" class="btn btn-default" >
+                  <i class="fas fa-search"></i> Buscar
+                </button>
+                
+              </div>
+              <div class="col-md-6">
+              <div class="float-right">
+                <button type="button" class="btn btn-md btn-link px-0 py-0 pesquisa-padrao">
+                  Voltar para a pesquisa padrão
+                </button>
+              </div>
+              </div>
+            </div>
           </div>
         </div>
         
         <table class="table table-bordered table-hover js-tabela">
-          <thead class="table-primary">
+          <thead class="bg-secondary">
             <tr>
               <th class="text-center">Código</th>
               <th>Nome</th>
@@ -161,6 +181,11 @@
   		$('#inputAvancada').val(true);
 		document.getElementById("filtroFornecedorForm").submit(); 
 	});
+	
+	$('#ancora').on('click', '.js-limpar-pesquisa', function(event) {
+		$('#inputSearch').val(null);
+		$('#filtroFornecedorForm').submit();
+  });
   </script>
   
 </html>
