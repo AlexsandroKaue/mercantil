@@ -317,6 +317,7 @@ $(document).ajaxSend(function(e, xhr, options) {
 
 window.onload = function(){
 	carretToEnd($('[autofocus="autofocus"]'));
+	$('.select2').select2();
 }
 
 function carretToEnd(myElement){

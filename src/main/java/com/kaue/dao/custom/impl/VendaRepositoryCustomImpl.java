@@ -18,6 +18,7 @@ import com.kaue.dao.custom.VendaRepositoryCustom;
 import com.kaue.dao.filter.VendaFilter;
 import com.kaue.enumeration.StatusVenda;
 import com.kaue.enumeration.TipoVenda;
+import com.kaue.model.Cliente;
 import com.kaue.model.Usuario;
 import com.kaue.model.Venda;
 import com.kaue.util.HasValue;
@@ -94,7 +95,9 @@ public class VendaRepositoryCustomImpl implements VendaRepositoryCustom{
         Path<Long> idPath = null;
         Path<String> usuarioPath = null;
         Path<String> clientePath = null;
-        Path<Date> dataPath = null;
+        Path<Long> clienteIdPath = null;
+        Path<Date> dataInicialPath = null;
+        Path<Date> dataFinalPath = null;
         Path<StatusVenda> statusPath = null;
         Path<TipoVenda> tipoVendaPath = null;
         
@@ -116,9 +119,17 @@ public class VendaRepositoryCustomImpl implements VendaRepositoryCustom{
         }
         
         if(HasValue.execute(vendaFiltro.getVenda().getCliente())) {
-        	if(HasValue.execute(vendaFiltro.getVenda().getCliente().getNome())) {
+        	if(HasValue.execute(vendaFiltro.getVenda().getCliente().getId())) {
+        		clienteIdPath = venda.get("cliente").get("id");
+        		predicates.add(cb.equal(clienteIdPath, vendaConsulta.getCliente().getId()));
+        	} else if(HasValue.execute(vendaFiltro.getVenda().getCliente().getNome())) {
         		//clientePath = venda.get("cliente") != null ? venda.get("cliente").get("nome") : null;
             	clientePath = venda.get("cliente").get("nome");
+            	predicates.add(cb.like(
+        				cb.upper(cb.trim(Trimspec.BOTH, clientePath)), 
+        				"%"+vendaFiltro.getVenda().getCliente().getNome().toUpperCase()+"%"
+        			)
+        		);
             	if(HasValue.execute(clientePath)) {
             		predicates.add(cb.like(
             				cb.upper(cb.trim(Trimspec.BOTH, clientePath)), 
@@ -130,13 +141,12 @@ public class VendaRepositoryCustomImpl implements VendaRepositoryCustom{
         }
         
         if(HasValue.execute(vendaFiltro.getDataInicio())) {
-        	dataPath = venda.get("dataVenda");
-        	predicates.add(cb.greaterThanOrEqualTo(dataPath, vendaFiltro.getDataInicio()));
+        	dataInicialPath = venda.get("dataVenda");
+        	predicates.add(cb.greaterThanOrEqualTo(dataInicialPath, vendaFiltro.getDataInicio()));
         }
         if(HasValue.execute(vendaFiltro.getDataFim())) {
-        	dataPath = venda.get("dataVenda");
-        	predicates.add(cb.lessThanOrEqualTo(dataPath, vendaFiltro.getDataFim()));
-        	System.out.println(vendaFiltro.getDataFim());
+        	dataFinalPath = venda.get("dataVenda");
+        	predicates.add(cb.lessThanOrEqualTo(dataFinalPath, vendaFiltro.getDataFim()));
         }
         
         if(HasValue.execute(vendaFiltro.getVenda().getStatus())) {
