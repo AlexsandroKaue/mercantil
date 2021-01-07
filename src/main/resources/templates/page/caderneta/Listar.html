@@ -39,7 +39,7 @@
   </style>
 
   <section layout:fragment="container">
-    <form id="filtroCategoriaForm" method="GET" th:action="@{/vendas}" th:object="${filtro}">
+    <form id="filtroClienteForm" method="GET" th:action="@{/caderneta}" th:object="${filtro}">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
       <header layout:insert="~{cabecalho}"></header>
       <header layout:insert="~{corpo}"></header>
@@ -47,43 +47,56 @@
   </section>
   
   <div layout:fragment="titulo">
-    <h1 class="m-0 text-dark">Cadernetas</h1>
+    <h1 class="m-0 lead">Cadernetas</h1>
   </div>
   
-  <div layout:fragment="botoes">
+  <!-- <div layout:fragment="botoes">
     <a class="btn btn-block btn-info" th:href="@{#}" 
      th:text="#{novo}" sec:authorize="hasAuthority('INCLUIR_CATEGORIA')"></a>
-  </div>
+  </div> -->
   
   <section layout:fragment="conteudo">
+    <div class="form-group row">
+      <div class="col-sm-6">
+        <div class="input-group">
+          <input class="form-control form-control-lg" id="inputSearch"
+            placeholder="Qual caderneta você está procurando?" autofocus="autofocus"
+            th:field="*{termo}" autocomplete="off"/>
+          <!-- <div class="input-group-append">
+            <button type="submit" class="btn btn-primary float-right"><i class="fas fa-search"></i> Buscar
+              <i class="fas fa-search"></i>
+            </button>
+          </div> -->
+        </div>
+        <div class="row mt-1">
+          <div class="col-md-6">
+          <button type="button" class="btn btn-default js-limpar-pesquisa">
+              <i class="fas fa-broom"></i> Limpar
+            </button>
+            <button type="submit" class="btn btn-default" >
+              <i class="fas fa-search"></i> Buscar
+            </button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Default box -->
     <div class="card card-solid">
-      <div class="card-body pb-0">        
-        <nav aria-label="Contacts Page Navigation">
-          <ul class="pagination justify-content-center m-0">
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#">5</a></li>
-            <li class="page-item"><a class="page-link" href="#">6</a></li>
-            <li class="page-item"><a class="page-link" href="#">7</a></li>
-            <li class="page-item"><a class="page-link" href="#">8</a></li>
-          </ul>
-        </nav>
+      <div class="card-body pb-0">
         <div class="row d-flex align-items-stretch mt-4">
           <th:block th:each="cliente : ${clientes}">
-            <div class="col-12 col-sm-6 col-md-4 d-flex " 
+            <div class="col-12 col-sm-6 col-md-4" 
               th:if="${cliente.cadernetaAberta}">
               <div class="card bg-light">
                 <div class="card-header border-bottom-0">
                   <h2 class="lead"><b>[[${cliente.nome}]]</b></h2>
                 </div>
-                <div class="card-body pt-0">
+                <!-- <div class="card-body pt-0">
                   <div class="row">
                     <div class="col-12">
-                      <!-- <h2 class="lead"><b>Nicole Pearson</b></h2>
-                      <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p> -->
+                      <h2 class="lead"><b>Nicole Pearson</b></h2>
+                      <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p>
                       <ul class="ml-4 mb-0 fa-ul text-muted">
                         <li><span class="fa-li small"><i class="fas fa-lg fa-building"></i></span>
                           <p class="text-muted text-sm" th:if="${#strings.isEmpty(cliente.enderecoFormatado)}">Endereço: [[#{nao.informado}]]</p>
@@ -94,18 +107,18 @@
                         </li>
                       </ul>
                     </div>
-                    <!-- <div class="col-5 text-center">
+                    <div class="col-5 text-center">
                       <img th:src="@{/custom/img/usuario/user_default.png}" alt="" class="img-circle img-fluid">
-                    </div> -->
+                    </div>
                   </div>
-                </div>
+                </div> -->
                 <div class="card-footer">
                   <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal">
+                    <!-- <a href="#" class="btn btn-sm bg-teal">
                       <i class="fas fa-comments"></i>
-                    </a>
+                    </a> -->
                     <a th:href="@{/caderneta/detalhes/{id}(id=${cliente.id})}" class="btn btn-sm btn-primary js-visualizar">
-                      <i class="fas fa-user"></i> Vizualizar
+                      <i class="fas fa-address-book"></i> Vizualizar
                     </a>
                   </div>
                 </div>
@@ -119,18 +132,6 @@
       </div>
       <!-- /.card-body -->
       <div class="card-footer">
-        <nav aria-label="Contacts Page Navigation">
-          <ul class="pagination justify-content-center m-0">
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#">5</a></li>
-            <li class="page-item"><a class="page-link" href="#">6</a></li>
-            <li class="page-item"><a class="page-link" href="#">7</a></li>
-            <li class="page-item"><a class="page-link" href="#">8</a></li>
-          </ul>
-        </nav>
       </div>
       <!-- /.card-footer -->
     </div>
@@ -476,6 +477,11 @@
     
     $('#ancora').on('hidden.bs.collapse', '.info-row', function(event){
     	$(this).addClass('d-none');
+    });
+    
+    $('#ancora').on('click', '.js-limpar-pesquisa', function(event) {
+    	$('#inputSearch').val(null);
+    	$('#filtroClienteForm').submit();
     });
     
     /* $('#ancora').on( "mouseenter mouseleave", '.info-row', function(event){

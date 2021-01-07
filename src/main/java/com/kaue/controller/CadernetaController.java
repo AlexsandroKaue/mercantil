@@ -44,17 +44,10 @@ public class CadernetaController {
 	
 	@RequestMapping
 	public ModelAndView pesquisar(@ModelAttribute("filtro") ClienteFilter filtro) {
-		if(!filtro.isAvancada()) {
-			String termo = filtro.getTermo();
-			if(termo!=null) {
-				//filtro.getCaderneta().setDataCaderneta(termo);
-				try {
-					Long id = Long.parseLong(termo);
-					filtro.getCliente().setId(id);
-				} catch(NumberFormatException nfe) {}
-			}
-		}
+		String termo = filtro.getTermo();
 		filtro.setOrder(Order.asc("nome"));
+		filtro.setCliente(new Cliente());
+		filtro.getCliente().setNome(termo);
 		List<Cliente> clienteList = clienteService.pesquisar(filtro);
 		if(HasValue.execute(clienteList)) {
 			for(Cliente cliente : clienteList) {

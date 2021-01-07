@@ -73,7 +73,7 @@
                   <span class="fa-li">
                   <i class="fas fa-user"></i></span> 
                   <span class="mb-0">Cliente:</span> 
-                  <span th:text="#{nao.informado}" th:if="${#strings.isEmpty(cliente.email)}"></span>
+                  <span th:text="#{nao.informado}" th:if="${#strings.isEmpty(cliente.nome)}"></span>
                   <p th:text="${cliente.nome}" th:if="${!#strings.isEmpty(cliente.nome)}"></p>
                 </li>
                 <li>
