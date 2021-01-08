@@ -34,6 +34,7 @@ public class ProdutoServiceImpl implements ProdutoService{
 		try {
 			return produtoDAO.save(produto);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new Exception("Ocorreu um erro ao tentar salvar o produto.");
 		}
 	}

@@ -3,6 +3,7 @@ package com.kaue.dao.custom.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,6 +11,8 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaBuilder.Trimspec;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -58,6 +61,7 @@ public class VendaRepositoryCustomImpl implements VendaRepositoryCustom{
         	typedQuery = entityManager.createQuery(query);
         }
  
+        List<Venda> vendaList = typedQuery.getResultList();
         return typedQuery.getResultList();
 	}
 
@@ -108,10 +112,11 @@ public class VendaRepositoryCustomImpl implements VendaRepositoryCustom{
         }
         if(HasValue.execute(vendaFiltro.getVenda().getUsuario())) {
         	if(HasValue.execute(vendaFiltro.getVenda().getUsuario().getNome())) {
-            	usuarioPath = venda.get("usuario").get("nome");
+				usuarioPath = venda.get("usuario").get("nome");
+            	usuarioPath = venda.join("usuario",JoinType.LEFT).get("nome");
             	if(HasValue.execute(usuarioPath)) {
             		predicates.add(cb.like(
-            				cb.upper(cb.trim(Trimspec.BOTH, usuarioPath)), "%"+vendaFiltro.getVenda().getUsuario().getNome().toUpperCase().trim()+"%"
+            				cb.upper(usuarioPath), "%"+vendaFiltro.getVenda().getUsuario().getNome().toUpperCase().trim()+"%"
             			)
             		);
             	}
@@ -126,17 +131,15 @@ public class VendaRepositoryCustomImpl implements VendaRepositoryCustom{
         		//clientePath = venda.get("cliente") != null ? venda.get("cliente").get("nome") : null;
             	clientePath = venda.get("cliente").get("nome");
             	predicates.add(cb.like(
-        				cb.upper(cb.trim(Trimspec.BOTH, clientePath)), 
+        				cb.upper(clientePath), 
         				"%"+vendaFiltro.getVenda().getCliente().getNome().toUpperCase()+"%"
         			)
         		);
-            	if(HasValue.execute(clientePath)) {
-            		predicates.add(cb.like(
-            				cb.upper(cb.trim(Trimspec.BOTH, clientePath)), 
-            				"%"+vendaFiltro.getVenda().getCliente().getNome().toUpperCase()+"%"
-            			)
-            		);
-            	}
+				/*
+				 * if(HasValue.execute(clientePath)) { predicates.add(cb.like(
+				 * cb.upper(cb.trim(Trimspec.BOTH, clientePath)),
+				 * "%"+vendaFiltro.getVenda().getCliente().getNome().toUpperCase()+"%" ) ); }
+				 */
         	}
         }
         

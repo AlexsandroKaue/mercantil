@@ -290,8 +290,8 @@
               <th class="text-center" th:text="#{codigo}"></th>
               <th class="col-auto" th:text="#{descricao}" ></th>
               <th class="text-center" th:text="#{marca}" ></th>
-              <!-- <th class="text-center" th:text="#{categoria}"></th> -->
-              <th class="text-center" th:text="#{venda}" ></th>
+              <th class="text-center">Situação</th>
+              <th class="text-center" th:text="#{venda}"></th>
               <th class="text-center" th:text="#{listagem.produto.coluna.acoes}">Ações</th>
             </tr>
           </thead>
@@ -300,6 +300,10 @@
               <td class="text-center" th:text="${produto.codigo}"></td>
               <td th:text="${produto.descricao}" style="vertical-align: middle;"></td>
               <td class="text-center" th:text="${produto.marca}"></td>
+              <td class="text-center">
+                <span th:if="${produto.quantidade>=produto.quantidadeMinima}" class="badge badge-success">Normal</span>
+                <span th:unless="${produto.quantidade>=produto.quantidadeMinima}" class="badge badge-danger">Repor</span>
+               </td>
               <!-- <td class="text-center" th:text="${produto.categoria!=null?produto.categoria.nome:null}"></td> -->
               <td class="text-center" th:text="${{produto.valorDeVenda}}"></td>                   
               <td class="text-center">

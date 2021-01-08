@@ -31,6 +31,7 @@ import com.kaue.model.Produto;
 import com.kaue.service.FornecedorService;
 import com.kaue.service.LoteService;
 import com.kaue.service.ProdutoService;
+import com.kaue.util.HasValue;
 
 @Controller
 @RequestMapping("/lotes")
@@ -71,8 +72,13 @@ public class LoteController {
 		
 		if(lote!=null) {
 			map.put("id", lote.getId());
-			map.put("dataFabricacao", new SimpleDateFormat("dd/MM/yyyy").format(lote.getDataFabricacao()) ); 
-			map.put("dataVencimento", new SimpleDateFormat("dd/MM/yyyy").format(lote.getDataVencimento()));
+			if(HasValue.execute(lote.getDataFabricacao())) {
+				map.put("dataFabricacao", new SimpleDateFormat("dd/MM/yyyy").format(lote.getDataFabricacao()) );
+			}
+			if(HasValue.execute(lote.getDataVencimento())) {
+				map.put("dataVencimento", new SimpleDateFormat("dd/MM/yyyy").format(lote.getDataVencimento()) );
+			}
+			 
 			map.put("valorCusto", new DecimalFormat("#,##0.00").format(lote.getValorCusto()));
 			map.put("quantidade", lote.getQuantidade());
 			map.put("fornecedor", lote.getFornecedor() != null ? lote.getFornecedor().getId() : null);

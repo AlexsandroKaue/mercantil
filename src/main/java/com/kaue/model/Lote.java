@@ -45,13 +45,13 @@ public class Lote {
 	private Date dataCadastro;
 	
 	@JsonFormat(pattern="dd/MM/yyyy")
-	@NotNull(message = "O campo Data de Fabricação é obrigatório")
+	/* @NotNull(message = "O campo Data de Fabricação é obrigatório") */
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataFabricacao;
 	
 	@JsonFormat(pattern="dd/MM/yyyy")
-	@NotNull(message = "O campo Data de Vencimento é obrigatório")
+	/* @NotNull(message = "O campo Data de Vencimento é obrigatório") */
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataVencimento;

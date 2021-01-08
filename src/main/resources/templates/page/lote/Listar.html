@@ -72,7 +72,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="inputQuantidade" class="col-form-label">Quantidade</label>
-                    <input type="text" class="form-control" id="inputQuantidade" th:field="*{quantidade}">
+                    <input type="text" class="form-control" id="inputQuantidade" th:field="*{quantidade}" autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -84,7 +84,6 @@
                       <option value="" selected th:text="#{selecione.fornecedor}"></option>
                       <option th:each="fornecedor : ${fornecedorList}" th:value="${fornecedor.id}" th:text="${fornecedor.nome}"></option>
                     </select>
-                    <a th:href="@{#}" data-toggle="modal" data-target="#modalFornecedor">Incluir novo</a>
                   </div>
                 </div>
               </div>
@@ -107,7 +106,7 @@
   </section>
   
   <div layout:fragment="titulo">
-    <h1 class="m-0 text-dark">Lotes</h1>
+    <h1 class="m-0 lead">Lotes</h1>
   </div>
   <div layout:fragment="botoes">
     <a class="btn btn-danger" th:href="@{/produtos}" th:text="#{voltar}"></a>
@@ -117,9 +116,9 @@
   </div>
   <div layout:fragment="conteudo">
     <div class="card card-secondary">
-      <!-- <div class="card-header">
-        <h3 class="card-title">Novo Título</h3>
-      </div> -->
+      <div class="card-header">
+        <h3 class="card-title"><i class="nav-icon fas fa-edit"></i> Incluir lote</h3>
+      </div>
       <div class="card-body">
         <input type="hidden" id="inputProduto" th:field="*{produto}"></input>
         <div class="row">
@@ -157,7 +156,7 @@
         <div class="row">
           <div class="col-md-12" >
             <table class="table table-bordered table-hover js-tabela">
-              <thead class="table-primary">
+              <thead class="bg-primary">
                 <tr>
                   <th class="text-center">Lote</th>
                   <!-- <th th:text="#{listagem.lote.coluna.produto}"></th> -->
@@ -247,18 +246,14 @@
   	});
   	
   	$('#inputDataFabricacao').rules('add', {
-      required: true,
       customDate: true,
       messages: { 
-          required: "Por favor digite a data de fabricação",
           customDate: "Por favor forneça uma data válida"
       }
     });
   	$('#inputDataVencimento').rules('add', {
-      required: true,
       customDate: true,
       messages: { 
-          required: "Por favor digite a data de vencimento",
           customDate: "Por favor forneça uma data válida"
       }
     });

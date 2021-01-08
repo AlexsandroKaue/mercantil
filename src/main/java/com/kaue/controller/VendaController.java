@@ -44,14 +44,15 @@ public class VendaController {
 		if(!filtro.isAvancada()) {
 			String termo = filtro.getTermo();
 			if(HasValue.execute(termo)) {
-				filtro.getVenda().setUsuario(new Usuario());
-				filtro.getVenda().getUsuario().setNome(termo);
-				filtro.getVenda().setCliente(new Cliente());
-				filtro.getVenda().getCliente().setNome(termo);
 				try {
-					Long id = Long.parseLong(termo);
+					Long id = Long.parseLong(termo.trim());
 					filtro.getVenda().setId(id);
-				} catch(NumberFormatException nfe) {}
+				} catch(NumberFormatException nfe) {
+					filtro.getVenda().setUsuario(new Usuario());
+					filtro.getVenda().getUsuario().setNome(termo);
+					filtro.getVenda().setCliente(new Cliente());
+					filtro.getVenda().getCliente().setNome(termo);
+				}
 			}
 		}
 		List<Venda> vendaList = vendaService.pesquisar(filtro);
